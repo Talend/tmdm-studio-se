@@ -100,7 +100,7 @@ public class XSDEditor2 extends XSDEditor implements ISvnHistory, IPostOpenActio
         }
         // Add ER Editor
         if (isEE()) {
-            exAdapter.addPage(xsdFile);
+            exAdapter.addPage(xsdFile, editorInput.isReadOnly());
         }
 
         // add repository view object in selectionprovider

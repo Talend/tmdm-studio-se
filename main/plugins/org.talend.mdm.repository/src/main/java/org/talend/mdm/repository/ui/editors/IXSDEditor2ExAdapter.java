@@ -36,7 +36,7 @@ public interface IXSDEditor2ExAdapter extends IExAdapter<XSDEditor2>, IPostOpenA
 
     Object getAdapter(Class type);
 
-    void addPage(IFile xsdFile);
+    void addPage(IFile xsdFile, boolean isReadOnly);
 
     void doPageChanged(int newPageIndex, int lastPageIndex);
 
