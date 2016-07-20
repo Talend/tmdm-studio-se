@@ -432,6 +432,8 @@ public class Messages extends NLS {
 
     public static String ImpactResultDialog_operation;
 
+    public static String ImpactResultDialog_recreatedEntities;
+
     public static String ImpactResultDialog_titleMessage;
 
     public static String ImportServerObject;

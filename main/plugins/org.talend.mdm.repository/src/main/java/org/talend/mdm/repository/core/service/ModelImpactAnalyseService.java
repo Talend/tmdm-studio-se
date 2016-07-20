@@ -108,6 +108,20 @@ public class ModelImpactAnalyseService {
         }
     }
 
+    public static class EntitiesToDrop {
+
+        List<String> entities = new ArrayList<String>();
+
+        public List<String> getEntities() {
+            return this.entities;
+        }
+
+        public void addEntity(String entity) {
+            entities.add(entity);
+        }
+
+    }
+
     static class Severity {
 
         List<Change> changes = new ArrayList<Change>();
@@ -134,6 +148,16 @@ public class ModelImpactAnalyseService {
 
         List<Severity> severities = new ArrayList<Severity>();
 
+        EntitiesToDrop entitiesToDrop;
+
+        public EntitiesToDrop getEntitiesToDrop() {
+            return this.entitiesToDrop;
+        }
+
+        public void setEntitiesToDrop(EntitiesToDrop entitiesToDrop) {
+            this.entitiesToDrop = entitiesToDrop;
+        }
+
         public void addSeverity(Severity severity) {
             severities.add(severity);
         }
@@ -143,7 +167,7 @@ public class ModelImpactAnalyseService {
         }
 
         public List<Change> getChanges() {
-            List<Change> changes = new LinkedList<ModelImpactAnalyseService.Change>();
+            List<Change> changes = new ArrayList<ModelImpactAnalyseService.Change>();
             if (getSeverities() != null) {
                 for (Severity severity : getSeverities()) {
                     if (severity.getChanges() != null) {
@@ -170,8 +194,7 @@ public class ModelImpactAnalyseService {
 
     private static XStream xstream;
 
-    private static List<Change> analyzeModelChange(MDMServerDef serverDef, IRepositoryViewObject modelViewObj)
-            throws XtentisException {
+    private static Result analyzeModelChange(MDMServerDef serverDef, IRepositoryViewObject modelViewObj) throws XtentisException {
         String responseMsg = invokeService(serverDef, modelViewObj, false, null);
         if (responseMsg != null) {
             return readResponseMessage(responseMsg);
@@ -179,14 +202,15 @@ public class ModelImpactAnalyseService {
         return null;
     }
 
-    private static Map<IRepositoryViewObject, List<Change>> analyzeModelChanges(MDMServerDef serverDef,
+    private static Map<IRepositoryViewObject, Result> analyzeModelChanges(MDMServerDef serverDef,
             List<IRepositoryViewObject> modelViewObjs) throws XtentisException {
-        Map<IRepositoryViewObject, List<Change>> result = new HashMap<IRepositoryViewObject, List<Change>>();
+        Map<IRepositoryViewObject, Result> result = new HashMap<IRepositoryViewObject, Result>();
         for (IRepositoryViewObject viewObj : modelViewObjs) {
             if (viewObj.getRepositoryObjectType() == IServerObjectRepositoryType.TYPE_DATAMODEL) {
-                List<Change> changes = analyzeModelChange(serverDef, viewObj);
+                Result analyzeResult = analyzeModelChange(serverDef, viewObj);
+                List<Change> changes = analyzeResult.getChanges();
                 if (changes != null && changes.size() > 0) {
-                    result.put(viewObj, changes);
+                    result.put(viewObj, analyzeResult);
                 }
             }
         }
@@ -208,7 +232,7 @@ public class ModelImpactAnalyseService {
     public static Map<IRepositoryViewObject, ImpactOperation> analyzeModelImpact(MDMServerDef serverDef,
             List<IRepositoryViewObject> modelViewObjs) throws InterruptedException {
         try {
-            Map<IRepositoryViewObject, List<Change>> changes = analyzeModelChanges(serverDef, modelViewObjs);
+            Map<IRepositoryViewObject, Result> changes = analyzeModelChanges(serverDef, modelViewObjs);
             if (!changes.isEmpty()) {
                 Shell shell = Display.getDefault().getActiveShell();
                 ImpactResultDialog dialog = new ImpactResultDialog(shell, changes);
@@ -273,13 +297,17 @@ public class ModelImpactAnalyseService {
             xstream.alias("medium", SeverityMedium.class); //$NON-NLS-1$
             xstream.alias("low", SeverityLow.class); //$NON-NLS-1$
             xstream.alias("high", SeverityHigh.class); //$NON-NLS-1$
+            xstream.alias("entitiesToDrop", EntitiesToDrop.class); //$NON-NLS-1$
+            xstream.alias("entity", String.class); //$NON-NLS-1$
+
             xstream.addImplicitCollection(Result.class, "severities"); //$NON-NLS-1$
             xstream.addImplicitCollection(Severity.class, "changes"); //$NON-NLS-1$
+            xstream.addImplicitCollection(EntitiesToDrop.class, "entities"); //$NON-NLS-1$
         }
         return xstream;
     }
 
-    public static List<Change> readResponseMessage(String message) {
+    public static Result readResponseMessage(String message) {
         if (message != null) {
             if (message.trim().isEmpty()) {
                 // first time deploy
@@ -290,7 +318,7 @@ public class ModelImpactAnalyseService {
             cur.setContextClassLoader(RepositoryPlugin.getDefault().getClass().getClassLoader());
             try {
                 Result result = (Result) getParser().fromXML(message);
-                return result.getChanges();
+                return result;
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 return null;

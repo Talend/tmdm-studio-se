@@ -45,10 +45,14 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.mdm.repository.core.service.ModelImpactAnalyseService;
 import org.talend.mdm.repository.core.service.ModelImpactAnalyseService.Change;
+import org.talend.mdm.repository.core.service.ModelImpactAnalyseService.EntitiesToDrop;
 import org.talend.mdm.repository.core.service.ModelImpactAnalyseService.ImpactOperation;
+import org.talend.mdm.repository.core.service.ModelImpactAnalyseService.Result;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.plugin.RepositoryPlugin;
 import org.talend.mdm.repository.utils.EclipseResourceManager;
+
+import com.amalto.workbench.MDMWorbenchPlugin;
 
 /**
  * created by HHB on 2014-3-11 Detailled comment
@@ -58,32 +62,46 @@ public class ImpactResultDialog extends Dialog {
 
     private class TreeContentProvider implements ITreeContentProvider {
 
+        @Override
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
         }
 
+        @Override
         public void dispose() {
         }
 
+        @Override
         public Object[] getElements(Object inputElement) {
             return getChildren(inputElement);
         }
 
+        @Override
         public Object[] getChildren(Object parentElement) {
             if (parentElement instanceof Collection) {
                 return ((Collection) parentElement).toArray();
             } else if (parentElement instanceof IRepositoryViewObject) {
-                List<Change> changes = input.get(parentElement);
+                Result result = input.get(parentElement);
+                List changes = result.getChanges();
+                EntitiesToDrop entitiesToDrop = result.getEntitiesToDrop();
+                if (entitiesToDrop != null && entitiesToDrop.getEntities() != null && !entitiesToDrop.getEntities().isEmpty()) {
+                    changes.add(entitiesToDrop);
+                }
                 if (changes != null) {
                     return changes.toArray();
                 }
+            } else if (parentElement instanceof EntitiesToDrop) {
+                List<String> entities = ((EntitiesToDrop) parentElement).getEntities();
+                return entities.toArray();
             }
             return new Object[0];
         }
 
+        @Override
         public Object getParent(Object element) {
             return null;
         }
 
+        @Override
         public boolean hasChildren(Object element) {
             return getChildren(element).length > 0;
         }
@@ -100,11 +118,13 @@ public class ImpactResultDialog extends Dialog {
 
     private TreeViewer treeViewer;
 
-    private final Map<IRepositoryViewObject, List<Change>> input;
+    private final Map<IRepositoryViewObject, Result> input;
 
     private final Map<IRepositoryViewObject, ImpactOperation> result = new HashMap<IRepositoryViewObject, ModelImpactAnalyseService.ImpactOperation>();
 
     private static final Image IMG_MODEL = EclipseResourceManager.getImage(RepositoryPlugin.PLUGIN_ID, "icons/datamodel.png"); //$NON-NLS-1$;
+
+    private static final Image IMG_ENTITY = EclipseResourceManager.getImage(MDMWorbenchPlugin.ID, "icons/concept.png"); //$NON-NLS-1$;
 
     private static final Image IMG_HIGH = EclipseResourceManager.getImage(RepositoryPlugin.PLUGIN_ID, "icons/high.gif"); //$NON-NLS-1$;
 
@@ -124,6 +144,7 @@ public class ImpactResultDialog extends Dialog {
             return super.getText(element);
         }
 
+        @Override
         public Image getColumnImage(Object element, int columnIndex) {
             if (columnIndex == 0) {
                 if (element instanceof IRepositoryViewObject) {
@@ -137,11 +158,14 @@ public class ImpactResultDialog extends Dialog {
                     case ModelImpactAnalyseService.LOW:
                         return IMG_LOW;
                     }
+                } else if (element instanceof String) {
+                    return IMG_ENTITY;
                 }
             }
             return null;
         }
 
+        @Override
         public String getColumnText(Object element, int columnIndex) {
             if (element instanceof IRepositoryViewObject) {
                 IRepositoryViewObject viewObject = (IRepositoryViewObject) element;
@@ -172,15 +196,19 @@ public class ImpactResultDialog extends Dialog {
 
                 }
 
+            } else if (element instanceof EntitiesToDrop && columnIndex == 0) {
+                return Messages.ImpactResultDialog_recreatedEntities;
+            } else if (element instanceof String && columnIndex == 0) {
+                return (String) element;
             }
             return ""; //$NON-NLS-1$
         }
     }
 
-    public ImpactResultDialog(Shell parentShell, Map<IRepositoryViewObject, List<Change>> map) {
+    public ImpactResultDialog(Shell parentShell, Map<IRepositoryViewObject, Result> changes) {
         super(parentShell);
         setShellStyle(getShellStyle() | SWT.RESIZE);
-        this.input = map;
+        this.input = changes;
     }
 
     /**
@@ -252,7 +280,8 @@ public class ImpactResultDialog extends Dialog {
     }
 
     private int getCurrentTopSeverityLevel(IRepositoryViewObject viewObj) {
-        List<Change> changes = input.get(viewObj);
+        Result result = input.get(viewObj);
+        List<Change> changes = result.getChanges();
         int level = 0;
         for (Change change : changes) {
             if (change.getSeverity() > level) {
