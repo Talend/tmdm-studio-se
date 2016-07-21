@@ -208,9 +208,11 @@ public class ModelImpactAnalyseService {
         for (IRepositoryViewObject viewObj : modelViewObjs) {
             if (viewObj.getRepositoryObjectType() == IServerObjectRepositoryType.TYPE_DATAMODEL) {
                 Result analyzeResult = analyzeModelChange(serverDef, viewObj);
-                List<Change> changes = analyzeResult.getChanges();
-                if (changes != null && changes.size() > 0) {
-                    result.put(viewObj, analyzeResult);
+                if (analyzeResult != null) {
+                    List<Change> changes = analyzeResult.getChanges();
+                    if (changes != null && changes.size() > 0) {
+                        result.put(viewObj, analyzeResult);
+                    }
                 }
             }
         }
