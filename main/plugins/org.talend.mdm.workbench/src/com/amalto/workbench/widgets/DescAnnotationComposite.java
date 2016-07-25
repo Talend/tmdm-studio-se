@@ -74,7 +74,7 @@ public class DescAnnotationComposite implements SelectionListener {
     public DescAnnotationComposite(String labelName, String buttonName, FormToolkit toolkit, Composite parent,
             AMainPageV2 dialog, boolean isBtnRight) {
         descAntionHolder = toolkit.createComposite(parent);
-        descAntionHolder.setLayoutData(new GridData(SWT.FILL, SWT.RIGHT, true, true, 2, 1));
+        descAntionHolder.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 2, 1));
         GridLayout layout = new GridLayout(3, false);
         layout.marginWidth = 0;
         layout.marginLeft = 0;
@@ -347,8 +347,9 @@ public class DescAnnotationComposite implements SelectionListener {
 
                 if (!outPut.equals(descriptionText.getText())) {
                     descriptionText.setText(outPut);
-                    if (accommodation != null)
+                    if (accommodation != null) {
                         accommodation.markDirtyWithoutCommit();
+                    }
                 }
 
             }
@@ -373,5 +374,10 @@ public class DescAnnotationComposite implements SelectionListener {
         if (column != null) {
             textGD.widthHint = column.getWidth() - 35;
         }
+    }
+
+    public void setEnable(boolean enable) {
+        annotationButton.setEnabled(enable);
+        descriptionText.setEnabled(enable);
     }
 }

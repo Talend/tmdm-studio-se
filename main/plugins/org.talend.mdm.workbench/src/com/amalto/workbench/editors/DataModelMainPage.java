@@ -85,7 +85,6 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.TreeItem;
@@ -229,10 +228,11 @@ import com.amalto.workbench.utils.XSDAnnotationsStructure;
 import com.amalto.workbench.webservices.TMDMService;
 import com.amalto.workbench.webservices.WSDataModel;
 import com.amalto.workbench.webservices.WSPutDataModel;
+import com.amalto.workbench.widgets.DescAnnotationComposite;
 import com.amalto.workbench.widgets.WidgetFactory;
 
 @SuppressWarnings("restriction")
-public class DataModelMainPage extends EditorPart implements ModifyListener, IGotoMarker {
+public class DataModelMainPage extends EditorPart implements IGotoMarker {
 
     public static final String ADDITIONMENUID = "talend.menuadition.datamodel";//$NON-NLS-1$
 
@@ -243,8 +243,6 @@ public class DataModelMainPage extends EditorPart implements ModifyListener, IGo
     private static final String MARKER_XSD_ERR = "org.eclipse.xsd.diagnostic"; //$NON-NLS-1$
 
     private final String ADDELEMENT_MENU_ID = "AddAfterID"; //$NON-NLS-1$
-
-    protected Text descriptionText;
 
     protected TreeViewer viewer;
 
@@ -388,6 +386,8 @@ public class DataModelMainPage extends EditorPart implements ModifyListener, IGo
 
     Composite mainControl;
 
+    private DescAnnotationComposite desAntionComposite;
+
     public DataModelMainPage(TreeObject obj) {
         this.xobject = obj;
         this.datamodel = (WSDataModel) obj.getWsObject();
@@ -442,15 +442,20 @@ public class DataModelMainPage extends EditorPart implements ModifyListener, IGo
             WSDataModel wsObject = (WSDataModel) (xobject.getWsObject());
 
             // description
-            Label descriptionLabel = toolkit.createLabel(mainComposite, Messages.DescriptionText, SWT.NULL);
-            descriptionLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+            Composite descriptionComposite = toolkit.createComposite(mainComposite, SWT.NONE);
+            descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
+            descriptionComposite.setLayout(new GridLayout());
+            desAntionComposite = new DescAnnotationComposite(Messages.DescriptionText,
+                    " ...", toolkit, descriptionComposite, null, //$NON-NLS-1$
+                    false);
+            desAntionComposite.setText(wsObject.getDescription() == null ? "" : wsObject.getDescription());//$NON-NLS-1$
+            desAntionComposite.getTextWidget().addModifyListener(new ModifyListener() {
 
-            descriptionText = toolkit.createText(mainComposite, "", SWT.BORDER);//$NON-NLS-1$
-            descriptionText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 1, 1));
-            descriptionText.setText(wsObject.getDescription() == null ? "" : wsObject.getDescription());//$NON-NLS-1$
-            ((GridData) descriptionText.getLayoutData()).minimumHeight = 30;
-            descriptionText.addModifyListener(this);
-            descriptionText.setEnabled(!isReadOnly());
+                public void modifyText(ModifyEvent e) {
+                    markDirty();
+                }
+            });
+            desAntionComposite.setEnable(!isReadOnly());
             Composite btnCmp = toolkit.createComposite(mainComposite);
             btnCmp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
             GridLayout gLayout = new GridLayout();
@@ -986,9 +991,10 @@ public class DataModelMainPage extends EditorPart implements ModifyListener, IGo
             WSDataModel wsObject = (WSDataModel) (xobject.getWsObject());
             String s;
             s = wsObject.getDescription() == null ? "" : wsObject.getDescription();//$NON-NLS-1$
-            if (!s.equals(descriptionText.getText())) {
-                descriptionText.setText(s);
+            if (!s.equals(desAntionComposite.getText())) {
+                desAntionComposite.setText(s);
             }
+
             String schema = Util.formatXsdSource(wsObject.getXsdSchema());
 
             XSDSchema xsd = Util.createXsdSchema(schema, xobject);
@@ -1016,7 +1022,7 @@ public class DataModelMainPage extends EditorPart implements ModifyListener, IGo
     public int save(String xsd) {
         try {
             WSDataModel wsObject = (WSDataModel) (xobject.getWsObject());
-            wsObject.setDescription(descriptionText.getText() == null ? "" : descriptionText.getText());//$NON-NLS-1$
+            wsObject.setDescription(desAntionComposite.getText());
             String schema = xsd;
             if (xsd == null) {
                 schema = ((SchemaTreeContentProvider) viewer.getContentProvider()).getXSDSchemaAsString();
@@ -2914,10 +2920,6 @@ public class DataModelMainPage extends EditorPart implements ModifyListener, IGo
         }
     }
 
-    public void modifyText(ModifyEvent arg0) {
-        markDirty();
-    }
-
     public ISelectionProvider getSelectionProvider() {
         return selectionProvider;
     }
@@ -2997,8 +2999,8 @@ public class DataModelMainPage extends EditorPart implements ModifyListener, IGo
     }
 
     public boolean isReadOnly() {
-        Object readOnly = getEditorInput().getAdapter(Boolean.class);
-        return ((Boolean) readOnly).booleanValue();
+        Boolean readOnly = (Boolean) getEditorInput().getAdapter(Boolean.class);
+        return readOnly;
     }
 
     private static final String DOM_ELEMENT = "domElement"; //$NON-NLS-1$
