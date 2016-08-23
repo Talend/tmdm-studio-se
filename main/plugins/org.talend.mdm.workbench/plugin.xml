@@ -475,42 +475,28 @@
             context="MDM"
             language="java"
             message="Required for using this component."
-            name="saaj-api.jar" mvn_uri="mvn:org.talend.libraries/saaj-api/6.0.0" 
-            required="true">
-      </libraryNeeded>
-         <libraryNeeded
-               context="MDM"
-               language="java"
-                           message="Required for using this component."
-               name="saaj-impl.jar" mvn_uri="mvn:org.talend.libraries/saaj-impl/6.0.0" 
-               required="true">
-      </libraryNeeded>   
-            <libraryNeeded
-            context="MDM"
-            language="java"
-            message="Required for using this component."
             name="activation.jar" mvn_uri="mvn:org.talend.libraries/activation/6.0.0" 
             required="true">
       </libraryNeeded>
-            <libraryNeeded
-                  context="MDM"
-                  language="java"
-                  message="Required for using this component."
-                  name="jaas.jar" mvn_uri="mvn:org.talend.libraries/jaas/6.0.0" 
-                  required="true">
-            </libraryNeeded>
-            <libraryNeeded
+      <libraryNeeded
             context="MDM"
             language="java"
             message="Required for using this component."
-            name="jax-qname.jar" mvn_uri="mvn:org.talend.libraries/jax-qname/6.0.0" 
+            name="dom4j-1.6.1.jar" mvn_uri="mvn:org.talend.libraries/dom4j-1.6.1/6.1.0" 
             required="true">
       </libraryNeeded>
-            <libraryNeeded
+      <libraryNeeded
             context="MDM"
             language="java"
             message="Required for using this component."
-            name="jta-spec1_0_1.jar" mvn_uri="mvn:org.talend.libraries/jta-spec1_0_1/6.0.0" 
+            name="dtdparser121.jar" mvn_uri="mvn:org.talend.libraries/dtdparser121/6.1.0" 
+            required="true">
+      </libraryNeeded>
+      <libraryNeeded
+            context="MDM"
+            language="java"
+            message="Required for using this component."
+            name="jaxen-1.1-beta-6.jar" mvn_uri="mvn:org.talend.libraries/jaxen-1.1-beta-6/6.0.0" 
             required="true">
       </libraryNeeded>
             <libraryNeeded
@@ -520,21 +506,42 @@
             name="mail.jar" mvn_uri="mvn:org.talend.libraries/mail/6.0.0" 
             required="true">
       </libraryNeeded>
-                  <libraryNeeded
+      <libraryNeeded
             context="MDM"
             language="java"
             message="Required for using this component."
-            name="namespace.jar" mvn_uri="mvn:org.talend.libraries/namespace/6.0.0" 
+            name="relaxngDatatype.jar" mvn_uri="mvn:org.talend.libraries/relaxngDatatype/6.1.0" 
             required="true">
       </libraryNeeded>
-                  <libraryNeeded
+      <libraryNeeded
+            context="MDM"
+            language="java"
+            message="Required for using this component."
+            name="saaj-api.jar" mvn_uri="mvn:org.talend.libraries/saaj-api/6.0.0" 
+            required="true">
+      </libraryNeeded>
+      <libraryNeeded
+               context="MDM"
+               language="java"
+                           message="Required for using this component."
+               name="saaj-impl.jar" mvn_uri="mvn:org.talend.libraries/saaj-impl/6.0.0" 
+               required="true">
+      </libraryNeeded>
+      <libraryNeeded
+               context="MDM"
+               language="java"
+                           message="Required for using this component."
+               name="trang.jar" mvn_uri="mvn:org.talend.libraries/trang/6.1.0" 
+               required="true">
+      </libraryNeeded>
+      <libraryNeeded
             context="MDM"
             language="java"
             message="Required for using this component."
             name="wsdl4j-1.5.1.jar" mvn_uri="mvn:org.talend.libraries/wsdl4j-1.5.1/6.0.0" 
             required="true">
       </libraryNeeded>
-                  <libraryNeeded
+      <libraryNeeded
             context="MDM"
             language="java"
             message="Required for using this component."
