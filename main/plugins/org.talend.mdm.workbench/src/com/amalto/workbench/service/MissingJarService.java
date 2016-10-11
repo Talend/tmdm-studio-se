@@ -44,7 +44,7 @@ public class MissingJarService {
     }
 
     private List<String> getMissingJarList() {
-        List<ModuleNeeded> modulesNeeded = ModulesNeededProvider.getModulesNeeded("MDM"); //$NON-NLS-1$
+        List<ModuleNeeded> modulesNeeded = ModulesNeededProvider.getModulesNeeded("plugin:org.talend.mdm.workbench"); //$NON-NLS-1$
         List<String> jars = new LinkedList<String>();
         for (ModuleNeeded module : modulesNeeded) {
             if (module.getStatus() == ELibraryInstallStatus.NOT_INSTALLED) {
