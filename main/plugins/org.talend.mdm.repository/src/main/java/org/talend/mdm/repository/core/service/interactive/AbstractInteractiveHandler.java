@@ -25,6 +25,7 @@ import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.model.mdmproperties.MDMServerObjectItem;
 import org.talend.mdm.repository.model.mdmserverobject.MDMServerObject;
 import org.talend.mdm.repository.utils.Bean2EObjUtil;
+import org.talend.mdm.repository.utils.UIUtil;
 
 import com.amalto.workbench.utils.XtentisException;
 import com.amalto.workbench.webservices.TMDMService;
@@ -35,7 +36,8 @@ import com.amalto.workbench.webservices.TMDMService;
 public abstract class AbstractInteractiveHandler implements IInteractiveHandler {
 
     protected TMDMService getService(MDMServerDef serverDef) throws XtentisException {
-        return RepositoryWebServiceAdapter.getMDMService(serverDef);
+        boolean workInUI = UIUtil.isWorkInUI();
+        return RepositoryWebServiceAdapter.getMDMService(serverDef, workInUI);
     }
 
     /*
@@ -44,11 +46,13 @@ public abstract class AbstractInteractiveHandler implements IInteractiveHandler 
      * @see org.talend.mdm.repository.core.service.IInteractiveHandler#convert(org.talend.core.model.properties.Item,
      * org.talend.mdm.repository.model.mdmserverobject.MDMServerObject)
      */
+    @Override
     public Object convert(Item item, MDMServerObject serverObj) {
         Object wsObj = Bean2EObjUtil.getInstance().convertFromEObj2Bean(serverObj);
         return wsObj;
     }
 
+    @Override
     public boolean doDeployWSObject(TMDMService service, Object wsObj) {
         return false;
         // do nothing
@@ -66,6 +70,7 @@ public abstract class AbstractInteractiveHandler implements IInteractiveHandler 
      * org.talend.mdm.repository.core.service.IInteractiveHandler#deploy(com.amalto.workbench.webservices.XtentisPort,
      * org.talend.core.model.properties.Item, org.talend.mdm.repository.model.mdmserverobject.MDMServerObject)
      */
+    @Override
     public boolean deploy(AbstractDeployCommand cmd) throws XtentisException {
         IRepositoryViewObject viewObj = cmd.getViewObject();
         Item item = viewObj.getProperty().getItem();
@@ -75,18 +80,22 @@ public abstract class AbstractInteractiveHandler implements IInteractiveHandler 
         return doDeployWSObject(service, wsObj);
     }
 
+    @Override
     public boolean remove(AbstractDeployCommand cmd) throws XtentisException {
         TMDMService service = getService(cmd.getServerDef());
         return doRemove(service, cmd);
     }
 
+    @Override
     public void assertPropertyIsInited(Item item) {
     }
 
+    @Override
     public List<IRepositoryViewObject> getAssociatedObjects(IRepositoryViewObject obj) {
         return null;
     }
 
+    @Override
     public boolean isShownInResultDialog(IRepositoryViewObject viewObj) {
         return true;
     }
