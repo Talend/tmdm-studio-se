@@ -98,6 +98,5 @@ Export-Package: org.talend.mdm.repository.core,
  org.talend.mdm.repository.ui.wizards.imports.viewer,
  org.talend.mdm.repository.ui.wizards.process,
  org.talend.mdm.repository.utils
-Import-Package: com.amalto.workbench.webservices,
- org.talend.mdm.webservice
+Import-Package: com.amalto.workbench.webservices
 Eclipse-BundleShape: dir
