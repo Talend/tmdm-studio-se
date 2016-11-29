@@ -49,8 +49,6 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -141,8 +139,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXParseException;
 
-import sun.misc.BASE64Encoder;
-
 import com.amalto.workbench.editors.DataModelMainPage;
 import com.amalto.workbench.editors.xsdeditor.XSDEditor;
 import com.amalto.workbench.i18n.Messages;
@@ -176,6 +172,8 @@ import com.amalto.workbench.webservices.WSWhereOperator;
 import com.sun.org.apache.xpath.internal.XPathAPI;
 import com.sun.org.apache.xpath.internal.objects.XObject;
 import com.sun.xml.internal.ws.wsdl.parser.InaccessibleWSDLException;
+
+import sun.misc.BASE64Encoder;
 
 /**
  * @author bgrieder
@@ -401,9 +399,6 @@ public class Util {
 
             try {
 
-                SSLContext sslContext = SSLContextProvider.getContext();
-                HttpsURLConnection.setDefaultHostnameVerifier(SSLContextProvider.getHostnameVerifier());
-                HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
                 TMDMService_Service service_service = new TMDMService_Service(url);
 
                 service = service_service.getTMDMPort();

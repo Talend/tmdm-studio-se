@@ -460,10 +460,6 @@ public abstract class MDMServerMessageConsole extends MessageConsole implements 
 
     private DefaultHttpClient createHttpClient() {
         DefaultHttpClient httpclient = new DefaultHttpClient();
-        if (serverDef.isEnableSSL()) {
-            int port = Integer.parseInt(serverDef.getPort());
-            httpclient = HttpClientUtil.enableSSL(httpclient, port);
-        }
 
         AuthScope authScope = new AuthScope(serverDef.getHost(), Integer.parseInt(serverDef.getPort()));
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(serverDef.getUser(), serverDef.getPasswd());

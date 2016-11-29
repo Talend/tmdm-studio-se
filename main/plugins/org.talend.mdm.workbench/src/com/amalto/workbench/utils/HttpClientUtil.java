@@ -25,10 +25,6 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLException;
-import javax.net.ssl.SSLPeerUnverifiedException;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,10 +47,6 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.conn.scheme.Scheme;
-import org.apache.http.conn.scheme.SchemeRegistry;
-import org.apache.http.conn.ssl.SSLSocketFactory;
-import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
@@ -106,9 +98,6 @@ public class HttpClientUtil {
     private static DefaultHttpClient wrapAuthClient(String url, String username, String password) throws SecurityException {
         DefaultHttpClient client = createClient();
         URI uri = URI.create(url);
-        if ("https".equals(uri.getScheme())) { //$NON-NLS-1$
-            client = enableSSL(client, uri.getPort());
-        }
         AuthScope authScope = new AuthScope(uri.getHost(), uri.getPort());
         UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
         client.getCredentialsProvider().setCredentials(authScope, credentials);
@@ -391,15 +380,6 @@ public class HttpClientUtil {
             return wrapResponse(response, message, clz);
         } catch (XtentisException ex) {
             throw ex;
-        } catch (SSLPeerUnverifiedException e) {
-            log.error(Messages.httpclientError_certification);
-            request.abort();
-            throw new XtentisException(Messages.httpclientError_certification, e);
-        } catch (SSLException e) {
-            // hostname unmatch
-            log.error(e.getMessage(), e);
-            request.abort();
-            throw new XtentisException(e.getMessage(), e);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             request.abort();
@@ -515,20 +495,6 @@ public class HttpClientUtil {
         return null;
     }
 
-    public static DefaultHttpClient enableSSL(DefaultHttpClient client, int port) throws SecurityException {
-        if (client == null) {
-            throw new IllegalArgumentException();
-        }
-        SSLContext context = SSLContextProvider.getContext();
-        X509HostnameVerifier verifier = (X509HostnameVerifier) SSLContextProvider.getHostnameVerifier();
-        SSLSocketFactory ssf = new SSLSocketFactory(context, verifier);
-        ClientConnectionManager ccm = client.getConnectionManager();
-        SchemeRegistry sr = ccm.getSchemeRegistry();
-        sr.register(new Scheme("https", port, ssf)); //$NON-NLS-1$
-        return new DefaultHttpClient(ccm, client.getParams());
-
-    }
-
     private static final String PATTERN_URL = "[http|https]+://.+:(\\d+)/.*"; //$NON-NLS-1$
 
     public static int getPortFromUrl(String url) {
@@ -542,11 +508,6 @@ public class HttpClientUtil {
         } else {
             return 80;
         }
-    }
-
-    public static DefaultHttpClient enableSSL(DefaultHttpClient client, String url) {
-        int port = getPortFromUrl(url);
-        return enableSSL(client, port);
     }
 
     public static OutputStream downloadFile(String url, String downloadFolder) {
