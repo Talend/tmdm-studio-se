@@ -30,6 +30,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -172,8 +174,6 @@ import com.amalto.workbench.webservices.WSWhereOperator;
 import com.sun.org.apache.xpath.internal.XPathAPI;
 import com.sun.org.apache.xpath.internal.objects.XObject;
 import com.sun.xml.internal.ws.wsdl.parser.InaccessibleWSDLException;
-
-import sun.misc.BASE64Encoder;
 
 /**
  * @author bgrieder
@@ -2098,10 +2098,10 @@ public class Util {
     public static String getResponseFromURL(String url, TreeObject treeObj) throws Exception {
         InputStreamReader doc = null;
         try {
-            BASE64Encoder encoder = new BASE64Encoder();
+            Encoder encoder = Base64.getEncoder();
             StringBuffer buffer = new StringBuffer();
-            String credentials = encoder.encode(new String(treeObj.getServerRoot().getUsername() + ":"//$NON-NLS-1$
-                    + treeObj.getServerRoot().getPassword()).getBytes());
+            String credentials = encoder.encodeToString((new String(treeObj.getServerRoot().getUsername() + ":"//$NON-NLS-1$
+                    + treeObj.getServerRoot().getPassword()).getBytes()));
 
             URL urlCn = new URL(url);
             URLConnection conn = urlCn.openConnection();
