@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -29,8 +31,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-
-import sun.misc.BASE64Encoder;
 
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.models.TreeObject;
@@ -135,9 +135,9 @@ public class ResourcesUtil {
         BufferedInputStream in = new BufferedInputStream(fis);
         byte buffer[] = new byte[256];
         StringBuffer picStr = new StringBuffer();
-        BASE64Encoder base64 = new BASE64Encoder();
+        Encoder encoder = Base64.getEncoder();
         while (in.read(buffer) >= 0) {
-            picStr.append(base64.encode(buffer));
+            picStr.append(encoder.encodeToString(buffer));
         }
         fis.close();
         fis = null;
