@@ -12,8 +12,9 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
+import org.talend.mdm.webservice.TMDMService;
+
 import com.amalto.workbench.exadapter.IExAdapter;
-import com.amalto.workbench.webservices.TMDMService;
 
 /**
  * created by HHB on 2014-1-7 Detailled comment

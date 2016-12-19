@@ -39,12 +39,12 @@ import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.ui.navigator.MDMRepositoryView;
 import org.talend.mdm.repository.ui.widgets.TisTableViewerR;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
+import org.talend.mdm.webservice.WSConceptKey;
+import org.talend.mdm.webservice.WSGetBusinessConceptKey;
+import org.talend.mdm.webservice.WSView;
 
 import com.amalto.workbench.editors.ViewMainPage;
 import com.amalto.workbench.utils.XtentisException;
-import com.amalto.workbench.webservices.WSConceptKey;
-import com.amalto.workbench.webservices.WSGetBusinessConceptKey;
-import com.amalto.workbench.webservices.WSView;
 import com.amalto.workbench.widgets.ComplexTableViewerColumn;
 import com.amalto.workbench.widgets.TisTableViewer;
 

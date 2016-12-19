@@ -15,9 +15,9 @@ package com.amalto.workbench.widgets.xmleditor.infoholder;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSGetTransformerV2PKs;
-import com.amalto.workbench.webservices.WSTransformerV2PK;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSGetTransformerV2PKs;
+import org.talend.mdm.webservice.WSTransformerV2PK;
 
 class AllProcessesNamesHolder extends ExternalInfoHolder<String[]> {
 

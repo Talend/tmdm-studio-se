@@ -48,6 +48,8 @@ import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.ui.widgets.AbstractNodeCheckTreeViewer;
 import org.talend.mdm.repository.utils.EclipseResourceManager;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
+import org.talend.mdm.webservice.WSDigest;
+import org.talend.mdm.webservice.WSDigestKey;
 
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.models.TreeObject;
@@ -56,8 +58,6 @@ import com.amalto.workbench.providers.ServerTreeContentProvider;
 import com.amalto.workbench.providers.ServerTreeLabelProvider;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XtentisException;
-import com.amalto.workbench.webservices.WSDigest;
-import com.amalto.workbench.webservices.WSDigestKey;
 import com.amalto.workbench.widgets.FilteredCheckboxTree;
 
 /**

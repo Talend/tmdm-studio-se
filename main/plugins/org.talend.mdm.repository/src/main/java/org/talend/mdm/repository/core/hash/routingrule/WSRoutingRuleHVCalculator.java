@@ -15,10 +15,9 @@ package org.talend.mdm.repository.core.hash.routingrule;
 import org.talend.mdm.commmon.util.hash.ArrayCollectionHashValueCalculator;
 import org.talend.mdm.commmon.util.hash.IHashValueCalculator;
 import org.talend.mdm.commmon.util.hash.impl.RoutingRuleHVCalculator;
-
-import com.amalto.workbench.webservices.WSRoutingRule;
-import com.amalto.workbench.webservices.WSRoutingRuleExpression;
-import com.amalto.workbench.webservices.WSRoutingRuleOperator;
+import org.talend.mdm.webservice.WSRoutingRule;
+import org.talend.mdm.webservice.WSRoutingRuleExpression;
+import org.talend.mdm.webservice.WSRoutingRuleOperator;
 
 /**
  * DOC hbhong class global comment. Detailled comment

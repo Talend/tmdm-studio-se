@@ -29,14 +29,13 @@ import org.talend.mdm.repository.core.datacontent.impl.ImportDataContentCommandP
 import org.talend.mdm.repository.core.datacontent.impl.ImportDataContentProcess;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSBoolean;
+import org.talend.mdm.webservice.WSDataCluster;
+import org.talend.mdm.webservice.WSDataClusterPK;
+import org.talend.mdm.webservice.WSExistsDataCluster;
+import org.talend.mdm.webservice.WSPutDataCluster;
 import org.talend.repository.utils.ZipFileUtils;
-
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSBoolean;
-import com.amalto.workbench.webservices.WSDataCluster;
-import com.amalto.workbench.webservices.WSDataClusterPK;
-import com.amalto.workbench.webservices.WSExistsDataCluster;
-import com.amalto.workbench.webservices.WSPutDataCluster;
 
 /**
  * DOC hbhong class global comment. Detailled comment

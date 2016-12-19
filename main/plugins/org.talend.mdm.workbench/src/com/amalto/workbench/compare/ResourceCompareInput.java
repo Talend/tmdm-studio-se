@@ -53,13 +53,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.mdm.webservice.WSDataClusterPK;
+import org.talend.mdm.webservice.WSDataModelPK;
+import org.talend.mdm.webservice.WSPutItem;
 
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XmlUtil;
-import com.amalto.workbench.webservices.WSDataClusterPK;
-import com.amalto.workbench.webservices.WSDataModelPK;
-import com.amalto.workbench.webservices.WSPutItem;
 
 /**
  * A two-way or three-way compare for arbitrary IResources.
