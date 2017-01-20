@@ -454,12 +454,6 @@
             sequence="M1+M2+F">
       </key>
    </extension>
-   <extension
-         point="org.eclipse.core.runtime.preferences">
-      <initializer
-            class="com.amalto.workbench.preferences.WorkbenchPreferenceInitializer">
-      </initializer>
-   </extension>
   <extension
          point="org.talend.core.runtime.librariesNeeded">
       <libraryNeeded
