@@ -28,8 +28,6 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -52,7 +50,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.navigator.CommonViewer;
-import org.eclipse.ui.progress.UIJob;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
@@ -81,6 +78,7 @@ import org.talend.mdm.repository.utils.Bean2EObjUtil;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 import org.talend.mdm.repository.utils.RepositoryTransformUtil;
 import org.talend.mdm.workbench.serverexplorer.ui.dialogs.SelectServerDefDialog;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IProxyRepositoryFactory;
 
 import com.amalto.workbench.exadapter.ExAdapterManager;
@@ -594,21 +592,22 @@ public class ImportServerObjectWizard extends Wizard {
 
     class ImportProcess implements IRunnableWithProgress {
 
+        @Override
         public void run(final IProgressMonitor wizardMonitor) throws InvocationTargetException, InterruptedException {
-            UIJob job = new UIJob(Messages.Import_Objects) {
+
+            RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("", this) { //$NON-NLS-1$
 
                 @Override
-                public IStatus runInUIThread(IProgressMonitor monitor) {
-                    List<String> importedIds = doImport(selectedObjects, monitor);
-                    commonViewer.refresh();
-                    if (exAdapter != null) {
+                protected void run() throws LoginException, PersistenceException {
+                    List<String> importedIds = doImport(selectedObjects, wizardMonitor);
 
+                    if (exAdapter != null) {
                         exAdapter.updateRelations(importedIds);
                     }
-                    return Status.OK_STATUS;
                 }
             };
-            job.schedule();
+            repositoryWorkUnit.setAvoidUnloadResources(true);
+            CoreRuntimePlugin.getInstance().getProxyRepositoryFactory().executeRepositoryWorkUnit(repositoryWorkUnit);
         }
     }
 
@@ -619,6 +618,7 @@ public class ImportServerObjectWizard extends Wizard {
          * 
          * @see org.eclipse.jface.operation.IRunnableWithProgress#run(org.eclipse.core.runtime.IProgressMonitor)
          */
+        @Override
         public void run(IProgressMonitor m) throws InvocationTargetException, InterruptedException {
 
             String url = serverDef.getProtocol() + serverDef.getHost() + ":" + serverDef.getPort() //$NON-NLS-1$ 
@@ -638,6 +638,7 @@ public class ImportServerObjectWizard extends Wizard {
             //
             Display.getDefault().syncExec(new Runnable() {
 
+                @Override
                 public void run() {
                     try {
 
@@ -655,6 +656,7 @@ public class ImportServerObjectWizard extends Wizard {
         private void sortTreeObjs(TreeParent serverRoot) {
             Collections.sort(serverRoot.getChildrenList(), new Comparator() {
 
+                @Override
                 public int compare(Object o1, Object o2) {
                     String name1 = ((TreeObject) o1).getDisplayName();
                     String name2 = ((TreeObject) o2).getDisplayName();
@@ -711,6 +713,7 @@ public class ImportServerObjectWizard extends Wizard {
             }
         }
 
+        @Override
         public void createControl(Composite parent) {
             Composite composite = new Composite(parent, SWT.BORDER);
             composite.setLayout(new GridLayout(4, false));
@@ -773,6 +776,7 @@ public class ImportServerObjectWizard extends Wizard {
             CheckboxTreeViewer checkboxViewer = (CheckboxTreeViewer) treeViewer.getViewer();
             checkboxViewer.addCheckStateListener(new ICheckStateListener() {
 
+                @Override
                 public void checkStateChanged(CheckStateChangedEvent checkstatechangedevent) {
                     updateSelectedObjects();
                     checkCompleted();
