@@ -318,12 +318,29 @@ public class MDMRepositoryView extends CommonNavigator implements ITabbedPropert
     public static MDMRepositoryView show() {
         IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         if (activeWorkbenchWindow != null) {
-            IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+            return findRepositoryView(activeWorkbenchWindow);
+        } else {
+            IWorkbenchWindow[] workbenchWindows = PlatformUI.getWorkbench().getWorkbenchWindows();
+            if (workbenchWindows != null) {
+                for (IWorkbenchWindow window : workbenchWindows) {
+                    MDMRepositoryView foundView = findRepositoryView(window);
+                    if (foundView != null) {
+                        return foundView;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private static MDMRepositoryView findRepositoryView(IWorkbenchWindow workbenchWindow) {
+        if (workbenchWindow != null) {
+            IWorkbenchPage activePage = workbenchWindow.getActivePage();
             if (activePage != null) {
                 IViewPart part = activePage.findView(VIEW_ID);
                 if (part == null) {
                     try {
-                        part = activeWorkbenchWindow.getActivePage().showView(VIEW_ID);
+                        part = workbenchWindow.getActivePage().showView(VIEW_ID);
                     } catch (Exception e) {
                         log.error(e.getMessage(), e);
                     }
@@ -340,26 +357,32 @@ public class MDMRepositoryView extends CommonNavigator implements ITabbedPropert
 
         IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
 
+        @Override
         public void partVisible(IWorkbenchPartReference partRef) {
 
         }
 
+        @Override
         public void partOpened(IWorkbenchPartReference partRef) {
 
         }
 
+        @Override
         public void partInputChanged(IWorkbenchPartReference partRef) {
 
         }
 
+        @Override
         public void partHidden(IWorkbenchPartReference partRef) {
 
         }
 
+        @Override
         public void partDeactivated(IWorkbenchPartReference partRef) {
 
         }
 
+        @Override
         public void partClosed(IWorkbenchPartReference partRef) {
             if (activedJobEditorRefs.contains(partRef)) {
                 activedJobEditorRefs.remove(partRef);
@@ -385,6 +408,7 @@ public class MDMRepositoryView extends CommonNavigator implements ITabbedPropert
 
                         Display.getDefault().asyncExec(new Runnable() {
 
+                            @Override
                             public void run() {
                                 if (!getCommonViewer().getTree().isDisposed()) {
                                     final IRepositoryViewObject viewObject = ContainerCacheService.get(id);
@@ -431,6 +455,7 @@ public class MDMRepositoryView extends CommonNavigator implements ITabbedPropert
 
         }
 
+        @Override
         public void partBroughtToTop(IWorkbenchPartReference partRef) {
         }
 
@@ -443,6 +468,7 @@ public class MDMRepositoryView extends CommonNavigator implements ITabbedPropert
 
         }
 
+        @Override
         public void partActivated(IWorkbenchPartReference partRef) {
 
             String curPerspectiveId = (currentPerspective == null) ? null : currentPerspective.getId();
@@ -452,6 +478,7 @@ public class MDMRepositoryView extends CommonNavigator implements ITabbedPropert
                 activedJobEditorRefs.add(partRef);
                 Display.getDefault().asyncExec(new Runnable() {
 
+                    @Override
                     public void run() {
                         SwitchPerspectiveDialog dialog = new SwitchPerspectiveDialog(getSite().getShell(),
                                 Messages.MDMRepositoryView_integration, IPerspectiveConstants.PERSPECTIVE_ID_DI,
@@ -602,6 +629,7 @@ public class MDMRepositoryView extends CommonNavigator implements ITabbedPropert
         return super.getAdapter(adapter);
     }
 
+    @Override
     public String getContributorId() {
         return CONTRIBUTER_ID;
     }
@@ -637,6 +665,7 @@ class TreeViewerListener implements ITreeViewerListener {
         this.viewer = viewer;
     }
 
+    @Override
     public void treeCollapsed(TreeExpansionEvent event) {
         Object element = event.getElement();
         if (element instanceof FolderRepositoryObject) {
@@ -651,6 +680,7 @@ class TreeViewerListener implements ITreeViewerListener {
         }
     }
 
+    @Override
     public void treeExpanded(TreeExpansionEvent event) {
         Object element = event.getElement();
         if (element instanceof FolderRepositoryObject) {

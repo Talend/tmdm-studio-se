@@ -73,6 +73,7 @@ import org.talend.mdm.repository.model.mdmserverobject.MDMServerObject;
 import org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectFactory;
 import org.talend.mdm.repository.model.mdmserverobject.WSResourceE;
 import org.talend.mdm.repository.ui.dialogs.lock.LockedObjectDialog;
+import org.talend.mdm.repository.ui.navigator.MDMRepositoryView;
 import org.talend.mdm.repository.ui.wizards.imports.viewer.TreeObjectCheckTreeViewer;
 import org.talend.mdm.repository.utils.Bean2EObjUtil;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
@@ -600,6 +601,13 @@ public class ImportServerObjectWizard extends Wizard {
                 @Override
                 protected void run() throws LoginException, PersistenceException {
                     List<String> importedIds = doImport(selectedObjects, wizardMonitor);
+                    Display.getDefault().asyncExec(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            MDMRepositoryView.show().getCommonViewer().refresh();
+                        }
+                    });
 
                     if (exAdapter != null) {
                         exAdapter.updateRelations(importedIds);
