@@ -408,14 +408,13 @@ public class AddBrowseItemsWizard extends Wizard {
                         browseItemToRoles.remove(key);
                         int prex = tValue.indexOf(BROWSE_ITEMS);
 
-                        if (prex != -1 && (prex + BROWSE_ITEMS.length()) <= tValue.length()) {
-                            elem.setName(tValue.substring(prex + BROWSE_ITEMS.length()));
-                        }
                         browseItemToRoles.put(tValue, lines);
-                        refreshRoleView(BROWSE_ITEMS + elem.getName());
+                        if (prex != -1 && (prex + BROWSE_ITEMS.length()) <= tValue.length()) {
+                            refreshRoleView(tValue);
+                        } else {
+                            refreshRoleView(BROWSE_ITEMS + elem.getName());
+                        }
                         browseViewer.update(elem, null);
-
-                        elem.setName(declName);
                     }
                 }
 

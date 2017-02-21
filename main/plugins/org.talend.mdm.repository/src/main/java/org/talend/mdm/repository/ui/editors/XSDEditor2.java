@@ -49,6 +49,7 @@ import org.talend.mdm.repository.ui.actions.IPostOpenAction;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 import org.talend.repository.RepositoryWorkUnit;
 
+import com.amalto.workbench.dialogs.AddBrowseItemsWizard;
 import com.amalto.workbench.editors.DataModelMainPage;
 import com.amalto.workbench.editors.xsdeditor.XSDEditor;
 import com.amalto.workbench.editors.xsdeditor.XSDSelectionListener;
@@ -302,7 +303,9 @@ public class XSDEditor2 extends XSDEditor implements ISvnHistory, IPostOpenActio
         if (type == MultiPageEditorPart.class) {
             return this;
         }
-
+        if (type == AddBrowseItemsWizard.class) {
+            return dMainPage.getAdapter(AddBrowseItemsWizard.class);
+        }
         if (isEE()) {
             Object adapter = exAdapter.getAdapter(type);
             if (adapter != null) {

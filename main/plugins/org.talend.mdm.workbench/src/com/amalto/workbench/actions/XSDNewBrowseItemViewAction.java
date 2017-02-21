@@ -21,13 +21,17 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.ui.IEditorPart;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.MultiPageEditorPart;
+import org.eclipse.ui.part.MultiPageEditorSite;
 import org.eclipse.xsd.XSDElementDeclaration;
 
 import com.amalto.workbench.dialogs.AddBrowseItemsWizard;
 import com.amalto.workbench.editors.DataModelMainPage;
+import com.amalto.workbench.editors.xsdeditor.XSDEditor;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -50,23 +54,48 @@ public class XSDNewBrowseItemViewAction extends AbstractXSDNewAction {
         setToolTipText(Messages.XSDNewBrowseItemViewAction_Text);
     }
 
+    protected boolean isDirty() {
+
+        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        if (window != null) {
+            IWorkbenchPage activePage = window.getActivePage();
+            if (activePage != null) {
+                return activePage.getActiveEditor().isDirty();
+            }
+        }
+        return false;
+    }
+
+    protected void saveEditor() {
+        IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        if (window != null) {
+            IWorkbenchPage activePage = window.getActivePage();
+            if (activePage != null) {
+                activePage.saveEditor(activePage.getActiveEditor(), false);
+            }
+        }
+    }
+
+    private String getDisplayName() {
+        return ((XSDEditor) getEditorPart()).getdMainPage().getXObject().getDisplayName();
+    }
+
     @Override
     public void doRun() {
-        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        IEditorPart part = activePage.getActiveEditor();
-        if (part.isDirty()) {
-            boolean save = MessageDialog.openConfirm(page.getSite().getShell(), Messages.SaveResource,
-                    Messages.bind(Messages.modifiedChanges, page.getXObject().getDisplayName()));
+
+        if (isDirty()) {
+            boolean save = MessageDialog.openConfirm(getShell(), Messages.SaveResource,
+                    Messages.bind(Messages.modifiedChanges, getDisplayName()));
             if (save) {
-                activePage.saveEditor(part, false);
+                saveEditor();
             } else {
                 return;
             }
         }
-        IStructuredSelection selection = (IStructuredSelection) page.getTreeViewer().getSelection();
+
         declList.clear();
-        List list = selection.toList();
-        for (Object obj : list) {
+        List elementDeclarations = getSelectedXSDElementDeclarations();
+        for (Object obj : elementDeclarations) {
             if (obj instanceof XSDElementDeclaration) {
                 XSDElementDeclaration declaration = (XSDElementDeclaration) obj;
                 if (Util.getParent(obj) == obj) {
@@ -78,24 +107,38 @@ public class XSDNewBrowseItemViewAction extends AbstractXSDNewAction {
         if (!declList.isEmpty()) {
             //
             AddBrowseItemsWizard wizard = getAddBrowseItemsWizard(declList);
-            WizardDialog dialog = new WizardDialog(page.getSite().getShell(), wizard);
+            WizardDialog dialog = new WizardDialog(getShell(), wizard);
             dialog.open();
         }
     }
 
+    protected List getSelectedXSDElementDeclarations() {
+        IStructuredSelection selection = (IStructuredSelection) page.getTreeViewer().getSelection();
+        return selection.toList();
+    }
+
+    protected Shell getShell() {
+        return page.getSite().getShell();
+    }
+
     private AddBrowseItemsWizard getAddBrowseItemsWizard(List<XSDElementDeclaration> declList) {
-        Object object = page.getAdapter(AddBrowseItemsWizard.class);
+        Object object = getEditorPart().getAdapter(AddBrowseItemsWizard.class);
         if (object != null) {
             AddBrowseItemsWizard wizard = (AddBrowseItemsWizard) object;
             wizard.setDeclarations(declList);
             return wizard;
         } else {
-            return new AddBrowseItemsWizard(page, declList);
+
+            return new AddBrowseItemsWizard(((XSDEditor) getEditorPart()).getdMainPage(), declList);
         }
     }
 
     @Override
     public void runWithEvent(Event event) {
         super.runWithEvent(event);
+    }
+
+    protected MultiPageEditorPart getEditorPart() {
+        return ((MultiPageEditorSite) page.getEditorSite()).getMultiPageEditor();
     }
 }
