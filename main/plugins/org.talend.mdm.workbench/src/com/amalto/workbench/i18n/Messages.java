@@ -117,6 +117,8 @@ public class Messages extends NLS {
 
     public static String ElementInfoConfigComposite_Name;
 
+    public static String ElementInfoConfigComposite_Occurrence;
+
     public static String ElementMainSection_Main;
 
     public static String ElementWrapperCommitHandler_BusinessElementCannotbeEmpty;
@@ -1121,9 +1123,9 @@ public class Messages extends NLS {
 
     public static String NewGroupDialog_ErrorMsg1;
 
-    public static String NewGroupDialog_MaxOccurence;
+    public static String NewGroupDialog_MaxOccurrence;
 
-    public static String NewGroupDialog_MinOccurence;
+    public static String NewGroupDialog_MinOccurrence;
 
     public static String NewGroupDialog_Sequence;
 

@@ -83,7 +83,7 @@ public class NewGroupDialog extends Dialog {
 
         Label minOccursLabel = new Label(composite, SWT.NONE);
         minOccursLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
-        minOccursLabel.setText(Messages.NewGroupDialog_MinOccurence);
+        minOccursLabel.setText(Messages.NewGroupDialog_MinOccurrence);
 
         minOccursText = new Text(composite, SWT.NONE);
         minOccursText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
@@ -92,7 +92,7 @@ public class NewGroupDialog extends Dialog {
 
         Label maxOccursLabel = new Label(composite, SWT.NONE);
         maxOccursLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
-        maxOccursLabel.setText(Messages.NewGroupDialog_MaxOccurence);
+        maxOccursLabel.setText(Messages.NewGroupDialog_MaxOccurrence);
 
         maxOccursText = new Text(composite, SWT.NONE);
         maxOccursText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));

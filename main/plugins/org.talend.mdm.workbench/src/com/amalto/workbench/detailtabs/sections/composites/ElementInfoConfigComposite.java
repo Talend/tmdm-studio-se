@@ -50,7 +50,7 @@ public class ElementInfoConfigComposite extends Composite {
 
     private XSDParticle curXSDParticle;
 
-    private Group occurenceGroup;
+    private Group occurrenceGroup;
 
     private Spinner spinMax;
 
@@ -122,7 +122,7 @@ public class ElementInfoConfigComposite extends Composite {
     }
 
     private void refreshCardinalityArea() {
-        if (occurenceGroup == null) {
+        if (occurrenceGroup == null) {
             return;
         }
         if (autoExpandBtn != null) {
@@ -136,11 +136,11 @@ public class ElementInfoConfigComposite extends Composite {
         // spinMax.setSelection(1);
         // }
 
-        // enableOccurenceGroup(!Util.isSimpleTypedParticle(curXSDParticle) ||
+        // enableOccurrenceGroup(!Util.isSimpleTypedParticle(curXSDParticle) ||
         // hasElementReference());
     }
 
-    private void enableOccurenceGroup(boolean isEnabled) {
+    private void enableOccurrenceGroup(boolean isEnabled) {
         spinMin.setEnabled(isEnabled);
         spinMax.setEnabled(isEnabled);
     }
@@ -177,35 +177,35 @@ public class ElementInfoConfigComposite extends Composite {
         final GridData gd_comboReference = new GridData(SWT.FILL, SWT.CENTER, true, false);
         comboReference.setLayoutData(gd_comboReference);
 
-        occurenceGroup = new Group(this, SWT.NONE);
-        final GridData gd_occurenceGroup = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
-        occurenceGroup.setLayoutData(gd_occurenceGroup);
-        occurenceGroup.setText("Occurence");//$NON-NLS-1$
+        occurrenceGroup = new Group(this, SWT.NONE);
+        final GridData gd_occurrenceGroup = new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1);
+        occurrenceGroup.setLayoutData(gd_occurrenceGroup);
+        occurrenceGroup.setText(Messages.ElementInfoConfigComposite_Occurrence);
         final GridLayout gridLayout_2 = new GridLayout();
         gridLayout_2.numColumns = 3;
-        occurenceGroup.setLayout(gridLayout_2);
+        occurrenceGroup.setLayout(gridLayout_2);
 
-        final Label lblMinOcur = new Label(occurenceGroup, SWT.NONE);
+        final Label lblMinOcur = new Label(occurrenceGroup, SWT.NONE);
         final GridData gd_lblMinOcur = new GridData(SWT.CENTER, SWT.CENTER, false, false);
         lblMinOcur.setLayoutData(gd_lblMinOcur);
         lblMinOcur.setText("Min");//$NON-NLS-1$
 
-        new Label(occurenceGroup, SWT.NONE);
+        new Label(occurrenceGroup, SWT.NONE);
 
-        final Label lblMaxOcur = new Label(occurenceGroup, SWT.NONE);
+        final Label lblMaxOcur = new Label(occurrenceGroup, SWT.NONE);
         final GridData gd_lblMaxOcur = new GridData(SWT.CENTER, SWT.CENTER, false, false);
         lblMaxOcur.setLayoutData(gd_lblMaxOcur);
         lblMaxOcur.setText("Max");//$NON-NLS-1$
 
-        spinMin = new Spinner(occurenceGroup, SWT.BORDER);
+        spinMin = new Spinner(occurrenceGroup, SWT.BORDER);
         spinMin.setSelection(1);
         spinMin.setMinimum(0);
         spinMin.setMaximum(Integer.MAX_VALUE);
 
-        final Label label = new Label(occurenceGroup, SWT.NONE);
+        final Label label = new Label(occurrenceGroup, SWT.NONE);
         label.setText("----->");//$NON-NLS-1$
 
-        spinMax = new Spinner(occurenceGroup, SWT.BORDER);
+        spinMax = new Spinner(occurrenceGroup, SWT.BORDER);
         spinMax.setLayoutData(new GridData());
         spinMax.setMaximum(Integer.MAX_VALUE);
         spinMax.setMinimum(-1);

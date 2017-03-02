@@ -155,7 +155,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
             if (name == null) {
                 name = "anonymous type ";//$NON-NLS-1$
             }
-            // return the occurence
+            // return the occurrence
             if (!((particle.getMinOccurs() == 1) && (particle.getMaxOccurs() == 1))) {
                 name += "  [";//$NON-NLS-1$
                 name += particle.getMinOccurs();
@@ -215,8 +215,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
             String name = attributeDec.getName();
             if (name == null) {
                 name = attributeDec.getAliasName();
-                if (name == null)
-                 {
+                if (name == null) {
                     name = " [null]"; //$NON-NLS-1$
                 }
             }
@@ -583,7 +582,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
              * s+= "("; } for (Iterator enumerators = value.iterator(); enumerators.hasNext();) { String enumerator =
              * enumerators.next().toString(); s+= enumerator; if (enumerators.hasNext()) { s+= " | ;"; } } if
              * (value.size() > 1) { s+= ")";
-             *
+             * 
              * }
              */
             s += xsdSimpleTypeDefinition.getName() != null ? xsdSimpleTypeDefinition.getName() : xsdSimpleTypeDefinition
@@ -649,7 +648,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
      */
     public Color getForeground(Object element) {
@@ -668,7 +667,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
      */
     public Color getBackground(Object element) {
