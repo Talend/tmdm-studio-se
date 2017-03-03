@@ -35,6 +35,7 @@ import org.talend.mdm.repository.model.mdmserverobject.matchrule.MatchRulePackag
  * <ul>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.matchrule.impl.MatchRuleMapInfoPageImpl#getMatchKeyMap <em>Match Key Map</em>}</li>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.matchrule.impl.MatchRuleMapInfoPageImpl#getParent <em>Parent</em>}</li>
+ *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.matchrule.impl.MatchRuleMapInfoPageImpl#getName <em>Name</em>}</li>
  * </ul>
  * </p>
  *
@@ -50,6 +51,26 @@ public class MatchRuleMapInfoPageImpl extends EObjectImpl implements MatchRuleMa
      * @ordered
      */
     protected EMap<String, String> matchKeyMap;
+
+    /**
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
+    protected static final String NAME_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
+    protected String name = NAME_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -128,6 +149,27 @@ public class MatchRuleMapInfoPageImpl extends EObjectImpl implements MatchRuleMa
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setName(String newName) {
+        String oldName = name;
+        name = newName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, MatchRulePackage.MATCH_RULE_MAP_INFO_PAGE__NAME, oldName, name));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -182,6 +224,8 @@ public class MatchRuleMapInfoPageImpl extends EObjectImpl implements MatchRuleMa
                 else return getMatchKeyMap().map();
             case MatchRulePackage.MATCH_RULE_MAP_INFO_PAGE__PARENT:
                 return getParent();
+            case MatchRulePackage.MATCH_RULE_MAP_INFO_PAGE__NAME:
+                return getName();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -199,6 +243,9 @@ public class MatchRuleMapInfoPageImpl extends EObjectImpl implements MatchRuleMa
                 return;
             case MatchRulePackage.MATCH_RULE_MAP_INFO_PAGE__PARENT:
                 setParent((EntityMapInfo)newValue);
+                return;
+            case MatchRulePackage.MATCH_RULE_MAP_INFO_PAGE__NAME:
+                setName((String)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -218,6 +265,9 @@ public class MatchRuleMapInfoPageImpl extends EObjectImpl implements MatchRuleMa
             case MatchRulePackage.MATCH_RULE_MAP_INFO_PAGE__PARENT:
                 setParent((EntityMapInfo)null);
                 return;
+            case MatchRulePackage.MATCH_RULE_MAP_INFO_PAGE__NAME:
+                setName(NAME_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -234,6 +284,8 @@ public class MatchRuleMapInfoPageImpl extends EObjectImpl implements MatchRuleMa
                 return matchKeyMap != null && !matchKeyMap.isEmpty();
             case MatchRulePackage.MATCH_RULE_MAP_INFO_PAGE__PARENT:
                 return getParent() != null;
+            case MatchRulePackage.MATCH_RULE_MAP_INFO_PAGE__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
         }
         return super.eIsSet(featureID);
     }

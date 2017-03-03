@@ -198,13 +198,22 @@ public interface MatchRulePackage extends EPackage {
     int MATCH_RULE_MAP_INFO_PAGE__PARENT = 1;
 
     /**
+     * The feature id for the '<em><b>Name</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCH_RULE_MAP_INFO_PAGE__NAME = 2;
+
+    /**
      * The number of structural features of the '<em>Map Info Page</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MATCH_RULE_MAP_INFO_PAGE_FEATURE_COUNT = 2;
+    int MATCH_RULE_MAP_INFO_PAGE_FEATURE_COUNT = 3;
 
     /**
      * The meta object id for the '{@link org.talend.mdm.repository.model.mdmserverobject.matchrule.impl.KeyXPathMapImpl <em>Key XPath Map</em>}' class.
@@ -487,6 +496,17 @@ public interface MatchRulePackage extends EPackage {
     EReference getMatchRuleMapInfoPage_Parent();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.mdm.repository.model.mdmserverobject.matchrule.MatchRuleMapInfoPage#getName <em>Name</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Name</em>'.
+     * @see org.talend.mdm.repository.model.mdmserverobject.matchrule.MatchRuleMapInfoPage#getName()
+     * @see #getMatchRuleMapInfoPage()
+     * @generated
+     */
+    EAttribute getMatchRuleMapInfoPage_Name();
+
+    /**
      * Returns the meta object for class '{@link java.util.Map.Entry <em>Key XPath Map</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -736,6 +756,14 @@ public interface MatchRulePackage extends EPackage {
          * @generated
          */
         EReference MATCH_RULE_MAP_INFO_PAGE__PARENT = eINSTANCE.getMatchRuleMapInfoPage_Parent();
+
+        /**
+         * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute MATCH_RULE_MAP_INFO_PAGE__NAME = eINSTANCE.getMatchRuleMapInfoPage_Name();
 
         /**
          * The meta object literal for the '{@link org.talend.mdm.repository.model.mdmserverobject.matchrule.impl.KeyXPathMapImpl <em>Key XPath Map</em>}' class.

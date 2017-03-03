@@ -299,6 +299,15 @@ public class MatchRulePackageImpl extends EPackageImpl implements MatchRulePacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getMatchRuleMapInfoPage_Name() {
+        return (EAttribute)matchRuleMapInfoPageEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getKeyXPathMap() {
         return keyXPathMapEClass;
     }
@@ -436,6 +445,7 @@ public class MatchRulePackageImpl extends EPackageImpl implements MatchRulePacka
         matchRuleMapInfoPageEClass = createEClass(MATCH_RULE_MAP_INFO_PAGE);
         createEReference(matchRuleMapInfoPageEClass, MATCH_RULE_MAP_INFO_PAGE__MATCH_KEY_MAP);
         createEReference(matchRuleMapInfoPageEClass, MATCH_RULE_MAP_INFO_PAGE__PARENT);
+        createEAttribute(matchRuleMapInfoPageEClass, MATCH_RULE_MAP_INFO_PAGE__NAME);
 
         keyXPathMapEClass = createEClass(KEY_XPATH_MAP);
         createEAttribute(keyXPathMapEClass, KEY_XPATH_MAP__KEY);
@@ -502,6 +512,7 @@ public class MatchRulePackageImpl extends EPackageImpl implements MatchRulePacka
         initEClass(matchRuleMapInfoPageEClass, MatchRuleMapInfoPage.class, "MatchRuleMapInfoPage", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getMatchRuleMapInfoPage_MatchKeyMap(), this.getKeyXPathMap(), null, "matchKeyMap", null, 0, -1, MatchRuleMapInfoPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getMatchRuleMapInfoPage_Parent(), this.getEntityMapInfo(), this.getEntityMapInfo_MatchRuleMapInfoPages(), "parent", null, 0, 1, MatchRuleMapInfoPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getMatchRuleMapInfoPage_Name(), theEcorePackage.getEString(), "name", null, 0, 1, MatchRuleMapInfoPage.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(keyXPathMapEClass, Map.Entry.class, "KeyXPathMap", !IS_ABSTRACT, !IS_INTERFACE, !IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getKeyXPathMap_Key(), theEcorePackage.getEString(), "key", null, 0, 1, Map.Entry.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

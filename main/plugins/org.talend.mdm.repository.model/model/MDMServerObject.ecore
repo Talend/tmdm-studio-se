@@ -206,6 +206,7 @@
           eType="#//matchrule/KeyXPathMap" containment="true"/>
       <eStructuralFeatures xsi:type="ecore:EReference" name="parent" eType="#//matchrule/EntityMapInfo"
           eOpposite="#//matchrule/EntityMapInfo/matchRuleMapInfoPages"/>
+      <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="KeyXPathMap" instanceClassName="java.util.Map$Entry">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="key" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
