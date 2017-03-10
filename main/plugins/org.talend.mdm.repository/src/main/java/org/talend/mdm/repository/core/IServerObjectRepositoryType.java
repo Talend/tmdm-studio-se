@@ -65,10 +65,11 @@ public interface IServerObjectRepositoryType {
     public ERepositoryObjectType TYPE_MATCH_RULE_MAPINFO = ERepositoryObjectType.valueOf(ERepositoryObjectType.class,
             "MDM.MatchRuleMapInfo"); //$NON-NLS-1$
 
+    public ERepositoryObjectType TYPE_TDS = ERepositoryObjectType.valueOf(ERepositoryObjectType.class, "MDM.TDS"); //$NON-NLS-1$
+
     public ERepositoryObjectType TYPE_MATCH_RULE = ERepositoryObjectType.TDQ_RULES_MATCHER;
 
     public ERepositoryObjectType[] ALL_TYPES = new ERepositoryObjectType[] { TYPE_CUSTOM_FORM, TYPE_DATACLUSTER, TYPE_DATAMODEL,
             TYPE_EVENTMANAGER, TYPE_JOB, TYPE_MENU, TYPE_MATCH_RULE, TYPE_RESOURCE, TYPE_ROLE, TYPE_ROUTINGRULE,
-            TYPE_SERVICECONFIGURATION, TYPE_STOREPROCEDURE, TYPE_TRANSFORMERV2,
-            TYPE_VIEW, TYPE_WORKFLOW };
+            TYPE_SERVICECONFIGURATION, TYPE_STOREPROCEDURE, TYPE_TRANSFORMERV2, TYPE_VIEW, TYPE_WORKFLOW };
 }

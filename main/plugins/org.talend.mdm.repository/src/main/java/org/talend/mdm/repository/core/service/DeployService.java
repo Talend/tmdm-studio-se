@@ -144,13 +144,18 @@ public class DeployService {
             this.commands = commands;
         }
 
+        @Override
         public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             if (commands != null) {
                 monitor.beginTask(Messages.DeployService_processTitle, commands.size());
                 for (ICommand cmd : commands) {
                     if (cmd.getToRunPhase() == ICommand.PHASE_DEPLOY) {
                         IStatus status = cmd.execute(null, monitor);
-                        mStatus.add(status);
+                        if (status.isMultiStatus()) {
+                            mStatus.addAll(status);
+                        } else {
+                            mStatus.add(status);
+                        }
                     }
                     monitor.worked(1);
                 }
@@ -256,9 +261,11 @@ public class DeployService {
                                 }
                             }
                         } else {
-                            IRepositoryViewObject viewObj = command.getViewObject();
-                            if (viewObj != null) {
-                                viewObjs.add(viewObj);
+                            if (command != null) {
+                                IRepositoryViewObject viewObj = command.getViewObject();
+                                if (viewObj != null) {
+                                    viewObjs.add(viewObj);
+                                }
                             }
                         }
 
@@ -603,22 +610,24 @@ public class DeployService {
         for (DeployStatus deployStatus : deployStatuses) {
             if (deployStatus != null && deployStatus.isOK()) {
                 ICommand command = deployStatus.getCommand();
-                CommandManager manager = CommandManager.getInstance();
-                manager.removeCommandStack(command, ICommand.PHASE_DEPLOY);
-                if (isUpdateServer) {
-                    MDMServerDef serverDef = null;
-                    if (command instanceof AbstractDeployCommand) {
-                        serverDef = ((AbstractDeployCommand) command).getServerDef();
-                    } else if (command instanceof DeployCompoundCommand) {
-                        serverDef = ((DeployCompoundCommand) command).getServerDef();
-                    }
-                    if (command instanceof BatchDeployJobCommand) {
-                        BatchDeployJobCommand deployJobCommand = (BatchDeployJobCommand) command;
-                        pushRestoreCommand(manager, deployJobCommand.getSubCmds(), serverDef);
-                        pushRestoreCommand(manager, deployJobCommand.getSubDeleteCmds(), serverDef);
-                    } else {
-                        // updateserver
-                        pushRestoreCommand(manager, command, serverDef);
+                if (command != null) {
+                    CommandManager manager = CommandManager.getInstance();
+                    manager.removeCommandStack(command, ICommand.PHASE_DEPLOY);
+                    if (isUpdateServer) {
+                        MDMServerDef serverDef = null;
+                        if (command instanceof AbstractDeployCommand) {
+                            serverDef = ((AbstractDeployCommand) command).getServerDef();
+                        } else if (command instanceof DeployCompoundCommand) {
+                            serverDef = ((DeployCompoundCommand) command).getServerDef();
+                        }
+                        if (command instanceof BatchDeployJobCommand) {
+                            BatchDeployJobCommand deployJobCommand = (BatchDeployJobCommand) command;
+                            pushRestoreCommand(manager, deployJobCommand.getSubCmds(), serverDef);
+                            pushRestoreCommand(manager, deployJobCommand.getSubDeleteCmds(), serverDef);
+                        } else {
+                            // updateserver
+                            pushRestoreCommand(manager, command, serverDef);
+                        }
                     }
                 }
             }

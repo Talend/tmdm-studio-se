@@ -55,26 +55,21 @@ public class DeployToAction extends AbstractDeployAction {
         if (!checkMissingJar) {
             return;
         }
+
         List<IRepositoryViewObject> viewObjs = getSelectedRepositoryViewObject();
-        if (exAdapter != null) {
-            viewObjs = exAdapter.showDependencyConfigDialog(viewObjs);
-            if (viewObjs == null) {
-                return;
-            }
-            // TO add match rule object
-            viewObjs = getSelectedRepositoryViewObject(viewObjs);
-            filterMatchRuleObjs(viewObjs);
+
+        viewObjs = doCheckDependency(viewObjs);
+        if (viewObjs == null) {
+            return;
         }
+
         SelectServerDefDialog dialog = getSelectServerDefDialog(viewObjs);
 
         if (dialog.open() == IDialogConstants.OK_ID) {
             // save editors
-            LockedDirtyObjectDialog lockDirtyDialog = new LockedDirtyObjectDialog(getShell(),
-                    Messages.AbstractDeployAction_promptToSaveEditors, viewObjs);
-            if (lockDirtyDialog.needShowDialog() && lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
+            if (!doBeforeDeploy(viewObjs)) {
                 return;
             }
-            lockDirtyDialog.saveDirtyObjects();
             // deploy
             MDMServerDef serverDef = dialog.getSelectedServerDef();
 
@@ -84,10 +79,38 @@ public class DeployToAction extends AbstractDeployAction {
                 if (status.isMultiStatus()) {
                     showDeployStatus(status);
                 }
-                updateLastServer(status, new NullProgressMonitor());
+                doPostDeploy(status);
             }
         }
 
+    }
+
+    protected List<IRepositoryViewObject> doCheckDependency(List<IRepositoryViewObject> viewObjs) {
+        if (exAdapter != null) {
+            viewObjs = exAdapter.showDependencyConfigDialog(viewObjs);
+            if (viewObjs == null) {
+                return null;
+            }
+            // TO add match rule object
+            viewObjs = getSelectedRepositoryViewObject(viewObjs);
+            filterMatchRuleObjs(viewObjs);
+            return viewObjs;
+        }
+        return viewObjs;
+    }
+
+    protected void doPostDeploy(IStatus status) {
+        updateLastServer(status, new NullProgressMonitor());
+    }
+
+    protected boolean doBeforeDeploy(List<IRepositoryViewObject> viewObjs) {
+        LockedDirtyObjectDialog lockDirtyDialog = new LockedDirtyObjectDialog(getShell(),
+                Messages.AbstractDeployAction_promptToSaveEditors, viewObjs);
+        if (lockDirtyDialog.needShowDialog() && lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
+            return false;
+        }
+        lockDirtyDialog.saveDirtyObjects();
+        return true;
     }
 
     private SelectServerDefDialog getSelectServerDefDialog(List<IRepositoryViewObject> viewObjs) {

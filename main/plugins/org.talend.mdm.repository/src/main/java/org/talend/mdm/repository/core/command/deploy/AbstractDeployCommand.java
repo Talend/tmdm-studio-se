@@ -42,6 +42,26 @@ public abstract class AbstractDeployCommand extends AbstractCommand {
         return this.serverDef;
     }
 
+    private IStatus deployStatus;
+
+    /**
+     * Getter for deployStatus.
+     * 
+     * @return the deployStatus
+     */
+    public IStatus getDeployStatus() {
+        return this.deployStatus;
+    }
+
+    /**
+     * Sets the deployStatus.
+     * 
+     * @param deployStatus the deployStatus to set
+     */
+    public void setDeployStatus(IStatus deployStatus) {
+        this.deployStatus = deployStatus;
+    }
+
     public void setServerDef(MDMServerDef serverDef) {
         this.serverDef = serverDef;
     }
@@ -81,8 +101,8 @@ public abstract class AbstractDeployCommand extends AbstractCommand {
 
         IStatus status = null;
         if (exceptionMsgs.length == 0) {
-            String errorMsg = msg != null && !msg.trim().isEmpty() ? msg
-                    : Messages.bind(Messages.Deploy_fail_text, typeLabel, objectName);
+            String errorMsg = msg != null && !msg.trim().isEmpty() ? msg : Messages.bind(Messages.Deploy_fail_text, typeLabel,
+                    objectName);
             status = DeployStatus.getErrorStatus(this, errorMsg, null);
         } else if (exceptionMsgs.length == 1) {
             status = DeployStatus.getErrorStatus(this, Messages.bind(bindMsg, typeLabel, objectName, exceptionMsgs[0]), e);

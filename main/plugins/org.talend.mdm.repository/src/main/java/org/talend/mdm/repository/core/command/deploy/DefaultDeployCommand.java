@@ -39,7 +39,11 @@ public abstract class DefaultDeployCommand extends AbstractDeployCommand {
             String typeLabel = handler.getLabel();
             monitor.subTask(Messages.bind(Messages.Deploy_text, typeLabel));
             try {
-                if (handler.deploy(this)) {
+                boolean isOK = handler.deploy(this);
+                if (getDeployStatus() != null) {
+                    return getDeployStatus();
+                }
+                if (isOK) {
                     if (getCommandType() == CMD_MODIFY) {
                         return DeployStatus.getOKStatus(this,
                                 Messages.bind(Messages.Deploy_successfully_text, typeLabel, objectName));

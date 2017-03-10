@@ -185,7 +185,8 @@ public class ConsistencyService {
         // only compare the reference file
         REF_FILE,
         // same with OBJ_RESOURCE except the property is sorted
-        SORTED_OBJ_RESOURCE
+        SORTED_OBJ_RESOURCE,
+        OTHER
 
     }
 
@@ -328,6 +329,7 @@ public class ConsistencyService {
             int size = copyList.size();
             Collections.sort(copyList, new Comparator<InternalEObject>() {
 
+                @Override
                 public int compare(InternalEObject o1, InternalEObject o2) {
                     String[] values1 = getValues(o1);
                     String[] values2 = getValues(o2);
@@ -631,7 +633,7 @@ public class ConsistencyService {
                 return DigestCalStrategyEnum.OBJ_RESOURCE;
             }
         }
-        return DigestCalStrategyEnum.OBJ_RESOURCE;
+        return DigestCalStrategyEnum.OTHER;
     }
 
     public String getLocalDigestValue(Item item) {
@@ -721,28 +723,30 @@ public class ConsistencyService {
     }
 
     public void updateDigestValue(MDMServerDef serverDef, IRepositoryViewObject viewObj) throws XtentisException {
-        TMDMService service = RepositoryWebServiceAdapter.getMDMService(serverDef);
-        updateLocalDigestValue(viewObj);
-        Item item = viewObj.getProperty().getItem();
 
-        // key
-        String type = viewObj.getRepositoryObjectType().getKey();
-        String objectName = getObjectName(viewObj);
-        WSDigestKey key = new WSDigestKey(objectName, type);
-        // value
-        WSDigest value = new WSDigest(getLocalDigestValue(item), 0L, key);
-        WSLong timeValue = service.updateDigest(value);
-        //
-        if (timeValue != null) {
-            updateLocalTimestamp(item, timeValue.getValue());
-        }
-        if (!viewObj.getRepositoryObjectType().equals(IServerObjectRepositoryType.TYPE_MATCH_RULE_MAPINFO)) {
-            item = RepositoryResourceUtil.assertItem(item);
-            Property property = item.getProperty();
-            boolean eDeliver = property.eDeliver();
-            property.eSetDeliver(false);
-            RepositoryResourceUtil.saveItem(item);
-            property.eSetDeliver(eDeliver);
+        Item item = viewObj.getProperty().getItem();
+        if (item instanceof MDMServerObjectItem) {
+            TMDMService service = RepositoryWebServiceAdapter.getMDMService(serverDef);
+            updateLocalDigestValue(viewObj);
+            // key
+            String type = viewObj.getRepositoryObjectType().getKey();
+            String objectName = getObjectName(viewObj);
+            WSDigestKey key = new WSDigestKey(objectName, type);
+            // value
+            WSDigest value = new WSDigest(getLocalDigestValue(item), 0L, key);
+            WSLong timeValue = service.updateDigest(value);
+            //
+            if (timeValue != null) {
+                updateLocalTimestamp(item, timeValue.getValue());
+            }
+            if (!viewObj.getRepositoryObjectType().equals(IServerObjectRepositoryType.TYPE_MATCH_RULE_MAPINFO)) {
+                item = RepositoryResourceUtil.assertItem(item);
+                Property property = item.getProperty();
+                boolean eDeliver = property.eDeliver();
+                property.eSetDeliver(false);
+                RepositoryResourceUtil.saveItem(item);
+                property.eSetDeliver(eDeliver);
+            }
         }
     }
 
