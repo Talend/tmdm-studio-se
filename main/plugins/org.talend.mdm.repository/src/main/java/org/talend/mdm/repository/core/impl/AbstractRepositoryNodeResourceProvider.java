@@ -24,7 +24,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.ByteArray;
@@ -161,8 +160,7 @@ public abstract class AbstractRepositoryNodeResourceProvider implements IReposit
             for (Object refObj : referenceResources) {
                 ReferenceFileItem fileItem = (ReferenceFileItem) refObj;
 
-                URI uri = fileItem.getContent().eResource().getURI();
-                String name = uri.lastSegment();
+                String name = fileItem.getName() + "." + fileItem.getExtension(); //$NON-NLS-1$
 
                 if (name != null && name.equals(file.getName())) {
                     return fileItem;
