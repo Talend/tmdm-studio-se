@@ -121,6 +121,7 @@ public class RepositoryNodeActionProviderAdapter implements IRepositoryNodeActio
 
     }
 
+    @Override
     public void initCommonViewer(CommonViewer commonViewer) {
         importObjectAction = initRepositoryAction(ImportObjectAction.createImportAction(), commonViewer);
 
@@ -172,6 +173,7 @@ public class RepositoryNodeActionProviderAdapter implements IRepositoryNodeActio
 
     }
 
+    @Override
     public List<AbstractRepositoryAction> getActions(IRepositoryViewObject viewObj) {
         List<AbstractRepositoryAction> actions = new LinkedList<AbstractRepositoryAction>();
         //
@@ -243,15 +245,18 @@ public class RepositoryNodeActionProviderAdapter implements IRepositoryNodeActio
 
     protected void addAction(List<AbstractRepositoryAction> actions, AbstractRepositoryAction action,
             IRepositoryViewObject viewObj) {
-        action.selectionChanged(selection);
-        if (action.isVisible(viewObj)) {
-            actions.add(action);
+        if (action != null) {
+            action.selectionChanged(selection);
+            if (action.isVisible(viewObj)) {
+                actions.add(action);
+            }
         }
     }
 
     /**
      * The child class can override this method, current implement is adapt to most of MDMServerobject
      */
+    @Override
     public IRepositoryViewEditorInput getOpenEditorInput(IRepositoryViewObject viewObj) {
         Item item = viewObj.getProperty().getItem();
         MDMServerObject serverObject = ((MDMServerObjectItem) item).getMDMServerObject();
@@ -261,14 +266,17 @@ public class RepositoryNodeActionProviderAdapter implements IRepositoryNodeActio
         return new XObjectEditorInput2(viewObj);
     }
 
+    @Override
     public AbstractRepositoryAction getOpenAction(IRepositoryViewObject viewObj) {
         return null;
     }
 
+    @Override
     public void setRepositoryViewGlobalActionHandler(IRepositoryViewGlobalActionHandler handler) {
         this.globalActionHandler = handler;
     }
 
+    @Override
     public void updateSelection(IStructuredSelection selection) {
         this.selection = selection;
         for (IRepositoryNodeActionProvider provider : getExtendActionProviders()) {

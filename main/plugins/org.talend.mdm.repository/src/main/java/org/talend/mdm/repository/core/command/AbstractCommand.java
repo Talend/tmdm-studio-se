@@ -160,4 +160,9 @@ public abstract class AbstractCommand implements ICommand {
         this.version = version;
     }
 
+    @Override
+    public boolean canExecute(Object params) {
+        return true;
+    }
+
 }

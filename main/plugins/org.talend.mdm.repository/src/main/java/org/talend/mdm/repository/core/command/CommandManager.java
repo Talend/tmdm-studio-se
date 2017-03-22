@@ -41,6 +41,8 @@ import org.talend.mdm.repository.core.command.param.ICommandParameter;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.repository.model.IProxyRepositoryFactory;
 
+import com.amalto.workbench.exadapter.ExAdapterManager;
+
 /**
  * DOC hbhong class global comment. Detailled comment
  */
@@ -62,11 +64,28 @@ public class CommandManager implements IMementoAware {
 
     protected Map<String, CommandStack> map = new HashMap<String, CommandStack>();
 
+    ICommandManagerExAdapter exAdapter;
+
+    private CommandManager() {
+        exAdapter = ExAdapterManager.getAdapter(this, ICommandManagerExAdapter.class);
+    }
+
     public CommandStack findCommandStack(String id) {
         if (id == null) {
             return null;
         }
         return map.get(id);
+    }
+
+    public ICommand getNewCommand(IRepositoryViewObject viewObj, int type) {
+        ICommand newCommand = null;
+        if (exAdapter != null) {
+            newCommand = exAdapter.getNewCommand(viewObj, type);
+        }
+        if (newCommand == null) {
+            newCommand = getNewCommand(type);
+        }
+        return newCommand;
     }
 
     public ICommand getNewCommand(int type) {
@@ -93,8 +112,13 @@ public class CommandManager implements IMementoAware {
     }
 
     public ICommand copyCommand(ICommand cmd, Object param) {
-        ICommand newCmd = getNewCommand(cmd.getCommandType());
-
+        ICommand newCmd = null;
+        if (exAdapter != null) {
+            newCmd = exAdapter.copyCommand(cmd, param);
+        }
+        if (newCmd == null) {
+            newCmd = getNewCommand(cmd.getCommandType());
+        }
         if (param == null) {
             param = new String[] { cmd.getObjName(), cmd.getObjLastName() };
         }
@@ -216,6 +240,7 @@ public class CommandManager implements IMementoAware {
         }
     }
 
+    @Override
     public void restoreState(IMemento aMemento) {
         if (map.isEmpty() && aMemento != null) {
             IMemento cmdManagerMem = aMemento.getChild(ICommand.MDM_COMMANDS);
@@ -235,6 +260,7 @@ public class CommandManager implements IMementoAware {
         }
     }
 
+    @Override
     public void saveState(IMemento aMemento) {
         IMemento cmdManagerMem = aMemento.createChild(ICommand.MDM_COMMANDS);
         for (CommandStack stack : map.values()) {
@@ -294,7 +320,7 @@ public class CommandManager implements IMementoAware {
             CommandStack stack = findCommandStack(viewObj.getId());
             if (stack == null) {
                 stack = new CommandStack();
-                ICommand cmd = getNewCommand(defaultCmdType);
+                ICommand cmd = getNewCommand(viewObj, defaultCmdType);
                 cmd.init(viewObj);
                 stack.pushCommand(cmd);
             }
@@ -334,7 +360,7 @@ public class CommandManager implements IMementoAware {
     public List<AbstractDeployCommand> getDeployCommandsWithoutHistory(List<IRepositoryViewObject> viewObjs) {
         List<AbstractDeployCommand> cmds = new LinkedList<AbstractDeployCommand>();
         for (IRepositoryViewObject viewObj : viewObjs) {
-            ICommand cmd = getNewCommand(ICommand.CMD_MODIFY);
+            ICommand cmd = getNewCommand(viewObj, ICommand.CMD_MODIFY);
             cmd.setVersion(viewObj.getVersion());
             cmd.init(viewObj);
             if (cmd instanceof AbstractDeployCommand) {

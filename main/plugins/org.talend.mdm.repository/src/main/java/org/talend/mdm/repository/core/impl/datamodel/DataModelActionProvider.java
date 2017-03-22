@@ -73,7 +73,7 @@ public class DataModelActionProvider extends RepositoryNodeActionProviderAdapter
             addAction(actions, deployToLastServerAction, viewObj);
             addAction(actions, deployAnotherToAction, viewObj);
             addAction(actions, undeployAction, viewObj);
-            if (exAdapter != null) {
+            if (exAdapter != null && exAdapter.getActions() != null) {
                 for (AbstractRepositoryAction action : exAdapter.getActions()) {
                     addAction(actions, action, viewObj);
                 }

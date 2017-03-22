@@ -47,6 +47,7 @@ public interface ICommand extends IMementoAware {
     public static final int CMD_UPDATE_SERVER = 32;
 
     public static final int CMD_PUSH_COMMAND = 1024;
+
     //
     public static final int PHASE_DEPLOY = 1;
 
@@ -61,33 +62,35 @@ public interface ICommand extends IMementoAware {
     public static final String MDM_COMMANDS = "MDM.COMMANDS"; //$NON-NLS-1$
 
     //
-    public int getCommandType();
+    int getCommandType();
 
-    public void setCommandId(String id);
+    void setCommandId(String id);
 
-    public String getCommandId();
+    String getCommandId();
 
-    public String getObjName();
+    String getObjName();
 
-    public String getObjLastName();
+    String getObjLastName();
 
-    public int getToRunPhase();
+    int getToRunPhase();
 
-    public void setToRunPhase(int phase);
+    void setToRunPhase(int phase);
 
-    public IRepositoryViewObject getViewObject();
+    IRepositoryViewObject getViewObject();
 
-    public void init(IRepositoryViewObject viewObj);
+    void init(IRepositoryViewObject viewObj);
 
-    public void init(String id, Object param);
+    void init(String id, Object param);
 
-    public void init();
+    void init();
 
-    public IStatus execute(Object params, IProgressMonitor monitor);
+    IStatus execute(Object params, IProgressMonitor monitor);
 
-    public void updateViewObject(IRepositoryViewObject viewObj);
+    boolean canExecute(Object params);
 
-    public String getVersion();
+    void updateViewObject(IRepositoryViewObject viewObj);
 
-    public void setVersion(String version);
+    String getVersion();
+
+    void setVersion(String version);
 }

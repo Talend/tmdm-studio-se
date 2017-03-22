@@ -150,11 +150,15 @@ public class DeployService {
                 monitor.beginTask(Messages.DeployService_processTitle, commands.size());
                 for (ICommand cmd : commands) {
                     if (cmd.getToRunPhase() == ICommand.PHASE_DEPLOY) {
-                        IStatus status = cmd.execute(null, monitor);
-                        if (status.isMultiStatus()) {
-                            mStatus.addAll(status);
-                        } else {
-                            mStatus.add(status);
+                        if (cmd.canExecute(commands)) {
+                            IStatus status = cmd.execute(null, monitor);
+                            if (status != null) {
+                                if (status.isMultiStatus()) {
+                                    mStatus.addAll(status);
+                                } else {
+                                    mStatus.add(status);
+                                }
+                            }
                         }
                     }
                     monitor.worked(1);

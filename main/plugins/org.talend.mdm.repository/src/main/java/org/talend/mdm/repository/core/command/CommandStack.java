@@ -88,6 +88,7 @@ public class CommandStack implements IMementoAware {
         return false;
     }
 
+    @Override
     public void restoreState(IMemento aMemento) {
         IMemento[] children = aMemento.getChildren(ICommand.MEM_TYPE_COMMAND);
         if (children != null) {
@@ -103,6 +104,7 @@ public class CommandStack implements IMementoAware {
 
     }
 
+    @Override
     public void saveState(IMemento aMemento) {
         for (ICommand cmd : commands) {
             IMemento commandMem = aMemento.createChild(ICommand.MEM_TYPE_COMMAND);
@@ -162,7 +164,7 @@ public class CommandStack implements IMementoAware {
                     validCommand = copyCommand(last, first, last);
                 } else {
                     // modify
-                    ICommand modifyCmd = manager.getNewCommand(ICommand.CMD_MODIFY);
+                    ICommand modifyCmd = manager.getNewCommand(first.getViewObject(), ICommand.CMD_MODIFY);
                     modifyCmd.setCommandId(getCommandId());
                     validCommand = copyCommand(modifyCmd, first, last);
                 }

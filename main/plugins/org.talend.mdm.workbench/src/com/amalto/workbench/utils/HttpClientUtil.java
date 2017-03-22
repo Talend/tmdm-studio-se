@@ -35,6 +35,7 @@ import org.apache.http.HttpMessage;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
+import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -372,7 +373,13 @@ public class HttpClientUtil {
         HttpResponse response = null;
         try {
             response = client.execute(request, context);
+            StatusLine statusLine = response.getStatusLine();
+            if (statusLine != null && statusLine.getStatusCode() == 204) {
+                throw new OperationIgnoredException();
+            }
             return wrapResponse(response, message, clz);
+        } catch (OperationIgnoredException ex) {
+            throw ex;
         } catch (XtentisException ex) {
             throw ex;
         } catch (Exception e) {
@@ -458,7 +465,9 @@ public class HttpClientUtil {
 
             String errMessage = Messages.Util_21 + "%s" + Messages.Util_22 + "%s"; //$NON-NLS-1$//$NON-NLS-2$
             String content = getTextContent(httpClient, request, null, errMessage);
-
+            if (content == null) {
+                content = ""; //$NON-NLS-1$
+            }
             return content;
         } catch (SecurityException e) {
             log.error(e.getMessage(), e);
