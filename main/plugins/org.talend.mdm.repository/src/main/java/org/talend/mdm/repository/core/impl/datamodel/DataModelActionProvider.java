@@ -41,10 +41,8 @@ public class DataModelActionProvider extends RepositoryNodeActionProviderAdapter
 
     AbstractRepositoryAction addAction;
 
-    private IDataModelActionProviderExAdapter exAdapter;
-
     public DataModelActionProvider() {
-        this.exAdapter = ExAdapterManager.getAdapter(this, IDataModelActionProviderExAdapter.class);
+
     }
 
     @Override
@@ -73,6 +71,7 @@ public class DataModelActionProvider extends RepositoryNodeActionProviderAdapter
             addAction(actions, deployToLastServerAction, viewObj);
             addAction(actions, deployAnotherToAction, viewObj);
             addAction(actions, undeployAction, viewObj);
+            IDataModelActionProviderExAdapter exAdapter = getExAdapter();
             if (exAdapter != null && exAdapter.getActions() != null) {
                 for (AbstractRepositoryAction action : exAdapter.getActions()) {
                     addAction(actions, action, viewObj);
@@ -81,6 +80,10 @@ public class DataModelActionProvider extends RepositoryNodeActionProviderAdapter
         }
         addAction(actions, deployAllAction, viewObj);
         return actions;
+    }
+
+    private IDataModelActionProviderExAdapter getExAdapter() {
+        return ExAdapterManager.getAdapter(this, IDataModelActionProviderExAdapter.class);
     }
 
     @Override
