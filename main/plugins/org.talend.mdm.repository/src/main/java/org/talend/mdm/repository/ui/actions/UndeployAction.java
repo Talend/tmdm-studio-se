@@ -112,7 +112,7 @@ public class UndeployAction extends AbstractBridgeRepositoryAction {
             MDMServerDef serverDef = dialog.getSelectedServerDef();
             List<AbstractDeployCommand> deleteCommands = new ArrayList<AbstractDeployCommand>(viewObjs.size());
             for (IRepositoryViewObject obj : viewObjs) {
-                ICommand deleteCmd = cmanager.getNewCommand(ICommand.CMD_DELETE);
+                ICommand deleteCmd = cmanager.getNewCommand(obj, ICommand.CMD_DELETE);
                 deleteCmd.init(obj);
                 deleteCommands.add((AbstractDeployCommand) deleteCmd);
             }
