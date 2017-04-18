@@ -1425,6 +1425,14 @@ public class Messages extends NLS {
 
     public static String HttpClientUtil_authorizationFail;
 
+    public static String HttpClientUtil_Error_401;
+
+    public static String HttpClientUtil_Error_403;
+
+    public static String HttpClientUtil_Error_500;
+
+    public static String HttpClientUtil_Error_501;
+
     public static String DataModelSelectDialog_Ok;
 
     public static String DataModelSelectDialog_SelectDataModel;

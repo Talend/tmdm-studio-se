@@ -35,6 +35,7 @@ import org.apache.http.HttpMessage;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
+import org.apache.http.ParseException;
 import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.AuthenticationException;
@@ -274,22 +275,34 @@ public class HttpClientUtil {
         return data;
     }
 
-    private static <T> T wrapResponse(HttpResponse response, String message, Class<T> clz) throws XtentisException,
-            IllegalStateException, IOException {
-        HttpEntity content = response.getEntity();
+    private static <T> T wrapResponse(HttpResponse response, String message, Class<T> clz, boolean isReturnServerError)
+            throws XtentisException, IllegalStateException, IOException {
+
         switch (response.getStatusLine().getStatusCode()) {
         case HttpStatus.SC_OK:
         case HttpStatus.SC_NO_CONTENT:
+        case HttpStatus.SC_METHOD_FAILURE:
             break;
-
+        case HttpStatus.SC_FORBIDDEN:
+            throw new XtentisException(Messages.HttpClientUtil_Error_403);
         case HttpStatus.SC_NOT_FOUND:
             throw new XtentisException(Messages.httpclientError_url);
         case HttpStatus.SC_UNAUTHORIZED:
-            throw new XtentisException(Messages.httpclientError_principal);
+            throw new XtentisException(Messages.HttpClientUtil_Error_401);
+        case HttpStatus.SC_INTERNAL_SERVER_ERROR:
+            if (isReturnServerError) {
+                String returnError = readResponse(response, String.class);
+                throw new InternalServerErrorException(returnError);
+            }
         default:
             throw new XtentisException(String.format(message, response.getStatusLine().getStatusCode(), response.getStatusLine()
                     .getReasonPhrase()));
         }
+        return readResponse(response, clz);
+    }
+
+    private static <T> T readResponse(HttpResponse response, Class<T> clz) throws ParseException, IOException {
+        HttpEntity content = response.getEntity();
         if (null != clz && content != null && content.isStreaming()) {
             if (clz.equals(byte[].class)) {
                 InputStream instream = content.getContent();
@@ -367,6 +380,11 @@ public class HttpClientUtil {
 
     private static <T> T getResponseContent(DefaultHttpClient client, HttpUriRequest request, HttpContext context,
             String message, Class<T> clz) throws XtentisException {
+        return getResponseContent(client, request, context, message, clz, false);
+    }
+
+    private static <T> T getResponseContent(DefaultHttpClient client, HttpUriRequest request, HttpContext context,
+            String message, Class<T> clz, boolean isReturnServerError) throws XtentisException {
         if (null == request) {
             throw new IllegalArgumentException("null request"); //$NON-NLS-1$
         }
@@ -374,11 +392,14 @@ public class HttpClientUtil {
         try {
             response = client.execute(request, context);
             StatusLine statusLine = response.getStatusLine();
-            if (statusLine != null && statusLine.getStatusCode() == 204) {
-                throw new OperationIgnoredException();
+            if (statusLine != null && statusLine.getStatusCode() == 501) {
+                throw new OperationIgnoredException(Messages.HttpClientUtil_Error_501);
             }
-            return wrapResponse(response, message, clz);
+
+            return wrapResponse(response, message, clz, isReturnServerError);
         } catch (OperationIgnoredException ex) {
+            throw ex;
+        } catch (InternalServerErrorException ex) {
             throw ex;
         } catch (XtentisException ex) {
             throw ex;
@@ -459,12 +480,12 @@ public class HttpClientUtil {
 
             DefaultHttpClient httpClient = wrapAuthClient(url, username, password);
 
-            HttpUriRequest request = new HttpGet(url);
+            HttpUriRequest request = new HttpPut(url);
             request.setHeader("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
             addStudioToken(request, username);
 
             String errMessage = Messages.Util_21 + "%s" + Messages.Util_22 + "%s"; //$NON-NLS-1$//$NON-NLS-2$
-            String content = getTextContent(httpClient, request, null, errMessage);
+            String content = getResponseContent(httpClient, request, null, errMessage, String.class, true);
             if (content == null) {
                 content = ""; //$NON-NLS-1$
             }
