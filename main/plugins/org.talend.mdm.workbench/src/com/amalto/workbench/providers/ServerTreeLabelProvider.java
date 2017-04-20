@@ -22,11 +22,6 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Display;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.mdm.commmon.util.webapp.XSystemObjects;
-import org.talend.mdm.webservice.WSGetRoutingRule;
-import org.talend.mdm.webservice.WSRoutingRule;
-import org.talend.mdm.webservice.WSRoutingRulePK;
-import org.talend.mdm.webservice.WSTransformerV2;
-import org.talend.mdm.webservice.WSView;
 
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -36,6 +31,11 @@ import com.amalto.workbench.service.bridge.ITransformService;
 import com.amalto.workbench.utils.EXObjectStatus;
 import com.amalto.workbench.utils.FontUtils;
 import com.amalto.workbench.utils.Util;
+import com.amalto.workbench.webservices.WSGetRoutingRule;
+import com.amalto.workbench.webservices.WSRoutingRule;
+import com.amalto.workbench.webservices.WSRoutingRulePK;
+import com.amalto.workbench.webservices.WSTransformerV2;
+import com.amalto.workbench.webservices.WSView;
 
 public class ServerTreeLabelProvider extends ColumnLabelProvider implements IColorProvider, IFontProvider {
 

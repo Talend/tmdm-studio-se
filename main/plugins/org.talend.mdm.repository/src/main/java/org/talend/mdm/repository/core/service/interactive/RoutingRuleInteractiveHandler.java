@@ -16,15 +16,15 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.mdm.repository.core.IServerObjectRepositoryType;
 import org.talend.mdm.repository.core.command.deploy.AbstractDeployCommand;
 import org.talend.mdm.repository.i18n.Messages;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSDeleteRoutingRule;
-import org.talend.mdm.webservice.WSPutRoutingRule;
-import org.talend.mdm.webservice.WSRoutingRule;
-import org.talend.mdm.webservice.WSRoutingRulePK;
 
 import com.amalto.workbench.utils.EXtentisObjects;
 import com.amalto.workbench.utils.TreeObjectUtil;
 import com.amalto.workbench.utils.XtentisException;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSDeleteRoutingRule;
+import com.amalto.workbench.webservices.WSPutRoutingRule;
+import com.amalto.workbench.webservices.WSRoutingRule;
+import com.amalto.workbench.webservices.WSRoutingRulePK;
 
 /**
  * DOC hbhong class global comment. Detailled comment

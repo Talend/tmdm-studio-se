@@ -78,11 +78,11 @@ import org.talend.mdm.repository.models.FolderRepositoryObject;
 import org.talend.mdm.repository.plugin.RepositoryPlugin;
 import org.talend.mdm.repository.ui.navigator.MDMRepositoryLabelProvider;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
-import org.talend.mdm.webservice.WSDigest;
-import org.talend.mdm.webservice.WSDigestKey;
 
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.utils.XtentisException;
+import com.amalto.workbench.webservices.WSDigest;
+import com.amalto.workbench.webservices.WSDigestKey;
 
 /**
  * DOC hbhong class global comment. Detailled comment

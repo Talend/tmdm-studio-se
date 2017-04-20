@@ -25,11 +25,11 @@ import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.ui.dialogs.xpath.XpathSelectDialog2;
 import org.talend.mdm.repository.ui.widgets.TisTableViewerR;
 import org.talend.mdm.repository.ui.widgets.xmleditor.infoholder.RepositoryExternalInfoHolder;
-import org.talend.mdm.webservice.WSServiceGetDocument;
 
 import com.amalto.workbench.dialogs.XpathSelectDialog;
 import com.amalto.workbench.editors.RoutingRuleMainPage;
 import com.amalto.workbench.utils.XtentisException;
+import com.amalto.workbench.webservices.WSServiceGetDocument;
 import com.amalto.workbench.widgets.TisTableViewer;
 import com.amalto.workbench.widgets.xmleditor.infoholder.ExternalInfoHolder;
 

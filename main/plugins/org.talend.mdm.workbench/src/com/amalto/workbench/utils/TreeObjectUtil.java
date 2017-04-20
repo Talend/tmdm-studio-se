@@ -12,9 +12,8 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
-import org.talend.mdm.webservice.TMDMService;
-
 import com.amalto.workbench.exadapter.ExAdapterManager;
+import com.amalto.workbench.webservices.TMDMService;
 
 public class TreeObjectUtil {
 

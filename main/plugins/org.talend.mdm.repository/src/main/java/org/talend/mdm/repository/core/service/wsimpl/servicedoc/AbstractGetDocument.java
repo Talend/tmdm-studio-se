@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.mdm.repository.core.service.wsimpl.servicedoc;
 
-import org.talend.mdm.webservice.WSServiceGetDocument;
+import com.amalto.workbench.webservices.WSServiceGetDocument;
 
 /**
  * DOC hbhong class global comment. Detailled comment

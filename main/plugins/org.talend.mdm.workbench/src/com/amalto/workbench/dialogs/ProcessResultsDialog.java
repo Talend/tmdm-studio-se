@@ -45,11 +45,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
 import org.eclipse.ui.internal.browser.WebBrowserPreference;
-import org.talend.mdm.webservice.WSExtractedContent;
 
 import com.amalto.workbench.editors.TransformerMainPage;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.utils.FileProvider;
+import com.amalto.workbench.webservices.WSExtractedContent;
 
 public class ProcessResultsDialog extends Dialog {
 

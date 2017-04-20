@@ -12,10 +12,9 @@
 // ============================================================================
 package com.amalto.workbench.editors;
 
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSServicePutConfiguration;
-
 import com.amalto.workbench.exadapter.IExAdapter;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSServicePutConfiguration;
 
 /**
  * created by HHB on 2014-1-8 Detailled comment

@@ -27,17 +27,17 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSExecuteRoutingOrderV2Asynchronously;
-import org.talend.mdm.webservice.WSExecuteRoutingOrderV2Synchronously;
-import org.talend.mdm.webservice.WSRoutingOrderV2;
-import org.talend.mdm.webservice.WSRoutingOrderV2PK;
-import org.talend.mdm.webservice.WSString;
 
 import com.amalto.workbench.editors.RoutingEngineV2BrowserMainPage;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.utils.Util;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSExecuteRoutingOrderV2Asynchronously;
+import com.amalto.workbench.webservices.WSExecuteRoutingOrderV2Synchronously;
+import com.amalto.workbench.webservices.WSRoutingOrderV2;
+import com.amalto.workbench.webservices.WSRoutingOrderV2PK;
+import com.amalto.workbench.webservices.WSString;
 
 public class ExecuteRoutingOrdersAction extends Action {
 

@@ -54,7 +54,6 @@ import org.talend.mdm.repository.model.mdmserverobject.MDMServerObject;
 import org.talend.mdm.repository.models.WSRootRepositoryObject;
 import org.talend.mdm.repository.ui.editors.IRepositoryViewEditorInput;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
-import org.talend.mdm.webservice.WSDataClusterPK;
 import org.talend.mdm.workbench.serverexplorer.ui.dialogs.SelectServerDefDialog;
 import org.talend.repository.model.IProxyRepositoryFactory;
 
@@ -66,6 +65,7 @@ import com.amalto.workbench.providers.XObjectEditorInput;
 import com.amalto.workbench.service.MissingJarService;
 import com.amalto.workbench.utils.EXtentisObjects;
 import com.amalto.workbench.utils.UserInfo;
+import com.amalto.workbench.webservices.WSDataClusterPK;
 
 /**
  * DOC hbhong class global comment. Detailled comment <br/>

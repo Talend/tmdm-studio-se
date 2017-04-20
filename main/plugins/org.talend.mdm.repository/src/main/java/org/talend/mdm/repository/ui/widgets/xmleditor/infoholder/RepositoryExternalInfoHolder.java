@@ -12,13 +12,12 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.widgets.xmleditor.infoholder;
 
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSMDMConfig;
-import org.talend.mdm.webservice.WSTransformerV2;
-
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.models.infoextractor.IAllDataModelHolder;
 import com.amalto.workbench.utils.JobInfo;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSMDMConfig;
+import com.amalto.workbench.webservices.WSTransformerV2;
 import com.amalto.workbench.widgets.xmleditor.infoholder.ExternalInfoHolder;
 import com.amalto.workbench.widgets.xmleditor.infoholder.ProcessAllCallJobVariableCandidatesHolder;
 import com.amalto.workbench.widgets.xmleditor.util.WorkflowInfo;

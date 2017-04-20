@@ -55,10 +55,10 @@ import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.plugin.RepositoryPlugin;
 import org.talend.mdm.repository.ui.dialogs.datacontent.DataProcessRuleDialog;
-import org.talend.mdm.webservice.WSItem;
 
 import com.amalto.workbench.service.IWebServiceHook;
 import com.amalto.workbench.utils.Util;
+import com.amalto.workbench.webservices.WSItem;
 
 /**
  * created by HHB on 2012-10-9 Detailled comment

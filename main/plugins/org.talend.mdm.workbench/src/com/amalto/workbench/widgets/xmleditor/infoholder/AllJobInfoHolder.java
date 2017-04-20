@@ -17,11 +17,11 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSMDMJob;
-import org.talend.mdm.webservice.WSMDMNULL;
 
 import com.amalto.workbench.utils.JobInfo;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSMDMJob;
+import com.amalto.workbench.webservices.WSMDMNULL;
 
 public class AllJobInfoHolder extends ExternalInfoHolder<JobInfo[]> {
 

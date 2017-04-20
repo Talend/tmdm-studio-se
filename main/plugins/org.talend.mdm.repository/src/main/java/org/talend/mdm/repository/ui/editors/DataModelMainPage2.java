@@ -33,7 +33,6 @@ import org.talend.mdm.repository.ui.navigator.MDMRepositoryView;
 import org.talend.mdm.repository.ui.wizards.view.AddBrowseItemsWizardR;
 import org.talend.mdm.repository.utils.Bean2EObjUtil;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
-import org.talend.mdm.webservice.WSDataModel;
 
 import com.amalto.workbench.actions.XSDDeleteConceptAction;
 import com.amalto.workbench.actions.XSDSetAnnotationFKFilterAction;
@@ -45,6 +44,7 @@ import com.amalto.workbench.dialogs.SelectImportedModulesDialog;
 import com.amalto.workbench.editors.DataModelMainPage;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.providers.datamodel.SchemaTreeContentProvider;
+import com.amalto.workbench.webservices.WSDataModel;
 
 /**
  * DOC hbhong class global comment. Detailled comment

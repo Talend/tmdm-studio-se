@@ -27,12 +27,6 @@ import org.talend.core.GlobalServiceRegister;
 import org.talend.mdm.repository.core.AbstractRepositoryAction;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSDataClusterPK;
-import org.talend.mdm.webservice.WSItemPK;
-import org.talend.mdm.webservice.WSRouteItemV2;
-import org.talend.mdm.webservice.WSRoutingRulePK;
-import org.talend.mdm.webservice.WSRoutingRulePKArray;
 import org.talend.mdm.workbench.serverexplorer.ui.dialogs.SelectServerDefDialog;
 
 import com.amalto.workbench.editors.DataClusterDialog;
@@ -41,6 +35,12 @@ import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.service.ILegendServerDefService;
 import com.amalto.workbench.utils.Util;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSDataClusterPK;
+import com.amalto.workbench.webservices.WSItemPK;
+import com.amalto.workbench.webservices.WSRouteItemV2;
+import com.amalto.workbench.webservices.WSRoutingRulePK;
+import com.amalto.workbench.webservices.WSRoutingRulePKArray;
 
 
 /**

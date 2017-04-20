@@ -42,9 +42,9 @@ import org.talend.mdm.repository.ui.dialogs.job.JobOptionsDialog.Execution;
 import org.talend.mdm.repository.ui.dialogs.job.JobOptionsDialog.Parameter;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 import org.talend.mdm.repository.utils.UIUtil;
-import org.talend.mdm.webservice.WSTransformerVariablesMapping;
 
 import com.amalto.workbench.service.IValidateService;
+import com.amalto.workbench.webservices.WSTransformerVariablesMapping;
 
 /**
  * 

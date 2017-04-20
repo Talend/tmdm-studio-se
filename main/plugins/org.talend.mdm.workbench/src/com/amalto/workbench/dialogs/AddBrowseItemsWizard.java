@@ -56,13 +56,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDXPathDefinition;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSBoolean;
-import org.talend.mdm.webservice.WSDeleteView;
-import org.talend.mdm.webservice.WSGetView;
-import org.talend.mdm.webservice.WSPutView;
-import org.talend.mdm.webservice.WSView;
-import org.talend.mdm.webservice.WSViewPK;
 
 import com.amalto.workbench.editors.DataModelMainPage;
 import com.amalto.workbench.exadapter.ExAdapterManager;
@@ -73,6 +66,13 @@ import com.amalto.workbench.models.TreeParent;
 import com.amalto.workbench.providers.XObjectEditorInput;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XSDAnnotationsStructure;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSBoolean;
+import com.amalto.workbench.webservices.WSDeleteView;
+import com.amalto.workbench.webservices.WSGetView;
+import com.amalto.workbench.webservices.WSPutView;
+import com.amalto.workbench.webservices.WSView;
+import com.amalto.workbench.webservices.WSViewPK;
 import com.amalto.workbench.widgets.ComplexTableViewer;
 import com.amalto.workbench.widgets.ComplexTableViewerColumn;
 

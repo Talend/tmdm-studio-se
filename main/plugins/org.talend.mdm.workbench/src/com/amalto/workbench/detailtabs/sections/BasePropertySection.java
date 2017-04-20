@@ -20,12 +20,12 @@ import org.eclipse.ui.views.properties.tabbed.ISection;
 import org.eclipse.ui.views.properties.tabbed.ITabDescriptor;
 import org.eclipse.ui.views.properties.tabbed.TabContents;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
-import org.talend.mdm.webservice.WSDataModel;
 
 import com.amalto.workbench.detailtabs.sections.util.CommitBarListenerRegistry;
 import com.amalto.workbench.editors.DataModelMainPage;
 import com.amalto.workbench.editors.xsdeditor.XSDEditor;
 import com.amalto.workbench.models.TreeObject;
+import com.amalto.workbench.webservices.WSDataModel;
 
 public abstract class BasePropertySection extends AbstractPropertySection {
 

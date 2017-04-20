@@ -42,15 +42,6 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSCheckServiceConfigRequest;
-import org.talend.mdm.webservice.WSCheckServiceConfigResponse;
-import org.talend.mdm.webservice.WSGetServicesList;
-import org.talend.mdm.webservice.WSServiceGetDocument;
-import org.talend.mdm.webservice.WSServicePutConfiguration;
-import org.talend.mdm.webservice.WSServicesList;
-import org.talend.mdm.webservice.WSServicesListItem;
-import org.talend.mdm.webservice.WSString;
 
 import com.amalto.workbench.dialogs.PluginDetailsDialog;
 import com.amalto.workbench.exadapter.ExAdapterManager;
@@ -60,6 +51,15 @@ import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.providers.XObjectEditorInput;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XmlUtil;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSCheckServiceConfigRequest;
+import com.amalto.workbench.webservices.WSCheckServiceConfigResponse;
+import com.amalto.workbench.webservices.WSGetServicesList;
+import com.amalto.workbench.webservices.WSServiceGetDocument;
+import com.amalto.workbench.webservices.WSServicePutConfiguration;
+import com.amalto.workbench.webservices.WSServicesList;
+import com.amalto.workbench.webservices.WSServicesListItem;
+import com.amalto.workbench.webservices.WSString;
 
 public class ServiceConfigrationMainPage extends AMainPageV2 {
 
