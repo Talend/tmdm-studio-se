@@ -15,6 +15,7 @@ package org.talend.mdm.repository.core.service;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -504,18 +505,41 @@ public class DeployService {
     }
 
     private void reorderCommandObjects(List<AbstractDeployCommand> commands) {
-        List<AbstractDeployCommand> dataModelCommands = new LinkedList<AbstractDeployCommand>();
-        for (Iterator<AbstractDeployCommand> il = commands.iterator(); il.hasNext();) {
-            AbstractDeployCommand command = il.next();
-            IRepositoryViewObject viewObj = command.getViewObject();
-            if (viewObj != null && viewObj.getRepositoryObjectType() == IServerObjectRepositoryType.TYPE_DATAMODEL) {
-                dataModelCommands.add(command);
-                il.remove();
+        commands.sort(new Comparator<AbstractDeployCommand>() {
+
+            private int getTypeOrder(ERepositoryObjectType type) {
+                if (type.equals(IServerObjectRepositoryType.TYPE_DATAMODEL)) {
+                    return 1;
+                }
+                if (type.equals(IServerObjectRepositoryType.TYPE_DATACLUSTER)) {
+                    return 2;
+                }
+                if (type.equals(IServerObjectRepositoryType.TYPE_MATCH_RULE_MAPINFO)) {
+                    return 3;
+                }
+                if (type.equals(IServerObjectRepositoryType.TYPE_TDS)) {
+                    return 4;
+                }
+                // others
+                return 10;
             }
-        }
-        if (!dataModelCommands.isEmpty()) {
-            commands.addAll(0, dataModelCommands);
-        }
+
+            @Override
+            public int compare(AbstractDeployCommand o1, AbstractDeployCommand o2) {
+                ERepositoryObjectType t1 = o1.getViewObject().getRepositoryObjectType();
+                ERepositoryObjectType t2 = o2.getViewObject().getRepositoryObjectType();
+                String label1 = o1.getViewObject().getLabel();
+                String label2 = o2.getViewObject().getLabel();
+                int typeOrder1 = getTypeOrder(t1);
+                int typeOrder2 = getTypeOrder(t2);
+                if (typeOrder1 == typeOrder2) {
+                    return label1.compareTo(label2);
+                } else {
+                    return typeOrder1 - typeOrder2;
+                }
+            }
+
+        });
     }
 
     private void pushRestoreCommand(CommandManager manager, List<ICommand> subCmds, MDMServerDef serverDef) {

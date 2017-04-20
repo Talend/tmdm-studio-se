@@ -483,7 +483,8 @@ public class HttpClientUtil {
             HttpUriRequest request = new HttpPut(url);
             request.setHeader("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
             addStudioToken(request, username);
-
+            HttpContext preemptiveContext = getPreemptiveContext(url);
+            authenticate(username, password, request, preemptiveContext);
             String errMessage = Messages.Util_21 + "%s" + Messages.Util_22 + "%s"; //$NON-NLS-1$//$NON-NLS-2$
             String content = getResponseContent(httpClient, request, null, errMessage, String.class, true);
             if (content == null) {
