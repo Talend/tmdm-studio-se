@@ -57,6 +57,18 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSDataClusterPK;
+import org.talend.mdm.webservice.WSGetView;
+import org.talend.mdm.webservice.WSQuickSearch;
+import org.talend.mdm.webservice.WSStringPredicate;
+import org.talend.mdm.webservice.WSView;
+import org.talend.mdm.webservice.WSViewPK;
+import org.talend.mdm.webservice.WSViewSearch;
+import org.talend.mdm.webservice.WSWhereAnd;
+import org.talend.mdm.webservice.WSWhereCondition;
+import org.talend.mdm.webservice.WSWhereItem;
+import org.talend.mdm.webservice.WSWhereOperator;
 
 import com.amalto.workbench.dialogs.DOMViewDialog;
 import com.amalto.workbench.i18n.Messages;
@@ -66,18 +78,6 @@ import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.providers.XObjectBrowserInput;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XtentisException;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSDataClusterPK;
-import com.amalto.workbench.webservices.WSGetView;
-import com.amalto.workbench.webservices.WSQuickSearch;
-import com.amalto.workbench.webservices.WSStringPredicate;
-import com.amalto.workbench.webservices.WSView;
-import com.amalto.workbench.webservices.WSViewPK;
-import com.amalto.workbench.webservices.WSViewSearch;
-import com.amalto.workbench.webservices.WSWhereAnd;
-import com.amalto.workbench.webservices.WSWhereCondition;
-import com.amalto.workbench.webservices.WSWhereItem;
-import com.amalto.workbench.webservices.WSWhereOperator;
 
 public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListener {
 

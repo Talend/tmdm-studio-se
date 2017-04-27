@@ -45,6 +45,9 @@ import org.talend.mdm.repository.core.service.wsimpl.transformplugin.XPathPlugin
 import org.talend.mdm.repository.core.service.wsimpl.transformplugin.XSLTPluginDetail;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSServiceGetDocument;
+import org.talend.mdm.webservice.WSTransformerPluginV2Details;
 import org.talend.mdm.workbench.serverexplorer.ui.dialogs.SelectServerDefDialog;
 
 import com.amalto.workbench.models.TreeObject;
@@ -52,9 +55,6 @@ import com.amalto.workbench.models.TreeParent;
 import com.amalto.workbench.utils.UserInfo;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XtentisException;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSServiceGetDocument;
-import com.amalto.workbench.webservices.WSTransformerPluginV2Details;
 
 /**
  * DOC hbhong class global comment. Detailled comment

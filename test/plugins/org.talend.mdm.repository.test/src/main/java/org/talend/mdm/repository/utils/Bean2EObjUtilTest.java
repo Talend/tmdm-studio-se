@@ -33,11 +33,11 @@ import org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectFactory;
 import org.talend.mdm.repository.model.mdmserverobject.WSMenuE;
 import org.talend.mdm.repository.model.mdmserverobject.WSMenuEntryE;
 import org.talend.mdm.repository.model.mdmserverobject.WSMenuMenuEntriesDescriptionsE;
+import org.talend.mdm.webservice.WSMenu;
+import org.talend.mdm.webservice.WSMenuEntry;
+import org.talend.mdm.webservice.WSMenuMenuEntriesDescriptions;
 
 import com.amalto.workbench.models.TreeObject;
-import com.amalto.workbench.webservices.WSMenu;
-import com.amalto.workbench.webservices.WSMenuEntry;
-import com.amalto.workbench.webservices.WSMenuMenuEntriesDescriptions;
 
 @PrepareForTest({ Bean2EObjUtil.class, System.class, IOUtil.class, EMFClassUtil.class, Logger.class })
 public class Bean2EObjUtilTest {

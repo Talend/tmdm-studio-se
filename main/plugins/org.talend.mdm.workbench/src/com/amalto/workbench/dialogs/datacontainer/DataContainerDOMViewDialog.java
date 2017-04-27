@@ -21,12 +21,11 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.mdm.webservice.TMDMService;
 import org.w3c.dom.Node;
 
 import com.amalto.workbench.dialogs.DOMViewDialog;
 import com.amalto.workbench.i18n.Messages;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.TMDMService;
 
 /**
  * created by HHB on 2012-11-19 Detailled comment

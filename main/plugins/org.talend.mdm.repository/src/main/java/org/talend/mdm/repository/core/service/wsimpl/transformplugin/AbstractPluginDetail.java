@@ -15,8 +15,8 @@ package org.talend.mdm.repository.core.service.wsimpl.transformplugin;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.amalto.workbench.webservices.WSTransformerPluginV2Details;
-import com.amalto.workbench.webservices.WSTransformerPluginV2VariableDescriptor;
+import org.talend.mdm.webservice.WSTransformerPluginV2Details;
+import org.talend.mdm.webservice.WSTransformerPluginV2VariableDescriptor;
 
 /**
  * DOC hbhong class global comment. Detailled comment
