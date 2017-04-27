@@ -61,6 +61,9 @@ import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.impl.XSDSchemaImpl;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSDataModelPK;
+import org.talend.mdm.webservice.WSRegexDataModelPKs;
 import org.w3c.dom.Document;
 
 import com.amalto.workbench.exadapter.ExAdapterManager;
@@ -72,9 +75,6 @@ import com.amalto.workbench.providers.datamodel.SchemaTreeContentProvider;
 import com.amalto.workbench.providers.datamodel.TypesTreeContentProvider;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XtentisException;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSDataModelPK;
-import com.amalto.workbench.webservices.WSRegexDataModelPKs;
 
 public class SelectImportedModulesDialog extends Dialog {
 

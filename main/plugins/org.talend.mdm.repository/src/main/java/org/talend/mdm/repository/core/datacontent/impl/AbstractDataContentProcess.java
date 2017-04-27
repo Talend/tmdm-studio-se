@@ -24,8 +24,7 @@ import org.exolab.castor.mapping.MappingException;
 import org.talend.mdm.repository.core.datacontent.DataProcessRule;
 import org.talend.mdm.repository.core.datacontent.IDataContentProcess;
 import org.talend.mdm.repository.plugin.RepositoryPlugin;
-
-import com.amalto.workbench.webservices.WSItem;
+import org.talend.mdm.webservice.WSItem;
 
 /**
  * created by HHB on 2012-10-9 Detailled comment

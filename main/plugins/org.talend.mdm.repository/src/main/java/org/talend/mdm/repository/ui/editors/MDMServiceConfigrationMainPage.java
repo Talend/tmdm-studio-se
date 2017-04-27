@@ -22,12 +22,12 @@ import org.talend.mdm.repository.model.mdmproperties.MDMServerObjectItem;
 import org.talend.mdm.repository.model.mdmserverobject.MDMServerObject;
 import org.talend.mdm.repository.model.mdmserverobject.WSServiceConfigurationE;
 import org.talend.mdm.repository.model.mdmserverobject.WSServicePutConfigurationE;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSCheckServiceConfigRequest;
+import org.talend.mdm.webservice.WSCheckServiceConfigResponse;
+import org.talend.mdm.webservice.WSServiceGetDocument;
 
 import com.amalto.workbench.editors.ServiceConfigrationMainPage;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSCheckServiceConfigRequest;
-import com.amalto.workbench.webservices.WSCheckServiceConfigResponse;
-import com.amalto.workbench.webservices.WSServiceGetDocument;
 
 /**
  * DOC jsxie class global comment. Detailled comment

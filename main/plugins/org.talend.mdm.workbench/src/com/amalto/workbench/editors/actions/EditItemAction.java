@@ -24,12 +24,12 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.exolab.castor.xml.Marshaller;
+import org.talend.mdm.webservice.WSRoutingOrderV2;
 
 import com.amalto.workbench.dialogs.DOMViewDialog;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.utils.Util;
-import com.amalto.workbench.webservices.WSRoutingOrderV2;
 
 /***************************************************************
  * Edit Item Action

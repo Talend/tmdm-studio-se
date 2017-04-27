@@ -50,6 +50,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.talend.mdm.webservice.WSMenuEntry;
+import org.talend.mdm.webservice.WSMenuMenuEntriesDescriptions;
 
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
@@ -57,8 +59,6 @@ import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.utils.HttpClientUtil;
 import com.amalto.workbench.utils.Util;
-import com.amalto.workbench.webservices.WSMenuEntry;
-import com.amalto.workbench.webservices.WSMenuMenuEntriesDescriptions;
 import com.amalto.workbench.widgets.FileSelectWidget;
 
 public class MenuEntryDialog extends Dialog {

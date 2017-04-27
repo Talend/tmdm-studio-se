@@ -19,9 +19,9 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.talend.mdm.repository.core.service.RepositoryQueryService;
 import org.talend.mdm.repository.core.service.RepositoryWebServiceAdapter;
 import org.talend.mdm.repository.i18n.Messages;
+import org.talend.mdm.webservice.TMDMService;
 
 import com.amalto.workbench.editors.StoredProcedureMainPage;
-import com.amalto.workbench.webservices.TMDMService;
 
 /**
  * DOC hbhong class global comment. Detailled comment

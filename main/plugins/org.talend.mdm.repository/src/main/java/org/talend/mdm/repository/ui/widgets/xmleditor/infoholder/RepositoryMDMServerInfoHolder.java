@@ -16,10 +16,9 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSMDMConfig;
 import org.talend.mdm.workbench.serverexplorer.core.ServerDefService;
-
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSMDMConfig;
 
 /**
  * DOC hbhong class global comment. Detailled comment
