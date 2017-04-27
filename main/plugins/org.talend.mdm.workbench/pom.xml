@@ -87,14 +87,19 @@
 				<version>${tycho.version}</version>
 				<configuration>
 					<dependency-resolution>
-						<optionalDependencies>ignore</optionalDependencies>
-						<extraRequirements>
-							<requirement>
-								<type>eclipse-plugin</type>
-								<id>org.talend.mdm.ws</id>
-								<versionRange>0.0.0</versionRange>
-							</requirement>
-						</extraRequirements>
+					    <optionalDependencies>ignore</optionalDependencies>
+					    <extraRequirements>
+					        <requirement>
+					            <type>eclipse-plugin</type>
+					            <id>org.talend.libraries.mdm</id>
+					            <versionRange>0.0.0</versionRange>
+					        </requirement>
+					        <requirement>
+					            <type>eclipse-plugin</type>
+					            <id>org.talend.libraries.mdm.webservice.ce</id>
+					            <versionRange>0.0.0</versionRange>
+					        </requirement>
+					    </extraRequirements>
 					</dependency-resolution>
 				</configuration>
 			</plugin>

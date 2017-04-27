@@ -21,14 +21,14 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.talend.mdm.repository.core.service.RepositoryWebServiceAdapter;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSDataClusterPK;
+import org.talend.mdm.webservice.WSViewPK;
 
 import com.amalto.workbench.editors.ViewBrowserMainPage;
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XtentisException;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSDataClusterPK;
-import com.amalto.workbench.webservices.WSViewPK;
 
 /**
  * DOC hbhong class global comment. Detailled comment

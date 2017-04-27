@@ -58,6 +58,15 @@ import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSDataClusterPK;
+import org.talend.mdm.webservice.WSDroppedItem;
+import org.talend.mdm.webservice.WSDroppedItemPK;
+import org.talend.mdm.webservice.WSFindAllDroppedItemsPKs;
+import org.talend.mdm.webservice.WSItemPK;
+import org.talend.mdm.webservice.WSLoadDroppedItem;
+import org.talend.mdm.webservice.WSRecoverDroppedItem;
+import org.talend.mdm.webservice.WSRemoveDroppedItem;
 
 import com.amalto.workbench.dialogs.DOMViewDialog;
 import com.amalto.workbench.i18n.Messages;
@@ -67,15 +76,6 @@ import com.amalto.workbench.models.IXObjectModelListener;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.providers.XObjectBrowserInput;
 import com.amalto.workbench.utils.Util;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSDataClusterPK;
-import com.amalto.workbench.webservices.WSDroppedItem;
-import com.amalto.workbench.webservices.WSDroppedItemPK;
-import com.amalto.workbench.webservices.WSFindAllDroppedItemsPKs;
-import com.amalto.workbench.webservices.WSItemPK;
-import com.amalto.workbench.webservices.WSLoadDroppedItem;
-import com.amalto.workbench.webservices.WSRecoverDroppedItem;
-import com.amalto.workbench.webservices.WSRemoveDroppedItem;
 import com.amalto.workbench.widgets.WidgetFactory;
 
 public class ItemsTrashBrowserMainPage extends AMainPage implements IXObjectModelListener {

@@ -21,13 +21,13 @@ import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtension;
 import org.eclipse.core.runtime.IExtensionPoint;
 import org.eclipse.core.runtime.Platform;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSMDMConfig;
+import org.talend.mdm.webservice.WSTransformerV2;
 
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.models.infoextractor.IAllDataModelHolder;
 import com.amalto.workbench.utils.JobInfo;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSMDMConfig;
-import com.amalto.workbench.webservices.WSTransformerV2;
 import com.amalto.workbench.widgets.xmleditor.util.WorkflowInfo;
 
 public abstract class ExternalInfoHolder<T> {

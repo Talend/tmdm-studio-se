@@ -16,15 +16,15 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.mdm.repository.core.IServerObjectRepositoryType;
 import org.talend.mdm.repository.core.command.deploy.AbstractDeployCommand;
 import org.talend.mdm.repository.i18n.Messages;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSDeleteView;
+import org.talend.mdm.webservice.WSPutView;
+import org.talend.mdm.webservice.WSView;
+import org.talend.mdm.webservice.WSViewPK;
 
 import com.amalto.workbench.utils.EXtentisObjects;
 import com.amalto.workbench.utils.TreeObjectUtil;
 import com.amalto.workbench.utils.XtentisException;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSDeleteView;
-import com.amalto.workbench.webservices.WSPutView;
-import com.amalto.workbench.webservices.WSView;
-import com.amalto.workbench.webservices.WSViewPK;
 
 /**
  * DOC hbhong class global comment. Detailled comment
