@@ -42,13 +42,13 @@ import org.eclipse.jface.viewers.TreeExpansionEvent;
 import org.eclipse.swt.widgets.TreeItem;
 import org.talend.mdm.commmon.util.core.ICoreConstants;
 import org.talend.mdm.commmon.util.webapp.XSystemObjects;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSCategoryData;
 
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.models.IXObjectModelListener;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.models.TreeParent;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSCategoryData;
 
 public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeViewerListener {
 

@@ -19,9 +19,9 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.mdm.repository.core.IServerObjectRepositoryType;
 import org.talend.mdm.repository.core.impl.AbstractContentProvider;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
-import org.talend.mdm.webservice.WSMenu;
 
 import com.amalto.workbench.models.TreeObject;
+import com.amalto.workbench.webservices.WSMenu;
 
 /**
  * DOC hbhong class global comment. Detailled comment <br/>

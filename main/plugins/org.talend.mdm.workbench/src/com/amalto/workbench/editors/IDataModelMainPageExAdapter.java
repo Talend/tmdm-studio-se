@@ -16,9 +16,9 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.talend.mdm.webservice.TMDMService;
 
 import com.amalto.workbench.exadapter.IExAdapter;
+import com.amalto.workbench.webservices.TMDMService;
 
 /**
  * created by HHB on 2014-1-6 Detailled comment

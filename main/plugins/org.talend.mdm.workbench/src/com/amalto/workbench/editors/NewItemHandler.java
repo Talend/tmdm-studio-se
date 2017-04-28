@@ -22,18 +22,18 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSDataClusterPK;
-import org.talend.mdm.webservice.WSDataModelPK;
-import org.talend.mdm.webservice.WSDataModelPKArray;
-import org.talend.mdm.webservice.WSPutItem;
-import org.talend.mdm.webservice.WSPutItemWithReport;
-import org.talend.mdm.webservice.WSRegexDataModelPKs;
 
 import com.amalto.workbench.dialogs.DOMViewDialog;
 import com.amalto.workbench.dialogs.datacontainer.DataContainerDOMViewDialog;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.utils.Util;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSDataClusterPK;
+import com.amalto.workbench.webservices.WSDataModelPK;
+import com.amalto.workbench.webservices.WSDataModelPKArray;
+import com.amalto.workbench.webservices.WSPutItem;
+import com.amalto.workbench.webservices.WSPutItemWithReport;
+import com.amalto.workbench.webservices.WSRegexDataModelPKs;
 
 /**
  * created by liusongbo on 2014-2-19

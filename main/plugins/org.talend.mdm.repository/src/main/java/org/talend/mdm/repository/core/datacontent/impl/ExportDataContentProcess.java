@@ -41,16 +41,16 @@ import org.talend.mdm.repository.core.datacontent.DataProcessRuleFactory;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.plugin.RepositoryPlugin;
 import org.talend.mdm.repository.utils.IOUtil;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSDataClusterPK;
-import org.talend.mdm.webservice.WSGetItem;
-import org.talend.mdm.webservice.WSGetItemPKsByCriteria;
-import org.talend.mdm.webservice.WSItem;
-import org.talend.mdm.webservice.WSItemPKsByCriteriaResponseResults;
 import org.talend.repository.utils.ZipFileUtils;
 
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.utils.Util;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSDataClusterPK;
+import com.amalto.workbench.webservices.WSGetItem;
+import com.amalto.workbench.webservices.WSGetItemPKsByCriteria;
+import com.amalto.workbench.webservices.WSItem;
+import com.amalto.workbench.webservices.WSItemPKsByCriteriaResponseResults;
 
 /**
  * created by HHB on 2012-10-9 Detailled comment

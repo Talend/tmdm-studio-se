@@ -12,16 +12,15 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
-import org.talend.mdm.webservice.WSDataClusterPK;
-import org.talend.mdm.webservice.WSDataModelPK;
-import org.talend.mdm.webservice.WSMenuPK;
-import org.talend.mdm.webservice.WSRolePK;
-import org.talend.mdm.webservice.WSRoutingRulePK;
-import org.talend.mdm.webservice.WSStoredProcedurePK;
-import org.talend.mdm.webservice.WSTransformerV2PK;
-import org.talend.mdm.webservice.WSViewPK;
-
 import com.amalto.workbench.models.TreeObject;
+import com.amalto.workbench.webservices.WSDataClusterPK;
+import com.amalto.workbench.webservices.WSDataModelPK;
+import com.amalto.workbench.webservices.WSMenuPK;
+import com.amalto.workbench.webservices.WSRolePK;
+import com.amalto.workbench.webservices.WSRoutingRulePK;
+import com.amalto.workbench.webservices.WSStoredProcedurePK;
+import com.amalto.workbench.webservices.WSTransformerV2PK;
+import com.amalto.workbench.webservices.WSViewPK;
 
 /**
  * 

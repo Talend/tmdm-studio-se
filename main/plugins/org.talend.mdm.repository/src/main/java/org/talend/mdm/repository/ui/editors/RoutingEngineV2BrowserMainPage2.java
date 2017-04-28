@@ -16,10 +16,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.talend.mdm.repository.core.service.RepositoryWebServiceAdapter;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
-import org.talend.mdm.webservice.TMDMService;
 
 import com.amalto.workbench.editors.RoutingEngineV2BrowserMainPage;
 import com.amalto.workbench.utils.XtentisException;
+import com.amalto.workbench.webservices.TMDMService;
 
 public class RoutingEngineV2BrowserMainPage2 extends RoutingEngineV2BrowserMainPage {
 

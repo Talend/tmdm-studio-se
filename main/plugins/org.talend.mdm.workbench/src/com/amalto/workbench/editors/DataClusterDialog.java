@@ -59,14 +59,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.IWorkbenchPartSite;
 import org.talend.core.GlobalServiceRegister;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSDataCluster;
-import org.talend.mdm.webservice.WSDataClusterPK;
-import org.talend.mdm.webservice.WSGetDataCluster;
-import org.talend.mdm.webservice.WSGetItem;
-import org.talend.mdm.webservice.WSItem;
-import org.talend.mdm.webservice.WSItemPK;
-import org.talend.mdm.webservice.WSRegexDataClusterPKs;
 
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.ImageCache;
@@ -78,6 +70,14 @@ import com.amalto.workbench.utils.MDMServerDef;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.WidgetUtils;
 import com.amalto.workbench.utils.XtentisException;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSDataCluster;
+import com.amalto.workbench.webservices.WSDataClusterPK;
+import com.amalto.workbench.webservices.WSGetDataCluster;
+import com.amalto.workbench.webservices.WSGetItem;
+import com.amalto.workbench.webservices.WSItem;
+import com.amalto.workbench.webservices.WSItemPK;
+import com.amalto.workbench.webservices.WSRegexDataClusterPKs;
 
 /**
  * created by liusongbo on 2013-1-24

@@ -14,8 +14,9 @@ package com.amalto.workbench.widgets.xmleditor.infoholder;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSMDMConfig;
+
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSMDMConfig;
 
 public class MDMServerInfoHolder extends ExternalInfoHolder<WSMDMConfig> {
 

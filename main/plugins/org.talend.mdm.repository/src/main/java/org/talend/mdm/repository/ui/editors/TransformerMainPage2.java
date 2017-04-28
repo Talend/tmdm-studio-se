@@ -33,14 +33,14 @@ import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.ui.navigator.MDMRepositoryView;
 import org.talend.mdm.repository.ui.widgets.xmleditor.infoholder.RepositoryExternalInfoHolder;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSTransformerPluginV2Details;
-import org.talend.mdm.webservice.WSTransformerPluginV2VariableDescriptor;
-import org.talend.mdm.webservice.WSTransformerV2;
 
 import com.amalto.workbench.editors.TransformerMainPage;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.utils.XtentisException;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSTransformerPluginV2Details;
+import com.amalto.workbench.webservices.WSTransformerPluginV2VariableDescriptor;
+import com.amalto.workbench.webservices.WSTransformerV2;
 import com.amalto.workbench.widgets.xmleditor.infoholder.ExternalInfoHolder;
 
 /**

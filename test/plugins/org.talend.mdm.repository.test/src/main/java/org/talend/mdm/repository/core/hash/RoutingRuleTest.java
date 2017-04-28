@@ -26,9 +26,10 @@ import org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectFactory;
 import org.talend.mdm.repository.model.mdmserverobject.WSRoutingRuleE;
 import org.talend.mdm.repository.model.mdmserverobject.WSRoutingRuleExpressionE;
 import org.talend.mdm.repository.model.mdmserverobject.WSRoutingRuleOperatorE;
-import org.talend.mdm.webservice.WSRoutingRule;
-import org.talend.mdm.webservice.WSRoutingRuleExpression;
-import org.talend.mdm.webservice.WSRoutingRuleOperator;
+
+import com.amalto.workbench.webservices.WSRoutingRule;
+import com.amalto.workbench.webservices.WSRoutingRuleExpression;
+import com.amalto.workbench.webservices.WSRoutingRuleOperator;
 
 /**
  * DOC hbhong class global comment. Detailled comment

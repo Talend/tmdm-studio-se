@@ -32,7 +32,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.powermock.reflect.Whitebox;
-import org.talend.mdm.webservice.WSMenu;
+
+import com.amalto.workbench.webservices.WSMenu;
 
 // @RunWith(PowerMockRunner.class)
 @PrepareForTest({ BeanClassUtil.class })

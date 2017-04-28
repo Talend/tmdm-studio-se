@@ -14,7 +14,6 @@ package com.amalto.workbench.availablemodel;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.IMenuManager;
-import org.talend.mdm.webservice.TMDMService;
 
 import com.amalto.workbench.editors.DataClusterBrowserMainPage;
 import com.amalto.workbench.editors.DataModelMainPage;
@@ -22,6 +21,8 @@ import com.amalto.workbench.editors.XObjectBrowser;
 import com.amalto.workbench.editors.XObjectEditor;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.models.TreeParent;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.TMDMService;
 
 public interface IAvailableModel {
 

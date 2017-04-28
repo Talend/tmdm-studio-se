@@ -18,10 +18,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSDataClusterPK;
-import org.talend.mdm.webservice.WSGetConceptsInDataCluster;
-import org.talend.mdm.webservice.WSStringArray;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSDataClusterPK;
+import com.amalto.workbench.webservices.WSGetConceptsInDataCluster;
+import com.amalto.workbench.webservices.WSStringArray;
 
 /**
  * created by HHB on 2012-10-8 Detailled comment

@@ -36,15 +36,16 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDXPathDefinition;
 import org.junit.Before;
 import org.junit.Test;
-import org.talend.mdm.webservice.WSRoutingRuleExpression;
-import org.talend.mdm.webservice.WSRoutingRuleOperator;
-import org.talend.mdm.webservice.WSStringPredicate;
-import org.talend.mdm.webservice.WSWhereCondition;
-import org.talend.mdm.webservice.WSWhereOperator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import com.amalto.workbench.webservices.WSRoutingRuleExpression;
+import com.amalto.workbench.webservices.WSRoutingRuleOperator;
+import com.amalto.workbench.webservices.WSStringPredicate;
+import com.amalto.workbench.webservices.WSWhereCondition;
+import com.amalto.workbench.webservices.WSWhereOperator;
 
 public class UtilTest {
 

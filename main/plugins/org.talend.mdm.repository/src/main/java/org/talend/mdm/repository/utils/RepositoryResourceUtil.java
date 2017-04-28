@@ -102,8 +102,6 @@ import org.talend.mdm.repository.model.mdmserverobject.WSDataModelE;
 import org.talend.mdm.repository.models.FolderRepositoryObject;
 import org.talend.mdm.repository.models.WSRootRepositoryObject;
 import org.talend.mdm.repository.ui.editors.IRepositoryViewEditorInput;
-import org.talend.mdm.webservice.WSConceptKey;
-import org.talend.mdm.webservice.WSGetBusinessConceptKey;
 import org.talend.mdm.workbench.serverexplorer.core.ServerDefService;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
@@ -114,6 +112,8 @@ import org.talend.repository.model.RepositoryNode;
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XtentisException;
+import com.amalto.workbench.webservices.WSConceptKey;
+import com.amalto.workbench.webservices.WSGetBusinessConceptKey;
 
 /**
  * DOC hbhong class global comment. Detailled comment <br/>

@@ -29,16 +29,16 @@ import org.talend.mdm.repository.model.mdmproperties.MDMServerObjectItem;
 import org.talend.mdm.repository.model.mdmproperties.WSDataModelItem;
 import org.talend.mdm.repository.model.mdmserverobject.MDMServerObject;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
-import org.talend.mdm.webservice.TMDMService;
-import org.talend.mdm.webservice.WSDataModel;
-import org.talend.mdm.webservice.WSDataModelPK;
-import org.talend.mdm.webservice.WSDeleteDataModel;
-import org.talend.mdm.webservice.WSPutDataModel;
 
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.utils.EXtentisObjects;
 import com.amalto.workbench.utils.TreeObjectUtil;
 import com.amalto.workbench.utils.XtentisException;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.WSDataModel;
+import com.amalto.workbench.webservices.WSDataModelPK;
+import com.amalto.workbench.webservices.WSDeleteDataModel;
+import com.amalto.workbench.webservices.WSPutDataModel;
 
 /**
  * DOC hbhong class global comment. Detailled comment
