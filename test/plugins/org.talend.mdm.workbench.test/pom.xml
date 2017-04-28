@@ -24,6 +24,16 @@
                                 <id>org.talend.libraries.mdm</id>
                                 <versionRange>0.0.0</versionRange>
                             </requirement>
+                            <requirement>
+                                <type>eclipse-plugin</type>
+                                <id>org.talend.libraries.mdm.webservice.ce</id>
+                                <versionRange>0.0.0</versionRange>
+                            </requirement>
+                            <requirement>
+                                <type>eclipse-plugin</type>
+                                <id>org.talend.libraries.mdm.webservice.ee</id>
+                                <versionRange>0.0.0</versionRange>
+                            </requirement>
                         </extraRequirements>
 					</dependency-resolution>
 				</configuration>
