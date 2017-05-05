@@ -12,8 +12,10 @@
 // ============================================================================
 package com.amalto.workbench.service;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -33,6 +35,8 @@ import com.amalto.workbench.i18n.Messages;
  */
 public class MissingJarService {
 
+    private String mdmComponentName = "plugin:org.talend.mdm.workbench"; //$NON-NLS-1$
+
     private MissingJarService() {
 
     }
@@ -44,7 +48,7 @@ public class MissingJarService {
     }
 
     private List<String> getMissingJarList() {
-        List<ModuleNeeded> modulesNeeded = ModulesNeededProvider.getModulesNeeded("plugin:org.talend.mdm.workbench"); //$NON-NLS-1$
+        List<ModuleNeeded> modulesNeeded = ModulesNeededProvider.getModulesNeeded(mdmComponentName);
         List<String> jars = new LinkedList<String>();
         for (ModuleNeeded module : modulesNeeded) {
             if (module.getStatus() == ELibraryInstallStatus.NOT_INSTALLED) {
@@ -52,6 +56,18 @@ public class MissingJarService {
             }
         }
         return jars.isEmpty() ? null : jars;
+    }
+
+    public Set<ModuleNeeded> getMissingJars() {
+        List<ModuleNeeded> modulesNeeded = ModulesNeededProvider.getModulesNeeded(mdmComponentName);
+        Set<ModuleNeeded> jars = new HashSet<ModuleNeeded>();
+        for (ModuleNeeded module : modulesNeeded) {
+            if (module.getStatus() == ELibraryInstallStatus.NOT_INSTALLED) {
+                jars.add(module);
+            }
+        }
+
+        return jars;
     }
 
     private boolean needRestart = false;
