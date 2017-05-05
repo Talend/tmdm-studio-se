@@ -12,8 +12,10 @@
 // ============================================================================
 package com.amalto.workbench.service;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -52,6 +54,18 @@ public class MissingJarService {
             }
         }
         return jars.isEmpty() ? null : jars;
+    }
+
+    public Set<ModuleNeeded> getMissingJars() {
+        List<ModuleNeeded> modulesNeeded = ModulesNeededProvider.getModulesNeeded("MDM"); //$NON-NLS-1$
+        Set<ModuleNeeded> jars = new HashSet<ModuleNeeded>();
+        for (ModuleNeeded module : modulesNeeded) {
+            if (module.getStatus() == ELibraryInstallStatus.NOT_INSTALLED) {
+                jars.add(module);
+            }
+        }
+
+        return jars;
     }
 
     private boolean needRestart = false;
