@@ -9,4 +9,30 @@
   </parent>
   <artifactId>org.talend.mdm.workbench.serverexplorer</artifactId>
   <packaging>eclipse-plugin</packaging>
+  <build>
+        <plugins>   
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>target-platform-configuration</artifactId>
+                <version>${tycho.version}</version>
+                <configuration>
+                    <dependency-resolution>
+                        <optionalDependencies>ignore</optionalDependencies>
+                        <extraRequirements>
+                            <requirement>
+                                <type>eclipse-plugin</type>
+                                <id>org.talend.libraries.mdm</id>
+                                <versionRange>0.0.0</versionRange>
+                            </requirement>
+                            <requirement>
+                                <type>eclipse-plugin</type>
+                                <id>org.talend.libraries.mdm.webservice.ce</id>
+                                <versionRange>0.0.0</versionRange>
+                            </requirement>
+                        </extraRequirements>
+                    </dependency-resolution>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
