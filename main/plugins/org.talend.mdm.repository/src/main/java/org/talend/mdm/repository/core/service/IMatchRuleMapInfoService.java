@@ -54,4 +54,6 @@ public interface IMatchRuleMapInfoService extends IService {
     IRepositoryViewObject generateWSMatchRuleObject(Item item);
 
     List<IRepositoryViewObject> findReferencedDataModels(String matchRuleName);
+
+    void renameEntityMapinfo(Item item, String oldName, String newName);
 }

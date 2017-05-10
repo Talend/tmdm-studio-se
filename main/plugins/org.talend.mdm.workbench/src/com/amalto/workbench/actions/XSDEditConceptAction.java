@@ -34,6 +34,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 
 import com.amalto.workbench.editors.DataModelMainPage;
+import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -44,11 +45,14 @@ public class XSDEditConceptAction extends UndoAction {
 
     private static Log log = LogFactory.getLog(XSDEditConceptAction.class);
 
+    private IMatchRuleMapInfoOperationExAdapter exAdapter;
+
     public XSDEditConceptAction(DataModelMainPage page) {
         super(page);
         setImageDescriptor(ImageCache.getImage(EImage.EDIT_OBJ.getPath()));
         setText(Messages.Text);
         setToolTipText(Messages.XSDEditConceptAction_ActionTip);
+        this.exAdapter = ExAdapterManager.getAdapter(this, IMatchRuleMapInfoOperationExAdapter.class);
     }
 
     @Override
@@ -60,8 +64,8 @@ public class XSDEditConceptAction extends UndoAction {
             IStructuredContentProvider provider = (IStructuredContentProvider) page.getTreeViewer().getContentProvider();
             String oldName = decl.getName();
 
-            InputDialog id = new InputDialog(page.getSite().getShell(), Messages.XSDEditConceptAction_Text, Messages.XSDEditConceptAction_DialogTip,
-                    oldName, new IInputValidator() {
+            InputDialog id = new InputDialog(page.getSite().getShell(), Messages.XSDEditConceptAction_Text,
+                    Messages.XSDEditConceptAction_DialogTip, oldName, new IInputValidator() {
 
                         public String isValid(String newText) {
                             if ((newText == null) || "".equals(newText)) {
@@ -99,7 +103,9 @@ public class XSDEditConceptAction extends UndoAction {
             decl.setName(id.getValue().trim());
             decl.updateElement();
             Util.updateReference(decl, objs, allForeignKeyRelatedInfos, oldName, id.getValue());
-
+            if (exAdapter != null) {
+                exAdapter.renameEntityMapinfo(oldName, id.getValue());
+            }
             // change unique key with new name of concept
             EList list = decl.getIdentityConstraintDefinitions();
             XSDIdentityConstraintDefinition toUpdate = null;

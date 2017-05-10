@@ -28,11 +28,13 @@ import org.eclipse.xsd.XSDXPathDefinition;
 import org.eclipse.xsd.XSDXPathVariety;
 import org.eclipse.xsd.util.XSDSchemaBuildingTools;
 
+import com.amalto.workbench.actions.IMatchRuleMapInfoOperationExAdapter;
 import com.amalto.workbench.detailtabs.exception.CommitException;
 import com.amalto.workbench.detailtabs.exception.CommitValidationException;
 import com.amalto.workbench.detailtabs.sections.model.entity.EntityWrapper;
 import com.amalto.workbench.detailtabs.sections.model.entity.FieldWrapper;
 import com.amalto.workbench.detailtabs.sections.model.entity.KeyWrapper;
+import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.providers.datamodel.SchemaTreeContentProvider;
 import com.amalto.workbench.utils.Util;
@@ -59,8 +61,11 @@ public class EntityCommitHandler extends CommitHandler<EntityWrapper> {
 
     private static final String ERR_FIELD_WRONGFORMAT = Messages.EntityCommitHandler_KeyFieldInWrongFormat;
 
+    private IMatchRuleMapInfoOperationExAdapter exAdapter;
+
     public EntityCommitHandler(EntityWrapper entityWrapper) {
         super(entityWrapper);
+        this.exAdapter = ExAdapterManager.getAdapter(this, IMatchRuleMapInfoOperationExAdapter.class);
     }
 
     @Override
@@ -86,11 +91,12 @@ public class EntityCommitHandler extends CommitHandler<EntityWrapper> {
 
         XSDElementDeclaration xsdElementDeclaration = getCommitedObj().getSourceEntity();
         String oldName = xsdElementDeclaration.getName();
-        if (oldName.equals(getCommitedObj().getName())) {
+        String newName = getCommitedObj().getName();
+        if (oldName.equals(newName)) {
             return false;
         }
 
-        xsdElementDeclaration.setName(getCommitedObj().getName());
+        xsdElementDeclaration.setName(newName);
         xsdElementDeclaration.updateElement();
 
         updateReferenceForNewName(xsdElementDeclaration, oldName);
@@ -99,10 +105,13 @@ public class EntityCommitHandler extends CommitHandler<EntityWrapper> {
         for (Object idConsObj : xsdElementDeclaration.getIdentityConstraintDefinitions()) {
             XSDIdentityConstraintDefinition idCons = (XSDIdentityConstraintDefinition) idConsObj;
             if (idCons.getName().equals(oldName)) {
-                idCons.setName(xsdElementDeclaration.getName());
+                idCons.setName(newName);
                 idCons.updateElement();
                 break;
             }
+        }
+        if (exAdapter != null) {
+            exAdapter.renameEntityMapinfo(oldName, newName);
         }
         return true;
     }
