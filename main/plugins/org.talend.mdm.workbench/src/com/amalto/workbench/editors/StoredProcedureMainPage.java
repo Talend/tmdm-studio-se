@@ -69,6 +69,13 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.IHyperlinkListener;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Hyperlink;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSDataClusterPK;
+import org.talend.mdm.webservice.WSExecuteStoredProcedure;
+import org.talend.mdm.webservice.WSPutStoredProcedure;
+import org.talend.mdm.webservice.WSStoredProcedure;
+import org.talend.mdm.webservice.WSStoredProcedurePK;
+import org.talend.mdm.webservice.WSStringArray;
 
 import com.amalto.workbench.actions.EditXObjectAction;
 import com.amalto.workbench.dialogs.DOMViewDialog;
@@ -83,13 +90,6 @@ import com.amalto.workbench.providers.XObjectEditorInput;
 import com.amalto.workbench.service.MissingJarService;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.WidgetUtils;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSDataClusterPK;
-import com.amalto.workbench.webservices.WSExecuteStoredProcedure;
-import com.amalto.workbench.webservices.WSPutStoredProcedure;
-import com.amalto.workbench.webservices.WSStoredProcedure;
-import com.amalto.workbench.webservices.WSStoredProcedurePK;
-import com.amalto.workbench.webservices.WSStringArray;
 
 public class StoredProcedureMainPage extends AMainPage implements ITextListener {
 
