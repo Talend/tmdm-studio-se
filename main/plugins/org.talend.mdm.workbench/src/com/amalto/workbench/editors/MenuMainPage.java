@@ -62,6 +62,9 @@ import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.IWorkbenchActionConstants;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.talend.mdm.webservice.WSMenu;
+import org.talend.mdm.webservice.WSMenuEntry;
+import org.talend.mdm.webservice.WSMenuMenuEntriesDescriptions;
 
 import com.amalto.workbench.dialogs.MenuEntryDialog;
 import com.amalto.workbench.i18n.Messages;
@@ -70,9 +73,6 @@ import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.providers.XObjectEditorInput;
 import com.amalto.workbench.utils.Util;
-import com.amalto.workbench.webservices.WSMenu;
-import com.amalto.workbench.webservices.WSMenuEntry;
-import com.amalto.workbench.webservices.WSMenuMenuEntriesDescriptions;
 
 public class MenuMainPage extends AMainPageV2 {
 

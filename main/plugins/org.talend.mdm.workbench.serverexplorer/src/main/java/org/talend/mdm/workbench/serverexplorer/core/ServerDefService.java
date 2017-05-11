@@ -35,13 +35,13 @@ import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.model.mdmproperties.MDMServerDefItem;
 import org.talend.mdm.repository.model.mdmproperties.MdmpropertiesFactory;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSPing;
 import org.talend.repository.model.IProxyRepositoryFactory;
 
 import com.amalto.workbench.service.ILegendServerDefService;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XtentisException;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSPing;
 
 /**
  * DOC hbhong class global comment. Detailled comment <br/>

@@ -1,6 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Web Service Object for CE
-Bundle-SymbolicName: org.talend.mdm.ws
-Bundle-Version: 6.4.0.qualifier
-Export-Package: com.amalto.workbench.webservices

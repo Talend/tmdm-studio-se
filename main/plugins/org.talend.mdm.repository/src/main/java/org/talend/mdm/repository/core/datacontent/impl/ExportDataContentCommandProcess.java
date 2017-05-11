@@ -14,8 +14,7 @@ package org.talend.mdm.repository.core.datacontent.impl;
 
 import org.eclipse.ui.progress.IProgressService;
 import org.talend.mdm.repository.core.service.ConsoleProgressService;
-
-import com.amalto.workbench.webservices.TMDMService;
+import org.talend.mdm.webservice.TMDMService;
 
 /**
  * created by HHB on 2012-10-10 Detailled comment

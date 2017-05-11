@@ -15,14 +15,14 @@ package com.amalto.workbench.availablemodel;
 import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSMDMJob;
+import org.talend.mdm.webservice.WSMDMNULL;
 
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.models.TreeParent;
 import com.amalto.workbench.utils.EXtentisObjects;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSMDMJob;
-import com.amalto.workbench.webservices.WSMDMNULL;
 
 /**
  * DOC achen class global comment. Detailled comment

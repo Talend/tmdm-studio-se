@@ -21,8 +21,7 @@ import org.talend.mdm.repository.model.mdmproperties.WSViewItem;
 import org.talend.mdm.repository.model.mdmserverobject.WSViewE;
 import org.talend.mdm.repository.model.mdmserverobject.WSWhereConditionE;
 import org.talend.mdm.repository.model.mdmserverobject.WSWhereOperatorE;
-
-import com.amalto.workbench.webservices.WSWhereOperator;
+import org.talend.mdm.webservice.WSWhereOperator;
 
 
 /**

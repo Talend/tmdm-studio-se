@@ -38,15 +38,15 @@ import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.model.mdmserverobject.WSDataModelE;
 import org.talend.mdm.repository.ui.dialogs.xpath.XpathSelectDialog2;
 import org.talend.mdm.repository.ui.navigator.MDMRepositoryView;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSDataModel;
+import org.talend.mdm.webservice.WSDataModelPK;
+import org.talend.mdm.webservice.WSGetDataModel;
 import org.talend.mdm.workbench.serverexplorer.core.ServerDefService;
 import org.talend.mdm.workbench.serverexplorer.ui.dialogs.SelectServerDefDialog;
 
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.utils.XtentisException;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSDataModel;
-import com.amalto.workbench.webservices.WSDataModelPK;
-import com.amalto.workbench.webservices.WSGetDataModel;
 import com.amalto.workbench.widgets.celleditor.EditableComboBoxDialogCellEditor;
 
 /**
