@@ -446,19 +446,19 @@ public class MDM {
     }
 
     /**
-     * Get webservice client connection time from jvm param setting
+     * Get webservice client timeout information from jvm param setting
      *  
      * {talendTypes} int
      * 
      * {Category} MDM
      * 
-     * {param} none
+     * {param} String property: timeout property
      *  
-     * {example} getWSClientConnectionTimeout() # return 60000
+     * {example} getWSClientTimeout(String property) # return 60000
      */
-    public static int getWSClientConnectionTimeout() throws Exception {
+    public static int getWSClientTimeout(String property) throws Exception {
     	int defaultTimeout = 60000;
-        String inputTimeout = System.getProperty(WS_CLIENT_CONNECTION_TIME_VALUE);
+        String inputTimeout = System.getProperty(property);
         if (inputTimeout != null) {
             try {
             	int timeout = Integer.parseInt(inputTimeout);
@@ -466,34 +466,7 @@ public class MDM {
             		return timeout;
             	}
             } catch (Exception exception) {
-                throw new RuntimeException("Webservice client connection timeout value '" + inputTimeout + "' is invalid", exception);
-            }
-        }
-        return defaultTimeout;
-    }
-    
-    /**
-     * Get webservice client receive time from jvm param setting
-     *  
-     * {talendTypes} int
-     * 
-     * {Category} MDM
-     * 
-     * {param} none
-     *  
-     * {example} getWSClientReceiveTimeout() # return 60000
-     */
-    public static int getWSClientReceiveTimeout() throws Exception {
-    	int defaultTimeout = 60000;
-        String inputTimeout = System.getProperty(WS_CLIENT_RECEIVE_TIME_VALUE);
-        if (inputTimeout != null) {
-            try {
-            	int timeout = Integer.parseInt(inputTimeout);
-            	if (timeout > 0) {
-            		return timeout;
-            	}
-            } catch (Exception exception) {
-                throw new RuntimeException("Webservice client receive timeout value '" + inputTimeout + "' is invalid", exception);
+                throw new RuntimeException("Webservice " + property + " property value '" + inputTimeout + "' is invalid", exception);
             }
         }
         return defaultTimeout;
