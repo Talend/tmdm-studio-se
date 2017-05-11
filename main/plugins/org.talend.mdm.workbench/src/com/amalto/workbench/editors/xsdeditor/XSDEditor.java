@@ -87,6 +87,7 @@ import org.eclipse.xsd.XSDTerm;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDXPathDefinition;
 import org.talend.mdm.commmon.util.core.CommonUtil;
+import org.talend.mdm.webservice.WSDataModel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXParseException;
@@ -99,7 +100,6 @@ import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.providers.datamodel.SchemaTreeContentProvider;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.views.MDMPerspective;
-import com.amalto.workbench.webservices.WSDataModel;
 
 @SuppressWarnings("restriction")
 public class XSDEditor extends MultiPageEditorPart implements IServerObjectEditorState, ITabbedPropertySheetPageContributor,

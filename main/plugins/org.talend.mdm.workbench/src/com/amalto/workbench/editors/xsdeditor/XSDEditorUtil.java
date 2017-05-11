@@ -26,11 +26,11 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.talend.mdm.webservice.WSDataModel;
 
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.utils.EXtentisObjects;
-import com.amalto.workbench.webservices.WSDataModel;
 
 public class XSDEditorUtil {
 

@@ -30,15 +30,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSDataClusterPK;
+import org.talend.mdm.webservice.WSDataModelPK;
+import org.talend.mdm.webservice.WSRegexDataClusterPKs;
+import org.talend.mdm.webservice.WSRegexDataModelPKs;
 
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.utils.Util;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSDataClusterPK;
-import com.amalto.workbench.webservices.WSDataModelPK;
-import com.amalto.workbench.webservices.WSRegexDataClusterPKs;
-import com.amalto.workbench.webservices.WSRegexDataModelPKs;
 
 public class ProjectDecisionDialog extends Dialog {
 

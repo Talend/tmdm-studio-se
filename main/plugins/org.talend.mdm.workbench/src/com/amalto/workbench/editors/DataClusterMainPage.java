@@ -25,10 +25,10 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.talend.mdm.webservice.WSDataCluster;
 
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.providers.XObjectEditorInput;
-import com.amalto.workbench.webservices.WSDataCluster;
 
 public class DataClusterMainPage extends AMainPageV2 implements ITextListener {
 
