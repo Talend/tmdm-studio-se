@@ -15,6 +15,7 @@ package com.amalto.workbench.detailtabs.sections.handlers;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -28,20 +29,29 @@ import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDSchemaBuildingTools;
 import org.w3c.dom.Element;
 
+import com.amalto.workbench.actions.IMatchRuleMapInfoOperationExAdapter;
+import com.amalto.workbench.actions.IXSDElementOperationExAdapter;
 import com.amalto.workbench.actions.XSDGetXPathAction;
 import com.amalto.workbench.detailtabs.exception.CommitException;
 import com.amalto.workbench.detailtabs.exception.CommitValidationException;
 import com.amalto.workbench.detailtabs.sections.model.element.ElementWrapper;
 import com.amalto.workbench.editors.DataModelMainPage;
 import com.amalto.workbench.editors.xsdeditor.XSDEditor;
+import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XSDAnnotationsStructure;
 
 public class ElementWrapperCommitHandler extends CommitHandler<ElementWrapper> {
 
+    private IXSDElementOperationExAdapter elementExAdapter = null;
+
+    private IMatchRuleMapInfoOperationExAdapter mapinfoExAdapter = null;
+
     public ElementWrapperCommitHandler(ElementWrapper submittedObj) {
         super(submittedObj);
+        this.elementExAdapter = ExAdapterManager.getAdapter(this, IXSDElementOperationExAdapter.class);
+        this.mapinfoExAdapter = ExAdapterManager.getAdapter(this, IMatchRuleMapInfoOperationExAdapter.class);
     }
 
     @Override
@@ -65,10 +75,16 @@ public class ElementWrapperCommitHandler extends CommitHandler<ElementWrapper> {
             if (decl.isElementDeclarationReference()) {
                 ref = decl.getResolvedElementDeclaration();
             }
-            XSDAnnotationsStructure struct=new XSDAnnotationsStructure(getCommitedObj().getSourceElement());
-            //remove first
-            //struct.setAutoExpand(null);
+            XSDAnnotationsStructure struct = new XSDAnnotationsStructure(getCommitedObj().getSourceElement());
+            // remove first
+            // struct.setAutoExpand(null);
             struct.setAutoExpand(String.valueOf(getCommitedObj().isAutoExpand()));
+
+            // update validation rule
+            Set<String> paths = new HashSet<String>();
+            DataModelMainPage page = getPage();
+            Util.collectElementPaths((IStructuredContentProvider) page.getElementsViewer().getContentProvider(), page.getSite(),
+                    getCommitedObj().getSourceElement(), paths, null);
 
             XSDElementDeclaration newRef = Util.findReference(getCommitedObj().getNewReference(), getCommitedObj().getSchema());
 
@@ -95,15 +111,15 @@ public class ElementWrapperCommitHandler extends CommitHandler<ElementWrapper> {
                 decl.setResolvedElementDeclaration(newRef);
                 decl.setTypeDefinition(null);
                 Element elem = decl.getElement();
-                if (elem.getAttributes().getNamedItem("type") != null)//$NON-NLS-1$
+                if (elem.getAttributes().getNamedItem("type") != null) {
                     elem.getAttributes().removeNamedItem("type");//$NON-NLS-1$
+                }
                 decl.updateElement();
             } else if (ref != null) {
 
                 XSDElementDeclaration sourceXSDContent = getCommitedObj().getSourceXSDContent();
-                sourceXSDContent.setTypeDefinition(
-                        getCommitedObj().getSchema().getSchemaForSchema()
-                                .resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"));//$NON-NLS-1$
+                sourceXSDContent.setTypeDefinition(getCommitedObj().getSchema().getSchemaForSchema()
+                        .resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"));//$NON-NLS-1$
 
                 sourceXSDContent.setResolvedElementDeclaration(sourceXSDContent);
                 // XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
@@ -124,28 +140,36 @@ public class ElementWrapperCommitHandler extends CommitHandler<ElementWrapper> {
                 // }
             }
 
-    		int newMaxOcur = getCommitedObj().getNewMaxOcur();
-			if (Util.changeElementTypeToSequence(decl, newMaxOcur) == Status.CANCEL_STATUS) {
-				return false;
-			}
+            int newMaxOcur = getCommitedObj().getNewMaxOcur();
+            if (Util.changeElementTypeToSequence(decl, newMaxOcur) == Status.CANCEL_STATUS) {
+                return false;
+            }
 
-			int newMinOcur = getCommitedObj().getNewMinOcur();
-			getCommitedObj().getSourceElement().setMinOccurs(newMinOcur);
-			if (newMaxOcur == -1 || (newMaxOcur == 0 & newMinOcur == 0)) {
-                if (!"unbounded".equals(getCommitedObj().getSourceElement().getElement().getAttribute("maxOccurs")))//$NON-NLS-1$//$NON-NLS-2$
+            int newMinOcur = getCommitedObj().getNewMinOcur();
+            getCommitedObj().getSourceElement().setMinOccurs(newMinOcur);
+            if (newMaxOcur == -1 || (newMaxOcur == 0 & newMinOcur == 0)) {
+                if (!"unbounded".equals(getCommitedObj().getSourceElement().getElement().getAttribute("maxOccurs"))) {
                     getCommitedObj().getSourceElement().getElement().setAttribute("maxOccurs", "unbounded");//$NON-NLS-1$//$NON-NLS-2$
-			} else {
-				getCommitedObj().getSourceElement().setMaxOccurs(newMaxOcur);
-			}
+                }
+            } else {
+                getCommitedObj().getSourceElement().setMaxOccurs(newMaxOcur);
+            }
 
-			getCommitedObj().getSourceElement().updateElement();
+            getCommitedObj().getSourceElement().updateElement();
 
             updateReference(originalName);
-		} catch (Exception e) {
-			throw new CommitException(e.getMessage(), e);
-		}
 
-		return true;
+            if (elementExAdapter != null) {
+                elementExAdapter.renameElement(getCommitedObj().getSchema(), paths, getCommitedObj().getNewName());
+            }
+            if (mapinfoExAdapter != null) {
+                mapinfoExAdapter.renameElementMapinfo(paths, decl.getName());
+            }
+        } catch (Exception e) {
+            throw new CommitException(e.getMessage(), e);
+        }
+
+        return true;
     }
 
     private DataModelMainPage getPage() {
@@ -182,35 +206,38 @@ public class ElementWrapperCommitHandler extends CommitHandler<ElementWrapper> {
             Object[] allForeignKeyRelatedInfos = Util.getAllForeignKeyRelatedInfos(page.getSite(), new ArrayList<Object>(),
                     provider, new HashSet<Object>());
             Util.updateForeignKeyRelatedInfo(originalXpath, modifiedXpath, allForeignKeyRelatedInfos);
+
         }
     }
 
-	private void validateCardinality() throws CommitValidationException {
-		int newMinOcur = getCommitedObj().getNewMinOcur();
-		if (newMinOcur < 0)
-			throw new CommitValidationException(
-					Messages.ElementWrapperCommitHandler_MinValidExceptionInfo);
+    private void validateCardinality() throws CommitValidationException {
+        int newMinOcur = getCommitedObj().getNewMinOcur();
+        if (newMinOcur < 0) {
+            throw new CommitValidationException(Messages.ElementWrapperCommitHandler_MinValidExceptionInfo);
+        }
 
-		int newMaxOcur = getCommitedObj().getNewMaxOcur();
-		if (newMaxOcur > -1
-				&& newMaxOcur < newMinOcur)
-			throw new CommitValidationException(
-					Messages.ElementWrapperCommitHandler_ManValidExceptionInfo);
-	}
+        int newMaxOcur = getCommitedObj().getNewMaxOcur();
+        if (newMaxOcur > -1 && newMaxOcur < newMinOcur) {
+            throw new CommitValidationException(Messages.ElementWrapperCommitHandler_ManValidExceptionInfo);
+        }
+    }
 
     private void validateElementNameAndReference() throws CommitValidationException {
 
         if (((getCommitedObj().getNewName() == null) || ("".equals(getCommitedObj().getNewName())))//$NON-NLS-1$
-                && ((getCommitedObj().getNewReference() == null) || "".equals(getCommitedObj().getNewReference())))//$NON-NLS-1$
+                && ((getCommitedObj().getNewReference() == null) || "".equals(getCommitedObj().getNewReference()))) {
             throw new CommitValidationException(Messages.ElementWrapperCommitHandler_BusinessElementCannotbeEmpty);
+        }
 
-        if (getCommitedObj().getNewName().replaceAll("\\s", "").length() != getCommitedObj().getNewName().length())//$NON-NLS-1$//$NON-NLS-2$
+        if (getCommitedObj().getNewName().replaceAll("\\s", "").length() != getCommitedObj().getNewName().length()) {
             throw new CommitValidationException(Messages.ElementWrapperCommitHandler_BusinessElementCannotContainEmpty);
+        }
 
         if (getCommitedObj().hasNewReference()
-                && (Util.findReference(getCommitedObj().getNewReference(), getCommitedObj().getSchema()) == null))
-            throw new CommitValidationException(Messages.ElementWrapperCommitHandler_ReferenceElementExceptionInfo + getCommitedObj().getNewReference()
-                    + Messages.ElementWrapperCommitHandler_ReferenceElementExceptionInfoA);
+                && (Util.findReference(getCommitedObj().getNewReference(), getCommitedObj().getSchema()) == null)) {
+            throw new CommitValidationException(Messages.ElementWrapperCommitHandler_ReferenceElementExceptionInfo
+                    + getCommitedObj().getNewReference() + Messages.ElementWrapperCommitHandler_ReferenceElementExceptionInfoA);
+        }
 
     }
 }

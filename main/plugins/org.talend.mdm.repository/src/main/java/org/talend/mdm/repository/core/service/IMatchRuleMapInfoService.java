@@ -13,6 +13,7 @@
 package org.talend.mdm.repository.core.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.emf.edit.domain.EditingDomain;
 import org.talend.core.IService;
@@ -56,4 +57,8 @@ public interface IMatchRuleMapInfoService extends IService {
     List<IRepositoryViewObject> findReferencedDataModels(String matchRuleName);
 
     void renameEntityMapinfo(Item item, String oldName, String newName);
+
+    void renameElementMapinfo(Item item, Set<String> paths, String newName);
+
+    void deleteEntityMapinfo(Item item, String entityName);
 }

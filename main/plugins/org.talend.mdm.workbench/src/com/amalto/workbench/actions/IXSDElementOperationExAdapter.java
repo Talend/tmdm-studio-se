@@ -14,17 +14,15 @@ package com.amalto.workbench.actions;
 
 import java.util.Set;
 
+import org.eclipse.xsd.XSDSchema;
+
 import com.amalto.workbench.exadapter.IExAdapter;
 
 /**
- * created by HHB on 2017-5-9 Detailled comment
+ * created by HHB on 2017-5-15 Detailled comment
  *
  */
-public interface IMatchRuleMapInfoOperationExAdapter<T> extends IExAdapter<T> {
+public interface IXSDElementOperationExAdapter<T> extends IExAdapter<T> {
 
-    void deleteEntityMapInfo(String entityName);
-
-    void renameEntityMapinfo(String oldName, String newName);
-
-    void renameElementMapinfo(Set<String> paths, String newName);
+    void renameElement(XSDSchema schema, Set<String> paths, String newName);
 }

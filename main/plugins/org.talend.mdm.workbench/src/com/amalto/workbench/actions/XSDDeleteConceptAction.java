@@ -40,8 +40,9 @@ public class XSDDeleteConceptAction extends UndoAction {
 
     private static Log log = LogFactory.getLog(XSDDeleteConceptAction.class);
 
-    // private DataModelMainPage page = null;
-    private XSDElementDeclaration xsdElem = null;
+    private XSDElementDeclaration toDeleteElement = null;
+
+    protected String deletedEntityName;
 
     public XSDDeleteConceptAction(DataModelMainPage page) {
         super(page);
@@ -56,7 +57,7 @@ public class XSDDeleteConceptAction extends UndoAction {
         if (!(toDel instanceof XSDElementDeclaration)) {
             return;
         }
-        xsdElem = (XSDElementDeclaration) toDel;
+        toDeleteElement = (XSDElementDeclaration) toDel;
         super.run();
     }
 
@@ -66,15 +67,16 @@ public class XSDDeleteConceptAction extends UndoAction {
             // xsdElem is to support the multiple delete action on key press,
             // which each delete action on concept must be explicit passed a xsdElem to
             // delete
-            XSDElementDeclaration decl = xsdElem;
+            XSDElementDeclaration decl = toDeleteElement;
             if (decl == null) {
                 ISelection selection = page.getTreeViewer().getSelection();
                 decl = (XSDElementDeclaration) ((IStructuredSelection) selection).getFirstElement();
             }
-
+            deletedEntityName = decl.getName();
             // check if contains fk
             if (checkContainFK(decl.getName())) {
-                boolean confirmed = MessageDialog.openConfirm(page.getSite().getShell(), Messages.XSDDeleteConceptAction_ConfirmDel,
+                boolean confirmed = MessageDialog.openConfirm(page.getSite().getShell(),
+                        Messages.XSDDeleteConceptAction_ConfirmDel,
                         Messages.bind(Messages.XSDDeleteConceptAction_ConfirmInfo, decl.getName()));
                 if (!confirmed) {
                     return Status.CANCEL_STATUS;
@@ -97,18 +99,16 @@ public class XSDDeleteConceptAction extends UndoAction {
             schema.getContents().remove(decl);
 
             schema.update();
-            xsdElem = null;
+            toDeleteElement = null;
             page.refresh();
             page.markDirtyWithoutCommit();
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-			if (!Util.handleConnectionException(page.getSite().getShell(), e, Messages.XSDDeleteConceptAction_ErrorMsg)) {
-				MessageDialog.openError(page.getSite().getShell(),
-						Messages._Error, Messages.bind(
-								Messages.XSDDeleteConceptAction_ErrorMsg,
-								e.getLocalizedMessage()));
-			}
+            if (!Util.handleConnectionException(page.getSite().getShell(), e, Messages.XSDDeleteConceptAction_ErrorMsg)) {
+                MessageDialog.openError(page.getSite().getShell(), Messages._Error,
+                        Messages.bind(Messages.XSDDeleteConceptAction_ErrorMsg, e.getLocalizedMessage()));
+            }
             return Status.CANCEL_STATUS;
         }
         return Status.OK_STATUS;
@@ -147,6 +147,6 @@ public class XSDDeleteConceptAction extends UndoAction {
     }
 
     public void setXSDTODel(XSDElementDeclaration elem) {
-        xsdElem = elem;
+        toDeleteElement = elem;
     }
 }

@@ -15,10 +15,13 @@ package org.talend.mdm.repository.ui.actions.xsd;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.xsd.XSDSchema;
 
+import com.amalto.workbench.actions.IMatchRuleMapInfoOperationExAdapter;
 import com.amalto.workbench.actions.XSDDeleteConceptAction;
 import com.amalto.workbench.editors.DataModelMainPage;
+import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.utils.Util;
 
 /**
@@ -26,13 +29,11 @@ import com.amalto.workbench.utils.Util;
  */
 public class XSDDeleteConceptActionR extends XSDDeleteConceptAction {
 
-    /**
-     * DOC hbhong XSDDeleteConceptActionR constructor comment.
-     * 
-     * @param page
-     */
+    private IMatchRuleMapInfoOperationExAdapter mapinfoExAdapter = null;
+
     public XSDDeleteConceptActionR(DataModelMainPage page) {
         super(page);
+        this.mapinfoExAdapter = ExAdapterManager.getAdapter(this, IMatchRuleMapInfoOperationExAdapter.class);
     }
 
     @Override
@@ -44,6 +45,22 @@ public class XSDDeleteConceptActionR extends XSDDeleteConceptAction {
             return fks.contains(fkName);
         }
         return false;
+    }
+
+    @Override
+    public IStatus doAction() {
+
+        IStatus status = super.doAction();
+        if (status.isOK()) {
+            if (deletedEntityName != null && mapinfoExAdapter != null) {
+                mapinfoExAdapter.deleteEntityMapInfo(deletedEntityName);
+                deletedEntityName = null;
+            }
+
+        }
+
+        return status;
+
     }
 
 }

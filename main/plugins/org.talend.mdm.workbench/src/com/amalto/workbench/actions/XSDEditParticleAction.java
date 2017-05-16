@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,6 +43,7 @@ import org.w3c.dom.Element;
 
 import com.amalto.workbench.dialogs.BusinessElementInputDialog;
 import com.amalto.workbench.editors.DataModelMainPage;
+import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -67,11 +69,17 @@ public class XSDEditParticleAction extends UndoAction implements SelectionListen
 
     private String initEleName = ""; //$NON-NLS-1$
 
+    private IXSDElementOperationExAdapter elementExAdapter = null;
+
+    private IMatchRuleMapInfoOperationExAdapter mapinfoExAdapter = null;
+
     public XSDEditParticleAction(DataModelMainPage page) {
         super(page);
         setImageDescriptor(ImageCache.getImage(EImage.EDIT_OBJ.getPath()));
         setText(Messages.XSDEditParticleAction_EditElement);
         setToolTipText(Messages.XSDEditParticleAction_EditBusinessElement);
+        this.elementExAdapter = ExAdapterManager.getAdapter(this, IXSDElementOperationExAdapter.class);
+        this.mapinfoExAdapter = ExAdapterManager.getAdapter(this, IMatchRuleMapInfoOperationExAdapter.class);
     }
 
     @Override
@@ -123,9 +131,9 @@ public class XSDEditParticleAction extends UndoAction implements SelectionListen
                 isPK = true;
             }
             initEleName = decl.getName();
-            dialog = new BusinessElementInputDialog(this, page.getSite().getShell(), Messages.XSDEditParticleAction_InputDialogTitle, decl.getName(),
-                    ref == null ? null : ref.getQName(), elementDeclarations, selParticle.getMinOccurs(),
-                    selParticle.getMaxOccurs(), false, isPK);
+            dialog = new BusinessElementInputDialog(this, page.getSite().getShell(),
+                    Messages.XSDEditParticleAction_InputDialogTitle, decl.getName(), ref == null ? null : ref.getQName(),
+                    elementDeclarations, selParticle.getMinOccurs(), selParticle.getMaxOccurs(), false, isPK);
             dialog.setBlockOnOpen(true);
             int ret = dialog.open();
             if (ret == Window.CANCEL) {
@@ -139,10 +147,17 @@ public class XSDEditParticleAction extends UndoAction implements SelectionListen
             if (!"".equals(refName.trim())) { //$NON-NLS-1$
                 newRef = Util.findReference(refName, schema);
                 if (newRef == null) {
-                    MessageDialog.openError(this.page.getSite().getShell(), Messages._Error, Messages.bind(Messages.XSDEditParticleAction_ErrorMsg, refName));
+                    MessageDialog.openError(this.page.getSite().getShell(), Messages._Error,
+                            Messages.bind(Messages.XSDEditParticleAction_ErrorMsg, refName));
                     return Status.CANCEL_STATUS;
                 }
             }// ref
+
+            // update validation rule
+            Set<String> paths = new HashSet<String>();
+            Util.collectElementPaths((IStructuredContentProvider) page.getElementsViewer().getContentProvider(), page.getSite(),
+                    selParticle, paths, null);
+            //
 
             decl.setName("".equals(this.elementName) ? null : this.elementName); //$NON-NLS-1$
             if (keyPath != null) {
@@ -157,8 +172,7 @@ public class XSDEditParticleAction extends UndoAction implements SelectionListen
                 decl.setResolvedElementDeclaration(newRef);
                 decl.setTypeDefinition(null);
                 Element elem = decl.getElement();
-                if (elem.getAttributes().getNamedItem("type") != null)
-                 {
+                if (elem.getAttributes().getNamedItem("type") != null) {
                     elem.getAttributes().removeNamedItem("type");//$NON-NLS-1$
                 }
                 decl.updateElement();
@@ -205,13 +219,20 @@ public class XSDEditParticleAction extends UndoAction implements SelectionListen
 
             updateReference(originalXpath);
 
+            if (elementExAdapter != null) {
+                elementExAdapter.renameElement(decl.getSchema(), paths, decl.getName());
+            }
+            if (mapinfoExAdapter != null) {
+                mapinfoExAdapter.renameElementMapinfo(paths, decl.getName());
+            }
+
             page.refresh();
             page.markDirty();
 
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            MessageDialog.openError(page.getSite().getShell(), Messages._Error, Messages.bind(Messages.XSDEditParticleAction_ErrorMsg1
-                    , e.getLocalizedMessage()));
+            MessageDialog.openError(page.getSite().getShell(), Messages._Error,
+                    Messages.bind(Messages.XSDEditParticleAction_ErrorMsg1, e.getLocalizedMessage()));
             return Status.CANCEL_STATUS;
         }
 
@@ -249,8 +270,7 @@ public class XSDEditParticleAction extends UndoAction implements SelectionListen
     }
 
     public void widgetSelected(SelectionEvent e) {
-        if (dialog.getReturnCode() == -1)
-         {
+        if (dialog.getReturnCode() == -1) {
             return; // there was a validation error
         }
         elementName = dialog.getElementName();
@@ -261,12 +281,13 @@ public class XSDEditParticleAction extends UndoAction implements SelectionListen
         // check that this element does not already exist
         XSDModelGroup group = (XSDModelGroup) selParticle.getContainer();
         // get position of the selected particle in the container
-        for (Iterator iter = group.getContents().iterator(); iter.hasNext();) {
-            XSDParticle p = (XSDParticle) iter.next();
+        for (Object element : group.getContents()) {
+            XSDParticle p = (XSDParticle) element;
             if (p.getTerm() instanceof XSDElementDeclaration) {
                 XSDElementDeclaration thisDecl = (XSDElementDeclaration) p.getTerm();
                 if (thisDecl.getName().equals(elementName) && initEleName != null && !initEleName.equalsIgnoreCase(elementName)) {
-                    MessageDialog.openError(page.getSite().getShell(), Messages._Error, Messages.bind(Messages.XSDEditParticleAction_ErrorMsg2, elementName));
+                    MessageDialog.openError(page.getSite().getShell(), Messages._Error,
+                            Messages.bind(Messages.XSDEditParticleAction_ErrorMsg2, elementName));
                     return;
                 }
             }

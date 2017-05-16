@@ -112,6 +112,7 @@ import org.eclipse.xsd.XSDInclude;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDParticleContent;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.XSDSchemaDirective;
@@ -1538,6 +1539,43 @@ public class Util {
 
         }
 
+    }
+
+    public static void collectElementPaths(IStructuredContentProvider provider, Object input, XSDParticle toSearch,
+            Set<String> paths, String inputPath) {
+        if (input == null || paths == null || provider == null) {
+            return;
+        }
+        Object[] elems = provider.getElements(input);
+        if (elems != null && elems.length > 0) {
+            for (Object obj : elems) {
+                if (obj == null) {
+                    continue;
+                }
+                String curPath = inputPath;
+                if (obj instanceof XSDElementDeclaration) {
+                    String name = ((XSDElementDeclaration) obj).getName();
+                    if (curPath == null) {
+                        curPath = name;
+                    } else {
+                        curPath += "/" + name; //$NON-NLS-1$
+                    }
+                }
+                if (obj instanceof XSDParticle) {
+                    XSDParticleContent content = ((XSDParticle) obj).getContent();
+                    if (content instanceof XSDElementDeclaration) {
+                        String name = ((XSDElementDeclaration) content).getName();
+                        curPath += "/" + name; //$NON-NLS-1$
+                    }
+                    if (obj == toSearch) {
+                        paths.add(curPath);
+                        break;
+                    }
+                }
+                collectElementPaths(provider, obj, toSearch, paths, curPath);
+
+            }
+        }
     }
 
     /**
