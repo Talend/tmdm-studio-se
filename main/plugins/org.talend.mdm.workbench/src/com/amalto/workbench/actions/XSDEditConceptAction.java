@@ -45,14 +45,17 @@ public class XSDEditConceptAction extends UndoAction {
 
     private static Log log = LogFactory.getLog(XSDEditConceptAction.class);
 
-    private IMatchRuleMapInfoOperationExAdapter exAdapter;
+    private IMatchRuleMapInfoOperationExAdapter mapinfoExAdapter = null;
+
+    private IXSDElementOperationExAdapter elementExAdapter = null;
 
     public XSDEditConceptAction(DataModelMainPage page) {
         super(page);
         setImageDescriptor(ImageCache.getImage(EImage.EDIT_OBJ.getPath()));
         setText(Messages.Text);
         setToolTipText(Messages.XSDEditConceptAction_ActionTip);
-        this.exAdapter = ExAdapterManager.getAdapter(this, IMatchRuleMapInfoOperationExAdapter.class);
+        this.mapinfoExAdapter = ExAdapterManager.getAdapter(this, IMatchRuleMapInfoOperationExAdapter.class);
+        this.elementExAdapter = ExAdapterManager.getAdapter(this, IXSDElementOperationExAdapter.class);
     }
 
     @Override
@@ -103,8 +106,11 @@ public class XSDEditConceptAction extends UndoAction {
             decl.setName(id.getValue().trim());
             decl.updateElement();
             Util.updateReference(decl, objs, allForeignKeyRelatedInfos, oldName, id.getValue());
-            if (exAdapter != null) {
-                exAdapter.renameEntityMapinfo(oldName, id.getValue());
+            if (mapinfoExAdapter != null) {
+                mapinfoExAdapter.renameEntityMapinfo(oldName, id.getValue());
+            }
+            if (elementExAdapter != null) {
+                elementExAdapter.renameEntityName(decl.getSchema(), oldName, id.getValue());
             }
             // change unique key with new name of concept
             EList list = decl.getIdentityConstraintDefinitions();

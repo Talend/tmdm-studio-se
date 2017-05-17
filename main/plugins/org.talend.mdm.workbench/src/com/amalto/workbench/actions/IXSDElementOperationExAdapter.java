@@ -25,4 +25,6 @@ import com.amalto.workbench.exadapter.IExAdapter;
 public interface IXSDElementOperationExAdapter<T> extends IExAdapter<T> {
 
     void renameElement(XSDSchema schema, Set<String> paths, String newName);
+
+    void renameEntityName(XSDSchema schema, String oldEntityName, String newEntityName);
 }

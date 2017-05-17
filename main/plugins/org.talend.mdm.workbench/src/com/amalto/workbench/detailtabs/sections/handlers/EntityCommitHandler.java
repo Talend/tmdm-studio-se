@@ -29,6 +29,7 @@ import org.eclipse.xsd.XSDXPathVariety;
 import org.eclipse.xsd.util.XSDSchemaBuildingTools;
 
 import com.amalto.workbench.actions.IMatchRuleMapInfoOperationExAdapter;
+import com.amalto.workbench.actions.IXSDElementOperationExAdapter;
 import com.amalto.workbench.detailtabs.exception.CommitException;
 import com.amalto.workbench.detailtabs.exception.CommitValidationException;
 import com.amalto.workbench.detailtabs.sections.model.entity.EntityWrapper;
@@ -61,11 +62,14 @@ public class EntityCommitHandler extends CommitHandler<EntityWrapper> {
 
     private static final String ERR_FIELD_WRONGFORMAT = Messages.EntityCommitHandler_KeyFieldInWrongFormat;
 
-    private IMatchRuleMapInfoOperationExAdapter exAdapter;
+    private IMatchRuleMapInfoOperationExAdapter mapinfoExAdapter = null;
+
+    private IXSDElementOperationExAdapter elementExAdapter = null;
 
     public EntityCommitHandler(EntityWrapper entityWrapper) {
         super(entityWrapper);
-        this.exAdapter = ExAdapterManager.getAdapter(this, IMatchRuleMapInfoOperationExAdapter.class);
+        this.mapinfoExAdapter = ExAdapterManager.getAdapter(this, IMatchRuleMapInfoOperationExAdapter.class);
+        this.elementExAdapter = ExAdapterManager.getAdapter(this, IXSDElementOperationExAdapter.class);
     }
 
     @Override
@@ -110,8 +114,11 @@ public class EntityCommitHandler extends CommitHandler<EntityWrapper> {
                 break;
             }
         }
-        if (exAdapter != null) {
-            exAdapter.renameEntityMapinfo(oldName, newName);
+        if (mapinfoExAdapter != null) {
+            mapinfoExAdapter.renameEntityMapinfo(oldName, newName);
+        }
+        if (elementExAdapter != null) {
+            elementExAdapter.renameEntityName(xsdElementDeclaration.getSchema(), oldName, newName);
         }
         return true;
     }
