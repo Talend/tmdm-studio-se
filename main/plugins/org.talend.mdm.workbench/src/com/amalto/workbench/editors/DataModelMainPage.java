@@ -1528,7 +1528,6 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
                 && !Util.IsAImporedElement((XSDIdentityConstraintDefinition) obj, xsdSchema)) {
             manager.add(editIdentityConstraintAction);
             manager.add(deleteIdentityConstraintAction);
-            manager.add(newIdentityConstraintAction);
             manager.add(new Separator());
             manager.add(newXPathAction);
         }

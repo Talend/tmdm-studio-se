@@ -19,8 +19,6 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -133,40 +131,12 @@ public class IdentityConstraintInputDialog extends Dialog {
         typeCombo = new CCombo(composite, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
         typeCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         typeCombo.add("Unique Key");//$NON-NLS-1$
-        typeCombo.add("Simple Key");//$NON-NLS-1$
         typeCombo.select(0);
         // typeList.add("Foreign Key"); -- FIXME: foreign keys not supported now
 
-        keyNameText.setEditable(isSimpleKey());
-
-        initUIListener();
+        keyNameText.setEditable(false);
 
         return composite;
-    }
-
-    private void initUIListener() {
-
-        typeCombo.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-
-                keyNameText.setEditable(isSimpleKey());
-
-                if (isUniqueKey())
-                    keyNameText.setText(keyContainer.getName());
-            }
-
-        });
-
-    }
-
-    public boolean isUniqueKey() {
-        return "Unique Key".equals(typeCombo.getText().trim());//$NON-NLS-1$
-    }
-
-    public boolean isSimpleKey() {
-        return "Simple Key".equals(typeCombo.getText().trim());//$NON-NLS-1$
     }
 
     protected void createButtonsForButtonBar(Composite parent) {
