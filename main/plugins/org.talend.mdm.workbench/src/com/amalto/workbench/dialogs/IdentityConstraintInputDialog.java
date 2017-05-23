@@ -19,6 +19,7 @@ import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -34,7 +35,7 @@ import com.amalto.workbench.utils.inputvalidator.NewXSDIndentityConstraintValida
 
 public class IdentityConstraintInputDialog extends Dialog {
 
-    private CCombo typeCombo = null;
+    private CLabel typeCLabel = null;
 
     private CCombo fieldNameCombo = null;
 
@@ -128,11 +129,9 @@ public class IdentityConstraintInputDialog extends Dialog {
         typeLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
         typeLabel.setText(Messages.IdentityConstraintInputDialog_Type);
 
-        typeCombo = new CCombo(composite, SWT.DROP_DOWN | SWT.READ_ONLY | SWT.BORDER);
-        typeCombo.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
-        typeCombo.add("Unique Key");//$NON-NLS-1$
-        typeCombo.select(0);
-        // typeList.add("Foreign Key"); -- FIXME: foreign keys not supported now
+        typeCLabel = new CLabel(composite, SWT.BORDER);
+        typeCLabel.setText("Unique Key");//$NON-NLS-1$
+        typeCLabel.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
 
         keyNameText.setEditable(false);
 
@@ -207,14 +206,7 @@ public class IdentityConstraintInputDialog extends Dialog {
     }
 
     private XSDIdentityConstraintCategory getTypeFromUI() {
-
-        String selection = (typeCombo.getText()).toUpperCase();
-        if (selection.indexOf("UNIQUE") >= 0)//$NON-NLS-1$
-            return XSDIdentityConstraintCategory.UNIQUE_LITERAL;
-        else if (selection.indexOf("FOREIGN") >= 0)//$NON-NLS-1$
-            return XSDIdentityConstraintCategory.KEYREF_LITERAL;
-        else
-            return XSDIdentityConstraintCategory.KEY_LITERAL;
+        return XSDIdentityConstraintCategory.UNIQUE_LITERAL;
     }
 
     public String getKeyName() {
