@@ -61,9 +61,9 @@ public class ModelImpactAnalyseService {
     public static final int LOW = 1, MEDIUM = 2, HIGH = 3;
 
     public enum ImpactOperation {
-        RECREATE_TABLE(Messages.ModelImpactAnalyseService_recreateTable),
-        APPLY_LOW_CHANGE(Messages.ModelImpactAnalyseService_applyChange),
-        CANCEL(Messages.ModelImpactAnalyseService_cancelDeploying);
+                                 RECREATE_TABLE(Messages.ModelImpactAnalyseService_recreateTable),
+                                 APPLY_LOW_CHANGE(Messages.ModelImpactAnalyseService_applyChange),
+                                 CANCEL(Messages.ModelImpactAnalyseService_cancelDeploying);
 
         private final String description;
 
@@ -358,7 +358,8 @@ public class ModelImpactAnalyseService {
                         il.remove();
                         toRemoveKeys.add(viewObject);
                     }
-                } else if (type == IServerObjectRepositoryType.TYPE_MATCH_RULE_MAPINFO) {
+                } else if (type == IServerObjectRepositoryType.TYPE_MATCH_RULE_MAPINFO
+                        || type == IServerObjectRepositoryType.TYPE_TDS) {
                     String label = viewObject.getLabel();
                     for (IRepositoryViewObject modelViewObj : impactResult.keySet()) {
                         if (modelViewObj.getLabel().equals(label)) {
