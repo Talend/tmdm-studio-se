@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.mdm.repository.utils;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,13 +38,15 @@ public class IOUtilExt {
      * @return true if the file is in tar format
      */
     public static boolean isTarFile(String fileName) {
-        if (fileName.length() == 0) {
+        assertNotNull(fileName);
+
+        if (fileName.trim().length() == 0) {
             return false;
         }
 
         TarFile tarFile = null;
         try {
-            tarFile = new TarFile(fileName);
+            tarFile = new TarFile(fileName.trim());
         } catch (TarException tarException) {
             return false;
         } catch (IOException ioException) {

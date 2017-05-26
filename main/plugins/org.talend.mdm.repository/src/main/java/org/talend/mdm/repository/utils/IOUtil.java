@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.mdm.repository.utils;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.zip.ZipFile;
@@ -76,13 +78,15 @@ public class IOUtil {
      * @return true if the file is in tar format
      */
     public static boolean isZipFile(String fileName) {
-        if (fileName.length() == 0) {
+        assertNotNull(fileName);
+
+        if (fileName.trim().length() == 0) {
             return false;
         }
 
         ZipFile zipFile = null;
         try {
-            zipFile = new ZipFile(fileName);
+            zipFile = new ZipFile(fileName.trim());
         } catch (IOException ioException) {
             return false;
         } finally {

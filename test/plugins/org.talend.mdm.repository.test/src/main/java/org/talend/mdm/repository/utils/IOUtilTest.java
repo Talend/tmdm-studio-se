@@ -12,11 +12,13 @@
 // ============================================================================
 package org.talend.mdm.repository.utils;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import org.junit.Test;
 
@@ -48,6 +50,48 @@ public class IOUtilTest {
         }
         IOUtil.cleanFolder(newfile);
         assertFalse(newfile.exists());
+    }
+
+    @Test
+    public void testIsZipFile() {
+        File dir = IOUtil.getTempFolder();
+        String file = new File(dir, "test.zip").getAbsolutePath(); //$NON-NLS-1$
+        assertFalse(IOUtil.isZipFile("")); //$NON-NLS-1$
+        assertFalse(IOUtil.isZipFile("   ")); //$NON-NLS-1$
+
+        createZipFile(file);
+        assertTrue(IOUtil.isZipFile(file));
+        new File(file).deleteOnExit();
+
+        file = new File(dir, "test.jar").getAbsolutePath(); //$NON-NLS-1$
+        createZipFile(file);
+        assertTrue(IOUtil.isZipFile(file));
+        new File(file).deleteOnExit();
+    }
+
+    private void createZipFile(String zipfile) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Test String"); //$NON-NLS-1$
+
+        ZipOutputStream out = null;
+        try {
+            File f = new File(zipfile);
+            out = new ZipOutputStream(new FileOutputStream(f));
+            ZipEntry e = new ZipEntry("mytext.txt"); //$NON-NLS-1$
+            out.putNextEntry(e);
+
+            byte[] data = sb.toString().getBytes();
+            out.write(data, 0, data.length);
+        } catch (Exception e) {//
+        } finally {
+            if (out != null) {
+                try {
+                    out.closeEntry();
+                    out.close();
+                } catch (IOException e) {//
+                }
+            }
+        }
     }
 
 }
