@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">  
+  <xsd:import namespace="http://www.w3.org/2001/XMLSchema"/>  
+  <xsd:element name="Product"> 
+    <xsd:complexType> 
+      <xsd:all maxOccurs="1" minOccurs="1"> 
+        <xsd:element maxOccurs="1" minOccurs="1" name="Id" type="xsd:string"> 
+          <xsd:annotation> 
+            <xsd:appinfo source="X_Label_EN">Unique Id</xsd:appinfo>  
+            <xsd:appinfo source="X_Label_FR">Id unique</xsd:appinfo> 
+          </xsd:annotation> 
+        </xsd:element>  
+        <xsd:element maxOccurs="1" minOccurs="1" name="Name" type="xsd:string"> 
+          <xsd:annotation> 
+            <xsd:appinfo source="X_Label_EN">Name</xsd:appinfo>  
+            <xsd:appinfo source="X_Label_FR">Nom</xsd:appinfo>  
+            <xsd:appinfo source="X_ForeignKey_Filter">Product/Description$$Strict Contains$$Product$$#Product/Name$$Contains Text Of$$Family$$#</xsd:appinfo> 
+          </xsd:annotation> 
+        </xsd:element>  
+        <xsd:element maxOccurs="1" minOccurs="1" name="Description" type="xsd:string"> 
+          <xsd:annotation> 
+            <xsd:appinfo source="X_Label_EN">Description</xsd:appinfo>  
+            <xsd:appinfo source="X_Label_FR">Description</xsd:appinfo> 
+          </xsd:annotation> 
+        </xsd:element>  
+        <xsd:element maxOccurs="1" minOccurs="1" name="Price" type="xsd:decimal"> 
+          <xsd:annotation> 
+            <xsd:appinfo source="X_Label_EN">Price</xsd:appinfo>  
+            <xsd:appinfo source="X_Label_FR">Prix</xsd:appinfo>  
+            <xsd:appinfo source="X_Description_EN">Run a price request to change this price</xsd:appinfo>  
+            <xsd:appinfo source="X_Description_FR">Faites une demande de changement de prix pour modifier</xsd:appinfo> 
+          </xsd:annotation> 
+        </xsd:element> 
+      </xsd:all> 
+    </xsd:complexType>  
+    <xsd:unique name="Product"> 
+      <xsd:selector xpath="."/>  
+      <xsd:field xpath="Id"/> 
+    </xsd:unique> 
+  </xsd:element> 
+</xsd:schema>
