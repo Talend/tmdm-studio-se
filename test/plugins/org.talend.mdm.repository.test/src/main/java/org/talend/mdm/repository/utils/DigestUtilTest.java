@@ -4,10 +4,13 @@ import static org.junit.Assert.*;
 
 import java.io.UnsupportedEncodingException;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 
 public class DigestUtilTest {
+
+    private static Logger log = Logger.getLogger(DigestUtilTest.class);
 
     @Test
     public void testEncodeByMD5() {
@@ -17,7 +20,7 @@ public class DigestUtilTest {
             assertNotNull(encodedByMD5);
             assertEquals(32, encodedByMD5.length());
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         }
     }
 

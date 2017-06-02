@@ -20,10 +20,12 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 public class IOUtilTest {
 
+    private static Logger log = Logger.getLogger(IOUtilTest.class);
 
     /**
      * Test method for {@link org.talend.mdm.repository.utils.IOUtil#getTempFolder()}
@@ -83,12 +85,14 @@ public class IOUtilTest {
             byte[] data = sb.toString().getBytes();
             out.write(data, 0, data.length);
         } catch (Exception e) {//
+            log.error(e.getMessage(), e);
         } finally {
             if (out != null) {
                 try {
                     out.closeEntry();
                     out.close();
                 } catch (IOException e) {//
+                    log.error(e.getMessage(), e);
                 }
             }
         }

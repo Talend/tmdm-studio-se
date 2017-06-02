@@ -9,12 +9,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
+import org.apache.log4j.Logger;
 import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarOutputStream;
 import org.junit.Test;
 
 
 public class IOUtilExtTest {
+
+    private static Logger log = Logger.getLogger(IOUtilExtTest.class);
 
     @Test
     public void testIsTarFile() {
@@ -70,6 +73,7 @@ public class IOUtilExtTest {
             destGZDir.listFiles()[0].deleteOnExit();
             destGZDir.deleteOnExit();
         } catch (Exception e) {//
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -90,12 +94,13 @@ public class IOUtilExtTest {
             tos.flush();
             tos.finish();
         } catch (Exception e) {//
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             if (tos != null) {
                 try {
                     tos.close();
                 } catch (IOException e) {//
+                    log.error(e.getMessage(), e);
                 }
             }
         }
@@ -121,18 +126,20 @@ public class IOUtilExtTest {
             gos.finish();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             if (gos != null) {
                 try {
                     gos.close();
                 } catch (IOException e) {//
+                    log.error(e.getMessage(), e);
                 }
             }
             if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {//
+                    log.error(e.getMessage(), e);
                 }
             }
         }
