@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.zip.ZipFile;
 
+import org.apache.log4j.Logger;
 import org.apache.tools.tar.TarEntry;
 import org.apache.tools.tar.TarOutputStream;
 import org.apache.tools.zip.ZipEntry;
@@ -23,6 +24,8 @@ import org.talend.mdm.repository.utils.IOUtil;
 
 
 public class MDMImportItemUtilTest {
+
+    private static Logger log = Logger.getLogger(MDMImportItemUtilTest.class);
 
     @Test
     public void testBuildUnzippedTempFile() {
@@ -61,22 +64,20 @@ public class MDMImportItemUtilTest {
             assertEquals("test.txt", unzippedTempTarFile.getName()); //$NON-NLS-1$
             FilesUtils.deleteFile(tempFolder, true);
             FilesUtils.deleteFile(unzippedTempTarFile.getParentFile(), true);
-        } catch (Exception e) {//
-        }
+            // test zip file
+            tempFile = createTempFile();
+            tempFolder = IOUtil.getTempFolder();
+            String destZipfile = tempFolder.getAbsolutePath() + File.separator + "test.zip"; //$NON-NLS-1$
+            createZipFile(tempFile, destZipfile);
 
-        // test zip file
-        tempFile = createTempFile();
-        tempFolder = IOUtil.getTempFolder();
-        String destZipfile = tempFolder.getAbsolutePath() + File.separator + "test.zip"; //$NON-NLS-1$
-        createZipFile(tempFile, destZipfile);
-        try {
             unzippedTempTarFile = MDMImportItemUtil.buildUnzippedTempFile(new ZipFile(new File(destZipfile)));
             assertNotNull(unzippedTempFile);
             assertEquals("test.txt", unzippedTempTarFile.getName()); //$NON-NLS-1$
             FilesUtils.deleteFile(tempFile.getParentFile(), true);
             FilesUtils.deleteFile(tempFolder, true);
             FilesUtils.deleteFile(unzippedTempTarFile.getParentFile(), true);
-        } catch (IOException e) {//
+        } catch (Exception e) {//
+            log.error(e.getMessage(), e);
         }
 
     }
@@ -92,13 +93,13 @@ public class MDMImportItemUtilTest {
                 writer.flush();
             }
         } catch (IOException e) {
-            //
+            log.error(e.getMessage(), e);
         } finally {
             if (writer != null) {
                 try {
                     writer.close();
                 } catch (IOException e) {
-                    //
+                    log.error(e.getMessage(), e);
                 }
             }
         }
@@ -123,12 +124,13 @@ public class MDMImportItemUtilTest {
             tos.flush();
             tos.finish();
         } catch (Exception e) {//
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
         } finally {
             if (tos != null) {
                 try {
                     tos.close();
                 } catch (IOException e) {//
+                    log.error(e.getMessage(), e);
                 }
             }
         }
@@ -151,6 +153,7 @@ public class MDMImportItemUtilTest {
             origin.close();
             out.close();
         } catch (IOException e) {//
+            log.error(e.getMessage(), e);
         }
     }
 }
