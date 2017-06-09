@@ -67,7 +67,7 @@ public class ContainerCacheService {
             throw new IllegalArgumentException();
         }
         if (viewObj instanceof RepositoryObject) {
-            viewObj = new RepositoryViewObject(viewObj.getProperty());
+            viewObj = createRepositoryViewObject(viewObj);
         }
         viewObjMap.put(prop.getId(), viewObj);
     }
@@ -77,10 +77,14 @@ public class ContainerCacheService {
             throw new IllegalArgumentException();
         }
         if (viewObj instanceof RepositoryObject) {
-            viewObj = new RepositoryViewObject(viewObj.getProperty());
+            viewObj = createRepositoryViewObject(viewObj);
         }
         viewObjMap.put(viewObj.getId(), viewObj);
         return viewObj;
+    }
+
+    private static IRepositoryViewObject createRepositoryViewObject(IRepositoryViewObject viewObj) {
+        return new RepositoryViewObject(viewObj.getProperty());
     }
 
     public static void put(Collection<IRepositoryViewObject> viewObjs) {

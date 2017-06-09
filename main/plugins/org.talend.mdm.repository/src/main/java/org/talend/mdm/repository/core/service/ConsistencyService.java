@@ -452,19 +452,7 @@ public class ConsistencyService {
             if (conflictCount > 0) {
                 ConsistencyCheckResult result = null;
                 if (isWarnUserWhenConflict()) {
-                    ConfirmConflictMessageDialog confirmDialog = new ConfirmConflictMessageDialog(getShell(), conflictCount);
-                    int returnValue = confirmDialog.open();
-                    if (returnValue == IDialogConstants.OK_ID) {
-                        int strategy = confirmDialog.getStrategy();
-                        result = getCheckResultByStrategy(strategy, viewObjMap, viewObCmdOpjMap);
-                    } else if (returnValue == IDialogConstants.DETAILS_ID) {
-                        ConsistencyConflictDialog dialog = new ConsistencyConflictDialog(getShell(), conflictCount, viewObjMap,
-                                viewObCmdOpjMap);
-                        dialog.open();
-                        result = dialog.getResult();
-                    } else {
-                        result = new ConsistencyCheckResult();
-                    }
+                    result = warnUserWhenConflict(viewObCmdOpjMap, viewObjMap, conflictCount);
                 } else {
                     int strategy = getConflictStrategy();
                     result = getCheckResultByStrategy(strategy, viewObjMap, viewObCmdOpjMap);
@@ -476,6 +464,25 @@ public class ConsistencyService {
         }
         return new ConsistencyCheckResult(viewObjs);
 
+    }
+
+    private ConsistencyCheckResult warnUserWhenConflict(Map<IRepositoryViewObject, Integer> viewObCmdOpjMap,
+            Map<IRepositoryViewObject, WSDigest> viewObjMap, int conflictCount) {
+        ConsistencyCheckResult result;
+        ConfirmConflictMessageDialog confirmDialog = new ConfirmConflictMessageDialog(getShell(), conflictCount);
+        int returnValue = confirmDialog.open();
+        if (returnValue == IDialogConstants.OK_ID) {
+            int strategy = confirmDialog.getStrategy();
+            result = getCheckResultByStrategy(strategy, viewObjMap, viewObCmdOpjMap);
+        } else if (returnValue == IDialogConstants.DETAILS_ID) {
+            ConsistencyConflictDialog dialog = new ConsistencyConflictDialog(getShell(), conflictCount, viewObjMap,
+                    viewObCmdOpjMap);
+            dialog.open();
+            result = dialog.getResult();
+        } else {
+            result = new ConsistencyCheckResult();
+        }
+        return result;
     }
 
     private void correctCheckResult(ConsistencyCheckResult result) {
@@ -865,7 +872,8 @@ public class ConsistencyService {
     }
 
     private IPreferenceStore getPreferenceStore() {
-        return RepositoryPlugin.getDefault().getPreferenceStore();
+        IPreferenceStore preferenceStore = RepositoryPlugin.getDefault().getPreferenceStore();
+        return preferenceStore;
     }
 
     public void setWarnUserWhenConflict(boolean isWarn) {

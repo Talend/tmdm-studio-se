@@ -51,7 +51,7 @@ public class ValidateService implements IValidateService {
      * ERepositoryObjectType, java.lang.String)
      */
     public int validateObjectExistence(ERepositoryObjectType objectType, String name) {
-        if (objectType != null) {
+        if (objectType != null && name != null) {
             IRepositoryViewObject viewObject = RepositoryResourceUtil.findViewObjectByName(objectType, name);
             if (viewObject != null) {
                 Property property = viewObject.getProperty();
