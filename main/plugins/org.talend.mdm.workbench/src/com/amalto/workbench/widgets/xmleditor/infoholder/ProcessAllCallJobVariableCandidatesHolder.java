@@ -16,10 +16,11 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.talend.mdm.webservice.WSTransformerProcessStep;
+import org.talend.mdm.webservice.WSTransformerV2;
+import org.talend.mdm.webservice.WSTransformerVariablesMapping;
+
 import com.amalto.workbench.editors.TransformerMainPage;
-import com.amalto.workbench.webservices.WSTransformerProcessStep;
-import com.amalto.workbench.webservices.WSTransformerV2;
-import com.amalto.workbench.webservices.WSTransformerVariablesMapping;
 
 public class ProcessAllCallJobVariableCandidatesHolder extends AllCallJobVariableCandidatesHolder {
 

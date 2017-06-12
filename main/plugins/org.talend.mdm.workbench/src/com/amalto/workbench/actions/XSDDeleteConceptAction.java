@@ -26,6 +26,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.talend.mdm.webservice.TMDMService;
 
 import com.amalto.workbench.editors.DataModelMainPage;
 import com.amalto.workbench.i18n.Messages;
@@ -34,7 +35,6 @@ import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.providers.ISchemaContentProvider;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XtentisException;
-import com.amalto.workbench.webservices.TMDMService;
 
 public class XSDDeleteConceptAction extends UndoAction {
 

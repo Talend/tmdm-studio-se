@@ -48,6 +48,10 @@ import org.eclipse.xsd.XSDIdentityConstraintCategory;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
+import org.talend.mdm.webservice.TMDMService;
+import org.talend.mdm.webservice.WSDataModel;
+import org.talend.mdm.webservice.WSDataModelPK;
+import org.talend.mdm.webservice.WSGetDataModel;
 
 import com.amalto.workbench.detailtabs.sections.util.MDMRepositoryViewExtensionService;
 import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
@@ -59,10 +63,6 @@ import com.amalto.workbench.providers.XPathTreeContentProvider;
 import com.amalto.workbench.providers.XSDTreeLabelProvider;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XtentisException;
-import com.amalto.workbench.webservices.TMDMService;
-import com.amalto.workbench.webservices.WSDataModel;
-import com.amalto.workbench.webservices.WSDataModelPK;
-import com.amalto.workbench.webservices.WSGetDataModel;
 
 public class XpathSelectDialog extends Dialog {
 

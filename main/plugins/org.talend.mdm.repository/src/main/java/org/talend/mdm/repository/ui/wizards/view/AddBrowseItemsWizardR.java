@@ -43,6 +43,9 @@ import org.talend.mdm.repository.model.mdmserverobject.WSRoleSpecificationInstan
 import org.talend.mdm.repository.model.mdmserverobject.WSViewE;
 import org.talend.mdm.repository.ui.actions.view.NewViewAction;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
+import org.talend.mdm.webservice.WSConceptKey;
+import org.talend.mdm.webservice.WSDataModelPK;
+import org.talend.mdm.webservice.WSGetBusinessConceptKey;
 import org.talend.repository.model.IProxyRepositoryFactory;
 
 import com.amalto.workbench.dialogs.AddBrowseItemsWizard;
@@ -53,9 +56,6 @@ import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.service.IValidateService;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XSDAnnotationsStructure;
-import com.amalto.workbench.webservices.WSConceptKey;
-import com.amalto.workbench.webservices.WSDataModelPK;
-import com.amalto.workbench.webservices.WSGetBusinessConceptKey;
 
 /**
  * DOC hbhong class global comment. Detailled comment
