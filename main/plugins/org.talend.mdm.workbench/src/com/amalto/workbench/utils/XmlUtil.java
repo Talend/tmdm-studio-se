@@ -153,7 +153,7 @@ public final class XmlUtil {
             if (node instanceof Element) {
                 treeWalk((Element) node, nodeProcess);
             } else {
-                nodeProcess.process(element);
+                nodeProcess.process(node);
             }
         }
     }
