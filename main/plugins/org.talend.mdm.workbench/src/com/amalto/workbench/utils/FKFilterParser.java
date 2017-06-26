@@ -40,7 +40,7 @@ public class FKFilterParser {
 
     private static List<Line> buildLine(String criteria, String[] keyNames) {
         List<Line> lines = new ArrayList<Line>();
-        if (criteria != null) {
+        if (criteria != null && keyNames != null) {
             String[] criterias = criteria.split(endSeparator);
             for (String cria : criterias) {
                 String[] values = cria.split("\\$\\$");//$NON-NLS-1$
@@ -76,15 +76,16 @@ public class FKFilterParser {
 
     public static String getDeParseredFilter(List<Line> lines) {
         StringBuffer sb = new StringBuffer();
-        for (Line line : lines) {
-            String xpath = line.keyValues.get(0).value;
-            String operator = line.keyValues.get(1).value;
-            String value = line.keyValues.get(2).value;
-            value = normalizeValue(value);
-            String predicate = line.keyValues.get(3).value;
-            sb.append(xpath + two$$ + operator + two$$ + value + two$$ + predicate + endSeparator);
+        if (lines != null) {
+            for (Line line : lines) {
+                String xpath = line.keyValues.get(0).value;
+                String operator = line.keyValues.get(1).value;
+                String value = line.keyValues.get(2).value;
+                value = normalizeValue(value);
+                String predicate = line.keyValues.get(3).value;
+                sb.append(xpath + two$$ + operator + two$$ + value + two$$ + predicate + endSeparator);
+            }
         }
-
         return sb.toString();
     }
 

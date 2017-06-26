@@ -83,8 +83,12 @@ public class XSDUtil {
     }
 
     public static boolean isValidatedXSDName(String newText) {
-        Pattern pattern = Pattern.compile("([a-zA-Z][-|\\.|\\w]*\\w)|[a-zA-Z]"); //$NON-NLS-1$
-        boolean result = pattern.matcher(newText).matches();
+        boolean result = false;
+        if (newText != null) {
+            Pattern pattern = Pattern.compile("([a-zA-Z][-|\\.|\\w]*\\w)|[a-zA-Z]"); //$NON-NLS-1$
+            result = pattern.matcher(newText).matches();
+        }
+
         return result;
     }
 
