@@ -216,8 +216,15 @@ public class ResourcesUtil {
         if (uri != null) {
             int startPos = uri.indexOf("//") + 2;//$NON-NLS-1$
             int endPos = uri.indexOf(":", startPos);//$NON-NLS-1$
-            if (endPos != -1 && startPos != -1) {
-                return uri.substring(startPos, endPos);
+            if (startPos != -1) {
+                if (endPos != -1) {
+                    return uri.substring(startPos, endPos);
+                } else {
+                    endPos = uri.indexOf("/", startPos); //$NON-NLS-1$
+                    if (endPos != -1) {
+                        return uri.substring(startPos, endPos);
+                    }
+                }
             }
         }
 
@@ -228,8 +235,11 @@ public class ResourcesUtil {
 
         if (uri != null) {
             String[] splitString = uri.split(":", 3);//$NON-NLS-1$
-            if (splitString[splitString.length - 1] != null) {
+            if (splitString.length == 3 && splitString[splitString.length - 1] != null) {
                 return splitString[2].substring(0, splitString[2].indexOf("/"));//$NON-NLS-1$
+            }
+            if (splitString.length == 2) {
+                return "80";
             }
         }
 
