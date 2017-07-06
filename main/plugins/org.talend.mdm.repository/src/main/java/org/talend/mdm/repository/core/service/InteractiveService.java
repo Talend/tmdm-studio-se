@@ -52,8 +52,10 @@ public class InteractiveService {
 
     public static IInteractiveHandler findHandler(ERepositoryObjectType type) {
         if (type != null) {
-            if (handlers.isEmpty() || handlers.size() == 2) {
-                initHandler();
+            synchronized (InteractiveService.class) {
+                if (handlers.isEmpty() || handlers.size() == 2) {
+                    initHandler();
+                }
             }
             for (IInteractiveHandler handler : handlers) {
                 if (handler.getRepositoryObjectType().equals(type)) {
