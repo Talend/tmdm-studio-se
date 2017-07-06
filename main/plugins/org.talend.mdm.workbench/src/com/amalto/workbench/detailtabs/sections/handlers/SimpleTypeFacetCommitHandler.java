@@ -14,6 +14,7 @@ package com.amalto.workbench.detailtabs.sections.handlers;
 
 import org.eclipse.xsd.XSDConstrainingFacet;
 import org.eclipse.xsd.XSDFacet;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.util.XSDSchemaBuildingTools;
 
 import com.amalto.workbench.detailtabs.exception.CommitException;
@@ -246,10 +247,19 @@ class SimpleTypeFacetCommitHandler_MaxExclusive extends SimpleTypeFacetCommitHan
     @Override
     protected SimpleTypeFacetCommitHandlerHelper getCommitHelper() {
 
-        if (Util.isDouble(getCommitedObj().getNewBaseType()) || Util.isFloat(getCommitedObj().getNewBaseType())
-                || Util.isDecimal(getCommitedObj().getNewBaseType()))
+        XSDSimpleTypeDefinition type = getCommitedObj().getNewBaseType();
+        if (Util.isDouble(type) || Util.isFloat(type) || Util.isDecimal(type)) {
             return SimpleTypeFacetCommitHandlerHelper.createHelperForDoubleFacet(this);
-
+        }
+        if (Util.isDate(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForDateFacet(this);
+        }
+        if (Util.isDateTime(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForDateTimeFacet(this);
+        }
+        if (Util.isTime(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForTimeFacet(this);
+        }
         return SimpleTypeFacetCommitHandlerHelper.createHelperForIntFacet(this);
     }
 }
@@ -273,10 +283,19 @@ class SimpleTypeFacetCommitHandler_MaxInclusive extends SimpleTypeFacetCommitHan
     @Override
     protected SimpleTypeFacetCommitHandlerHelper getCommitHelper() {
 
-        if (Util.isDouble(getCommitedObj().getNewBaseType()) || Util.isFloat(getCommitedObj().getNewBaseType())
-                || Util.isDecimal(getCommitedObj().getNewBaseType()))
+        XSDSimpleTypeDefinition type = getCommitedObj().getNewBaseType();
+        if (Util.isDouble(type) || Util.isFloat(type) || Util.isDecimal(type)) {
             return SimpleTypeFacetCommitHandlerHelper.createHelperForDoubleFacet(this);
-
+        }
+        if (Util.isDate(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForDateFacet(this);
+        }
+        if (Util.isDateTime(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForDateTimeFacet(this);
+        }
+        if (Util.isTime(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForTimeFacet(this);
+        }
         return SimpleTypeFacetCommitHandlerHelper.createHelperForIntFacet(this);
     }
 }
@@ -300,10 +319,19 @@ class SimpleTypeFacetCommitHandler_MinExclusive extends SimpleTypeFacetCommitHan
     @Override
     protected SimpleTypeFacetCommitHandlerHelper getCommitHelper() {
 
-        if (Util.isDouble(getCommitedObj().getNewBaseType()) || Util.isFloat(getCommitedObj().getNewBaseType())
-                || Util.isDecimal(getCommitedObj().getNewBaseType()))
+        XSDSimpleTypeDefinition type = getCommitedObj().getNewBaseType();
+        if (Util.isDouble(type) || Util.isFloat(type) || Util.isDecimal(type)) {
             return SimpleTypeFacetCommitHandlerHelper.createHelperForDoubleFacet(this);
-
+        }
+        if (Util.isDate(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForDateFacet(this);
+        }
+        if (Util.isDateTime(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForDateTimeFacet(this);
+        }
+        if (Util.isTime(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForTimeFacet(this);
+        }
         return SimpleTypeFacetCommitHandlerHelper.createHelperForIntFacet(this);
     }
 }
@@ -327,10 +355,19 @@ class SimpleTypeFacetCommitHandler_MinInclusive extends SimpleTypeFacetCommitHan
     @Override
     protected SimpleTypeFacetCommitHandlerHelper getCommitHelper() {
 
-        if (Util.isDouble(getCommitedObj().getNewBaseType()) || Util.isFloat(getCommitedObj().getNewBaseType())
-                || Util.isDecimal(getCommitedObj().getNewBaseType()))
+        XSDSimpleTypeDefinition type = getCommitedObj().getNewBaseType();
+        if (Util.isDouble(type) || Util.isFloat(type) || Util.isDecimal(type)) {
             return SimpleTypeFacetCommitHandlerHelper.createHelperForDoubleFacet(this);
-
+        }
+        if (Util.isDate(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForDateFacet(this);
+        }
+        if (Util.isDateTime(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForDateTimeFacet(this);
+        }
+        if (Util.isTime(type)) {
+            return SimpleTypeFacetCommitHandlerHelper.createHelperForTimeFacet(this);
+        }
         return SimpleTypeFacetCommitHandlerHelper.createHelperForIntFacet(this);
     }
 }

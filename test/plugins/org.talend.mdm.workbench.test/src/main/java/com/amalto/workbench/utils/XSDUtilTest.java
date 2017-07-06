@@ -38,11 +38,12 @@ import org.talend.commons.utils.StringUtils;
 import com.amalto.workbench.dialogs.datamodel.MatchRuleSelectionFilter;
 
 /**
- * DOC hbhong  class global comment. Detailled comment
+ * DOC hbhong class global comment. Detailled comment
  */
 public class XSDUtilTest {
 
     final String X_FOREIGN_KEY = "X_ForeignKey"; //$NON-NLS-1$
+
     @Test
     public void testGetAnnotationValue() throws Exception {
         String fileName = "Product_0.1.xsd"; //$NON-NLS-1$
@@ -193,5 +194,53 @@ public class XSDUtilTest {
             assertTrue(expected.containsAll(validElementPaths));
             assertTrue(validElementPaths.containsAll(expected));
         }
+    }
+
+    @Test
+    public void testIsValidatedXSDDate() {
+        assertTrue(XSDUtil.isValidatedXSDDate("2011-01-02")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDDate("2011-01-2")); //$NON-NLS-1$
+
+        assertTrue(XSDUtil.isValidatedXSDDate("2011-01-02Z")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDDate("2011-01-2A")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDDate("2011-01-2BC")); //$NON-NLS-1$
+
+        assertTrue(XSDUtil.isValidatedXSDDate("2011-01-02+10:01")); //$NON-NLS-1$
+        assertTrue(XSDUtil.isValidatedXSDDate("2011-01-02+14:00")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDDate("2011-01-02+15:01")); //$NON-NLS-1$
+    }
+
+    @Test
+    public void testIsValidatedXSDTime() {
+        assertTrue(XSDUtil.isValidatedXSDTime("23:01:59")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDTime("23:01:61")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDTime("24:01:01")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDTime("23:61:01")); //$NON-NLS-1$
+        assertTrue(XSDUtil.isValidatedXSDTime("24:00:00")); //$NON-NLS-1$
+
+        assertTrue(XSDUtil.isValidatedXSDTime("23:01:59Z")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDTime("23:01:59A")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDTime("23:01:59BC")); //$NON-NLS-1$
+
+        assertTrue(XSDUtil.isValidatedXSDTime("23:01:59+10:01")); //$NON-NLS-1$
+        assertTrue(XSDUtil.isValidatedXSDTime("23:01:59+14:00")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDTime("23:01:59+15:01")); //$NON-NLS-1$
+    }
+
+    @Test
+    public void testIsValidatedXSDDateTime() {
+        assertTrue(XSDUtil.isValidatedXSDDateTime("2011-01-02T23:01:59")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDDateTime("2011-01-02T23:01:61")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDDateTime("2011-01-02T24:01:01")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDDateTime("2011-01-02T23:61:01")); //$NON-NLS-1$
+        assertTrue(XSDUtil.isValidatedXSDDateTime("2011-01-02T24:00:00")); //$NON-NLS-1$
+
+        assertTrue(XSDUtil.isValidatedXSDDateTime("2011-01-02T23:01:59Z")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDDateTime("2011-01-02T23:01:59A")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDDateTime("2011-01-02T23:01:59BC")); //$NON-NLS-1$
+
+        assertTrue(XSDUtil.isValidatedXSDDateTime("2011-01-02T23:01:59+10:01")); //$NON-NLS-1$
+        assertTrue(XSDUtil.isValidatedXSDDateTime("2011-01-02T23:01:59+14:00")); //$NON-NLS-1$
+        assertFalse(XSDUtil.isValidatedXSDDateTime("2011-01-02T23:01:59+15:01")); //$NON-NLS-1$
     }
 }

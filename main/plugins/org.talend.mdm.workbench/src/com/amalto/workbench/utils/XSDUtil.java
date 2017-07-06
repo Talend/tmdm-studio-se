@@ -41,6 +41,12 @@ public class XSDUtil {
 
     private static final String X_FOREIGN_KEY = "X_ForeignKey"; //$NON-NLS-1$
 
+    public static final int VALIDATE_DATE = 1;
+
+    public static final int VALIDATE_TIME = 2;
+
+    public static final int VALIDATE_DATE_TIME = 4;
+
     public static String getAnnotationValue(XSDElementDeclaration elementDesc, String key) {
         XSDAnnotation annotation = elementDesc.getAnnotation();
         if (annotation != null) {
@@ -172,5 +178,50 @@ public class XSDUtil {
 
             }
         }
+    }
+
+    public static boolean isValidatedXSDDate(String newText) {
+        if (newText == null || newText.trim().isEmpty()) {
+            return true;
+        }
+        String regex = "([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?";//$NON-NLS-1$
+        return matches(regex, newText);
+    }
+
+    public static boolean isValidatedXSDDateTime(String newText) {
+        if (newText == null || newText.trim().isEmpty()) {
+            return true;
+        }
+        String regex = "([1-9][0-9]{3,}|0[0-9]{3})-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?";//$NON-NLS-1$
+        return matches(regex, newText);
+    }
+
+    public static boolean isValidatedXSDTime(String newText) {
+        if (newText == null || newText.trim().isEmpty()) {
+            return true;
+        }
+        String regex = "(([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9](\\.[0-9]+)?|(24:00:00(\\.0+)?))(Z|(\\+|-)((0[0-9]|1[0-3]):[0-5][0-9]|14:00))?";//$NON-NLS-1$
+        return matches(regex, newText);
+    }
+
+    public static boolean isValidatedXSDDate(int key, String newText) {
+        switch (key) {
+        case VALIDATE_DATE:
+            return isValidatedXSDDate(newText);
+        case VALIDATE_TIME:
+            return isValidatedXSDTime(newText);
+        case VALIDATE_DATE_TIME:
+            return isValidatedXSDDateTime(newText);
+
+        default:
+            throw new IllegalArgumentException();
+
+        }
+    }
+
+    private static boolean matches(String regex, String newText) {
+        Pattern pattern = Pattern.compile(regex);
+        boolean match = pattern.matcher(newText).matches();
+        return match;
     }
 }

@@ -1555,6 +1555,10 @@ public class Messages extends NLS {
 
     public static String XSDEditFacetAction_ActionTip;
 
+    public static String XSDEditFacetAction_dateFormat;
+
+    public static String XSDEditFacetAction_dateTimeFormat;
+
     public static String XSDEditFacetAction_DialogTitle1;
 
     public static String XSDEditFacetAction_DialogTitle10;
@@ -1600,6 +1604,8 @@ public class Messages extends NLS {
     public static String XSDEditFacetAction_ErrorMsg1;
 
     public static String XSDEditFacetAction_ErrorMsg2;
+
+    public static String XSDEditFacetAction_timeFormat;
 
     public static String XSDEditFacetAction_Title;
 

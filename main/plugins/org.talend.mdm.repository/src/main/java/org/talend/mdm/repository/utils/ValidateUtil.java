@@ -53,8 +53,11 @@ public class ValidateUtil {
     }
 
     private static boolean matches(String regex, String tailRegex, String newText) {
-        Pattern tailPattern = Pattern.compile(tailRegex);
-        boolean match = tailPattern.matcher(newText).matches();
+        boolean match = true;
+        if (tailRegex != null) {
+            Pattern tailPattern = Pattern.compile(tailRegex);
+            match = tailPattern.matcher(newText).matches();
+        }
 
         if (match) {
             Pattern pattern = Pattern.compile(regex);

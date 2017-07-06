@@ -53,6 +53,7 @@ import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.utils.Util;
+import com.amalto.workbench.utils.XSDUtil;
 
 public class XSDEditFacetAction extends UndoAction {
 
@@ -75,19 +76,21 @@ public class XSDEditFacetAction extends UndoAction {
         setToolTipText(Messages.bind(Messages.XSDEditFacetAction_ActionTip, facetName));
     }
 
+    @Override
     public IStatus doAction() {
         try {
 
             IStructuredSelection selection = (IStructuredSelection) page.getTreeViewer().getSelection();
 
             XSDComponent xSDCom = null;
-            if (selection.getFirstElement() instanceof XSDSimpleTypeDefinition)
+            if (selection.getFirstElement() instanceof XSDSimpleTypeDefinition) {
                 std = (XSDSimpleTypeDefinition) selection.getFirstElement();
-            else {
+            } else {
                 TreePath tPath = ((TreeSelection) selection).getPaths()[0];
                 for (int i = 0; i < tPath.getSegmentCount(); i++) {
-                    if (tPath.getSegment(i) instanceof XSDSimpleTypeDefinition)
+                    if (tPath.getSegment(i) instanceof XSDSimpleTypeDefinition) {
                         std = (XSDSimpleTypeDefinition) (tPath.getSegment(i));
+                    }
                 }
             }
             // std = (XSDSimpleTypeDefinition)((IStructuredSelection)selection).getFirstElement();
@@ -121,13 +124,13 @@ public class XSDEditFacetAction extends UndoAction {
             }
 
             else {
-                MessageDialog.openError(page.getSite().getShell(), Messages._Error, Messages.bind(Messages.XSDEditFacetAction_ErrorMsg1, facetName));
+                MessageDialog.openError(page.getSite().getShell(), Messages._Error,
+                        Messages.bind(Messages.XSDEditFacetAction_ErrorMsg1, facetName));
                 return Status.CANCEL_STATUS;
             }
 
             std.updateElement();
 
-            
             page.getTreeViewer().refresh(true);
             page.markDirty();
             page.refresh();
@@ -141,6 +144,7 @@ public class XSDEditFacetAction extends UndoAction {
         return Status.OK_STATUS;
     }
 
+    @Override
     public void runWithEvent(Event event) {
         super.runWithEvent(event);
     }
@@ -165,8 +169,9 @@ public class XSDEditFacetAction extends UndoAction {
 
         dialog.setBlockOnOpen(true);
         int ret = dialog.open();
-        if (ret == Dialog.CANCEL)
+        if (ret == Dialog.CANCEL) {
             return;
+        }
 
         std.getFacetContents().removeAll(currentValues);
         for (Iterator iter = newValues.iterator(); iter.hasNext();) {
@@ -198,8 +203,9 @@ public class XSDEditFacetAction extends UndoAction {
 
         dialog.setBlockOnOpen(true);
         int ret = dialog.open();
-        if (ret == Dialog.CANCEL)
+        if (ret == Dialog.CANCEL) {
             return;
+        }
 
         std.getFacetContents().removeAll(currentValues);
         for (Iterator iter = newValues.iterator(); iter.hasNext();) {
@@ -214,10 +220,11 @@ public class XSDEditFacetAction extends UndoAction {
     private void editLength() {
         XSDLengthFacet currentValue = std.getLengthFacet();
         String stringValue = "0";//$NON-NLS-1$
-        if (currentValue != null)
+        if (currentValue != null) {
             stringValue = currentValue.getLexicalValue();
-        dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle3, Messages.XSDEditFacetAction_DialogTitle3Tip,
-                stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
+        }
+        dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle3,
+                Messages.XSDEditFacetAction_DialogTitle3Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
 
                     public String isValid(String newText) {
                         int val;
@@ -226,19 +233,22 @@ public class XSDEditFacetAction extends UndoAction {
                         } catch (Exception e) {
                             return Messages.XSDEditFacetAction_ValueMustBeXX;
                         }
-                        if (val < 0)
+                        if (val < 0) {
                             return Messages.XSDEditFacetAction_ValueMustBeXX;
+                        }
                         return null;
                     }
                 });
 
         dialog.setBlockOnOpen(true);
         int ret = dialog.open();
-        if (ret == Dialog.CANCEL)
+        if (ret == Dialog.CANCEL) {
             return;
+        }
 
-        if (currentValue != null)
+        if (currentValue != null) {
             std.getFacetContents().remove(currentValue);
+        }
         int intValue = Integer.parseInt(((InputDialog) dialog).getValue());
         if (intValue > 0) {
             XSDLengthFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDLengthFacet();
@@ -251,10 +261,11 @@ public class XSDEditFacetAction extends UndoAction {
     private void editMinLength() {
         XSDMinLengthFacet currentValue = std.getMinLengthFacet();
         String stringValue = "0";//$NON-NLS-1$
-        if (currentValue != null)
+        if (currentValue != null) {
             stringValue = currentValue.getLexicalValue();
-        dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle4, Messages.XSDEditFacetAction_DialogTitle4Tip,
-                stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
+        }
+        dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle4,
+                Messages.XSDEditFacetAction_DialogTitle4Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
 
                     public String isValid(String newText) {
                         int val;
@@ -263,19 +274,22 @@ public class XSDEditFacetAction extends UndoAction {
                         } catch (Exception e) {
                             return Messages.XSDEditFacetAction_ValueMustBeXX;
                         }
-                        if (val < 0)
+                        if (val < 0) {
                             return Messages.XSDEditFacetAction_ValueMustBeXX;
+                        }
                         return null;
                     }
                 });
 
         dialog.setBlockOnOpen(true);
         int ret = dialog.open();
-        if (ret == Dialog.CANCEL)
+        if (ret == Dialog.CANCEL) {
             return;
+        }
 
-        if (currentValue != null)
+        if (currentValue != null) {
             std.getFacetContents().remove(currentValue);
+        }
         int intValue = Integer.parseInt(((InputDialog) dialog).getValue());
         if (intValue > 0) {
             XSDMinLengthFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDMinLengthFacet();
@@ -288,10 +302,11 @@ public class XSDEditFacetAction extends UndoAction {
     private void editMaxLength() {
         XSDMaxLengthFacet currentValue = std.getMaxLengthFacet();
         String stringValue = "0";//$NON-NLS-1$
-        if (currentValue != null)
+        if (currentValue != null) {
             stringValue = currentValue.getLexicalValue();
-        dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle5, Messages.XSDEditFacetAction_DialogTitle4Tip,
-                stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
+        }
+        dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle5,
+                Messages.XSDEditFacetAction_DialogTitle4Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
 
                     public String isValid(String newText) {
                         int val;
@@ -300,18 +315,21 @@ public class XSDEditFacetAction extends UndoAction {
                         } catch (Exception e) {
                             return Messages.XSDEditFacetAction_ValueMustBeXX;
                         }
-                        if (val < 0)
+                        if (val < 0) {
                             return Messages.XSDEditFacetAction_ValueMustBeXX;
+                        }
                         return null;
                     }
                 });
         dialog.setBlockOnOpen(true);
         int ret = dialog.open();
-        if (ret == Dialog.CANCEL)
+        if (ret == Dialog.CANCEL) {
             return;
+        }
 
-        if (currentValue != null)
+        if (currentValue != null) {
             std.getFacetContents().remove(currentValue);
+        }
         int intValue = Integer.parseInt(((InputDialog) dialog).getValue());
         if (intValue > 0) {
             XSDMaxLengthFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDMaxLengthFacet();
@@ -324,8 +342,9 @@ public class XSDEditFacetAction extends UndoAction {
     private void editTotalDigits() {
         XSDTotalDigitsFacet currentValue = std.getTotalDigitsFacet();
         String stringValue = "0";//$NON-NLS-1$
-        if (currentValue != null)
+        if (currentValue != null) {
             stringValue = currentValue.getLexicalValue();
+        }
         dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle6,
                 Messages.XSDEditFacetAction_DialogTitle6Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
 
@@ -336,18 +355,21 @@ public class XSDEditFacetAction extends UndoAction {
                         } catch (Exception e) {
                             return Messages.XSDEditFacetAction_ValueMustBeXX;
                         }
-                        if (val < 0)
+                        if (val < 0) {
                             return Messages.XSDEditFacetAction_ValueMustBeXX;
+                        }
                         return null;
                     }
                 });
         dialog.setBlockOnOpen(true);
         int ret = dialog.open();
-        if (ret == Dialog.CANCEL)
+        if (ret == Dialog.CANCEL) {
             return;
+        }
 
-        if (currentValue != null)
+        if (currentValue != null) {
             std.getFacetContents().remove(currentValue);
+        }
         int intValue = Integer.parseInt(((InputDialog) dialog).getValue());
         if (intValue > 0) {
             XSDTotalDigitsFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDTotalDigitsFacet();
@@ -376,8 +398,9 @@ public class XSDEditFacetAction extends UndoAction {
                         } catch (Exception e) {
                             return Messages.XSDEditFacetAction_ValueMustBeXX;
                         }
-                        if (val < 0)
+                        if (val < 0) {
                             return Messages.XSDEditFacetAction_ValueMustBeXX;
+                        }
                         return null;
                     }
                 });
@@ -408,17 +431,23 @@ public class XSDEditFacetAction extends UndoAction {
         if (currentValue != null) {
             stringValue = currentValue.getLexicalValue();
         }
-        dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle8,
-                Messages.XSDEditFacetAction_DialogTitle8Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
+        boolean isDateType = true;
+        dialog = getInputDialog4Date(Messages.XSDEditFacetAction_DialogTitle8, Messages.XSDEditFacetAction_DialogTitle8Tip,
+                stringValue);
+        if (dialog == null) {
+            isDateType = false;
+            dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle8,
+                    Messages.XSDEditFacetAction_DialogTitle8Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
 
-                    public String isValid(String newText) {
-                        if (newText.trim().isEmpty()) {
-                            return null;
+                        public String isValid(String newText) {
+                            if (newText.trim().isEmpty()) {
+                                return null;
+                            }
+
+                            return isValidBoundaryNumber(std, newText);
                         }
-
-                        return isValidBoundaryNumber(std, newText);
-                    }
-                });
+                    });
+        }
         dialog.setBlockOnOpen(true);
         int ret = dialog.open();
         if (ret == Dialog.CANCEL) {
@@ -431,11 +460,15 @@ public class XSDEditFacetAction extends UndoAction {
 
         String input = ((InputDialog) dialog).getValue();
         if (!input.trim().isEmpty()) {
-            if (Double.parseDouble(input) >= 0) {
-                XSDMaxInclusiveFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDMaxInclusiveFacet();
+            XSDMaxInclusiveFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDMaxInclusiveFacet();
+            if (isDateType) {
+                f.setLexicalValue(input.trim());
+                std.getFacetContents().add(f);
+            } else if (Double.parseDouble(input) >= 0) {
                 f.setLexicalValue("" + getValidBoundaryNumber(std, input));//$NON-NLS-1$
                 std.getFacetContents().add(f);
             }
+
         }
     }
 
@@ -445,17 +478,23 @@ public class XSDEditFacetAction extends UndoAction {
         if (currentValue != null) {
             stringValue = currentValue.getLexicalValue();
         }
-        dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle9,
-                Messages.XSDEditFacetAction_DialogTitle9Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
+        boolean isDateType = true;
+        dialog = getInputDialog4Date(Messages.XSDEditFacetAction_DialogTitle9, Messages.XSDEditFacetAction_DialogTitle9Tip,
+                stringValue);
+        if (dialog == null) {
+            isDateType = false;
+            dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle9,
+                    Messages.XSDEditFacetAction_DialogTitle9Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
 
-                    public String isValid(String newText) {
-                        if (newText.trim().isEmpty()) {
-                            return null;
+                        public String isValid(String newText) {
+                            if (newText.trim().isEmpty()) {
+                                return null;
+                            }
+
+                            return isValidBoundaryNumber(std, newText);
                         }
-
-                        return isValidBoundaryNumber(std, newText);
-                    }
-                });
+                    });
+        }
         dialog.setBlockOnOpen(true);
         int ret = dialog.open();
         if (ret == Dialog.CANCEL) {
@@ -467,13 +506,66 @@ public class XSDEditFacetAction extends UndoAction {
         }
 
         String input = ((InputDialog) dialog).getValue();
+
         if (!input.trim().isEmpty()) {
-            if (Double.parseDouble(input) >= 0) {
-                XSDMaxExclusiveFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDMaxExclusiveFacet();
+            XSDMaxExclusiveFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDMaxExclusiveFacet();
+            if (isDateType) {
+                f.setLexicalValue(input.trim());
+                std.getFacetContents().add(f);
+            } else if (Double.parseDouble(input) >= 0) {
                 f.setLexicalValue("" + getValidBoundaryNumber(std, input));//$NON-NLS-1$
                 std.getFacetContents().add(f);
             }
+
         }
+    }
+
+    private InputDialog getInputDialog4Date(String title, String message, String stringValue) {
+        IInputValidator validator = null;
+        if (Util.isDate(std)) {
+            validator = new IInputValidator() {
+
+                public String isValid(String newText) {
+                    if (newText.trim().isEmpty()) {
+                        return null;
+                    }
+                    if (XSDUtil.isValidatedXSDDate(newText)) {
+                        return null;
+                    }
+                    return Messages.XSDEditFacetAction_dateFormat;
+                }
+            };
+        } else if (Util.isDateTime(std)) {
+            validator = new IInputValidator() {
+
+                public String isValid(String newText) {
+                    if (newText.trim().isEmpty()) {
+                        return null;
+                    }
+                    if (XSDUtil.isValidatedXSDDateTime(newText)) {
+                        return null;
+                    }
+                    return Messages.XSDEditFacetAction_dateTimeFormat;
+                }
+            };
+        } else if (Util.isTime(std)) {
+            validator = new IInputValidator() {
+
+                public String isValid(String newText) {
+                    if (newText.trim().isEmpty()) {
+                        return null;
+                    }
+                    if (XSDUtil.isValidatedXSDTime(newText)) {
+                        return null;
+                    }
+                    return Messages.XSDEditFacetAction_timeFormat;
+                }
+            };
+        }
+        if (validator != null) {
+            return new InputDialog(page.getSite().getShell(), title, message, stringValue == null ? "" : stringValue, validator); //$NON-NLS-1$
+        }
+        return null;
     }
 
     private void editMinInclusive() {
@@ -482,17 +574,23 @@ public class XSDEditFacetAction extends UndoAction {
         if (currentValue != null) {
             stringValue = currentValue.getLexicalValue();
         }
-        dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle10,
-                Messages.XSDEditFacetAction_DialogTitle10Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
+        boolean isDateType = true;
+        dialog = getInputDialog4Date(Messages.XSDEditFacetAction_DialogTitle10, Messages.XSDEditFacetAction_DialogTitle10Tip,
+                stringValue);
+        if (dialog == null) {
+            isDateType = false;
+            dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle10,
+                    Messages.XSDEditFacetAction_DialogTitle10Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
 
-                    public String isValid(String newText) {
-                        if (newText.trim().isEmpty()) {
-                            return null;
+                        public String isValid(String newText) {
+                            if (newText.trim().isEmpty()) {
+                                return null;
+                            }
+
+                            return isValidBoundaryNumber(std, newText);
                         }
-
-                        return isValidBoundaryNumber(std, newText);
-                    }
-                });
+                    });
+        }
         dialog.setBlockOnOpen(true);
         int ret = dialog.open();
         if (ret == Dialog.CANCEL) {
@@ -505,12 +603,17 @@ public class XSDEditFacetAction extends UndoAction {
 
         String input = ((InputDialog) dialog).getValue();
 
+
         if (!input.trim().isEmpty()) {
-            if (Double.parseDouble(input) >= 0) {
-                XSDMinInclusiveFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDMinInclusiveFacet();
-                f.setLexicalValue("" + getValidBoundaryNumber(std, input)); //$NON-NLS-1$
+            XSDMinInclusiveFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDMinInclusiveFacet();
+            if (isDateType) {
+                f.setLexicalValue(input.trim());
+                std.getFacetContents().add(f);
+            } else if (Double.parseDouble(input) >= 0) {
+                f.setLexicalValue("" + getValidBoundaryNumber(std, input));//$NON-NLS-1$
                 std.getFacetContents().add(f);
             }
+
         }
     }
 
@@ -520,17 +623,23 @@ public class XSDEditFacetAction extends UndoAction {
         if (currentValue != null) {
             stringValue = currentValue.getLexicalValue();
         }
-        dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle11,
-                Messages.XSDEditFacetAction_DialogTitle11Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
+        boolean isDateType = true;
+        dialog = getInputDialog4Date(Messages.XSDEditFacetAction_DialogTitle11, Messages.XSDEditFacetAction_DialogTitle11Tip,
+                stringValue);
+        if (dialog == null) {
+            isDateType = false;
+            dialog = new InputDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle11,
+                    Messages.XSDEditFacetAction_DialogTitle11Tip, stringValue == null ? "" : stringValue, new IInputValidator() {//$NON-NLS-1$
 
-                    public String isValid(String newText) {
-                        if (newText.trim().isEmpty()) {
-                            return null;
+                        public String isValid(String newText) {
+                            if (newText.trim().isEmpty()) {
+                                return null;
+                            }
+
+                            return isValidBoundaryNumber(std, newText);
                         }
-
-                        return isValidBoundaryNumber(std, newText);
-                    }
-                });
+                    });
+        }
         dialog.setBlockOnOpen(true);
         int ret = dialog.open();
         if (ret == Dialog.CANCEL) {
@@ -542,12 +651,17 @@ public class XSDEditFacetAction extends UndoAction {
         }
 
         String input = ((InputDialog) dialog).getValue();
+
         if (!input.trim().isEmpty()) {
-            if (Double.parseDouble(input) >= 0) {
-                XSDMinExclusiveFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDMinExclusiveFacet();
-                f.setLexicalValue("" + getValidBoundaryNumber(std, input)); //$NON-NLS-1$
+            XSDMinExclusiveFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDMinExclusiveFacet();
+            if (isDateType) {
+                f.setLexicalValue(input.trim());
+                std.getFacetContents().add(f);
+            } else if (Double.parseDouble(input) >= 0) {
+                f.setLexicalValue("" + getValidBoundaryNumber(std, input));//$NON-NLS-1$
                 std.getFacetContents().add(f);
             }
+
         }
     }
 
@@ -555,17 +669,20 @@ public class XSDEditFacetAction extends UndoAction {
         String[] values = { "preserve", "replace", "collapse" };//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
         XSDWhiteSpaceFacet currentValue = std.getWhiteSpaceFacet();
         String stringValue = "preserve";//$NON-NLS-1$
-        if (currentValue != null)
+        if (currentValue != null) {
             stringValue = currentValue.getLexicalValue();
-        dialog = new InputComboDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle12, Messages.XSDEditFacetAction_DialogTitle12Tip, values,
-                stringValue,null);
+        }
+        dialog = new InputComboDialog(page.getSite().getShell(), Messages.XSDEditFacetAction_DialogTitle12,
+                Messages.XSDEditFacetAction_DialogTitle12Tip, values, stringValue, null);
         dialog.setBlockOnOpen(true);
         int ret = dialog.open();
-        if (ret == Dialog.CANCEL)
+        if (ret == Dialog.CANCEL) {
             return;
+        }
 
-        if (currentValue != null)
+        if (currentValue != null) {
             std.getFacetContents().remove(currentValue);
+        }
         String stirngValue = ((InputComboDialog) dialog).getValue();
         if (stirngValue != null && stirngValue.length() > 0) {
             XSDWhiteSpaceFacet f = (XSDSchemaBuildingTools.getXSDFactory()).createXSDWhiteSpaceFacet();
@@ -577,11 +694,13 @@ public class XSDEditFacetAction extends UndoAction {
     private Object getValidBoundaryNumber(XSDSimpleTypeDefinition type, String text) {
 
         try {
-            if (Util.isDouble(type) || Util.isDecimal(type))
+            if (Util.isDouble(type) || Util.isDecimal(type)) {
                 return Double.parseDouble(text);
+            }
 
-            if (Util.isFloat(type))
+            if (Util.isFloat(type)) {
                 return Float.parseFloat(text);
+            }
 
             return Integer.parseInt(text);
         } catch (Exception e) {
@@ -592,11 +711,13 @@ public class XSDEditFacetAction extends UndoAction {
 
     private String isValidBoundaryNumber(XSDSimpleTypeDefinition type, String text) {
 
-        if (Util.isDouble(type) || Util.isDecimal(type))
+        if (Util.isDouble(type) || Util.isDecimal(type)) {
             return isValidBoundaryDoubleNumber(text);
+        }
 
-        if (Util.isFloat(type))
+        if (Util.isFloat(type)) {
             return isValidBoundaryFloatNumber(text);
+        }
 
         return isValidBoundaryIntNumber(text);
     }
@@ -606,8 +727,9 @@ public class XSDEditFacetAction extends UndoAction {
         try {
             int tempVal = Integer.parseInt(text);
 
-            if (tempVal < 0)
+            if (tempVal < 0) {
                 return Messages.XSDEditFacetAction_ValueMustBeXI;
+            }
 
         } catch (Exception e) {
             return Messages.XSDEditFacetAction_ValueMustBeXI;
@@ -622,8 +744,9 @@ public class XSDEditFacetAction extends UndoAction {
         try {
             Float tempVal = Float.parseFloat(text);
 
-            if (tempVal < 0)
+            if (tempVal < 0) {
                 return Messages.XSDEditFacetAction_ValueMustBeXF;
+            }
 
         } catch (Exception e) {
             return Messages.XSDEditFacetAction_ValueMustBeXF;
@@ -637,8 +760,9 @@ public class XSDEditFacetAction extends UndoAction {
         try {
             Double tempVal = Double.parseDouble(text);
 
-            if (tempVal < 0)
+            if (tempVal < 0) {
                 return Messages.XSDEditFacetAction_ValueMustBeXD;
+            }
 
         } catch (Exception e) {
             return Messages.XSDEditFacetAction_ValueMustBeXD;

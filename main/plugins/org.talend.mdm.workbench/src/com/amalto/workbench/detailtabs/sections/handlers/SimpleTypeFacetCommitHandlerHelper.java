@@ -23,6 +23,7 @@ import com.amalto.workbench.detailtabs.exception.CommitException;
 import com.amalto.workbench.detailtabs.exception.CommitValidationException;
 import com.amalto.workbench.detailtabs.sections.model.simpletype.SimpleTypeWrapper;
 import com.amalto.workbench.i18n.Messages;
+import com.amalto.workbench.utils.XSDUtil;
 
 public abstract class SimpleTypeFacetCommitHandlerHelper {
 
@@ -48,6 +49,18 @@ public abstract class SimpleTypeFacetCommitHandlerHelper {
         return new SimpleTypeFacetCommitHandlerHelper_StringArrayFacet(commitHandler);
     }
 
+    public static SimpleTypeFacetCommitHandlerHelper createHelperForDateFacet(SimpleTypeFacetCommitHandler commitHandler) {
+        return new SimpleTypeFacetCommitHandlerHelper_DateFacet(commitHandler);
+    }
+
+    public static SimpleTypeFacetCommitHandlerHelper createHelperForDateTimeFacet(SimpleTypeFacetCommitHandler commitHandler) {
+        return new SimpleTypeFacetCommitHandlerHelper_DateTimeFacet(commitHandler);
+    }
+
+    public static SimpleTypeFacetCommitHandlerHelper createHelperForTimeFacet(SimpleTypeFacetCommitHandler commitHandler) {
+        return new SimpleTypeFacetCommitHandlerHelper_TimeFacet(commitHandler);
+    }
+
     protected abstract void validateCommit(String facetName) throws CommitValidationException;
 
     protected abstract boolean doCommit(String facetName) throws CommitException;
@@ -62,8 +75,10 @@ class SimpleTypeFacetCommitHandlerHelper_StringFacet extends SimpleTypeFacetComm
     @Override
     protected void validateCommit(String facetName) throws CommitValidationException {
 
-        if (!(commitHandler.getCommitedObj().getFacetValue(facetName) instanceof String))
-            throw new CommitValidationException(Messages.SimpleTypeFacetCommitHandlerHelper_ValueTypeOfFacet + facetName + Messages.SimpleTypeFacetCommitHandlerHelper_ShouldbeString);
+        if (!(commitHandler.getCommitedObj().getFacetValue(facetName) instanceof String)) {
+            throw new CommitValidationException(Messages.SimpleTypeFacetCommitHandlerHelper_ValueTypeOfFacet + facetName
+                    + Messages.SimpleTypeFacetCommitHandlerHelper_ShouldbeString);
+        }
 
     }
 
@@ -73,12 +88,14 @@ class SimpleTypeFacetCommitHandlerHelper_StringFacet extends SimpleTypeFacetComm
         String newValue = (String) commitHandler.getCommitedObj().getFacetValue(facetName);
         String oldValue = getOldFacetValue();
 
-        if (oldValue.equals(newValue))
+        if (oldValue.equals(newValue)) {
             return false;
+        }
 
-        if (!"".equals(oldValue))//$NON-NLS-1$
+        if (!"".equals(oldValue)) {
             commitHandler.getCommitedObj().getXSDSimpleType().getFacetContents()
                     .removeAll(Arrays.asList(commitHandler.getOldFacets()));
+        }
 
         if (!"".equals(newValue)) {//$NON-NLS-1$
             XSDConstrainingFacet f = commitHandler.creatNewFacet();
@@ -92,13 +109,15 @@ class SimpleTypeFacetCommitHandlerHelper_StringFacet extends SimpleTypeFacetComm
 
     protected String getOldFacetValue() {
 
-        if (commitHandler.getOldFacets().length == 0)
+        if (commitHandler.getOldFacets().length == 0) {
             return "";//$NON-NLS-1$
+        }
 
         XSDFacet facet = commitHandler.getOldFacets()[0];
 
-        if (facet == null || facet.getLexicalValue() == null)
+        if (facet == null || facet.getLexicalValue() == null) {
             return "";//$NON-NLS-1$
+        }
 
         return facet.getLexicalValue();
     }
@@ -115,9 +134,10 @@ class SimpleTypeFacetCommitHandlerHelper_DoubleFacet extends SimpleTypeFacetComm
     protected void validateCommit(String facetName) throws CommitValidationException {
         if (commitHandler.getCommitedObj().getFacetValue(facetName) != null) {
             if (!(commitHandler.getCommitedObj().getFacetValue(facetName) instanceof Double)
-                    || ((Double) commitHandler.getCommitedObj().getFacetValue(facetName)) < 0)
+                    || ((Double) commitHandler.getCommitedObj().getFacetValue(facetName)) < 0) {
                 throw new CommitValidationException(Messages.SimpleTypeFacetCommitHandlerHelper_ValueTypeOfFacet + facetName
                         + Messages.SimpleTypeFacetCommitHandlerHelper_ShouldbeDoubleOr0);
+            }
         }
 
     }
@@ -129,12 +149,14 @@ class SimpleTypeFacetCommitHandlerHelper_DoubleFacet extends SimpleTypeFacetComm
         Double oldValue = getOldFacetValue();
 
         if ((newValue == null && oldValue == null) || (oldValue != null && oldValue.equals(newValue))
-                || (newValue != null && newValue.equals(oldValue)))
+                || (newValue != null && newValue.equals(oldValue))) {
             return false;
+        }
 
-        if (oldValue != null)
+        if (oldValue != null) {
             commitHandler.getCommitedObj().getXSDSimpleType().getFacetContents()
                     .removeAll(Arrays.asList(commitHandler.getOldFacets()));
+        }
 
         if (newValue != null && newValue >= 0) {
             XSDConstrainingFacet f = commitHandler.creatNewFacet();
@@ -147,13 +169,15 @@ class SimpleTypeFacetCommitHandlerHelper_DoubleFacet extends SimpleTypeFacetComm
 
     protected Double getOldFacetValue() {
 
-        if (commitHandler.getOldFacets().length == 0)
+        if (commitHandler.getOldFacets().length == 0) {
             return null;
+        }
 
         XSDFacet facet = commitHandler.getOldFacets()[0];
 
-        if (facet == null || facet.getLexicalValue() == null)
+        if (facet == null || facet.getLexicalValue() == null) {
             return null;
+        }
 
         return Double.parseDouble(facet.getLexicalValue());
     }
@@ -170,9 +194,10 @@ class SimpleTypeFacetCommitHandlerHelper_IntFacet extends SimpleTypeFacetCommitH
     protected void validateCommit(String facetName) throws CommitValidationException {
         if (commitHandler.getCommitedObj().getFacetValue(facetName) != null) {
             if (!(commitHandler.getCommitedObj().getFacetValue(facetName) instanceof Integer)
-                    || ((Integer) commitHandler.getCommitedObj().getFacetValue(facetName)) < 0)
+                    || ((Integer) commitHandler.getCommitedObj().getFacetValue(facetName)) < 0) {
                 throw new CommitValidationException(Messages.SimpleTypeFacetCommitHandlerHelper_ValueTypeOfFacet + facetName
                         + Messages.SimpleTypeFacetCommitHandlerHelper_ShouldbePosition);
+            }
         }
     }
 
@@ -183,12 +208,14 @@ class SimpleTypeFacetCommitHandlerHelper_IntFacet extends SimpleTypeFacetCommitH
         Integer oldValue = getOldFacetValue();
 
         if ((newValue == null && oldValue == null) || (oldValue != null && oldValue.equals(newValue))
-                || (newValue != null && newValue.equals(oldValue)))
+                || (newValue != null && newValue.equals(oldValue))) {
             return false;
+        }
 
-        if (oldValue != null)
+        if (oldValue != null) {
             commitHandler.getCommitedObj().getXSDSimpleType().getFacetContents()
                     .removeAll(Arrays.asList(commitHandler.getOldFacets()));
+        }
 
         if (newValue != null && newValue >= 0) {
             XSDConstrainingFacet f = commitHandler.creatNewFacet();
@@ -202,16 +229,120 @@ class SimpleTypeFacetCommitHandlerHelper_IntFacet extends SimpleTypeFacetCommitH
 
     protected Integer getOldFacetValue() {
 
-        if (commitHandler.getOldFacets().length == 0)
+        if (commitHandler.getOldFacets().length == 0) {
             return 0;
+        }
 
         XSDFacet facet = commitHandler.getOldFacets()[0];
 
-        if (facet == null || facet.getLexicalValue() == null)
+        if (facet == null || facet.getLexicalValue() == null) {
             return null;
+        }
 
         return Integer.parseInt(facet.getLexicalValue());
     }
+}
+
+abstract class SimpleTypeFacetCommitHandlerHelper_AbstractDateFacet extends SimpleTypeFacetCommitHandlerHelper {
+
+    public SimpleTypeFacetCommitHandlerHelper_AbstractDateFacet(SimpleTypeFacetCommitHandler commitHandler) {
+        super(commitHandler);
+    }
+
+    @Override
+    protected void validateCommit(String facetName) throws CommitValidationException {
+        Object facetValue = commitHandler.getCommitedObj().getFacetValue(facetName);
+        if (facetValue != null) {
+            String value = (String) facetValue;
+            value = value.trim();
+            if (!value.isEmpty() && !validate(value)) {
+                throw new CommitValidationException(Messages.SimpleTypeFacetCommitHandlerHelper_ValueTypeOfFacet + facetName
+                        + Messages.SimpleTypeFacetCommitHandlerHelper_ShouldbePosition);
+            }
+        }
+    }
+
+    abstract boolean validate(String newValue);
+
+    @Override
+    protected boolean doCommit(String facetName) throws CommitException {
+
+        String newValue = (String) commitHandler.getCommitedObj().getFacetValue(facetName);
+        String oldValue = getOldFacetValue();
+
+        if ((newValue == null && oldValue == null) || (oldValue != null && oldValue.equals(newValue))
+                || (newValue != null && newValue.equals(oldValue))) {
+            return false;
+        }
+
+        if (oldValue != null) {
+            commitHandler.getCommitedObj().getXSDSimpleType().getFacetContents()
+                    .removeAll(Arrays.asList(commitHandler.getOldFacets()));
+        }
+
+        if (newValue != null && !newValue.trim().isEmpty()) {
+            XSDConstrainingFacet f = commitHandler.creatNewFacet();
+            f.setLexicalValue("" + newValue);//$NON-NLS-1$
+            commitHandler.getCommitedObj().getXSDSimpleType().getFacetContents().add(f);
+        }
+
+        return true;
+
+    }
+
+    protected String getOldFacetValue() {
+
+        if (commitHandler.getOldFacets().length == 0) {
+            return ""; //$NON-NLS-1$
+        }
+
+        XSDFacet facet = commitHandler.getOldFacets()[0];
+
+        if (facet == null || facet.getLexicalValue() == null) {
+            return null;
+        }
+
+        return facet.getLexicalValue();
+    }
+}
+
+class SimpleTypeFacetCommitHandlerHelper_DateFacet extends SimpleTypeFacetCommitHandlerHelper_AbstractDateFacet {
+
+    public SimpleTypeFacetCommitHandlerHelper_DateFacet(SimpleTypeFacetCommitHandler commitHandler) {
+        super(commitHandler);
+    }
+
+    @Override
+    boolean validate(String newValue) {
+        return XSDUtil.isValidatedXSDDate(newValue);
+    }
+
+}
+
+class SimpleTypeFacetCommitHandlerHelper_DateTimeFacet extends SimpleTypeFacetCommitHandlerHelper_AbstractDateFacet {
+
+    public SimpleTypeFacetCommitHandlerHelper_DateTimeFacet(SimpleTypeFacetCommitHandler commitHandler) {
+        super(commitHandler);
+    }
+
+    @Override
+    boolean validate(String newValue) {
+        return XSDUtil.isValidatedXSDDateTime(newValue);
+    }
+
+}
+
+class SimpleTypeFacetCommitHandlerHelper_TimeFacet extends SimpleTypeFacetCommitHandlerHelper_AbstractDateFacet {
+
+    public SimpleTypeFacetCommitHandlerHelper_TimeFacet(SimpleTypeFacetCommitHandler commitHandler) {
+        super(commitHandler);
+    }
+
+    @Override
+    boolean validate(String newValue) {
+        return XSDUtil.isValidatedXSDTime(newValue);
+    }
+
 }
 
 class SimpleTypeFacetCommitHandlerHelper_StringArrayFacet extends SimpleTypeFacetCommitHandlerHelper {
@@ -223,16 +354,19 @@ class SimpleTypeFacetCommitHandlerHelper_StringArrayFacet extends SimpleTypeFace
     @Override
     protected void validateCommit(String facetName) throws CommitValidationException {
 
-        if (!(commitHandler.getCommitedObj().getFacetValue(facetName) instanceof String[]))
-            throw new CommitValidationException(Messages.SimpleTypeFacetCommitHandlerHelper_ValueTypeOfFacet + facetName + Messages.SimpleTypeFacetCommitHandlerHelper_ShouldbeStringArray);
+        if (!(commitHandler.getCommitedObj().getFacetValue(facetName) instanceof String[])) {
+            throw new CommitValidationException(Messages.SimpleTypeFacetCommitHandlerHelper_ValueTypeOfFacet + facetName
+                    + Messages.SimpleTypeFacetCommitHandlerHelper_ShouldbeStringArray);
+        }
 
     }
 
     @Override
     protected boolean doCommit(String facetName) throws CommitException {
 
-        if (!hasChange(commitHandler.getCommitedObj(), facetName))
+        if (!hasChange(commitHandler.getCommitedObj(), facetName)) {
             return false;
+        }
 
         commitHandler.getCommitedObj().getXSDSimpleType().getFacetContents()
                 .removeAll(Arrays.asList(commitHandler.getOldFacets()));
@@ -253,19 +387,22 @@ class SimpleTypeFacetCommitHandlerHelper_StringArrayFacet extends SimpleTypeFace
 
         List<String> newFacetValues = Arrays.asList((String[]) simpleTypeWrapper.getFacetValue(facetName));
 
-        if (oldFacetValues.size() != newFacetValues.size())
+        if (oldFacetValues.size() != newFacetValues.size()) {
             return true;
+        }
 
         for (String eachNewValue : newFacetValues) {
 
-            if (!oldFacetValues.contains(eachNewValue))
+            if (!oldFacetValues.contains(eachNewValue)) {
                 return true;
+            }
         }
 
         for (String eachOldFacetValue : oldFacetValues) {
 
-            if (!newFacetValues.contains(eachOldFacetValue))
+            if (!newFacetValues.contains(eachOldFacetValue)) {
                 return true;
+            }
         }
 
         return false;
@@ -276,8 +413,9 @@ class SimpleTypeFacetCommitHandlerHelper_StringArrayFacet extends SimpleTypeFace
         List<String> oldPatterns = new ArrayList<String>();
         for (XSDFacet eachOldFacet : commitHandler.getOldFacets()) {
 
-            if (eachOldFacet.getLexicalValue() == null || "".equals(eachOldFacet.getLexicalValue().trim()))//$NON-NLS-1$
+            if (eachOldFacet.getLexicalValue() == null || "".equals(eachOldFacet.getLexicalValue().trim())) {
                 continue;
+            }
 
             oldPatterns.add(eachOldFacet.getLexicalValue());
         }
