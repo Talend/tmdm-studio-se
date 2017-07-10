@@ -743,7 +743,6 @@ public class Util {
 
     public static String[] getTextNodes(Node contextNode, String xPath, Node namespaceNode) throws XtentisException {
         String[] results = null;
-        ;
 
         // test for hard-coded values
         if (xPath.startsWith("\"") && xPath.endsWith("\"")) { //$NON-NLS-1$ //$NON-NLS-2$

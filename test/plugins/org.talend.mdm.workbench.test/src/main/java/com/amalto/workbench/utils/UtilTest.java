@@ -12,16 +12,22 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.apache.axis.utils.IOUtils;
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDCompositor;
@@ -36,6 +42,11 @@ import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDXPathDefinition;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -47,7 +58,11 @@ import com.amalto.workbench.webservices.WSStringPredicate;
 import com.amalto.workbench.webservices.WSWhereCondition;
 import com.amalto.workbench.webservices.WSWhereOperator;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ Util.class })
 public class UtilTest {
+
+    private Logger log = Logger.getLogger(UtilTest.class);
 
     XSDSchema schema;
 
@@ -287,7 +302,7 @@ public class UtilTest {
         assertEquals(xml, "abcdefg"); //$NON-NLS-1$
         xmlstring = "<c>Entity></c><t>1313434343</t><p/>"; //$NON-NLS-1$
         xml = Util.getItemContent(xmlstring);
-        assertEquals(xml, "");
+        assertEquals(xml, ""); //$NON-NLS-1$
     }
 
     @Test
@@ -340,7 +355,7 @@ public class UtilTest {
         XSDModelGroup group = (XSDModelGroup) ((XSDParticle) complexType.getContent()).getTerm();
         XSDParticle curXSDParticle = group.getParticles().get(0);
         String name = Util.getParticleReferenceName(curXSDParticle);
-        assertEquals(name, "");
+        assertEquals(name, ""); //$NON-NLS-1$
     }
 
     @Test
@@ -555,4 +570,241 @@ public class UtilTest {
         return Util.getXSDSchema(xsdContent);
     }
 
+    @Test
+    public void testCheckAndAddSuffix() {
+        String suffix = "?wsdl"; //$NON-NLS-1$
+        PowerMockito.mockStatic(Util.class);
+        try {
+            String method = "checkAndAddSuffix"; //$NON-NLS-1$
+            PowerMockito.when(Util.class, method, any(URL.class)).thenCallRealMethod(); // $NON-NLS-1$
+            // http
+            String url_str = "http://localhost:8180/talendmdm/services/soap"; //$NON-NLS-1$
+            URL url_in = new URL(url_str);
+            URL url_result = Whitebox.invokeMethod(Util.class, method, url_in);
+            assertEquals(url_str + suffix, url_result.toString());
+
+            url_str = "http://localhost:8180/talendmdm/services/soap?wsdl"; //$NON-NLS-1$
+            url_in = new URL(url_str);
+            url_result = Whitebox.invokeMethod(Util.class, method, url_in);
+            assertEquals(url_str, url_result.toString());
+
+            // https
+            url_str = "https://localhost:8543/talendmdm/services/soap"; //$NON-NLS-1$
+            url_in = new URL(url_str);
+            url_result = Whitebox.invokeMethod(Util.class, method, url_in);
+            assertEquals(url_str + suffix, url_result.toString());
+
+            url_str = "https://localhost:8543/talendmdm/services/soap?wsdl"; //$NON-NLS-1$
+            url_in = new URL(url_str);
+            url_result = Whitebox.invokeMethod(Util.class, method, url_in);
+            assertEquals(url_str, url_result.toString());
+
+            // ftp
+            url_str = "ftp://localhost:8543/talendmdm/services/soap"; //$NON-NLS-1$
+            url_in = new URL(url_str);
+            url_result = Whitebox.invokeMethod(Util.class, method, url_in);
+            assertEquals(url_str, url_result.toString());
+
+            url_str = "ftp://localhost:8543/talendmdm/services/soap?wsdl"; //$NON-NLS-1$
+            url_in = new URL(url_str);
+            url_result = Whitebox.invokeMethod(Util.class, method, url_in);
+            assertEquals(url_str, url_result.toString());
+
+            // ftps
+            url_str = "ftps://localhost:8543/talendmdm/services/soap"; //$NON-NLS-1$
+            url_in = new URL(url_str);
+            url_result = Whitebox.invokeMethod(Util.class, method, url_in);
+            assertEquals(url_str, url_result.toString());
+
+            url_str = "ftps://localhost:8543/talendmdm/services/soap?wsdl"; //$NON-NLS-1$
+            url_in = new URL(url_str);
+            url_result = Whitebox.invokeMethod(Util.class, method, url_in);
+            assertEquals(url_str, url_result.toString());
+
+            // file
+            url_str = "file://d:/dir/Product.proc"; //$NON-NLS-1$
+            url_in = new URL(url_str);
+            url_result = Whitebox.invokeMethod(Util.class, method, url_in);
+            assertEquals(url_str, url_result.toString());
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Test
+    public void testGetTextNodes() {
+        Node contextNode = null;
+        String xpath = ""; //$NON-NLS-1$
+        Node namespaceNode = contextNode;
+
+        try {
+            xpath = "\"pathA\""; //$NON-NLS-1$
+            String[] textNodes = Util.getTextNodes(contextNode, xpath, namespaceNode);
+            assertNotNull(textNodes);
+            assertEquals(1, textNodes.length);
+            assertEquals("pathA", textNodes[0]); //$NON-NLS-1$
+
+
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document doc = documentBuilder.newDocument();
+            Element nameElement = doc.createElement("xsd:element"); //$NON-NLS-1$
+            nameElement.setAttribute("name", "NameA"); //$NON-NLS-1$ //$NON-NLS-2$
+            nameElement.setAttribute("type", "xsd:string"); //$NON-NLS-1$ //$NON-NLS-2$
+            nameElement.appendChild(doc.createElement("xsd:annotation")); //$NON-NLS-1$
+            Element pictureElement = doc.createElement("xsd:element"); //$NON-NLS-1$
+            pictureElement.setAttribute("name", "PictureA"); //$NON-NLS-1$ //$NON-NLS-2$
+            pictureElement.setAttribute("type", "PICTURE"); //$NON-NLS-1$ //$NON-NLS-2$
+            pictureElement.appendChild(doc.createElement("xsd:annotation")); //$NON-NLS-1$
+
+            xpath = "@name"; //$NON-NLS-1$
+            textNodes = Util.getTextNodes(nameElement, xpath, nameElement);
+            assertNotNull(textNodes);
+            assertEquals(1, textNodes.length);
+            assertEquals("NameA", textNodes[0]); //$NON-NLS-1$
+            textNodes = Util.getTextNodes(pictureElement, xpath, pictureElement);
+            assertNotNull(textNodes);
+            assertEquals(1, textNodes.length);
+            assertEquals("PictureA", textNodes[0]); //$NON-NLS-1$
+
+            xpath = "@type"; //$NON-NLS-1$
+            textNodes = Util.getTextNodes(nameElement, xpath, nameElement);
+            assertNotNull(textNodes);
+            assertEquals(1, textNodes.length);
+            assertEquals("xsd:string", textNodes[0]); //$NON-NLS-1$
+            textNodes = Util.getTextNodes(pictureElement, xpath, pictureElement);
+            assertNotNull(textNodes);
+            assertEquals(1, textNodes.length);
+            assertEquals("PICTURE", textNodes[0]); //$NON-NLS-1$
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Test
+    public void testFindElementsUsingType() {
+        fail();
+    }
+
+    @Test
+    public void testGetForeignKeyofParcle() {
+        fail();
+    }
+
+    @Test
+    public void testGetforeignKeyOfElement() {
+        fail();
+    }
+
+    @Test
+    public void testIsReferrenced() {// private
+        fail();
+    }
+
+    @Test
+    public void testGetTypeDefinition() {
+        fail();
+    }
+
+    @Test
+    public void testGetParent() {
+        fail();
+    }
+
+    @Test
+    public void testGetTopParent() {
+        fail();
+    }
+
+    @Test
+    public void testGetTopElement() {// private
+        fail();
+    }
+
+    @Test
+    public void testFindOutSpecialSonElement() {// private
+        fail();
+    }
+
+    @Test
+    public void testFindOutAllSonElements() {// private
+        fail();
+    }
+
+    @Test
+    public void testCheckConcept() {
+        fail();
+    }
+
+    @Test
+    public void testUpdateReferenceToXSDTypeDefinition() {
+        fail();
+    }
+
+    @Test
+    public void testUpdatePrimaryKeyInfo() {// private
+        fail();
+    }
+
+    @Test
+    public void testUpdateReference() {
+        fail();
+    }
+
+    @Test
+    public void testUpdateForeignKeyRelatedInfo() {
+        fail();
+    }
+
+    @Test
+    public void testGetAllForeignKeyRelatedInfos() {
+        fail();
+    }
+
+    @Test
+    public void testGetComplexChilds() {// private
+        fail();
+    }
+
+    @Test
+    public void testIsAImporedElement() {
+        fail();
+    }
+
+    @Test
+    public void testCreateXsdSchema() {
+        fail();
+    }
+
+    @Test
+    public void testGetComplexTypes() {
+        fail();
+    }
+
+    @Test
+    public void testGetSimpleTypeDefinitionChildren() {
+        fail();
+    }
+
+    @Test
+    public void testFilterOutDuplicatedElems() {
+        fail();
+    }
+
+    @Test
+    public void testIsSimpleTypedParticle() {
+        fail();
+    }
+
+    @Test
+    public void testFindReference() {
+        fail();
+    }
+
+    @Test
+    public void testGetContextPath() {
+        fail();
+    }
 }
