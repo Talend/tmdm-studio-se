@@ -830,7 +830,7 @@ public class Util {
      * @param localName for the type used
      * @return Boolean indicate any XSDElementDeclarations is found or not
      */
-    public static boolean findElementsUsingType(ArrayList<Object> objList, XSDTypeDefinition localTypedef) {
+    public static boolean findElementsUsingType(List<Object> objList, XSDTypeDefinition localTypedef) {
         // A handy convenience method quickly gets all
         // elementDeclarations within our schema; note that
         // whether or not this returns types in included,
@@ -840,8 +840,15 @@ public class Util {
             if (obj == localTypedef) {
                 continue;
             }
-            if (obj instanceof XSDElementDeclaration || obj instanceof XSDTypeDefinition) {
+
+            if (obj instanceof XSDParticle || obj instanceof XSDElementDeclaration || obj instanceof XSDTypeDefinition) {
                 XSDTypeDefinition typedef = null;
+                if (obj instanceof XSDParticle) {
+                    XSDParticle xsdParticle = (XSDParticle) obj;
+                    if (xsdParticle.getTerm() instanceof XSDElementDeclaration) {
+                        obj = xsdParticle.getTerm();
+                    }
+                }
                 if (obj instanceof XSDElementDeclaration) {
                     XSDElementDeclaration elem = (XSDElementDeclaration) obj;
                     if (elem.getAnonymousTypeDefinition() != null) {
@@ -870,7 +877,11 @@ public class Util {
                             for (XSDParticle pt : elist) {
                                 if (pt.getContent() instanceof XSDElementDeclaration) {
                                     XSDTypeDefinition typeDef = ((XSDElementDeclaration) pt.getContent()).getTypeDefinition();
-                                    if (typeDef != null && typeDef.getName() != null) {
+                                    boolean sameType = (typeDef instanceof XSDComplexTypeDefinition
+                                            && localTypedef instanceof XSDComplexTypeDefinition)
+                                            || (typeDef instanceof XSDSimpleTypeDefinition
+                                                    && localTypedef instanceof XSDSimpleTypeDefinition);
+                                    if (typeDef != null && typeDef.getName() != null && sameType) {
                                         if ((localTypedef.getName().equals(typeDef.getName()))) {
                                             return true;
                                         }
@@ -882,7 +893,8 @@ public class Util {
                 } else if (typedef instanceof XSDSimpleTypeDefinition) {
                     XSDSimpleTypeDefinition type = (XSDSimpleTypeDefinition) typedef;
                     XSDSimpleTypeDefinition baseType = type.getBaseTypeDefinition();
-                    if (baseType != null && baseType.getName().equals(localTypedef.getName())) {
+                    if (baseType != null && baseType.getName().equals(localTypedef.getName())
+                            && localTypedef instanceof XSDSimpleTypeDefinition) {
                         return true;
                     }
                 }
@@ -946,7 +958,7 @@ public class Util {
                     if (source == null) {
                         continue;
                     }
-                    String appinfoSource = annotList.get(k).getAttributes().getNamedItem("source").getNodeValue();//$NON-NLS-1$
+                    String appinfoSource = source.getNodeValue();
                     if ("X_ForeignKey".equals(appinfoSource)) {//$NON-NLS-1$
                         String path = annotList.get(k).getFirstChild().getNodeValue();
                         list.add(getConceptFromPath(path));
@@ -964,33 +976,35 @@ public class Util {
      * @param element
      */
     public static void getforeignKeyOfElement(Set<String> list, XSDElementDeclaration element) {
-        if (element.getAnnotation() != null) {
-            getForeignKeyofParcle(list, element.getAnnotation());
-        }
-        if (element.getTypeDefinition() instanceof XSDComplexTypeDefinition) {
-            XSDComplexTypeContent fromcomplexType = ((XSDComplexTypeDefinition) element.getTypeDefinition()).getContent();
-            if (fromcomplexType instanceof XSDParticle) {
+        if (element != null) {
+            if (element.getAnnotation() != null) {
+                getForeignKeyofParcle(list, element.getAnnotation());
+            }
+            if (element.getTypeDefinition() instanceof XSDComplexTypeDefinition) {
+                XSDComplexTypeContent fromcomplexType = ((XSDComplexTypeDefinition) element.getTypeDefinition()).getContent();
+                if (fromcomplexType instanceof XSDParticle) {
 
-                XSDParticle particle = (XSDParticle) fromcomplexType;
+                    XSDParticle particle = (XSDParticle) fromcomplexType;
 
-                if (particle.getTerm() instanceof XSDModelGroup) {
+                    if (particle.getTerm() instanceof XSDModelGroup) {
 
-                    XSDModelGroup modelGroup = ((XSDModelGroup) particle.getTerm());
-                    EList<XSDParticle> fromlist = modelGroup.getContents();
+                        XSDModelGroup modelGroup = ((XSDModelGroup) particle.getTerm());
+                        EList<XSDParticle> fromlist = modelGroup.getContents();
 
-                    for (XSDParticle el : fromlist.toArray(new XSDParticle[fromlist.size()])) {
-                        XSDTerm term = el.getTerm();
-                        if (term instanceof XSDElementDeclaration) {
-                            if (isReferrenced(element, (XSDElementDeclaration) term)) {
-                                continue;
+                        for (XSDParticle el : fromlist.toArray(new XSDParticle[fromlist.size()])) {
+                            XSDTerm term = el.getTerm();
+                            if (term instanceof XSDElementDeclaration) {
+                                if (isReferrenced(element, (XSDElementDeclaration) term)) {
+                                    continue;
+                                }
+
+                                XSDAnnotation annotation = ((XSDElementDeclaration) term).getAnnotation();
+
+                                if (annotation != null) {
+                                    getForeignKeyofParcle(list, annotation);
+                                }
+                                getforeignKeyOfElement(list, (XSDElementDeclaration) term);
                             }
-
-                            XSDAnnotation annotation = ((XSDElementDeclaration) term).getAnnotation();
-
-                            if (annotation != null) {
-                                getForeignKeyofParcle(list, annotation);
-                            }
-                            getforeignKeyOfElement(list, (XSDElementDeclaration) term);
                         }
                     }
                 }

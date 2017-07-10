@@ -25,14 +25,18 @@ import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.axis.utils.IOUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
@@ -685,12 +689,165 @@ public class UtilTest {
 
     @Test
     public void testFindElementsUsingType() {
-        fail();
+        String typenameA = "ComplexTypeA"; //$NON-NLS-1$
+        String typenameB = "ComplexTypeB"; //$NON-NLS-1$
+
+        XSDParticle xsdParticle0 = XSDFactory.eINSTANCE.createXSDParticle();
+
+        //
+        XSDSimpleTypeDefinition xsdSimpleTypeDefinition = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
+        List<Object> objList = new ArrayList<Object>();
+        objList.add(xsdSimpleTypeDefinition);
+        boolean findElements = Util.findElementsUsingType(objList, xsdSimpleTypeDefinition);
+        assertFalse(findElements);
+        
+        //
+        objList.clear();
+        XSDComplexTypeDefinition xsdComplexTypeDefinition1 = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+        objList.add(xsdComplexTypeDefinition1);
+        findElements = Util.findElementsUsingType(objList, xsdComplexTypeDefinition1);
+        assertFalse(findElements);
+        
+        //
+        objList.clear();
+        xsdComplexTypeDefinition1.setName(typenameA);
+        XSDComplexTypeDefinition xsdComplexTypeDefinition2 = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+        xsdComplexTypeDefinition2.setName(typenameA);
+        objList.add(xsdComplexTypeDefinition2);
+        findElements = Util.findElementsUsingType(objList, xsdComplexTypeDefinition1);
+        assertTrue(findElements);
+
+        //
+        objList.clear();
+        XSDElementDeclaration xsdElementDeclaration = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+        xsdElementDeclaration.setTypeDefinition(xsdComplexTypeDefinition2);
+        objList.add(xsdElementDeclaration);
+        findElements = Util.findElementsUsingType(objList, xsdComplexTypeDefinition1);
+        assertTrue(findElements);
+
+        objList.clear();
+        xsdParticle0.setContent(xsdElementDeclaration);
+        objList.add(xsdParticle0);
+        findElements = Util.findElementsUsingType(objList, xsdComplexTypeDefinition1);
+        assertTrue(findElements);
+
+        //
+        objList.clear();
+        XSDComplexTypeDefinition xsdComplexTypeDefinition_child = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+        xsdComplexTypeDefinition_child.setName(typenameA);
+        XSDElementDeclaration xsdElementDeclaration_child = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+        xsdElementDeclaration_child.setTypeDefinition(xsdComplexTypeDefinition_child);
+        XSDParticle xsdParticle_child = XSDFactory.eINSTANCE.createXSDParticle();
+        xsdParticle_child.setContent(xsdElementDeclaration_child);
+        EList<XSDParticle> elist = new BasicEList<XSDParticle>();
+        elist.add(xsdParticle_child);
+        XSDModelGroup xsdModelGroup = XSDFactory.eINSTANCE.createXSDModelGroup();
+        xsdModelGroup.getContents().addAll(elist);
+        XSDParticle xsdParticle = XSDFactory.eINSTANCE.createXSDParticle();
+        xsdParticle.setTerm(xsdModelGroup);
+
+        xsdComplexTypeDefinition2.setName(typenameB);
+        xsdComplexTypeDefinition2.setContent(xsdParticle);
+        objList.add(xsdElementDeclaration);
+        findElements = Util.findElementsUsingType(objList, xsdComplexTypeDefinition1);
+        assertTrue(findElements);
+
+        objList.clear();
+        xsdParticle0.setContent(xsdElementDeclaration);
+        objList.add(xsdParticle0);
+        findElements = Util.findElementsUsingType(objList, xsdComplexTypeDefinition1);
+        assertTrue(findElements);
+
+        //
+        objList.clear();
+        objList.add(xsdComplexTypeDefinition2);
+        findElements = Util.findElementsUsingType(objList, xsdComplexTypeDefinition1);
+        assertTrue(findElements);
+
+        //
+        XSDSimpleTypeDefinition xsdSimpleTypeDefinition_child = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
+        xsdSimpleTypeDefinition_child.setName(typenameA);
+        xsdElementDeclaration_child.setTypeDefinition(xsdSimpleTypeDefinition_child);
+        findElements = Util.findElementsUsingType(objList, xsdComplexTypeDefinition1);
+        assertFalse(findElements);
+
+        //
+        objList.clear();
+        XSDSimpleTypeDefinition xsdSimpleBaseTypeDef = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
+        xsdSimpleBaseTypeDef.setName(typenameA);
+        XSDSimpleTypeDefinition xsdSimpleTypeDef = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
+        xsdSimpleTypeDef.setBaseTypeDefinition(xsdSimpleBaseTypeDef);
+
+        XSDSimpleTypeDefinition xsdSimpleTypeDef_tosearch = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
+        xsdSimpleTypeDef_tosearch.setName(typenameA);
+        objList.add(xsdSimpleTypeDef);
+        findElements = Util.findElementsUsingType(objList, xsdSimpleTypeDef_tosearch);
+        assertTrue(findElements);
+
+        //
+        objList.clear();
+        XSDElementDeclaration xsdElementDecl = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+        xsdElementDecl.setTypeDefinition(xsdSimpleTypeDef);
+        objList.add(xsdElementDecl);
+        findElements = Util.findElementsUsingType(objList, xsdSimpleTypeDef_tosearch);
+        assertTrue(findElements);
+
+        objList.clear();
+        xsdParticle0.setContent(xsdElementDecl);
+        objList.add(xsdParticle0);
+        findElements = Util.findElementsUsingType(objList, xsdSimpleTypeDef_tosearch);
+        assertTrue(findElements);
+
+        //
+        XSDComplexTypeDefinition xsdComplexTypedef_search = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+        xsdComplexTypedef_search.setName(typenameB);
+        findElements = Util.findElementsUsingType(objList, xsdComplexTypedef_search);
+        assertFalse(findElements);
+
+        //
+        objList.clear();
+        objList.add(xsdSimpleTypeDef);
+        findElements = Util.findElementsUsingType(objList, xsdComplexTypedef_search);
+        assertFalse(findElements);
+
     }
 
     @Test
     public void testGetForeignKeyofParcle() {
-        fail();
+        Set<String> list = new HashSet<String>();
+        try {
+            Util.getforeignKeyOfElement(list, null);
+            assertTrue(list.isEmpty());
+
+            //
+            Document doc = getEmptyDocument();
+
+            Element appinfoElement1 = doc.createElementNS("http://www.w3.org/XML/1998/namespace", "appinfo"); //$NON-NLS-1$ //$NON-NLS-2$
+            appinfoElement1.setAttribute("source", "X_ForeignKey"); //$NON-NLS-1$ //$NON-NLS-2$
+            appinfoElement1.appendChild(doc.createTextNode("Store/Id")); //$NON-NLS-1$
+
+            Element appinfoElement2 = doc.createElementNS("http://www.w3.org/XML/1998/namespace", "appinfosssss"); //$NON-NLS-1$ //$NON-NLS-2$
+            appinfoElement2.setAttribute("source", "X_ForeignKey"); //$NON-NLS-1$ //$NON-NLS-2$
+            appinfoElement2.appendChild(doc.createTextNode("ProductFamily/Id")); //$NON-NLS-1$
+
+            XSDAnnotation xsdAnnotation = XSDFactory.eINSTANCE.createXSDAnnotation();
+            EList<Element> applicationInformations = xsdAnnotation.getApplicationInformation();
+            applicationInformations.add(appinfoElement1);
+            applicationInformations.add(appinfoElement2);
+
+            Util.getForeignKeyofParcle(list, xsdAnnotation);
+            assertTrue(list.size() == 1);
+            assertTrue(list.contains("Store")); //$NON-NLS-1$
+        } catch (ParserConfigurationException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    private Document getEmptyDocument() throws ParserConfigurationException {
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document doc = builder.newDocument();
+        return doc;
     }
 
     @Test
