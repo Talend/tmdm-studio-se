@@ -152,7 +152,7 @@ public class XSDPasteConceptAction extends UndoAction {
 
                     }
                 }
-                HashMap<String, XSDTypeDefinition> typeDef = Util.getTypeDefinition(schema);
+                Map<String, XSDTypeDefinition> typeDef = Util.getTypeDefinition(schema);
                 for (XSDTypeDefinition type : copyTypeSet) {
                     if (typeDef.containsKey(type.getName())) {
                         continue;

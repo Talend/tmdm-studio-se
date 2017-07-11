@@ -998,11 +998,6 @@ public class Util {
                                     continue;
                                 }
 
-                                XSDAnnotation annotation = ((XSDElementDeclaration) term).getAnnotation();
-
-                                if (annotation != null) {
-                                    getForeignKeyofParcle(list, annotation);
-                                }
                                 getforeignKeyOfElement(list, (XSDElementDeclaration) term);
                             }
                         }
@@ -1094,7 +1089,7 @@ public class Util {
      * @param schema
      * @return
      */
-    public static HashMap<String, XSDTypeDefinition> getTypeDefinition(XSDSchema schema) {
+    public static Map<String, XSDTypeDefinition> getTypeDefinition(XSDSchema schema) {
         HashMap<String, XSDTypeDefinition> map = new HashMap<String, XSDTypeDefinition>();
         for (XSDSchemaContent content : schema.getContents()) {
             if (content instanceof XSDTypeDefinition) {

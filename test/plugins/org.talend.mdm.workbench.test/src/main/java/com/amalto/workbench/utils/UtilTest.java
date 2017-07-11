@@ -12,7 +12,6 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
-import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.io.InputStream;
@@ -41,12 +40,14 @@ import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDXPathDefinition;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -580,7 +581,7 @@ public class UtilTest {
         PowerMockito.mockStatic(Util.class);
         try {
             String method = "checkAndAddSuffix"; //$NON-NLS-1$
-            PowerMockito.when(Util.class, method, any(URL.class)).thenCallRealMethod(); // $NON-NLS-1$
+            PowerMockito.when(Util.class, method, Mockito.any(URL.class)).thenCallRealMethod(); // $NON-NLS-1$
             // http
             String url_str = "http://localhost:8180/talendmdm/services/soap"; //$NON-NLS-1$
             URL url_in = new URL(url_str);
@@ -838,7 +839,7 @@ public class UtilTest {
             Util.getForeignKeyofParcle(list, xsdAnnotation);
             assertTrue(list.size() == 1);
             assertTrue(list.contains("Store")); //$NON-NLS-1$
-        } catch (ParserConfigurationException e) {
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -852,17 +853,210 @@ public class UtilTest {
 
     @Test
     public void testGetforeignKeyOfElement() {
-        fail();
+        String attKey = "source"; //$NON-NLS-1$
+        String attValue = "X_ForeignKey"; //$NON-NLS-1$
+        String namespaceURI = "http://www.w3.org/XML/1998/namespace"; //$NON-NLS-1$
+        String qualifiedName = "appinfo"; //$NON-NLS-1$
+
+        Set<String> list = new HashSet<String>();
+        try {
+            Util.getforeignKeyOfElement(list, null);
+            assertTrue(list.isEmpty());
+
+            //
+            Document doc = getEmptyDocument();
+
+            Element appinfoElement1 = doc.createElementNS(namespaceURI, qualifiedName);
+            appinfoElement1.setAttribute(attKey, attValue);
+            appinfoElement1.appendChild(doc.createTextNode("StoreA/Id")); //$NON-NLS-1$
+
+            Element appinfoElement2 = doc.createElementNS(namespaceURI, "appinfosssss"); //$NON-NLS-1$
+            appinfoElement2.setAttribute(attKey, attValue);
+            appinfoElement2.appendChild(doc.createTextNode("StoreB/Id")); //$NON-NLS-1$
+
+            XSDAnnotation xsdAnnotation = XSDFactory.eINSTANCE.createXSDAnnotation();
+            EList<Element> applicationInformations = xsdAnnotation.getApplicationInformation();
+            applicationInformations.add(appinfoElement1);
+            applicationInformations.add(appinfoElement2);
+
+            // prepare a
+            XSDAnnotation xsdAnnotation_a = XSDFactory.eINSTANCE.createXSDAnnotation();
+            Element appElement_a = doc.createElementNS(namespaceURI, qualifiedName);
+            appElement_a.setAttribute(attKey, attValue); // $NON-NLS-1$
+            appElement_a.appendChild(doc.createTextNode("StoreC/Id")); //$NON-NLS-1$
+            xsdAnnotation_a.getApplicationInformation().add(appElement_a);
+            XSDElementDeclaration xsdElementDeclaration_a = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+            xsdElementDeclaration_a.setAnnotation(xsdAnnotation_a);
+            XSDParticle xsdParticle_a = XSDFactory.eINSTANCE.createXSDParticle();
+            xsdParticle_a.setTerm(xsdElementDeclaration_a);
+
+            // prepare b
+            XSDAnnotation xsdAnnotation_b = XSDFactory.eINSTANCE.createXSDAnnotation();
+            Element appElement_b = doc.createElementNS(namespaceURI, qualifiedName);
+            appElement_b.setAttribute(attKey, attValue); // $NON-NLS-1$
+            appElement_b.appendChild(doc.createTextNode("StoreD/Id")); //$NON-NLS-1$
+            xsdAnnotation_b.getApplicationInformation().add(appElement_b);
+            XSDElementDeclaration xsdElementDeclaration_b = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+            xsdElementDeclaration_b.setAnnotation(xsdAnnotation_b);
+            XSDParticle xsdParticle_b = XSDFactory.eINSTANCE.createXSDParticle();
+            xsdParticle_b.setTerm(xsdElementDeclaration_b);
+
+            // prepare c
+            XSDAnnotation xsdAnnotation_c = XSDFactory.eINSTANCE.createXSDAnnotation();
+            Element appElement_c = doc.createElementNS(namespaceURI, qualifiedName);
+            appElement_c.setAttribute(attKey, attValue); // $NON-NLS-1$
+            appElement_c.appendChild(doc.createTextNode("StoreE/Id")); //$NON-NLS-1$
+            xsdAnnotation_c.getApplicationInformation().add(appElement_c);
+            XSDElementDeclaration xsdElementDeclaration_c = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+            xsdElementDeclaration_c.setAnnotation(xsdAnnotation_c);
+            XSDComplexTypeDefinition xsdComplexTypeDefinition_c = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+            xsdElementDeclaration_c.setTypeDefinition(xsdComplexTypeDefinition_c);
+            XSDParticle xsdParticle_c_1 = XSDFactory.eINSTANCE.createXSDParticle();
+            xsdComplexTypeDefinition_c.setContent(xsdParticle_c_1);
+            XSDModelGroup xsdModelGroup_c_1 = XSDFactory.eINSTANCE.createXSDModelGroup();
+            xsdParticle_c_1.setTerm(xsdModelGroup_c_1);
+            XSDParticle xsdParticle_c_2 = XSDFactory.eINSTANCE.createXSDParticle();
+            xsdModelGroup_c_1.getContents().add(xsdParticle_c_2);
+            XSDElementDeclaration xsdElementDeclaration_c_2 = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+            xsdParticle_c_2.setTerm(xsdElementDeclaration_c_2);
+            XSDAnnotation xsdAnnotation_c_2 = XSDFactory.eINSTANCE.createXSDAnnotation();
+            Element appElement_c_2 = doc.createElementNS(namespaceURI, qualifiedName);
+            appElement_c_2.setAttribute(attKey, attValue); // $NON-NLS-1$
+            appElement_c_2.appendChild(doc.createTextNode("StoreF/Id")); //$NON-NLS-1$
+            xsdAnnotation_c_2.getApplicationInformation().add(appElement_c_2);
+            xsdElementDeclaration_c_2.setAnnotation(xsdAnnotation_c_2);
+
+            XSDParticle xsdParticle_c = XSDFactory.eINSTANCE.createXSDParticle();
+            xsdParticle_c.setTerm(xsdElementDeclaration_c);
+
+
+            XSDModelGroup xsdModelGroup_a = XSDFactory.eINSTANCE.createXSDModelGroup();
+            xsdModelGroup_a.getContents().add(xsdParticle_a);
+            xsdModelGroup_a.getContents().add(xsdParticle_b);// referecened
+            xsdModelGroup_a.getContents().add(xsdParticle_c);
+            XSDParticle xsdParticle_child = XSDFactory.eINSTANCE.createXSDParticle();
+            xsdParticle_child.setTerm(xsdModelGroup_a);
+            XSDComplexTypeDefinition xsdComplexTypeDefinition = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+            xsdComplexTypeDefinition.setContent(xsdParticle_child);
+
+            XSDElementDeclaration xsdElementDeclaration = xsdElementDeclaration_b;
+            xsdElementDeclaration.setAnnotation(xsdAnnotation);
+            xsdElementDeclaration.setTypeDefinition(xsdComplexTypeDefinition);
+
+            // run and check
+            Util.getforeignKeyOfElement(list, xsdElementDeclaration);
+            assertTrue(list.size() == 4);
+            assertTrue(list.contains("StoreA")); //$NON-NLS-1$
+            assertTrue(list.contains("StoreC")); //$NON-NLS-1$
+            assertTrue(list.contains("StoreE")); //$NON-NLS-1$
+            assertTrue(list.contains("StoreF")); //$NON-NLS-1$
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     @Test
-    public void testIsReferrenced() {// private
-        fail();
+    public void testIsReferrenced() {
+        PowerMockito.mockStatic(Util.class);
+        try {
+            String method_isReferenced = "isReferrenced"; //$NON-NLS-1$
+            PowerMockito.when(Util.class, method_isReferenced, Mockito.any(XSDElementDeclaration.class),
+                    Mockito.any(XSDElementDeclaration.class))
+                    .thenCallRealMethod();
+            XSDElementDeclaration xsdElementDeclaration1 = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+            XSDElementDeclaration xsdElementDeclaration2 = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+
+            //
+            boolean isReferenced = Whitebox.invokeMethod(Util.class, method_isReferenced, xsdElementDeclaration1,
+                    xsdElementDeclaration1);
+            assertTrue(isReferenced);
+
+            //
+            isReferenced = Whitebox.invokeMethod(Util.class, method_isReferenced, xsdElementDeclaration1, xsdElementDeclaration2);
+            assertFalse(isReferenced);
+
+            //
+            XSDParticle xsdParticle = buildXSDParticleWithChildren(3, new String[] { "a", "b", "c" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            XSDComplexTypeDefinition xsdComplexTypeDefinition = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+            xsdComplexTypeDefinition.setContent(xsdParticle);
+            xsdElementDeclaration2.setTypeDefinition(xsdComplexTypeDefinition);
+            isReferenced = Whitebox.invokeMethod(Util.class, method_isReferenced, xsdElementDeclaration1, xsdElementDeclaration2);
+            assertFalse(isReferenced);
+
+            //
+            XSDParticle xsdParticle1 = XSDFactory.eINSTANCE.createXSDParticle();
+            xsdParticle1.setTerm(xsdElementDeclaration1);
+            XSDModelGroup modelGroup = ((XSDModelGroup) xsdParticle.getTerm());
+            modelGroup.getContents().add(xsdParticle1);
+            isReferenced = Whitebox.invokeMethod(Util.class, method_isReferenced, xsdElementDeclaration1, xsdElementDeclaration2);
+            assertTrue(isReferenced);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    private XSDParticle buildXSDParticleWithChildren(int childrenNumb, String[] childrenNames) {
+        XSDParticle xsdParticle = XSDFactory.eINSTANCE.createXSDParticle();
+
+        XSDModelGroup xsdModelGroup = XSDFactory.eINSTANCE.createXSDModelGroup();
+        xsdParticle.setTerm(xsdModelGroup);
+
+        for (int i = 0; i < childrenNumb && i < childrenNames.length; i++) {
+            XSDParticle xsdParticle_child = XSDFactory.eINSTANCE.createXSDParticle();
+            XSDElementDeclaration xsdElementDeclaration_child = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+            xsdElementDeclaration_child.setName(childrenNames[i]);
+            xsdParticle_child.setTerm(xsdElementDeclaration_child);
+            xsdModelGroup.getContents().add(xsdParticle_child);
+        }
+
+        return xsdParticle;
     }
 
     @Test
     public void testGetTypeDefinition() {
-        fail();
+        String s_name = "simpleType"; //$NON-NLS-1$
+        String c_name = "complexType"; //$NON-NLS-1$
+        String e_name = "xsdElementDeclaration"; //$NON-NLS-1$
+
+        XSDSchema xsdSchema = XSDFactory.eINSTANCE.createXSDSchema();
+        XSDSimpleTypeDefinition xsdSimpleTypeDefinition1 = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
+        XSDSimpleTypeDefinition xsdSimpleTypeDefinition2 = XSDFactory.eINSTANCE.createXSDSimpleTypeDefinition();
+        XSDComplexTypeDefinition xsdComplexTypeDefinition1 = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+        XSDComplexTypeDefinition xsdComplexTypeDefinition2 = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+        xsdSimpleTypeDefinition1.setName(s_name + 1);
+        xsdSimpleTypeDefinition2.setName(s_name + 2);
+        xsdComplexTypeDefinition1.setName(c_name + 1);
+        xsdComplexTypeDefinition2.setName(c_name + 2);
+        xsdSimpleTypeDefinition1
+                .setBaseTypeDefinition(xsdSchema.resolveSimpleTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "string")); //$NON-NLS-1$ anyType
+        xsdSimpleTypeDefinition2
+                .setBaseTypeDefinition(xsdSchema.resolveSimpleTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "string")); //$NON-NLS-1$
+        xsdComplexTypeDefinition1.setBaseTypeDefinition(
+                xsdSchema.resolveComplexTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$
+        xsdComplexTypeDefinition2.setBaseTypeDefinition(
+                xsdSchema.resolveComplexTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$
+        EList<XSDSchemaContent> contents = xsdSchema.getContents();
+
+        contents.add(xsdSimpleTypeDefinition1);
+        contents.add(xsdSimpleTypeDefinition2);
+        contents.add(xsdComplexTypeDefinition1);
+        contents.add(xsdComplexTypeDefinition2);
+
+        XSDElementDeclaration xsdElementDeclaration = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+        xsdElementDeclaration.setName(e_name);
+        contents.add(xsdElementDeclaration);
+        Map<String, XSDTypeDefinition> typeDefinition = Util.getTypeDefinition(xsdSchema);
+        assertNotNull(typeDefinition);
+        assertTrue(typeDefinition.size() == 4);
+        assertTrue(typeDefinition.keySet().contains(s_name + 1));
+        assertTrue(typeDefinition.keySet().contains(s_name + 2));
+        assertTrue(typeDefinition.keySet().contains(c_name + 1));
+        assertTrue(typeDefinition.keySet().contains(c_name + 2));
+        assertTrue(typeDefinition.values().contains(xsdSimpleTypeDefinition1));
+        assertTrue(typeDefinition.values().contains(xsdSimpleTypeDefinition2));
+        assertTrue(typeDefinition.values().contains(xsdComplexTypeDefinition1));
+        assertTrue(typeDefinition.values().contains(xsdComplexTypeDefinition2));
     }
 
     @Test
