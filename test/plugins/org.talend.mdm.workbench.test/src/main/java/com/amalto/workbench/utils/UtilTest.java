@@ -1061,12 +1061,94 @@ public class UtilTest {
 
     @Test
     public void testGetParent() {
-        fail();
+        Object parent = Util.getParent(null);
+        assertNull(parent);
+
+        XSDElementDeclaration concept = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+        XSDParticle xsdParticle = XSDFactory.eINSTANCE.createXSDParticle();
+        parent = Util.getParent(concept);
+        assertNull(parent);
+        parent = Util.getParent(xsdParticle);
+        assertNull(parent);
+
+        XSDSchema xsdSchema = XSDFactory.eINSTANCE.createXSDSchema();
+        xsdSchema.getContents().add(concept);
+        parent = Util.getParent(concept);
+        assertSame(concept, parent);// concept's parent is itself
+
+        //
+        PowerMockito.mockStatic(Util.class);
+        String method_private = "findOutSpecialSonElement"; //$NON-NLS-1$
+        try {
+            PowerMockito.when(Util.getParent(Mockito.any(Object.class))).thenCallRealMethod();
+
+            XSDComplexTypeDefinition xsdComplexTypeDef = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+            xsdComplexTypeDef.setBaseTypeDefinition(
+                    xsdSchema.resolveComplexTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$
+            XSDParticle particle = XSDFactory.eINSTANCE.createXSDParticle();
+            xsdComplexTypeDef.setContent(particle);
+            concept.setAnonymousTypeDefinition(xsdComplexTypeDef);
+
+            XSDModelGroup modelGroup = XSDFactory.eINSTANCE.createXSDModelGroup();
+            particle.setContent(modelGroup);
+
+            XSDParticle particle1 = XSDFactory.eINSTANCE.createXSDParticle();
+            XSDElementDeclaration elementDeclaration1 = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+            particle1.setContent(elementDeclaration1);
+
+            XSDParticle particle2 = XSDFactory.eINSTANCE.createXSDParticle();
+            XSDElementDeclaration elementDeclaration2 = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+            particle2.setContent(elementDeclaration2);
+            // add children to elementDeclaration2
+            XSDComplexTypeDefinition complexType2 = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
+            complexType2.setBaseTypeDefinition(
+                    xsdSchema.resolveComplexTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$
+            XSDModelGroup modelGroup_type = XSDFactory.eINSTANCE.createXSDModelGroup();
+            XSDParticle particle_child = XSDFactory.eINSTANCE.createXSDParticle();
+            XSDElementDeclaration elementDeclaration_child = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+            particle_child.setContent(elementDeclaration_child);
+            modelGroup_type.getContents().add(particle_child);
+            XSDParticle particle_type = XSDFactory.eINSTANCE.createXSDParticle();
+            particle_type.setContent(modelGroup_type);
+            complexType2.setContent(particle_type);
+            elementDeclaration2.setAnonymousTypeDefinition(complexType2);
+
+            modelGroup.getContents().add(particle1);
+            modelGroup.getContents().add(particle2);
+
+            parent = Util.getParent(elementDeclaration1);
+            assertSame(concept, parent);
+            parent = Util.getParent(elementDeclaration2);
+            assertSame(concept, parent);
+
+            XSDElementDeclaration son = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+            parent = Util.getParent(son);
+            assertNull(parent);
+
+            //
+            xsdSchema.getContents().clear();
+            xsdSchema.getContents().add(xsdComplexTypeDef);
+            parent = Util.getParent(elementDeclaration1);
+            assertSame(xsdComplexTypeDef, parent);
+            parent = Util.getParent(elementDeclaration2);
+            assertSame(xsdComplexTypeDef, parent);
+
+            //
+            XSDElementDeclaration element = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+
+            PowerMockito.when(Util.class, method_private, Mockito.any(XSDElementDeclaration.class),
+                    Mockito.any(XSDElementDeclaration.class), Mockito.anySet()).thenReturn(element);
+            parent = Util.getParent(elementDeclaration_child);
+            assertSame(element, parent);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     @Test
     public void testGetTopParent() {
-        fail();
+
     }
 
     @Test
