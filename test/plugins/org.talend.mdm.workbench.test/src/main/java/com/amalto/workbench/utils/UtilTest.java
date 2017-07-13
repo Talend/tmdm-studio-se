@@ -13,6 +13,7 @@
 package com.amalto.workbench.utils;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -36,6 +37,7 @@ import org.eclipse.xsd.XSDCompositor;
 import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDFactory;
+import org.eclipse.xsd.XSDIdentityConstraintCategory;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
@@ -1148,27 +1150,225 @@ public class UtilTest {
 
     @Test
     public void testGetTopParent() {
+        //
+        List<Object> topParent = Util.getTopParent(null);
+        assertNull(topParent);
+
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        //
+        XSDElementDeclaration concept = factory.createXSDElementDeclaration();
+        topParent = Util.getTopParent(concept);
+        assertNull(topParent);
+
+        // concept with three children
+        String element1 = "Id"; //$NON-NLS-1$
+        String element2 = "code"; //$NON-NLS-1$
+        String element3 = "address"; //$NON-NLS-1$
+        XSDSchema xsdSchema = factory.createXSDSchema();
+        xsdSchema.getContents().add(concept);
+        XSDComplexTypeDefinition xsdComplexTypeDef = factory.createXSDComplexTypeDefinition();
+        xsdComplexTypeDef.setBaseTypeDefinition(
+                xsdSchema.resolveComplexTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$
+        concept.setAnonymousTypeDefinition(xsdComplexTypeDef);
+        XSDParticle xsdParticle = factory.createXSDParticle();
+        xsdComplexTypeDef.setContent(xsdParticle);
+        XSDModelGroup xsdModelGroup = factory.createXSDModelGroup();
+        xsdParticle.setContent(xsdModelGroup);
+
+        XSDParticle childParticle1 = factory.createXSDParticle();
+        XSDElementDeclaration childElement1 = factory.createXSDElementDeclaration();
+        childElement1.setName(element1);
+        childParticle1.setContent(childElement1);
+        XSDParticle childParticle2 = factory.createXSDParticle();
+        XSDElementDeclaration childElement2 = factory.createXSDElementDeclaration();
+        childElement2.setName(element2);
+        childParticle2.setContent(childElement2);
+        XSDParticle childParticle3 = factory.createXSDParticle();
+        XSDElementDeclaration childElement3 = factory.createXSDElementDeclaration();
+        childElement3.setName(element3);
+        childParticle3.setContent(childElement3);
+        xsdModelGroup.getContents().add(childParticle1);
+        xsdModelGroup.getContents().add(childParticle2);
+        xsdModelGroup.getContents().add(childParticle3);
+
+        XSDIdentityConstraintDefinition xsdIdConsDef = factory.createXSDIdentityConstraintDefinition();
+        concept.getIdentityConstraintDefinitions().add(xsdIdConsDef);
+        XSDXPathDefinition xsdXPathDefinition1 = factory.createXSDXPathDefinition();
+        xsdXPathDefinition1.setValue(element1);
+        XSDXPathDefinition xsdXPathDefinition2 = factory.createXSDXPathDefinition();
+        xsdXPathDefinition2.setValue(element2);
+        xsdIdConsDef.getFields().add(xsdXPathDefinition1);
+        xsdIdConsDef.getFields().add(xsdXPathDefinition2);
+
+        // complex type with one child
+        XSDComplexTypeDefinition xsdComplexTypeDef2 = factory.createXSDComplexTypeDefinition();
+        xsdComplexTypeDef2.setBaseTypeDefinition(
+                xsdSchema.resolveComplexTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$
+        XSDParticle xsdParticle2 = factory.createXSDParticle();
+        xsdComplexTypeDef2.setContent(xsdParticle2);
+        XSDModelGroup xsdModelGroup2 = factory.createXSDModelGroup();
+        xsdParticle2.setContent(xsdModelGroup2);
+
+        XSDParticle childParticle_2 = factory.createXSDParticle();
+        XSDElementDeclaration childElement_2 = factory.createXSDElementDeclaration();
+        childElement_2.setName(element1);
+        childParticle_2.setContent(childElement_2);
+        xsdModelGroup2.getContents().add(childParticle_2);
+        xsdSchema.getContents().add(xsdComplexTypeDef2);
+
+        //
+        topParent = Util.getTopParent(childElement1);
+        assertNotNull(topParent);
+        assertTrue(topParent.size() == 2);
+
+        //
+        topParent = Util.getTopParent(childElement_2);
+        assertNull(topParent);
 
     }
 
     @Test
     public void testGetTopElement() {// private
-        fail();
+        String methodToExpect = "getTopElement"; //$NON-NLS-1$
+
+        PowerMockito.mockStatic(Util.class);
+        try {
+            PowerMockito.when(Util.class, methodToExpect, Mockito.any()).thenCallRealMethod();
+
+            XSDFactory factory = XSDFactory.eINSTANCE;
+            //
+            XSDElementDeclaration concept = factory.createXSDElementDeclaration();
+            // concept with three children
+            String element1 = "Id"; //$NON-NLS-1$
+            String element2 = "code"; //$NON-NLS-1$
+            String element3 = "address"; //$NON-NLS-1$
+            XSDSchema xsdSchema = factory.createXSDSchema();
+            xsdSchema.getContents().add(concept);
+            XSDComplexTypeDefinition xsdComplexTypeDef = factory.createXSDComplexTypeDefinition();
+            xsdComplexTypeDef.setBaseTypeDefinition(
+                    xsdSchema.resolveComplexTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$
+            concept.setAnonymousTypeDefinition(xsdComplexTypeDef);
+            xsdSchema.getContents().add(xsdComplexTypeDef);
+            XSDParticle xsdParticle = factory.createXSDParticle();
+            xsdComplexTypeDef.setContent(xsdParticle);
+            XSDModelGroup xsdModelGroup = factory.createXSDModelGroup();
+            xsdParticle.setContent(xsdModelGroup);
+
+            XSDParticle childParticle1 = factory.createXSDParticle();
+            XSDElementDeclaration childElement1 = factory.createXSDElementDeclaration();
+            childElement1.setName(element1);
+            childParticle1.setContent(childElement1);
+            XSDParticle childParticle2 = factory.createXSDParticle();
+            XSDElementDeclaration childElement2 = factory.createXSDElementDeclaration();
+            childElement2.setName(element2);
+            childParticle2.setContent(childElement2);
+            XSDParticle childParticle3 = factory.createXSDParticle();
+            XSDElementDeclaration childElement3 = factory.createXSDElementDeclaration();
+            childElement3.setName(element3);
+            childParticle3.setContent(childElement3);
+            xsdModelGroup.getContents().add(childParticle1);
+            xsdModelGroup.getContents().add(childParticle2);
+            xsdModelGroup.getContents().add(childParticle3);
+
+            Object primaryKey = Whitebox.invokeMethod(Util.class, methodToExpect, concept, childElement1);
+            assertEquals(element1, primaryKey);
+
+            XSDElementDeclaration elementDecl = factory.createXSDElementDeclaration();
+            elementDecl.setTypeDefinition(factory.createXSDSimpleTypeDefinition());
+            primaryKey = Whitebox.invokeMethod(Util.class, methodToExpect, elementDecl, childElement1);
+            assertNull(primaryKey);
+
+            //
+
+            XSDComplexTypeDefinition xsdComplexTypeDef2 = factory.createXSDComplexTypeDefinition();
+            xsdComplexTypeDef2.setBaseTypeDefinition(xsdComplexTypeDef);
+            XSDParticle xsdParticle2 = factory.createXSDParticle();
+            xsdComplexTypeDef2.setContent(xsdParticle2);
+            XSDModelGroup xsdModelGroup2 = factory.createXSDModelGroup();
+            xsdParticle2.setContent(xsdModelGroup2);
+
+            XSDParticle childParticle_2 = factory.createXSDParticle();
+            XSDElementDeclaration childElement_2 = factory.createXSDElementDeclaration();
+            childElement_2.setName(element1);
+            childParticle_2.setContent(childElement_2);
+            xsdModelGroup2.getContents().add(childParticle_2);
+            xsdSchema.getContents().add(xsdComplexTypeDef2);
+            concept.setAnonymousTypeDefinition(xsdComplexTypeDef2);
+            primaryKey = Whitebox.invokeMethod(Util.class, methodToExpect, concept, childElement1);
+            assertEquals(element1, primaryKey);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     @Test
-    public void testFindOutSpecialSonElement() {// private
-        fail();
+    public void testFindOutSpecialSonElement() {
+        String method_findspecial = "findOutSpecialSonElement"; //$NON-NLS-1$
+        String method_findall = "findOutAllSonElements"; //$NON-NLS-1$
+
+        Set<XSDConcreteComponent> complexTypes = new HashSet<XSDConcreteComponent>();
+        String[] names = { "ele1", "ele2", "ele3", "ele4" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
+        PowerMockito.mockStatic(Util.class);
+        try {
+            PowerMockito.when(Util.class, method_findspecial, any(XSDElementDeclaration.class),
+                    any(XSDElementDeclaration.class), anySet()).thenCallRealMethod();
+
+            XSDFactory factory = XSDFactory.eINSTANCE;
+            XSDElementDeclaration parent = factory.createXSDElementDeclaration();
+            XSDElementDeclaration xsdElementDeclaration1 = factory.createXSDElementDeclaration();
+            xsdElementDeclaration1.setName(names[0]);
+            XSDElementDeclaration xsdElementDeclaration2 = factory.createXSDElementDeclaration();
+            xsdElementDeclaration2.setName(names[1]);
+
+            List<XSDElementDeclaration> particleElementList1 = new ArrayList<XSDElementDeclaration>();
+            particleElementList1.add(xsdElementDeclaration1);
+            particleElementList1.add(xsdElementDeclaration2);
+            //
+
+            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), any(XSDComplexTypeDefinition.class))
+                    .thenReturn(particleElementList1);
+            Object result = Whitebox.invokeMethod(Util.class, method_findspecial, parent, xsdElementDeclaration1, complexTypes);
+            assertSame(parent, result);
+
+            //
+            XSDElementDeclaration xsdEleDeclaration1 = factory.createXSDElementDeclaration();
+            xsdEleDeclaration1.setName(names[2]);
+            XSDElementDeclaration xsdEleDeclaration2 = factory.createXSDElementDeclaration();
+            xsdEleDeclaration2.setName(names[3]);
+            List<XSDElementDeclaration> particleElementList2 = new ArrayList<XSDElementDeclaration>();
+            particleElementList2.add(xsdEleDeclaration1);
+            particleElementList2.add(xsdEleDeclaration2);
+            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), any(XSDComplexTypeDefinition.class))
+                    .thenReturn(particleElementList1, particleElementList2);
+            result = Whitebox.invokeMethod(Util.class, method_findspecial, parent, xsdEleDeclaration1, complexTypes);
+            assertSame(xsdElementDeclaration1, result);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     @Test
-    public void testFindOutAllSonElements() {// private
+    public void testFindOutAllSonElements() {
         fail();
     }
 
     @Test
     public void testCheckConcept() {
-        fail();
+        XSDElementDeclaration concept = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+        XSDIdentityConstraintDefinition xsdIdConsDef1 = XSDFactory.eINSTANCE.createXSDIdentityConstraintDefinition();
+        XSDIdentityConstraintDefinition xsdIdConsDef2 = XSDFactory.eINSTANCE.createXSDIdentityConstraintDefinition();
+        concept.getIdentityConstraintDefinitions().add(xsdIdConsDef1);
+        concept.getIdentityConstraintDefinitions().add(xsdIdConsDef2);
+        boolean isConcept = Util.checkConcept(concept);
+        assertFalse(isConcept);
+
+        xsdIdConsDef1.setIdentityConstraintCategory(XSDIdentityConstraintCategory.UNIQUE_LITERAL);
+        xsdIdConsDef2.setIdentityConstraintCategory(XSDIdentityConstraintCategory.KEY_LITERAL);
+        isConcept = Util.checkConcept(concept);
+        assertTrue(isConcept);
     }
 
     @Test

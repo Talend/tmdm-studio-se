@@ -1114,9 +1114,7 @@ public class Util {
             return null;
         }
         EList<XSDSchemaContent> parentList = elem.getSchema().getContents();
-        ArrayList<Object> list = new ArrayList<Object>();
         for (XSDSchemaContent top : parentList) {
-            list.clear();
             if (!(top instanceof XSDElementDeclaration) && !(top instanceof XSDComplexTypeDefinition)) {
                 continue;
             }
@@ -1178,7 +1176,7 @@ public class Util {
     }
 
     public static List<Object> getTopParent(Object son) {
-        if (!((son instanceof XSDElementDeclaration) || (son instanceof XSDParticle))) {
+        if (!((son instanceof XSDElementDeclaration))) {
             return null;
         }
 
@@ -1195,21 +1193,20 @@ public class Util {
             if (!(top instanceof XSDElementDeclaration)) {
                 continue;
             }
-            if (top instanceof XSDElementDeclaration) {
-                XSDElementDeclaration decl = (XSDElementDeclaration) top;
-                if (decl.getTypeDefinition() instanceof XSDComplexTypeDefinition) {
 
-                    String primaryKey = getTopElement(decl, elem, (XSDComplexTypeDefinition) decl.getTypeDefinition());
-                    if (!"".equalsIgnoreCase(primaryKey)) {//$NON-NLS-1$
-                        EList<XSDIdentityConstraintDefinition> idtylist = decl.getIdentityConstraintDefinitions();
-                        for (XSDIdentityConstraintDefinition idty : idtylist) {
-                            EList<XSDXPathDefinition> fields = idty.getFields();
-                            for (XSDXPathDefinition path : fields) {
-                                if ((path.getValue()).equals(primaryKey)) {
-                                    list.add(idty);
-                                    list.add(path);
-                                    return list;
-                                }
+            XSDElementDeclaration decl = (XSDElementDeclaration) top;
+            if (decl.getTypeDefinition() instanceof XSDComplexTypeDefinition) {
+
+                String primaryKey = getTopElement(decl, elem);
+                if (!"".equalsIgnoreCase(primaryKey)) {//$NON-NLS-1$
+                    EList<XSDIdentityConstraintDefinition> idtylist = decl.getIdentityConstraintDefinitions();
+                    for (XSDIdentityConstraintDefinition idty : idtylist) {
+                        EList<XSDXPathDefinition> fields = idty.getFields();
+                        for (XSDXPathDefinition path : fields) {
+                            if ((path.getValue()).equals(primaryKey)) {
+                                list.add(idty);
+                                list.add(path);
+                                return list;
                             }
                         }
                     }
@@ -1219,8 +1216,14 @@ public class Util {
         return null;
     }
 
-    private static String getTopElement(XSDElementDeclaration parent, XSDElementDeclaration son, XSDComplexTypeDefinition type) {
-        List<XSDComplexTypeDefinition> hierarchyComplexTypes = getAllSuperComplexTypes(type);
+    private static String getTopElement(XSDElementDeclaration parent, XSDElementDeclaration son) {
+        XSDTypeDefinition type = parent.getTypeDefinition();
+        if (!(type instanceof XSDComplexTypeDefinition)) {
+            return null;
+        }
+
+        List<XSDComplexTypeDefinition> hierarchyComplexTypes = getAllSuperComplexTypes(
+                (XSDComplexTypeDefinition) type);
 
         for (XSDComplexTypeDefinition complexType : hierarchyComplexTypes) {
             if (complexType.getContent() instanceof XSDParticle) {
@@ -1330,11 +1333,12 @@ public class Util {
 
     private static XSDElementDeclaration findOutSpecialSonElement(XSDElementDeclaration parent, XSDElementDeclaration son,
             Set<XSDConcreteComponent> complexTypes) {
-        ArrayList<XSDElementDeclaration> particleElemList = findOutAllSonElements(parent, complexTypes);
+        List<XSDElementDeclaration> particleElemList = findOutAllSonElements(parent, complexTypes);
         XSDElementDeclaration specialParent = null;
         for (XSDElementDeclaration e : particleElemList) {
             if (e == son) {
                 specialParent = parent;
+                break;
             }
         }
 
@@ -1350,7 +1354,7 @@ public class Util {
         return specialParent;
     }
 
-    private static ArrayList<XSDElementDeclaration> findOutAllSonElements(XSDElementDeclaration decl,
+    private static List<XSDElementDeclaration> findOutAllSonElements(XSDElementDeclaration decl,
             Set<XSDConcreteComponent> complexTypes) {
         ArrayList<XSDElementDeclaration> holder = new ArrayList<XSDElementDeclaration>();
         if (decl.getTypeDefinition() instanceof XSDComplexTypeDefinition) {
@@ -1390,9 +1394,9 @@ public class Util {
 
     public static boolean checkConcept(XSDElementDeclaration decl) {
         boolean isConcept = false;
-        EList l = decl.getIdentityConstraintDefinitions();
-        for (Iterator iter = l.iterator(); iter.hasNext();) {
-            XSDIdentityConstraintDefinition icd = (XSDIdentityConstraintDefinition) iter.next();
+        EList<XSDIdentityConstraintDefinition> list = decl.getIdentityConstraintDefinitions();
+        for (Iterator<XSDIdentityConstraintDefinition> iter = list.iterator(); iter.hasNext();) {
+            XSDIdentityConstraintDefinition icd = iter.next();
             if (icd.getIdentityConstraintCategory().equals(XSDIdentityConstraintCategory.UNIQUE_LITERAL)) {
                 isConcept = true;
                 break;
