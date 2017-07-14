@@ -37,6 +37,7 @@ import com.amalto.workbench.detailtabs.sections.model.entity.FieldWrapper;
 import com.amalto.workbench.detailtabs.sections.model.entity.KeyWrapper;
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.i18n.Messages;
+import com.amalto.workbench.models.sync.EntitySyncProcessor;
 import com.amalto.workbench.providers.datamodel.SchemaTreeContentProvider;
 import com.amalto.workbench.utils.Util;
 
@@ -131,8 +132,10 @@ public class EntityCommitHandler extends CommitHandler<EntityWrapper> {
         Object[] objs = Util.getAllObject(site, new ArrayList<Object>(), contentProvider);
         Object[] allForeignKeyAndInfos = Util.getAllForeignKeyRelatedInfos(site, new ArrayList<Object>(), contentProvider,
                 new HashSet<Object>());
-
-        Util.updateReference(xsdElementDeclaration, objs, allForeignKeyAndInfos, oldName, getCommitedObj().getName());
+        String newName = getCommitedObj().getName();
+        Util.updateReference(xsdElementDeclaration, objs, allForeignKeyAndInfos, oldName, newName);
+        EntitySyncProcessor.syncNameForAnnotation(xsdElementDeclaration, oldName, newName);
+        xsdElementDeclaration.updateElement();
     }
 
     private boolean commitEnitityKeys() {

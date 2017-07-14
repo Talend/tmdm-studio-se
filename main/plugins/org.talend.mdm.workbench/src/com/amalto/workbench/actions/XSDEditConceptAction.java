@@ -38,6 +38,7 @@ import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
+import com.amalto.workbench.models.sync.EntitySyncProcessor;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XSDUtil;
 
@@ -103,14 +104,18 @@ public class XSDEditConceptAction extends UndoAction {
             Object[] allForeignKeyRelatedInfos = Util.getAllForeignKeyRelatedInfos(page.getSite(), new ArrayList<Object>(),
                     provider, new HashSet<Object>());
 
-            decl.setName(id.getValue().trim());
+            String newName = id.getValue().trim();
+            decl.setName(newName);
             decl.updateElement();
-            Util.updateReference(decl, objs, allForeignKeyRelatedInfos, oldName, id.getValue());
+            Util.updateReference(decl, objs, allForeignKeyRelatedInfos, oldName, newName);
+
+            EntitySyncProcessor.syncNameForAnnotation(decl, oldName, newName);
+
             if (mapinfoExAdapter != null) {
-                mapinfoExAdapter.renameEntityMapinfo(oldName, id.getValue());
+                mapinfoExAdapter.renameEntityMapinfo(oldName, newName);
             }
             if (elementExAdapter != null) {
-                elementExAdapter.renameEntityName(decl.getSchema(), oldName, id.getValue());
+                elementExAdapter.renameEntityName(decl.getSchema(), oldName, newName);
             }
             // change unique key with new name of concept
             EList list = decl.getIdentityConstraintDefinitions();
@@ -123,7 +128,7 @@ public class XSDEditConceptAction extends UndoAction {
                 }
             }
             if (toUpdate != null) {
-                toUpdate.setName(id.getValue());
+                toUpdate.setName(newName);
                 toUpdate.updateElement();
             }
 

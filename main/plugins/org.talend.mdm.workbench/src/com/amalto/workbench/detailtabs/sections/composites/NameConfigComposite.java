@@ -13,8 +13,11 @@
 package com.amalto.workbench.detailtabs.sections.composites;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.FocusAdapter;
+import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -43,11 +46,12 @@ public class NameConfigComposite extends Composite {
     private Image errIcon = ImageCache.getImage(EImage.ERROR.getPath()).createImage();
 
     protected BasePropertySection section;
-    public NameConfigComposite(Composite parent, int style,BasePropertySection section) {
-    	this(parent,style);
-    	this.section=section;
+
+    public NameConfigComposite(Composite parent, int style, BasePropertySection section) {
+        this(parent, style);
+        this.section = section;
     }
-    
+
     public NameConfigComposite(Composite parent, int style) {
         super(parent, style);
 
@@ -87,54 +91,79 @@ public class NameConfigComposite extends Composite {
 
         if (target != null) {
             String name = target.getName();
-			txtName.setText(name);
-    		if (name != null) {
-    			int length = name.length();
-				if (length >= caretOffset) {
-    				txtName.setSelection(caretOffset,caretOffset);
-    			} else {
-    				txtName.setSelection(length,length);
-    			}
-    		}
+            txtName.setText(name);
+            if (name != null) {
+                int length = name.length();
+                if (length >= caretOffset) {
+                    txtName.setSelection(caretOffset, caretOffset);
+                } else {
+                    txtName.setSelection(length, length);
+                }
+            }
         }
 
         addUIListener();
     }
+
     private int caretOffset;
+
+    private FocusAdapter focusListener;
+
+    private SelectionListener selectionListener;
+
+    private void doUpdate() {
+
+        if (target == null) {
+            return;
+        }
+
+        String errMsg = target.validNewName(txtName.getText().trim());
+
+        lblNameErrIndicator.setVisible(errMsg != null);
+        lblNameErrIndicator.setToolTipText(errMsg == null ? "" : errMsg);//$NON-NLS-1$
+
+        target.setName(txtName.getText().trim());
+        caretOffset = txtName.getCaretPosition();
+        if (section != null) {
+            section.autoCommit();
+
+            if (target instanceof EntityWrapper) {
+                EntityWrapper wrapper = (EntityWrapper) target;
+                RefreshPropertySheetTitleHandler.refreshPropertySheetTitle(section, wrapper.getSourceEntity());
+            }
+        }
+
+    }
+
     private void initUIListener() {
 
-        lTxtNameListener = new ModifyListener() {
+        this.focusListener = new FocusAdapter() {
 
-            public void modifyText(ModifyEvent e) {
+            @Override
+            public void focusLost(FocusEvent e) {
+                doUpdate();
+            }
 
-                if (target == null)
-                    return;
+        };
+        this.selectionListener = new SelectionListener() {
 
-                String errMsg = target.validNewName(txtName.getText().trim());
+            public void widgetSelected(SelectionEvent e) {
+            }
 
-                lblNameErrIndicator.setVisible(errMsg != null);
-                lblNameErrIndicator.setToolTipText(errMsg == null ? "" : errMsg);//$NON-NLS-1$
-
-                target.setName(txtName.getText().trim());
-                caretOffset = txtName.getCaretPosition();
-                if (section != null) {
-                    section.autoCommit();
-
-                    if (target instanceof EntityWrapper) {
-                        EntityWrapper wrapper = (EntityWrapper) target;
-                        RefreshPropertySheetTitleHandler.refreshPropertySheetTitle(section, wrapper.getSourceEntity());
-                    }
-                }
+            public void widgetDefaultSelected(SelectionEvent e) {
+                doUpdate();
             }
         };
     }
 
     private void addUIListener() {
-        txtName.addModifyListener(lTxtNameListener);
+        txtName.addFocusListener(focusListener);
+        txtName.addSelectionListener(selectionListener);
     }
 
     private void remvoeUIListener() {
-        txtName.removeModifyListener(lTxtNameListener);
+        txtName.removeFocusListener(focusListener);
+        txtName.removeSelectionListener(selectionListener);
     }
 
     @Override

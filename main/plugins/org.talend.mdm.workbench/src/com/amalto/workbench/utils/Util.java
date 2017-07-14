@@ -1531,7 +1531,13 @@ public class Util {
                 e.getChildNodes().item(0).setNodeValue(build.toString());
 
             } else {
-                if (nodeValue.startsWith(oldValue)) {
+                boolean changed = false;
+                if (nodeValue.contains("/")) { //$NON-NLS-1$
+                    changed = nodeValue.startsWith(oldValue + "/"); //$NON-NLS-1$
+                } else {
+                    changed = nodeValue.startsWith(oldValue);
+                }
+                if (changed) {
                     nodeValue = nodeValue.replaceFirst(oldValue, newValue);
                     e.getChildNodes().item(0).setNodeValue(nodeValue);
                 }

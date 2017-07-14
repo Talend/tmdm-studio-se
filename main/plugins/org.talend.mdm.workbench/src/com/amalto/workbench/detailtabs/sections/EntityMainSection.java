@@ -12,6 +12,8 @@
 // ============================================================================
 package com.amalto.workbench.detailtabs.sections;
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -22,10 +24,12 @@ import org.eclipse.xsd.XSDElementDeclaration;
 
 import com.amalto.workbench.detailtabs.exception.CommitException;
 import com.amalto.workbench.detailtabs.exception.CommitValidationException;
+import com.amalto.workbench.detailtabs.sections.composites.CommitBarComposite.CommitBarListener;
 import com.amalto.workbench.detailtabs.sections.composites.EntityKeyConfigComposite;
 import com.amalto.workbench.detailtabs.sections.composites.NameConfigComposite;
 import com.amalto.workbench.detailtabs.sections.model.ISubmittable;
 import com.amalto.workbench.detailtabs.sections.model.entity.EntityWrapper;
+import com.amalto.workbench.detailtabs.sections.util.CommitBarListenerRegistry;
 import com.amalto.workbench.i18n.Messages;
 
 public class EntityMainSection extends CommitBarListenerSection<XSDElementDeclaration> {
@@ -44,8 +48,8 @@ public class EntityMainSection extends CommitBarListenerSection<XSDElementDeclar
 
     private XSDElementDeclaration xsdElementDeclaration;
 
- // private CommitBarComposite compCommitBar;
-    
+    // private CommitBarComposite compCommitBar;
+
     @Override
     public boolean shouldUseExtraSpace() {
         return true;
@@ -53,8 +57,8 @@ public class EntityMainSection extends CommitBarListenerSection<XSDElementDeclar
 
     @Override
     public void refresh() {
-        
-     // compKeyConfig.setXSDElement(null);
+
+        // compKeyConfig.setXSDElement(null);
         // compNameConfig.setTarget(null);
         //
         // if (entityWrapper != null) {
@@ -67,7 +71,19 @@ public class EntityMainSection extends CommitBarListenerSection<XSDElementDeclar
     @Override
     protected boolean doSubmit() throws CommitException, CommitValidationException {
         boolean result = super.doSubmit();
+
         initUIContents(entityWrapper.getSourceEntity());
+        CommitSection commitsec = CommitBarListenerRegistry.getInstance().getRegistCommitSection(getParentTabID());
+        if (commitsec != null) {
+            List<CommitBarListener> commitBarListeners = commitsec.getCommitBar().getCommitBarListeners();
+            if (commitBarListeners != null) {
+                for (CommitBarListener listener : commitBarListeners) {
+                    if (listener != this) {
+                        listener.onReset();
+                    }
+                }
+            }
+        }
         return result;
     }
 
@@ -106,7 +122,7 @@ public class EntityMainSection extends CommitBarListenerSection<XSDElementDeclar
     // @Override
     // protected void registToGolbalCommitBarListenerReg() {
     // }
-    
+
     @Override
     protected void createControlsInSection(Composite compSectionClient) {
 
@@ -118,7 +134,7 @@ public class EntityMainSection extends CommitBarListenerSection<XSDElementDeclar
         // false, false);
         // compCommitBar.setLayoutData(gdCompCommitBar);
         // compCommitBar.addCommitListener(this);
-        
+
         compNameConfig = new NameConfigComposite(compTop, SWT.NONE, this);
         GridData gdCompName = new GridData(SWT.FILL, SWT.CENTER, true, false);
         compNameConfig.setLayoutData(gdCompName);
@@ -141,7 +157,7 @@ public class EntityMainSection extends CommitBarListenerSection<XSDElementDeclar
     // protected int getSectionStyle() {
     // return Section.NO_TITLE | Section.EXPANDED;
     // }
-    
+
     @Override
     protected boolean hasTitleSeperator() {
         return false;
