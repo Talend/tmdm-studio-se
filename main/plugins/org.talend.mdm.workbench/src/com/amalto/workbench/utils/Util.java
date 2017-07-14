@@ -1356,7 +1356,7 @@ public class Util {
 
     private static List<XSDElementDeclaration> findOutAllSonElements(XSDElementDeclaration decl,
             Set<XSDConcreteComponent> complexTypes) {
-        ArrayList<XSDElementDeclaration> holder = new ArrayList<XSDElementDeclaration>();
+        List<XSDElementDeclaration> holder = new ArrayList<XSDElementDeclaration>();
         if (decl.getTypeDefinition() instanceof XSDComplexTypeDefinition) {
             XSDComplexTypeDefinition type = (XSDComplexTypeDefinition) decl.getTypeDefinition();
             if (complexTypes.contains(type)) {

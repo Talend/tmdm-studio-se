@@ -14,6 +14,7 @@ package com.amalto.workbench.utils;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -31,6 +32,7 @@ import org.apache.axis.utils.IOUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDCompositor;
@@ -1352,7 +1354,53 @@ public class UtilTest {
 
     @Test
     public void testFindOutAllSonElements() {
-        fail();
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        Set<XSDConcreteComponent> complexTypes = new HashSet<XSDConcreteComponent>();
+
+        String[] targetNameSpaces = { "http://www.w3.org/2001/XMLSchema", "", "" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        String[] names = { "p1", "p2", "p3" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+        XSDTypeDefinition[] types = { factory.createXSDSimpleTypeDefinition(), factory.createXSDSimpleTypeDefinition(),
+                factory.createXSDSimpleTypeDefinition() };
+
+        XSDElementDeclaration xsdElementDeclaration = factory.createXSDElementDeclaration();
+        xsdElementDeclaration.setName(names[0]);
+        xsdElementDeclaration.setTargetNamespace(targetNameSpaces[0]);
+        XSDComplexTypeDefinition xsdComplexTypeDef = factory.createXSDComplexTypeDefinition();
+        xsdElementDeclaration.setAnonymousTypeDefinition(xsdComplexTypeDef);
+        XSDParticle typeParticle = factory.createXSDParticle();
+        xsdComplexTypeDef.setContent(typeParticle);
+        
+
+        XSDModelGroup xsdModelGroup = factory.createXSDModelGroup();
+        for (int i = 0; i < names.length; i++) {
+            XSDElementDeclaration xsdEleDec = factory.createXSDElementDeclaration();
+            xsdEleDec.setName(names[i]);
+            xsdEleDec.setTargetNamespace(targetNameSpaces[i]);
+            if (i == 0) {
+                xsdEleDec.setTypeDefinition(xsdComplexTypeDef);
+            } else {
+                xsdEleDec.setTypeDefinition(types[i]);
+            }
+            XSDParticle xsdParticle = factory.createXSDParticle();
+            xsdParticle.setContent(xsdEleDec);
+            xsdModelGroup.getContents().add(xsdParticle);
+        }
+        typeParticle.setContent(xsdModelGroup);
+
+        PowerMockito.mockStatic(Util.class);
+        try {
+            String methodToExecute = "findOutAllSonElements"; //$NON-NLS-1$
+            PowerMockito.when(Util.class, methodToExecute, any(XSDElementDeclaration.class), anySet()).thenCallRealMethod();
+            List<XSDElementDeclaration> allson = Whitebox.invokeMethod(Util.class, methodToExecute, xsdElementDeclaration,
+                    complexTypes);
+            assertNotNull(allson);
+            assertTrue(allson.size() == 2);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
     }
 
     @Test
@@ -1373,7 +1421,73 @@ public class UtilTest {
 
     @Test
     public void testUpdateReferenceToXSDTypeDefinition() {
-        fail();
+        String method_getall = "getAllObject"; //$NON-NLS-1$
+        String method_updateref = "updateReferenceToXSDTypeDefinition"; //$NON-NLS-1$
+        PowerMockito.mockStatic(Util.class);
+        try {
+            PowerMockito.when(Util.class, method_updateref, any(), any(XSDTypeDefinition.class),
+                    any(IStructuredContentProvider.class)).thenCallRealMethod();
+
+            Object[] allNodes = {};
+            XSDFactory factory = XSDFactory.eINSTANCE;
+
+            XSDTypeDefinition[] newTypes = { factory.createXSDComplexTypeDefinition(), factory.createXSDSimpleTypeDefinition() };
+            for (XSDTypeDefinition newType : newTypes) {
+                //
+                XSDElementDeclaration mockElementDecl = mock(XSDElementDeclaration.class);//
+                when(mockElementDecl.getTypeDefinition()).thenReturn(newType);
+
+                //
+                XSDParticle xsdParticle1 = mock(XSDParticle.class);//
+                XSDElementDeclaration mockElementDec2 = mock(XSDElementDeclaration.class);
+                when(mockElementDec2.getTypeDefinition()).thenReturn(newType);
+                when(xsdParticle1.getTerm()).thenReturn(mockElementDec2);
+
+                //
+                XSDParticle xsdParticle2 = mock(XSDParticle.class);//
+
+                XSDParticle particle_c1 = mock(XSDParticle.class);
+                XSDElementDeclaration mockElementDec_c1 = mock(XSDElementDeclaration.class);
+                when(mockElementDec_c1.getTypeDefinition()).thenReturn(newType);
+                when(particle_c1.getContent()).thenReturn(mockElementDec_c1);
+
+                XSDParticle particle_c2 = mock(XSDParticle.class);
+                XSDElementDeclaration mockElementDec_c2 = mock(XSDElementDeclaration.class);
+                when(mockElementDec_c2.getTypeDefinition()).thenReturn(newType);
+                when(particle_c2.getContent()).thenReturn(mockElementDec_c2);
+
+                XSDParticle particle_c3 = mock(XSDParticle.class);
+                XSDElementDeclaration mockElementDec_c3 = mock(XSDElementDeclaration.class);
+                when(mockElementDec_c3.getTypeDefinition()).thenReturn(factory.createXSDComplexTypeDefinition());
+                when(particle_c3.getContent()).thenReturn(mockElementDec_c3);
+
+                XSDModelGroup xsdModelGroup = mock(XSDModelGroup.class);
+                EList<XSDParticle> elist = new BasicEList<XSDParticle>();
+                elist.add(particle_c1);
+                elist.add(particle_c2);
+                elist.add(particle_c3);
+                when(xsdModelGroup.getContents()).thenReturn(elist);
+                when(xsdParticle2.getTerm()).thenReturn(xsdModelGroup);
+
+                allNodes = new Object[] { mockElementDecl, xsdParticle1, xsdParticle2 };
+
+                //
+                PowerMockito.when(Util.class, method_getall, any(), anyList(), any(IStructuredContentProvider.class))
+                        .thenReturn(allNodes);
+                Util.updateReferenceToXSDTypeDefinition(new Object(), newType, mock(IStructuredContentProvider.class));
+
+                Mockito.verify(mockElementDecl).setTypeDefinition(newType);
+                Mockito.verify(mockElementDec2).setTypeDefinition(newType);
+                Mockito.verify(mockElementDec_c1).setTypeDefinition(newType);
+                Mockito.verify(mockElementDec_c2).setTypeDefinition(newType);
+                if (newType instanceof XSDComplexTypeDefinition) {
+                    PowerMockito.verifyStatic();
+                    Util.updateChildrenReferenceToComplexType((XSDComplexTypeDefinition) newType);
+                }
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     @Test
