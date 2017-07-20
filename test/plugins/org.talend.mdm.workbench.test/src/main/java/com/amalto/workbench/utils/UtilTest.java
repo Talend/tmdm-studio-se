@@ -1491,8 +1491,53 @@ public class UtilTest {
     }
 
     @Test
-    public void testUpdatePrimaryKeyInfo() {// private
-        fail();
+    public void testUpdatePrimaryKeyInfo() {
+        String method_private = "updatePrimaryKeyInfo"; //$NON-NLS-1$
+        String app_primaryKey = "X_PrimaryKeyInfo"; //$NON-NLS-1$
+        XSDFactory factory = XSDFactory.eINSTANCE;
+
+        PowerMockito.mockStatic(Util.class);
+        try {
+            PowerMockito.when(Util.class, method_private, any(XSDElementDeclaration.class), anyString(), anyString())
+                    .thenCallRealMethod();
+
+            XSDElementDeclaration concept = factory.createXSDElementDeclaration();
+            XSDAnnotation conceptAnnotation = factory.createXSDAnnotation();
+            concept.setAnnotation(conceptAnnotation);
+            XSDSchema xsdSchema = factory.createXSDSchema();
+            xsdSchema.getContents().add(concept);
+
+            String pk1 = "Product/Id";//$NON-NLS-1$
+            String pk2 = "Product/code";//$NON-NLS-1$
+            String attr_key = "source";//$NON-NLS-1$
+            String namespaceURI = "http://www.w3.org/XML/1998/namespace"; //$NON-NLS-1$
+
+            Document doc = getEmptyDocument();
+            xsdSchema.setDocument(doc);
+
+            Element appinfoElement1 = doc.createElementNS(namespaceURI, "appinfo"); //$NON-NLS-1$
+            appinfoElement1.setAttribute(attr_key, app_primaryKey);
+            appinfoElement1.appendChild(doc.createTextNode(pk1));
+
+            Element appinfoElement2 = doc.createElementNS(namespaceURI, "appinfosssss"); //$NON-NLS-1$
+            appinfoElement2.setAttribute(attr_key, app_primaryKey);
+            appinfoElement2.appendChild(doc.createTextNode(pk2));
+
+            Element annoElement = doc.createElement("s"); //$NON-NLS-1$
+            annoElement.appendChild(appinfoElement1);
+            annoElement.appendChild(appinfoElement2);
+            conceptAnnotation.setElement(annoElement);
+            EList<Element> applicationInformations = conceptAnnotation.getApplicationInformation();
+            applicationInformations.add(appinfoElement1);
+            applicationInformations.add(appinfoElement2);
+
+            String newValue = "Product_sufix/Id"; //$NON-NLS-1$
+            Whitebox.invokeMethod(Util.class, method_private, concept, pk1, newValue);
+            assertEquals(newValue, annoElement.getChildNodes().item(1).getTextContent());
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     @Test
@@ -1502,7 +1547,40 @@ public class UtilTest {
 
     @Test
     public void testUpdateForeignKeyRelatedInfo() {
-        fail();
+        String attr_key = "source";//$NON-NLS-1$
+        String namespaceURI = "http://www.w3.org/XML/1998/namespace"; //$NON-NLS-1$
+
+        String[] appFKRelated = { "X_ForeignKey_Filter", "X_ForeignKey_Info", "X_ForeignKey" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+        //
+        Element[] allForeignKeyAndInfos = new Element[appFKRelated.length];
+        String[] oldValue = { "ProductFamily/Id$$Contains$$aaa$$#ProductFamily/Name$$Contains$$bbb$$#", "ProductFamily/Name", //$NON-NLS-1$ //$NON-NLS-2$
+                "ProductFamily/Id" }; //$NON-NLS-1$
+        String newValue = "ProductFamily/Names1"; //$NON-NLS-1$
+
+        try {
+            Document doc = getEmptyDocument();
+            if (doc == null) {
+                return;
+            }
+
+            for (int i = 0; i < appFKRelated.length; i++) {
+                Element ele = doc.createElementNS(namespaceURI, "node" + i); //$NON-NLS-1$
+                ele.setAttribute(attr_key, appFKRelated[i]);
+                ele.appendChild(doc.createTextNode(oldValue[i]));
+                allForeignKeyAndInfos[i] = ele;
+            }
+
+            Util.updateForeignKeyRelatedInfo("ProductFamily/Name", newValue, allForeignKeyAndInfos); //$NON-NLS-1$
+            assertEquals("ProductFamily/Id$$Contains$$aaa$$#ProductFamily/Names1$$Contains$$bbb$$#", //$NON-NLS-1$
+                    allForeignKeyAndInfos[0].getChildNodes().item(0).getTextContent());
+            assertEquals(newValue, allForeignKeyAndInfos[1].getChildNodes().item(0).getTextContent());
+
+
+        } catch (ParserConfigurationException e) {
+            log.error(e.getMessage(), e);
+        }
+
     }
 
     @Test
