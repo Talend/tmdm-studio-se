@@ -19,6 +19,7 @@ import static org.mockito.Mockito.*;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDIdentityConstraintCategory;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
+import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
@@ -48,11 +50,13 @@ import org.eclipse.xsd.XSDSchemaContent;
 import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDXPathDefinition;
+import org.eclipse.xsd.util.XSDConstants;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -61,6 +65,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.webservices.WSRoutingRuleExpression;
 import com.amalto.workbench.webservices.WSRoutingRuleOperator;
 import com.amalto.workbench.webservices.WSStringPredicate;
@@ -69,6 +74,7 @@ import com.amalto.workbench.webservices.WSWhereOperator;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ Util.class })
+@PowerMockIgnore("org.eclipse.osgi.util.*")
 public class UtilTest {
 
     private Logger log = Logger.getLogger(UtilTest.class);
@@ -1542,7 +1548,73 @@ public class UtilTest {
 
     @Test
     public void testUpdateReference() {
-        fail();
+        String oldValue = "oldValue", newValue = "newValue"; //$NON-NLS-1$ //$NON-NLS-2$
+        String methodToExecute = "updateReference"; //$NON-NLS-1$
+        String method_private = "updatePrimaryKeyInfo"; //$NON-NLS-1$
+        
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        PowerMockito.mockStatic(Util.class);
+        try {
+            PowerMockito
+                    .when(Util.class, methodToExecute, any(), any(Object[].class), any(Object[].class), anyString(), anyString())
+                    .thenCallRealMethod();
+
+            Object[] objs = new Object[4];
+            Object[] allForeignKeyAndInfos = new Object[0];
+
+            Util.updateReference(new Object(), objs, allForeignKeyAndInfos, oldValue, newValue);
+            PowerMockito.verifyStatic(times(0));
+            Util.updateForeignKeyRelatedInfo(oldValue, newValue, allForeignKeyAndInfos);
+            Whitebox.invokeMethod(Util.class, method_private, any(XSDElementDeclaration.class), eq(oldValue), eq(newValue));
+
+            //
+            XSDModelGroup xsdModelGroup = factory.createXSDModelGroup();
+            XSDElementDeclaration xsdEleDecl = mock(XSDElementDeclaration.class);
+
+            XSDParticle particle1 = mock(XSDParticle.class);
+            when(particle1.getTerm()).thenReturn(xsdEleDecl);
+            XSDElementDeclaration mockDeclaration1 = mock(XSDElementDeclaration.class);
+            when(mockDeclaration1.isElementDeclarationReference()).thenReturn(true);
+            when(mockDeclaration1.getResolvedElementDeclaration()).thenReturn(xsdEleDecl);
+            when(particle1.getContent()).thenReturn(mockDeclaration1);
+
+            XSDParticle particle2 = mock(XSDParticle.class);
+            when(particle2.getTerm()).thenReturn(xsdEleDecl);
+            when(particle2.getContent()).thenReturn(xsdModelGroup);
+
+            XSDParticle particle3 = mock(XSDParticle.class);
+            when(particle3.getTerm()).thenReturn(xsdModelGroup);
+            XSDElementDeclaration mockDeclaration3 = mock(XSDElementDeclaration.class);
+            when(mockDeclaration3.isElementDeclarationReference()).thenReturn(true);
+            when(mockDeclaration3.getResolvedElementDeclaration()).thenReturn(xsdEleDecl);
+            when(particle3.getContent()).thenReturn(mockDeclaration3);
+
+            XSDParticle particle4 = mock(XSDParticle.class);
+            when(particle4.getTerm()).thenReturn(xsdModelGroup);
+            when(particle4.getContent()).thenReturn(xsdModelGroup);
+
+            objs[0] = particle1;
+            objs[1] = particle2;
+            objs[2] = particle3;
+            objs[3] = particle4;
+
+            Util.updateReference(xsdEleDecl, objs, allForeignKeyAndInfos, oldValue, newValue);
+            PowerMockito.verifyStatic();
+            Util.updateForeignKeyRelatedInfo(oldValue, newValue, allForeignKeyAndInfos);
+            Whitebox.invokeMethod(Util.class, method_private, any(XSDElementDeclaration.class), eq(oldValue), eq(newValue));
+            
+            verify(particle1).setTerm(xsdEleDecl);
+            verify(particle1).updateElement();
+            verify(mockDeclaration1).setResolvedElementDeclaration(xsdEleDecl);
+
+            verify(particle2).setTerm(xsdEleDecl);
+            verify(particle2).updateElement();
+
+            verify(mockDeclaration3).setResolvedElementDeclaration(xsdEleDecl);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     @Test
@@ -1585,27 +1657,357 @@ public class UtilTest {
 
     @Test
     public void testGetAllForeignKeyRelatedInfos() {
-        fail();
+        String localName = "appinfo"; //$NON-NLS-1$
+        String attr_key = "source"; //$NON-NLS-1$
+        String[] fkRelatedInfo = { "X_ForeignKey", "X_ForeignKeyInfo", "X_ForeignKey_Filter" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        String namespaceURI = "http://www.w3.org/XML/1998/namespace"; //$NON-NLS-1$
+
+        Object elem1 = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+        List<Object> objList = new ArrayList<Object>();
+        Set<Object> visited = new HashSet<Object>();
+        IStructuredContentProvider provider = mock(IStructuredContentProvider.class);
+
+        Object[] allForeignKeyRelatedInfos = Util.getAllForeignKeyRelatedInfos(null, new ArrayList<Object>(), provider, visited);
+        assertNull(allForeignKeyRelatedInfos);
+        allForeignKeyRelatedInfos = Util.getAllForeignKeyRelatedInfos(new Object(), null, provider, visited);
+        assertNull(allForeignKeyRelatedInfos);
+        allForeignKeyRelatedInfos = Util.getAllForeignKeyRelatedInfos(new Object(), new ArrayList<Object>(), null, visited);
+        assertNull(allForeignKeyRelatedInfos);
+        allForeignKeyRelatedInfos = Util.getAllForeignKeyRelatedInfos(new Object(), new ArrayList<Object>(), provider, null);
+        assertNull(allForeignKeyRelatedInfos);
+        allForeignKeyRelatedInfos = Util.getAllForeignKeyRelatedInfos(new Object(), new ArrayList<Object>(), provider, visited);
+        assertNotNull(allForeignKeyRelatedInfos);
+        assertTrue(allForeignKeyRelatedInfos.length == 0);
+        
+        try {
+            Document doc = getEmptyDocument();
+            
+            Object[] elems1 = new Object[4];
+            for(int i=0; i<elems1.length-1;i++) {
+                Element fkRelatedElement = doc.createElementNS(namespaceURI, localName);
+                fkRelatedElement.setAttribute(attr_key, fkRelatedInfo[i]);
+                elems1[i] = fkRelatedElement;
+            }
+            Object elem2 = XSDFactory.eINSTANCE.createXSDElementDeclaration();
+            elems1[3] = elem2;
+            
+            Object[] elems2 = new Object[3];
+            for(int i=0; i<elems2.length;i++) {
+                Element fkRelatedElement = doc.createElementNS(namespaceURI, localName);
+                fkRelatedElement.setAttribute(attr_key, fkRelatedInfo[i]);
+                elems2[i] = fkRelatedElement;
+            }
+
+            when(provider.getElements(eq(elem1))).thenReturn(elems1);
+            when(provider.getElements(eq(elem2))).thenReturn(elems2);
+
+            allForeignKeyRelatedInfos = Util.getAllForeignKeyRelatedInfos(elem1, objList, provider, visited);
+            assertNotNull(allForeignKeyRelatedInfos);
+            assertEquals(6, allForeignKeyRelatedInfos.length);
+            assertArrayEquals(objList.toArray(), allForeignKeyRelatedInfos);
+
+            for (int j = 0; j < elems1.length - 1; j++) {
+                assertTrue(objList.contains(elems1[j]));
+            }
+            for (int j = 0; j < elems2.length; j++) {
+                assertTrue(objList.contains(elems1[j]));
+            }
+        } catch (ParserConfigurationException e) {
+            log.error(e.getMessage(),e);
+        }
+
     }
 
     @Test
-    public void testGetComplexChilds() {// private
-        fail();
+    public void testGetComplexChilds() {
+        String methodToExecute = "getComplexChilds"; //$NON-NLS-1$
+        String method_getChildElements = "getChildElements"; //$NON-NLS-1$
+        String parentxpath = ""; //$NON-NLS-1$
+        String[] names = { "simpleA", "complexB", "simpleC", "complexD" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        String[] childpath = { "child/aa", "child/bb" }; //$NON-NLS-1$ //$NON-NLS-2$
+        boolean onlyTopLevel = false;
+        Set<Object> visited = new HashSet<Object>();
+
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        XSDComplexTypeDefinition complexTypeDef = factory.createXSDComplexTypeDefinition();
+
+        PowerMockito.mockStatic(Util.class);
+        try {
+            PowerMockito
+                    .when(Util.class, methodToExecute, anyString(), any(XSDComplexTypeDefinition.class), anyBoolean(), anySet())
+                    .thenCallRealMethod();
+
+            Map<String, XSDParticle> complexChilds = Whitebox.invokeMethod(Util.class, methodToExecute, parentxpath,
+                    complexTypeDef, true, null);
+            assertNotNull(complexChilds);
+            assertTrue(complexChilds.isEmpty());
+
+            //
+            Map<String, XSDParticle> childElements1 = new HashMap<String, XSDParticle>();
+            XSDParticle childParticle1 = factory.createXSDParticle();
+            XSDParticle childParticle2 = factory.createXSDParticle();
+            childElements1.put(childpath[0], childParticle1);
+            childElements1.put(childpath[1], childParticle2);
+            PowerMockito
+                    .when(Util.class, method_getChildElements, anyString(), any(XSDComplexTypeDefinition.class), anyBoolean(),
+                    anySet()).thenReturn(childElements1);
+
+            XSDModelGroup group = factory.createXSDModelGroup();
+            for (int i = 0; i < names.length; i++) {
+                XSDParticle particle = factory.createXSDParticle();
+                XSDElementDeclaration elementDecl = factory.createXSDElementDeclaration();
+                XSDTypeDefinition xsdType = factory.createXSDSimpleTypeDefinition();
+                if (i % 2 != 0) {
+                    xsdType = factory.createXSDComplexTypeDefinition();
+                }
+                elementDecl.setTypeDefinition(xsdType);
+                elementDecl.setName(names[i]);
+                particle.setTerm(elementDecl);
+                group.getParticles().add(particle);
+            }
+            XSDParticle typeParticle = factory.createXSDParticle();
+            typeParticle.setTerm(group);
+            complexTypeDef.setContent(typeParticle);
+
+            complexChilds = Whitebox.invokeMethod(Util.class, methodToExecute, parentxpath, complexTypeDef, onlyTopLevel,
+                    visited);
+            assertTrue(complexChilds.keySet().contains("simpleA")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("simpleC")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("//complexB")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("//complexD")); //$NON-NLS-1$
+            if (complexChilds.size() == 6) {
+                assertTrue(complexChilds.keySet().contains(childpath[0]));
+                assertTrue(complexChilds.keySet().contains(childpath[1]));
+            }
+
+            onlyTopLevel = true;
+            complexChilds = Whitebox.invokeMethod(Util.class, methodToExecute, parentxpath, complexTypeDef, onlyTopLevel,
+                    visited);
+            assertTrue(complexChilds.keySet().contains("simpleA")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("simpleC")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("//complexB")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("//complexD")); //$NON-NLS-1$
+
+            //
+            parentxpath = "parentXPath"; //$NON-NLS-1$
+            onlyTopLevel = false;
+            visited.clear();
+            complexChilds = Whitebox.invokeMethod(Util.class, methodToExecute, parentxpath, complexTypeDef, onlyTopLevel,
+                    visited);
+            assertTrue(complexChilds.keySet().contains("parentXPath/simpleA")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("parentXPath/simpleC")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("parentXPath//complexB")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("parentXPath//complexD")); //$NON-NLS-1$
+            if (complexChilds.size() == 6) {
+                assertTrue(complexChilds.keySet().contains(childpath[0]));
+                assertTrue(complexChilds.keySet().contains(childpath[1]));
+            }
+
+            //
+            onlyTopLevel = true;
+            visited.clear();
+            complexChilds = Whitebox.invokeMethod(Util.class, methodToExecute, parentxpath, complexTypeDef, onlyTopLevel,
+                    visited);
+            assertTrue(complexChilds.keySet().contains("parentXPath/simpleA")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("parentXPath/simpleC")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("parentXPath//complexB")); //$NON-NLS-1$
+            assertTrue(complexChilds.keySet().contains("parentXPath//complexD")); //$NON-NLS-1$
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     @Test
     public void testIsAImporedElement() {
+        XSDFactory factory = XSDFactory.eINSTANCE;
+
+        XSDSchema xsdSchema = factory.createXSDSchema();
+        XSDElementDeclaration elementDeclaration = factory.createXSDElementDeclaration();
+        XSDComplexTypeDefinition complexTypeDefinition = factory.createXSDComplexTypeDefinition();
+        complexTypeDefinition.setBaseTypeDefinition(
+                xsdSchema.resolveComplexTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$
+        XSDParticle typeParticle = factory.createXSDParticle();
+        XSDModelGroup modelGroup = factory.createXSDModelGroup();
+        XSDParticle particle = factory.createXSDParticle();
+        XSDElementDeclaration pelement = factory.createXSDElementDeclaration();
+
+        elementDeclaration.setAnonymousTypeDefinition(complexTypeDefinition);
+        complexTypeDefinition.setContent(typeParticle);
+        typeParticle.setContent(modelGroup);
+        modelGroup.getContents().add(particle);
+        particle.setContent(pelement);
+
+        boolean isAImporedElement = Util.IsAImporedElement(null, xsdSchema);
+        assertFalse(isAImporedElement);
+        isAImporedElement = Util.IsAImporedElement(pelement, xsdSchema);
+        assertFalse(isAImporedElement);
+
+        xsdSchema.getContents().add(elementDeclaration);
+        isAImporedElement = Util.IsAImporedElement(pelement, xsdSchema);
+        assertFalse(isAImporedElement);
+
+        XSDSchema anotherSchema = factory.createXSDSchema();
+        isAImporedElement = Util.IsAImporedElement(pelement, anotherSchema);
+        assertFalse(isAImporedElement);
+
+        xsdSchema.getReferencingDirectives().add(factory.createXSDImport());
+        xsdSchema.getReferencingDirectives().add(factory.createXSDInclude());
+        isAImporedElement = Util.IsAImporedElement(pelement, anotherSchema);
+        assertTrue(isAImporedElement);
+
+    }
+
+    @Test
+    public void testGetComponentName() {
+        String methodToExecute = "getComponentName"; //$NON-NLS-1$
+        String prefix = "name=\"", suffix = "\""; //$NON-NLS-1$ //$NON-NLS-2$
+        String[] objNames = { "product_elementdeclaration", "product_particle", "p_complextype", "p_simpletype", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                "product_identityconstraintdef", "p_xpathdef" }; //$NON-NLS-1$ //$NON-NLS-2$
+        String[] expectedObjNames = new String[objNames.length];
+        for (int i = 0; i < objNames.length - 1; i++) {
+            expectedObjNames[i] = prefix + objNames[i] + suffix;
+        }
+        expectedObjNames[objNames.length - 1] = Messages.Util_42 + objNames[objNames.length - 1] + suffix;
+
+        XSDFactory factory = XSDFactory.eINSTANCE;
+
+        PowerMockito.mockStatic(Util.class);
+        try {
+            PowerMockito.when(Util.class, methodToExecute, any()).thenCallRealMethod();
+
+            XSDElementDeclaration xsdElementDeclaration = factory.createXSDElementDeclaration();
+            xsdElementDeclaration.setName(objNames[0]);
+
+            XSDParticle xsdParticle = factory.createXSDParticle();
+            XSDElementDeclaration xsdParticleDeclaration = factory.createXSDElementDeclaration();
+            xsdParticleDeclaration.setName(objNames[1]);
+            xsdParticle.setTerm(xsdParticleDeclaration);
+
+            XSDComplexTypeDefinition xsdComplexTypeDefinition = factory.createXSDComplexTypeDefinition();
+            xsdComplexTypeDefinition.setName(objNames[2]);
+
+            XSDSimpleTypeDefinition xsdSimpleTypeDefinition = factory.createXSDSimpleTypeDefinition();
+            xsdSimpleTypeDefinition.setName(objNames[3]);
+
+            XSDIdentityConstraintDefinition xsdIdConsDef = factory.createXSDIdentityConstraintDefinition();
+            xsdIdConsDef.setName(objNames[4]);
+
+            XSDXPathDefinition xsdPathDefinition = factory.createXSDXPathDefinition();
+            xsdPathDefinition.setValue(objNames[5]);
+
+            String name = Whitebox.invokeMethod(Util.class, methodToExecute, xsdElementDeclaration);
+            assertEquals(expectedObjNames[0], name);
+
+            name = Whitebox.invokeMethod(Util.class, methodToExecute, xsdParticle);
+            assertEquals(expectedObjNames[1], name);
+
+            name = Whitebox.invokeMethod(Util.class, methodToExecute, xsdComplexTypeDefinition);
+            assertEquals(expectedObjNames[2], name);
+
+            name = Whitebox.invokeMethod(Util.class, methodToExecute, xsdSimpleTypeDefinition);
+            assertEquals(expectedObjNames[3], name);
+
+            name = Whitebox.invokeMethod(Util.class, methodToExecute, xsdIdConsDef);
+            assertEquals(expectedObjNames[4], name);
+
+            name = Whitebox.invokeMethod(Util.class, methodToExecute, xsdPathDefinition);
+            assertEquals(expectedObjNames[5], name);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    @Test
+    public void testRetrieveXSDComponentPath() {
         fail();
     }
 
     @Test
-    public void testCreateXsdSchema() {
-        fail();
+    public void testAddImport() {// 2184
+        String namespace1 = "http://www.w3.org/XML/1998/namespace1"; //$NON-NLS-1$
+        String namespace2 = "http://www.w3.org/XML/1998/namespace2"; //$NON-NLS-1$
+        String namespace3 = "http://www.w3.org/XML/1998/namespace3"; //$NON-NLS-1$
+        String[] namespaces = { namespace1, namespace2, namespace3 };
+
+        String methodToExecute = "addImport"; //$NON-NLS-1$
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        XSDSchema xsdschema = factory.createXSDSchema();
+
+        List<XSDImport> imports = new ArrayList<XSDImport>();
+        for (int i = 0; i < 3; i++) {
+            XSDImport importt = factory.createXSDImport();
+            importt.setNamespace(namespaces[i]);
+            imports.add(importt);
+        }
+
+        XSDImport importt = factory.createXSDImport();
+        importt.setNamespace(""); //$NON-NLS-1$
+        imports.add(importt);
+
+        xsdschema.getContents().add(imports.get(0));
+
+        PowerMockito.mockStatic(Util.class);
+        try {
+            PowerMockito.when(Util.class, methodToExecute, any(XSDSchema.class), anyListOf(XSDImport.class)).thenCallRealMethod();
+            Whitebox.invokeMethod(Util.class, methodToExecute, xsdschema, imports);
+            EList<XSDSchemaContent> contents = xsdschema.getContents();
+            assertTrue(contents.size() == 3);
+            assertTrue(contents.contains(imports.get(0)));
+            assertTrue(contents.contains(imports.get(1)));
+            assertTrue(contents.contains(imports.get(2)));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     @Test
     public void testGetComplexTypes() {
-        fail();
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        XSDSchema xSchema = factory.createXSDSchema();
+        List<XSDComplexTypeDefinition> complexTypes = Util.getComplexTypes(xSchema);
+        assertNotNull(complexTypes);
+        assertTrue(complexTypes.isEmpty());
+
+        XSDSimpleTypeDefinition simpleTypeDefinition = factory.createXSDSimpleTypeDefinition();
+        simpleTypeDefinition
+                .setBaseTypeDefinition(xSchema.resolveSimpleTypeDefinition(xSchema.getSchemaForSchemaNamespace(), "string")); //$NON-NLS-1$ );
+        xSchema.getContents().add(simpleTypeDefinition);
+        complexTypes = Util.getComplexTypes(xSchema);
+        assertNotNull(complexTypes);
+        assertTrue(complexTypes.isEmpty());
+
+        XSDComplexTypeDefinition baseComplexTypeDefinition = xSchema
+                .resolveComplexTypeDefinition(xSchema.getSchemaForSchemaNamespace(), "anyType"); //$NON-NLS-1$
+
+        XSDComplexTypeDefinition complexType1 = factory.createXSDComplexTypeDefinition();
+        complexType1.setBaseTypeDefinition(baseComplexTypeDefinition);
+        complexType1.setTargetNamespace(null);
+        complexType1.setName("ctype1"); //$NON-NLS-1$
+        XSDComplexTypeDefinition complexType2 = factory.createXSDComplexTypeDefinition();
+        complexType2.setTargetNamespace("targetNameSpace"); //$NON-NLS-1$
+        complexType2.setName("ctype2"); //$NON-NLS-1$
+        complexType2.setBaseTypeDefinition(baseComplexTypeDefinition);
+        XSDComplexTypeDefinition complexType3 = factory.createXSDComplexTypeDefinition();
+        complexType3.setTargetNamespace(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001);
+        complexType3.setName("topLevelComplexType"); //$NON-NLS-1$
+        complexType3.setBaseTypeDefinition(baseComplexTypeDefinition);
+
+        EList<XSDTypeDefinition> contents = new BasicEList<XSDTypeDefinition>();
+        contents.add(complexType1);
+        contents.add(complexType2);
+        contents.add(complexType3);
+
+        XSDSchema spySchema = spy(xSchema);
+        when(spySchema.getTypeDefinitions()).thenReturn(contents);
+
+        complexTypes = Util.getComplexTypes(spySchema);
+        assertNotNull(complexTypes);
+        assertTrue(complexTypes.size() == 2);
+        assertTrue(complexTypes.contains(complexType1));
+        assertTrue(complexTypes.contains(complexType2));
+        assertFalse(complexTypes.contains(complexType3));
+
     }
 
     @Test
@@ -1620,7 +2022,26 @@ public class UtilTest {
 
     @Test
     public void testIsSimpleTypedParticle() {
-        fail();
+        boolean isSimpleTypedParticle = Util.isSimpleTypedParticle(null);
+        assertFalse(isSimpleTypedParticle);
+
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        XSDParticle particle = factory.createXSDParticle();
+
+        isSimpleTypedParticle = Util.isSimpleTypedParticle(particle);
+        assertFalse(isSimpleTypedParticle);
+
+        XSDElementDeclaration elementDeclaration = factory.createXSDElementDeclaration();
+        elementDeclaration.setTypeDefinition(factory.createXSDSimpleTypeDefinition());
+        particle.setContent(elementDeclaration);
+
+        isSimpleTypedParticle = Util.isSimpleTypedParticle(particle);
+        assertTrue(isSimpleTypedParticle);
+
+        XSDModelGroup modelGroup = factory.createXSDModelGroup();
+        particle.setContent(modelGroup);
+        isSimpleTypedParticle = Util.isSimpleTypedParticle(particle);
+        assertFalse(isSimpleTypedParticle);
     }
 
     @Test

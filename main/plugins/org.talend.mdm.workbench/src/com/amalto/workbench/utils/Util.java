@@ -2057,7 +2057,7 @@ public class Util {
 
         } else if (component instanceof XSDComplexTypeDefinition) {
             XSDComplexTypeDefinition type = (XSDComplexTypeDefinition) component;
-            return type.getName();
+            return Messages.Util_36 + type.getName() + Messages.Util_37;
 
         } else if (component instanceof XSDSimpleTypeDefinition) {
 
@@ -2067,7 +2067,6 @@ public class Util {
 
         else if (component instanceof XSDIdentityConstraintDefinition) {
             XSDIdentityConstraintDefinition identify = (XSDIdentityConstraintDefinition) component;
-            XSDConcreteComponent c = identify.getContainer();
             return Messages.Util_40 + identify.getName() + Messages.Util_41;
         } else if (component instanceof XSDXPathDefinition) {
             XSDXPathDefinition path = (XSDXPathDefinition) component;
