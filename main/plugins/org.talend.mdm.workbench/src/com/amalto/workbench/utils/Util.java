@@ -2077,7 +2077,6 @@ public class Util {
 
     public static List<String> retrieveXSDComponentPath(Object component, XSDSchema schema, List<String> buffer) {
         String name = null;
-        String elemType = "element";//$NON-NLS-1$
         if (component instanceof XSDElementDeclaration) {
             XSDElementDeclaration decl = (XSDElementDeclaration) component;
             name = decl.getName();

@@ -1920,7 +1920,149 @@ public class UtilTest {
 
     @Test
     public void testRetrieveXSDComponentPath() {
-        fail();
+        String conceptName = "Product"; //$NON-NLS-1$
+        String complextypeName = "ctype"; //$NON-NLS-1$
+        String simpletypeName = "stype"; //$NON-NLS-1$
+        String identityName = "identityName"; //$NON-NLS-1$
+        String xsdxpathValue = "Id"; //$NON-NLS-1$
+        String childelementName = "childelementName"; //$NON-NLS-1$
+
+        List<String> xsdComponentPath = null;
+
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        XSDSchema xschema = factory.createXSDSchema();
+        XSDElementDeclaration concept = factory.createXSDElementDeclaration();
+        concept.setName(conceptName);
+        xschema.getContents().add(concept);
+
+        XSDComplexTypeDefinition complexTypeDefinition = factory.createXSDComplexTypeDefinition();
+        complexTypeDefinition
+                .setBaseTypeDefinition(xschema.resolveComplexTypeDefinition(xschema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$ );
+        xschema.getContents().add(complexTypeDefinition);
+
+        XSDSimpleTypeDefinition simpleTypeDefinition = factory.createXSDSimpleTypeDefinition();
+        simpleTypeDefinition.setName(simpletypeName);
+
+        XSDModelGroup modelGroup = factory.createXSDModelGroup();
+        modelGroup.setCompositor(XSDCompositor.SEQUENCE_LITERAL);
+        XSDParticle typeparticle = factory.createXSDParticle();
+        complexTypeDefinition.setContent(typeparticle);
+        typeparticle.setContent(modelGroup);
+        
+        XSDParticle childParticle = factory.createXSDParticle();
+        XSDElementDeclaration childelement = factory.createXSDElementDeclaration();
+        childelement.setName(childelementName);
+        childParticle.setContent(childelement);
+        childParticle.setTerm(childelement);
+        modelGroup.getContents().add(childParticle);
+
+        XSDIdentityConstraintDefinition IdConsDef = factory.createXSDIdentityConstraintDefinition();
+        IdConsDef.setName(identityName );
+        concept.getIdentityConstraintDefinitions().add(IdConsDef);
+        
+        XSDXPathDefinition xsdXPathDefinition = factory.createXSDXPathDefinition();
+        xsdXPathDefinition.setValue(xsdxpathValue);
+        IdConsDef.getFields().add(xsdXPathDefinition);
+        
+        XSDAnnotation conceptAnnotation = factory.createXSDAnnotation();
+        concept.setAnnotation(conceptAnnotation);
+
+        XSDElementDeclaration anotherConcept = factory.createXSDElementDeclaration();
+        String concept2name = "anotherConcept"; //$NON-NLS-1$
+        anotherConcept.setName(concept2name);
+        xschema.getContents().add(anotherConcept);
+
+        //
+        List<String> buffer = new ArrayList<String>();
+        xsdComponentPath = Util.retrieveXSDComponentPath(concept, xschema, buffer);
+        assertEquals(1, xsdComponentPath.size());
+        assertEquals("//xsd:element[@name='" + conceptName + "']", xsdComponentPath.get(0)); //$NON-NLS-1$ //$NON-NLS-2$
+
+        //
+        buffer.clear();
+        xsdComponentPath = Util.retrieveXSDComponentPath(complexTypeDefinition, xschema, buffer);
+        assertEquals(1, xsdComponentPath.size());
+        assertEquals("//xsd:complexType", xsdComponentPath.get(0)); //$NON-NLS-1$
+
+        //
+        buffer.clear();
+        complexTypeDefinition.setName(complextypeName);
+        xsdComponentPath = Util.retrieveXSDComponentPath(complexTypeDefinition, xschema, buffer);
+        assertEquals(1, xsdComponentPath.size());
+        assertEquals("//xsd:complexType[@name='" + complextypeName + "']", xsdComponentPath.get(0)); //$NON-NLS-1$ //$NON-NLS-2$
+
+        //
+        buffer.clear();
+        xsdComponentPath = Util.retrieveXSDComponentPath(simpleTypeDefinition, xschema, buffer);
+        assertEquals(1, xsdComponentPath.size());
+        assertEquals("//xsd:simpleType[@name='" + simpletypeName + "']", xsdComponentPath.get(0)); //$NON-NLS-1$ //$NON-NLS-2$
+
+        //
+        buffer.clear();
+        xsdComponentPath = Util.retrieveXSDComponentPath(modelGroup, xschema, buffer);
+        assertEquals(2, xsdComponentPath.size());
+        assertTrue(xsdComponentPath.contains("//xsd:" + XSDCompositor.SEQUENCE_LITERAL.getLiteral())); //$NON-NLS-1$
+        assertTrue(xsdComponentPath.contains("//xsd:complexType[@name='" + complextypeName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        //
+        buffer.clear();
+        xsdComponentPath = Util.retrieveXSDComponentPath(IdConsDef, xschema, buffer);
+        assertEquals(2, xsdComponentPath.size());
+        assertTrue(xsdComponentPath.contains("//xsd:element[@name='" + conceptName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertTrue(xsdComponentPath.contains("//xsd:unique[@name='" + identityName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        //
+        buffer.clear();
+        xsdComponentPath = Util.retrieveXSDComponentPath(xsdXPathDefinition, xschema, buffer);
+        assertEquals(3, xsdComponentPath.size());
+        assertTrue(xsdComponentPath.contains("//xsd:element[@name='" + conceptName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertTrue(xsdComponentPath.contains("//xsd:unique[@name='" + identityName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertTrue(xsdComponentPath.contains("//xsd:field[@xpath='" + xsdxpathValue + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+        
+        //
+        buffer.clear();
+        xsdComponentPath = Util.retrieveXSDComponentPath(conceptAnnotation, xschema, buffer);
+        assertEquals(2, xsdComponentPath.size());
+        assertTrue(xsdComponentPath.contains("//xsd:element[@name='" + conceptName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertTrue(xsdComponentPath.contains("//xsd:annotation")); //$NON-NLS-1$
+
+        //
+        buffer.clear();
+        xsdComponentPath = Util.retrieveXSDComponentPath(childParticle, xschema, buffer);
+        assertEquals(2, xsdComponentPath.size());
+        assertTrue(xsdComponentPath.contains("//xsd:" + XSDCompositor.SEQUENCE_LITERAL.getLiteral())); //$NON-NLS-1$
+        assertTrue(xsdComponentPath.contains("//xsd:complexType[@name='" + complextypeName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        //
+        buffer.clear();
+        xsdComponentPath = Util.retrieveXSDComponentPath(childelement, xschema, buffer);
+        assertEquals(3, xsdComponentPath.size());
+        assertTrue(xsdComponentPath.contains("//xsd:" + XSDCompositor.SEQUENCE_LITERAL.getLiteral())); //$NON-NLS-1$
+        assertTrue(xsdComponentPath.contains("//xsd:complexType[@name='" + complextypeName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertTrue(xsdComponentPath.contains("//xsd:element[@name='" + childelementName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        //
+        buffer.clear();
+        childelement.setResolvedElementDeclaration(anotherConcept);
+        xsdComponentPath = Util.retrieveXSDComponentPath(childParticle, xschema, buffer);
+        assertEquals(3, xsdComponentPath.size());
+        assertTrue(xsdComponentPath.contains("//xsd:" + XSDCompositor.SEQUENCE_LITERAL.getLiteral())); //$NON-NLS-1$
+        assertTrue(xsdComponentPath.contains("//xsd:complexType[@name='" + complextypeName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertTrue(xsdComponentPath.contains("//xsd:element[@name='" + concept2name + "' or @ref='" + concept2name + "']")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+        //
+        buffer.clear();
+        String targetNamespace = "targetnamespace"; //$NON-NLS-1$
+        String key = "prefix"; //$NON-NLS-1$
+        anotherConcept.setTargetNamespace(targetNamespace);
+        xschema.getQNamePrefixToNamespaceMap().put(key, targetNamespace);
+        xsdComponentPath = Util.retrieveXSDComponentPath(childParticle, xschema, buffer);
+        assertEquals(3, xsdComponentPath.size());
+        assertTrue(xsdComponentPath.contains("//xsd:" + XSDCompositor.SEQUENCE_LITERAL.getLiteral())); //$NON-NLS-1$
+        assertTrue(xsdComponentPath.contains("//xsd:complexType[@name='" + complextypeName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertTrue(xsdComponentPath
+                .contains("//xsd:element[@name='" + concept2name + "' or @ref='" + key + ":" + concept2name + "']")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+
     }
 
     @Test
@@ -2046,6 +2188,11 @@ public class UtilTest {
 
     @Test
     public void testFindReference() {
+        fail();
+    }
+
+    @Test
+    public void testUnZipFile() {
         fail();
     }
 
