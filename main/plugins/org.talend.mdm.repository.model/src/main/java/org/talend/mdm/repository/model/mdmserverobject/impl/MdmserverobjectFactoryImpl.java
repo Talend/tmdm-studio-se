@@ -31,7 +31,7 @@ public class MdmserverobjectFactoryImpl extends EFactoryImpl implements Mdmserve
      */
     public static MdmserverobjectFactory init() {
         try {
-            MdmserverobjectFactory theMdmserverobjectFactory = (MdmserverobjectFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.talend.org/mdmserverobject"); 
+            MdmserverobjectFactory theMdmserverobjectFactory = (MdmserverobjectFactory)EPackage.Registry.INSTANCE.getEFactory(MdmserverobjectPackage.eNS_URI);
             if (theMdmserverobjectFactory != null) {
                 return theMdmserverobjectFactory;
             }

@@ -263,4 +263,5 @@ Export-Package: com.amalto.workbench,
  org.xml.sax,
  org.xml.sax.ext
 Eclipse-BundleShape: dir
-Import-Package: org.talend.commons.ui.swt.proposal
+Import-Package: org.talend.commons.ui.swt.proposal,
+ org.talend.mdm.repository.ui.dialogs.xpath

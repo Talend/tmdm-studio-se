@@ -20,9 +20,11 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="isAsc" type="{http://www.talend.com/mdm}WSBoolean" minOccurs="0"/>
  *         &lt;element name="isTransformerActive" type="{http://www.talend.com/mdm}WSBoolean" minOccurs="0"/>
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="searchableBusinessElements" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/>
+ *         &lt;element name="sortField" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="transformerPK" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="viewableBusinessElements" type="{http://www.w3.org/2001/XMLSchema}string" maxOccurs="unbounded" minOccurs="0"/>
  *         &lt;element name="whereConditions" type="{http://www.talend.com/mdm}WSWhereCondition" maxOccurs="unbounded" minOccurs="0"/>
@@ -37,9 +39,11 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WSView", propOrder = {
     "description",
+    "isAsc",
     "isTransformerActive",
     "name",
     "searchableBusinessElements",
+    "sortField",
     "transformerPK",
     "viewableBusinessElements",
     "whereConditions"
@@ -47,10 +51,12 @@ import javax.xml.bind.annotation.XmlType;
 public class WSView {
 
     protected String description;
+    protected WSBoolean isAsc;
     protected WSBoolean isTransformerActive;
     protected String name;
     @XmlElement(nillable = true)
     protected List<String> searchableBusinessElements;
+    protected String sortField;
     protected String transformerPK;
     @XmlElement(nillable = true)
     protected List<String> viewableBusinessElements;
@@ -69,11 +75,13 @@ public class WSView {
      * Fully-initialising value constructor
      * 
      */
-    public WSView(final String description, final WSBoolean isTransformerActive, final String name, final List<String> searchableBusinessElements, final String transformerPK, final List<String> viewableBusinessElements, final List<WSWhereCondition> whereConditions) {
+    public WSView(final String description, final WSBoolean isAsc, final WSBoolean isTransformerActive, final String name, final List<String> searchableBusinessElements, final String sortField, final String transformerPK, final List<String> viewableBusinessElements, final List<WSWhereCondition> whereConditions) {
         this.description = description;
+        this.isAsc = isAsc;
         this.isTransformerActive = isTransformerActive;
         this.name = name;
         this.searchableBusinessElements = searchableBusinessElements;
+        this.sortField = sortField;
         this.transformerPK = transformerPK;
         this.viewableBusinessElements = viewableBusinessElements;
         this.whereConditions = whereConditions;
@@ -101,6 +109,30 @@ public class WSView {
      */
     public void setDescription(String value) {
         this.description = value;
+    }
+
+    /**
+     * Gets the value of the isAsc property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link WSBoolean }
+     *     
+     */
+    public WSBoolean getIsAsc() {
+        return isAsc;
+    }
+
+    /**
+     * Sets the value of the isAsc property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link WSBoolean }
+     *     
+     */
+    public void setIsAsc(WSBoolean value) {
+        this.isAsc = value;
     }
 
     /**
@@ -178,6 +210,30 @@ public class WSView {
             searchableBusinessElements = new ArrayList<String>();
         }
         return this.searchableBusinessElements;
+    }
+
+    /**
+     * Gets the value of the sortField property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getSortField() {
+        return sortField;
+    }
+
+    /**
+     * Sets the value of the sortField property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setSortField(String value) {
+        this.sortField = value;
     }
 
     /**
