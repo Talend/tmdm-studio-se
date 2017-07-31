@@ -20,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -37,6 +38,9 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseTrackAdapter;
+import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -45,11 +49,16 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 
+import com.amalto.workbench.detailtabs.sections.IMDMRepositoryViewServiceExt;
+import com.amalto.workbench.detailtabs.sections.util.MDMRepositoryViewExtensionService;
+import com.amalto.workbench.dialogs.XpathSelectDialog;
+import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -107,6 +116,16 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
 
     protected Combo cboProcessList;
 
+    private Combo combox_policy;
+
+    private Combo combox_sortdirection;
+
+    private String lastSortField;
+
+    private final String[] SORT_FIELD = { Messages.ViewMainPage_defaultField, Messages.ViewMainPage_noneField };
+
+    private final String[] SORTING_DIRECTION = { Messages.ViewMainPage_ascOrder, Messages.ViewMainPage_descOrder };
+
     /*
      * private ComplexTableViewerColumn[] conditionsColumns= new ComplexTableViewerColumn[]{ new
      * ComplexTableViewerColumn("XPath", false, "newXPath", "newXPath", "",ComplexTableViewerColumn.XPATH_STYLE,new
@@ -158,11 +177,15 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             layout.marginHeight = 0;
             layout.marginBottom = 0;
             comp.setLayout(layout);
+            comp.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+
             btnRunProcess = toolkit.createButton(comp, Messages.ViewMainPage_RunResultThroughProcess, SWT.CHECK);
-            btnRunProcess.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true, 1, 1));
+            btnRunProcess.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
             cboProcessList = new Combo(comp, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.SINGLE);
-            cboProcessList.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true, 1, 1));
+            cboProcessList.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, false, true, 1, 1));
             initProcessCombo();
+
+            createSortPart(toolkit, comp);
 
             // add listener
             btnRunProcess.addSelectionListener(new SelectionListener() {
@@ -253,6 +276,99 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
 
     }// createCharacteristicsContent
 
+    private final String selectXPath = Messages.ViewMainPage_selectXPath;
+    protected void createSortPart(FormToolkit toolkit, Composite parent) {
+        Composite comp = toolkit.createComposite(parent);
+        GridLayout slayout = new GridLayout(3, false);
+        slayout.marginWidth = 0;
+        slayout.marginLeft = 0;
+        slayout.marginTop = 0;
+        slayout.marginHeight = 0;
+        slayout.marginBottom = 0;
+        comp.setLayout(slayout);
+        comp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 2, 1));
+
+        Label label_sortpolicy = toolkit.createLabel(comp, "Order by ", SWT.NONE); //$NON-NLS-1$
+        label_sortpolicy.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
+
+        combox_policy = new Combo(comp, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.BORDER | SWT.SINGLE);
+        GridData policyLayout = new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1);
+        policyLayout.widthHint = 120;
+        combox_policy.setLayoutData(policyLayout);
+
+        combox_sortdirection = new Combo(comp, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.BORDER | SWT.SINGLE);
+        GridData sortDirectionLayout = new GridData(SWT.RIGHT, SWT.CENTER, false, true, 1, 1);
+        combox_sortdirection.setLayoutData(sortDirectionLayout);
+
+        addListener();
+    }
+
+    private void addListener() {
+        combox_policy.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+
+                boolean toSelectXPath = combox_policy.getText().equals(selectXPath);
+                if (toSelectXPath) {
+                    String modelName = getDatamodelName();
+                    String entityName = concept;
+                    XpathSelectDialog dlg = getXPathSelectionDialog(Messages.ViewMainPage_titleSelectField, modelName,
+                            new SortFieldSelectionFilter());
+                    dlg.setConceptName(entityName);
+                    String xpath = null;
+                    if (dlg.open() == IDialogConstants.OK_ID) {
+                        xpath = dlg.getXpath();
+                    }
+
+                    if (xpath != null) {
+                        combox_policy.setItems(
+                                new String[] { SORT_FIELD[0], SORT_FIELD[1], xpath, selectXPath });
+                        combox_policy.setText(xpath);
+                        combox_sortdirection.setVisible(true);
+                        combox_sortdirection.select(0);
+                        markDirtyWithoutCommit();
+                    } else {
+                        lastSortField = lastSortField == null ? SORT_FIELD[0] : lastSortField;
+                        combox_policy.setText(lastSortField);
+                    }
+                } else if (combox_policy.getSelectionIndex() != 0 && combox_policy.getSelectionIndex() != 1) {
+                    combox_sortdirection.setVisible(true);
+                    combox_sortdirection.select(0);
+                    lastSortField = combox_policy.getText();
+                    markDirtyWithoutCommit();
+                } else {
+                    lastSortField = combox_policy.getText();
+                    combox_sortdirection.setVisible(false);
+                    markDirtyWithoutCommit();
+                }
+
+            }
+
+        });
+        combox_policy.addMouseTrackListener(new MouseTrackAdapter() {
+
+            @Override
+            public void mouseHover(MouseEvent e) {
+                combox_policy.setToolTipText(combox_policy.getText());
+            }
+
+        });
+        combox_sortdirection.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                markDirtyWithoutCommit();
+            }
+        });
+    }
+
+    protected XpathSelectDialog getXPathSelectionDialog(String title, String modelName, IXPathSelectionFilter filter) {
+        XpathSelectDialog dlg = new XpathSelectDialog(getEditorSite().getShell(), null, title, getSite(), false, modelName,
+                false, filter);
+        return dlg;
+    }
+
     private void addToolBarItem() {
         XObjectEditor editor = (XObjectEditor) getEditor();
         editor.getToolBar().addActions(new TestViewAction());
@@ -286,6 +402,32 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
                 cboProcessList.setText("");//$NON-NLS-1$
             }
 
+            ///////////////////////
+            combox_sortdirection.add(SORTING_DIRECTION[0]);
+            combox_sortdirection.add(SORTING_DIRECTION[1]);
+            String sortField = wsObject.getSortField();
+            WSBoolean ascOrder = wsObject.getIsAsc();
+            if (sortField == null) {
+                sortField = SORT_FIELD[0];
+            }
+            lastSortField = sortField;
+
+            String[] policys = { SORT_FIELD[0], SORT_FIELD[1], selectXPath };
+            if (sortField.equals(SORT_FIELD[0]) || sortField.equals(SORT_FIELD[1])) {
+                combox_sortdirection.setVisible(false);
+            } else {
+                policys = new String[] { SORT_FIELD[0], SORT_FIELD[1], sortField, selectXPath };
+                combox_sortdirection.setVisible(true);
+                if (ascOrder == null || ascOrder.isTrue()) {
+                    combox_sortdirection.setText(SORTING_DIRECTION[0]);
+                } else {
+                    combox_sortdirection.setText(SORTING_DIRECTION[1]);
+                }
+            }
+            combox_policy.setItems(policys);
+            combox_policy.setText(sortField);
+
+            ////////////////////
             java.util.List<Line> vlines = new ArrayList<Line>();
             java.util.List<String> vis = wsObject.getViewableBusinessElements();
             if (vis != null) {
@@ -341,6 +483,18 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
         return wsObject;
     }
 
+    private String dataModelName;
+
+    private String getDatamodelName() {
+        if (dataModelName == null || dataModelName.isEmpty()) {
+            IMDMRepositoryViewServiceExt repositoryViewService = MDMRepositoryViewExtensionService.getRepositoryViewService();
+            java.util.List<String> dataModelNames = repositoryViewService.getDataModel(dataModelName, concept);
+            dataModelName = dataModelNames.get(0);
+        }
+
+        return dataModelName;
+    }
+
     @Override
     protected void commit() {
         try {
@@ -354,6 +508,18 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             wsObject.setDescription(desAntionComposite.getText());
             wsObject.setIsTransformerActive(new WSBoolean(btnRunProcess.getSelection()));
             wsObject.setTransformerPK(cboProcessList.getText());
+
+            String policy = combox_policy.getText();
+            wsObject.setSortField(policy);
+
+            boolean visible = combox_sortdirection.isVisible();
+            if (visible) {
+                boolean isAscOrder = combox_sortdirection.getText().equals(SORTING_DIRECTION[0]);
+                wsObject.setIsAsc(new WSBoolean(isAscOrder));
+            } else {
+                wsObject.setIsAsc(null);
+            }
+
             java.util.List<Line> vlines = (java.util.List<Line>) viewableViewer.getViewer().getInput();
             wsObject.getViewableBusinessElements().clear();
             for (Line item : vlines) {

@@ -725,13 +725,31 @@ public interface MdmserverobjectPackage extends EPackage {
     int WS_VIEW_E__TRANSFORMER_PK = MDM_SERVER_OBJECT_FEATURE_COUNT + 5;
 
     /**
+     * The feature id for the '<em><b>Sort Field</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WS_VIEW_E__SORT_FIELD = MDM_SERVER_OBJECT_FEATURE_COUNT + 6;
+
+    /**
+     * The feature id for the '<em><b>Is Asc</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WS_VIEW_E__IS_ASC = MDM_SERVER_OBJECT_FEATURE_COUNT + 7;
+
+    /**
      * The number of structural features of the '<em>WS View E</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WS_VIEW_E_FEATURE_COUNT = MDM_SERVER_OBJECT_FEATURE_COUNT + 6;
+    int WS_VIEW_E_FEATURE_COUNT = MDM_SERVER_OBJECT_FEATURE_COUNT + 8;
 
     /**
      * The meta object id for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSWhereConditionEImpl <em>WS Where Condition E</em>}' class.
@@ -3179,6 +3197,28 @@ public interface MdmserverobjectPackage extends EPackage {
     EAttribute getWSViewE_TransformerPK();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getSortField <em>Sort Field</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Sort Field</em>'.
+     * @see org.talend.mdm.repository.model.mdmserverobject.WSViewE#getSortField()
+     * @see #getWSViewE()
+     * @generated
+     */
+    EAttribute getWSViewE_SortField();
+
+    /**
+     * Returns the meta object for the containment reference '{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getIsAsc <em>Is Asc</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the containment reference '<em>Is Asc</em>'.
+     * @see org.talend.mdm.repository.model.mdmserverobject.WSViewE#getIsAsc()
+     * @see #getWSViewE()
+     * @generated
+     */
+    EReference getWSViewE_IsAsc();
+
+    /**
      * Returns the meta object for class '{@link org.talend.mdm.repository.model.mdmserverobject.WSWhereConditionE <em>WS Where Condition E</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -4382,6 +4422,22 @@ public interface MdmserverobjectPackage extends EPackage {
          * @generated
          */
         EAttribute WS_VIEW_E__TRANSFORMER_PK = eINSTANCE.getWSViewE_TransformerPK();
+
+        /**
+         * The meta object literal for the '<em><b>Sort Field</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute WS_VIEW_E__SORT_FIELD = eINSTANCE.getWSViewE_SortField();
+
+        /**
+         * The meta object literal for the '<em><b>Is Asc</b></em>' containment reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference WS_VIEW_E__IS_ASC = eINSTANCE.getWSViewE_IsAsc();
 
         /**
          * The meta object literal for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSWhereConditionEImpl <em>WS Where Condition E</em>}' class.

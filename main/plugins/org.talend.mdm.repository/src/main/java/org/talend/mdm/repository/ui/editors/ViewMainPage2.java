@@ -36,10 +36,13 @@ import org.talend.mdm.repository.core.service.DeployService;
 import org.talend.mdm.repository.core.service.RepositoryQueryService;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
+import org.talend.mdm.repository.ui.dialogs.xpath.XpathSelectDialog2;
 import org.talend.mdm.repository.ui.navigator.MDMRepositoryView;
 import org.talend.mdm.repository.ui.widgets.TisTableViewerR;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 
+import com.amalto.workbench.dialogs.XpathSelectDialog;
+import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
 import com.amalto.workbench.editors.ViewMainPage;
 import com.amalto.workbench.utils.XtentisException;
 import com.amalto.workbench.webservices.WSConceptKey;
@@ -95,6 +98,13 @@ public class ViewMainPage2 extends ViewMainPage {
     @Override
     protected WSConceptKey getBusinessConceptKey(WSGetBusinessConceptKey businessConcepKey) throws XtentisException {
         return RepositoryResourceUtil.getBusinessConceptKey(businessConcepKey);
+    }
+
+    @Override
+    protected XpathSelectDialog getXPathSelectionDialog(String title, String modelName, IXPathSelectionFilter filter) {
+        XpathSelectDialog dlg = new XpathSelectDialog2(getEditorSite().getShell(), null, title, getSite(), false, modelName,
+                false, filter);
+        return dlg;
     }
 
     @Override
