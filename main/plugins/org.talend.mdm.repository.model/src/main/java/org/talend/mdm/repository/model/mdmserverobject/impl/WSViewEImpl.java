@@ -33,6 +33,7 @@ import org.talend.mdm.repository.model.mdmserverobject.WSWhereConditionE;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSViewEImpl#getSearchableBusinessElements <em>Searchable Business Elements</em>}</li>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSViewEImpl#getViewableBusinessElements <em>Viewable Business Elements</em>}</li>
@@ -40,8 +41,9 @@ import org.talend.mdm.repository.model.mdmserverobject.WSWhereConditionE;
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSViewEImpl#getWhereConditions <em>Where Conditions</em>}</li>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSViewEImpl#getIsTransformerActive <em>Is Transformer Active</em>}</li>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSViewEImpl#getTransformerPK <em>Transformer PK</em>}</li>
+ *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSViewEImpl#getSortField <em>Sort Field</em>}</li>
+ *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSViewEImpl#getIsAsc <em>Is Asc</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -125,6 +127,36 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
      * @ordered
      */
     protected String transformerPK = TRANSFORMER_PK_EDEFAULT;
+
+    /**
+     * The default value of the '{@link #getSortField() <em>Sort Field</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getSortField()
+     * @generated
+     * @ordered
+     */
+    protected static final String SORT_FIELD_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getSortField() <em>Sort Field</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getSortField()
+     * @generated
+     * @ordered
+     */
+    protected String sortField = SORT_FIELD_EDEFAULT;
+
+    /**
+     * The cached value of the '{@link #getIsAsc() <em>Is Asc</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getIsAsc()
+     * @generated
+     * @ordered
+     */
+    protected WSBooleanE isAsc;
 
     /**
      * <!-- begin-user-doc -->
@@ -271,6 +303,70 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getSortField() {
+        return sortField;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setSortField(String newSortField) {
+        String oldSortField = sortField;
+        sortField = newSortField;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, MdmserverobjectPackage.WS_VIEW_E__SORT_FIELD, oldSortField, sortField));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public WSBooleanE getIsAsc() {
+        return isAsc;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public NotificationChain basicSetIsAsc(WSBooleanE newIsAsc, NotificationChain msgs) {
+        WSBooleanE oldIsAsc = isAsc;
+        isAsc = newIsAsc;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, MdmserverobjectPackage.WS_VIEW_E__IS_ASC, oldIsAsc, newIsAsc);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setIsAsc(WSBooleanE newIsAsc) {
+        if (newIsAsc != isAsc) {
+            NotificationChain msgs = null;
+            if (isAsc != null)
+                msgs = ((InternalEObject)isAsc).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - MdmserverobjectPackage.WS_VIEW_E__IS_ASC, null, msgs);
+            if (newIsAsc != null)
+                msgs = ((InternalEObject)newIsAsc).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - MdmserverobjectPackage.WS_VIEW_E__IS_ASC, null, msgs);
+            msgs = basicSetIsAsc(newIsAsc, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, MdmserverobjectPackage.WS_VIEW_E__IS_ASC, newIsAsc, newIsAsc));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -278,6 +374,8 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
                 return ((InternalEList<?>)getWhereConditions()).basicRemove(otherEnd, msgs);
             case MdmserverobjectPackage.WS_VIEW_E__IS_TRANSFORMER_ACTIVE:
                 return basicSetIsTransformerActive(null, msgs);
+            case MdmserverobjectPackage.WS_VIEW_E__IS_ASC:
+                return basicSetIsAsc(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -302,6 +400,10 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
                 return getIsTransformerActive();
             case MdmserverobjectPackage.WS_VIEW_E__TRANSFORMER_PK:
                 return getTransformerPK();
+            case MdmserverobjectPackage.WS_VIEW_E__SORT_FIELD:
+                return getSortField();
+            case MdmserverobjectPackage.WS_VIEW_E__IS_ASC:
+                return getIsAsc();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -336,6 +438,12 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
             case MdmserverobjectPackage.WS_VIEW_E__TRANSFORMER_PK:
                 setTransformerPK((String)newValue);
                 return;
+            case MdmserverobjectPackage.WS_VIEW_E__SORT_FIELD:
+                setSortField((String)newValue);
+                return;
+            case MdmserverobjectPackage.WS_VIEW_E__IS_ASC:
+                setIsAsc((WSBooleanE)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -366,6 +474,12 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
             case MdmserverobjectPackage.WS_VIEW_E__TRANSFORMER_PK:
                 setTransformerPK(TRANSFORMER_PK_EDEFAULT);
                 return;
+            case MdmserverobjectPackage.WS_VIEW_E__SORT_FIELD:
+                setSortField(SORT_FIELD_EDEFAULT);
+                return;
+            case MdmserverobjectPackage.WS_VIEW_E__IS_ASC:
+                setIsAsc((WSBooleanE)null);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -390,6 +504,10 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
                 return isTransformerActive != null;
             case MdmserverobjectPackage.WS_VIEW_E__TRANSFORMER_PK:
                 return TRANSFORMER_PK_EDEFAULT == null ? transformerPK != null : !TRANSFORMER_PK_EDEFAULT.equals(transformerPK);
+            case MdmserverobjectPackage.WS_VIEW_E__SORT_FIELD:
+                return SORT_FIELD_EDEFAULT == null ? sortField != null : !SORT_FIELD_EDEFAULT.equals(sortField);
+            case MdmserverobjectPackage.WS_VIEW_E__IS_ASC:
+                return isAsc != null;
         }
         return super.eIsSet(featureID);
     }
@@ -412,6 +530,8 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
         result.append(transformerActive);
         result.append(", transformerPK: ");
         result.append(transformerPK);
+        result.append(", sortField: ");
+        result.append(sortField);
         result.append(')');
         return result.toString();
     }

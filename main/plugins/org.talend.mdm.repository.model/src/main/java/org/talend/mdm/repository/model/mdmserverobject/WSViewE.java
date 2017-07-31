@@ -15,6 +15,7 @@ import org.eclipse.emf.common.util.EList;
  *
  * <p>
  * The following features are supported:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getSearchableBusinessElements <em>Searchable Business Elements</em>}</li>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getViewableBusinessElements <em>Viewable Business Elements</em>}</li>
@@ -22,8 +23,9 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getWhereConditions <em>Where Conditions</em>}</li>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getIsTransformerActive <em>Is Transformer Active</em>}</li>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getTransformerPK <em>Transformer PK</em>}</li>
+ *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getSortField <em>Sort Field</em>}</li>
+ *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getIsAsc <em>Is Asc</em>}</li>
  * </ul>
- * </p>
  *
  * @see org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectPackage#getWSViewE()
  * @model
@@ -155,5 +157,57 @@ public interface WSViewE extends MDMServerObject {
      * @generated
      */
     void setTransformerPK(String value);
+
+    /**
+     * Returns the value of the '<em><b>Sort Field</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Sort Field</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Sort Field</em>' attribute.
+     * @see #setSortField(String)
+     * @see org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectPackage#getWSViewE_SortField()
+     * @model
+     * @generated
+     */
+    String getSortField();
+
+    /**
+     * Sets the value of the '{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getSortField <em>Sort Field</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Sort Field</em>' attribute.
+     * @see #getSortField()
+     * @generated
+     */
+    void setSortField(String value);
+
+    /**
+     * Returns the value of the '<em><b>Is Asc</b></em>' containment reference.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Is Asc</em>' containment reference isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Is Asc</em>' containment reference.
+     * @see #setIsAsc(WSBooleanE)
+     * @see org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectPackage#getWSViewE_IsAsc()
+     * @model containment="true"
+     * @generated
+     */
+    WSBooleanE getIsAsc();
+
+    /**
+     * Sets the value of the '{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getIsAsc <em>Is Asc</em>}' containment reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Is Asc</em>' containment reference.
+     * @see #getIsAsc()
+     * @generated
+     */
+    void setIsAsc(WSBooleanE value);
 
 } // WSViewE
