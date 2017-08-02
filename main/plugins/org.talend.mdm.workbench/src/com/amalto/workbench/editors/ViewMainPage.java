@@ -510,6 +510,9 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             wsObject.setTransformerPK(cboProcessList.getText());
 
             String policy = combox_policy.getText();
+            if (policy.equals(SORT_FIELD[0])) {
+                policy = null;
+            }
             wsObject.setSortField(policy);
 
             boolean visible = combox_sortdirection.isVisible();
