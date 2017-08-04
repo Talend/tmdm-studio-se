@@ -20,8 +20,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -2389,19 +2387,5 @@ public class UtilTest {
 
         contextPath = Util.getContextPath(urlPath);
         assertEquals(expectedContextPath, contextPath);
-    }
-
-    @Test
-    public void getFields() {
-        Method[] methods = Util.class.getMethods();
-        List<String> methodns = new ArrayList<String>();
-        for (Method method : methods) {
-            int modifiers = method.getModifiers();
-            if ((modifiers | Modifier.PUBLIC) != 0) {
-                methodns.add(method.getName());
-                System.out.println(method.getName());
-            }
-        }
-        System.out.println(methodns.size());
     }
 }
