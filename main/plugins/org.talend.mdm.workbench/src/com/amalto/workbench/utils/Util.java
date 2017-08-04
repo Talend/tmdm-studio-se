@@ -732,7 +732,7 @@ public class Util {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             String err = Messages.Util_14 + Messages.Util_15 + e.getClass().getName() + Messages.Util_16 + e.getLocalizedMessage()
-                    + Messages.Util_17 + xmlString;
+            + Messages.Util_17 + xmlString;
             throw new Exception(err);
         }
     }
@@ -1667,13 +1667,15 @@ public class Util {
     }
 
     public static XSDElementDeclaration findReference(String refName, XSDSchema schema) {
-        EList<XSDElementDeclaration> eDecls = schema.getElementDeclarations();
-        if (refName.indexOf(" : ") != -1) {//$NON-NLS-1$
-            refName = refName.substring(0, refName.indexOf(" : "));//$NON-NLS-1$
-        }
-        for (XSDElementDeclaration d : eDecls) {
-            if (d.getQName().equals(refName)) {
-                return d;
+        if (refName != null && schema != null) {
+            EList<XSDElementDeclaration> eDecls = schema.getElementDeclarations();
+            if (refName.indexOf(" : ") != -1) {//$NON-NLS-1$
+                refName = refName.substring(0, refName.indexOf(" : "));//$NON-NLS-1$
+            }
+            for (XSDElementDeclaration d : eDecls) {
+                if (d.getQName().equals(refName)) {
+                    return d;
+                }
             }
         }
 
@@ -2263,7 +2265,7 @@ public class Util {
 
     private static XSDSchema getXSDSchema(String namespaceURI, String rawData, final List<XSDImport> imports,
             final TreeObject treeObj, boolean uri, final List<Exception> exceptions, final Map<String, Integer> schemaMonitor)
-            throws Exception {
+                    throws Exception {
         FileInputStream fin = null;
         try {
             final String xsdFileName = System.getProperty("user.dir") + "/.xsdModel.xml";//$NON-NLS-1$//$NON-NLS-2$
@@ -2420,9 +2422,9 @@ public class Util {
                     }
                 }
                 if (!exist
-                        && (type.getTargetNamespace() != null
-                                && !type.getTargetNamespace().equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))
-                        || type.getTargetNamespace() == null) {
+                        && ((type.getTargetNamespace() != null
+                        && !type.getTargetNamespace().equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))
+                                || type.getTargetNamespace() == null)) {
                     complexs.add((XSDComplexTypeDefinition) type);
                 }
             }
@@ -3098,9 +3100,9 @@ public class Util {
                 }
             }
             if (!exist
-                    && (el.getTargetNamespace() != null
-                            && !el.getTargetNamespace().equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))
-                    || el.getTargetNamespace() == null) {
+                    && ((el.getTargetNamespace() != null
+                    && !el.getTargetNamespace().equals(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001))
+                            || el.getTargetNamespace() == null)) {
                 list.add(el);
             }
         }
@@ -3607,10 +3609,12 @@ public class Util {
     public static String getContextPath(String urlPath) {
         String contextPath = ""; //$NON-NLS-1$
 
-        String path = urlPath;
-        int index = path.indexOf("/services/soap"); //$NON-NLS-1$
-        if (index != -1 && index != 0) {
-            contextPath = path.substring(0, index);
+        if (urlPath != null) {
+            String path = urlPath;
+            int index = path.indexOf("/services/soap"); //$NON-NLS-1$
+            if (index != -1 && index != 0) {
+                contextPath = path.substring(0, index);
+            }
         }
         return contextPath;
     }

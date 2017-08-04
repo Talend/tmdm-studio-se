@@ -16,14 +16,22 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -31,6 +39,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.axis.utils.IOUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -44,6 +53,8 @@ import org.eclipse.xsd.XSDIdentityConstraintCategory;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDImport;
 import org.eclipse.xsd.XSDModelGroup;
+import org.eclipse.xsd.XSDModelGroupDefinition;
+import org.eclipse.xsd.XSDNamedComponent;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDSchemaContent;
@@ -711,14 +722,14 @@ public class UtilTest {
         objList.add(xsdSimpleTypeDefinition);
         boolean findElements = Util.findElementsUsingType(objList, xsdSimpleTypeDefinition);
         assertFalse(findElements);
-        
+
         //
         objList.clear();
         XSDComplexTypeDefinition xsdComplexTypeDefinition1 = XSDFactory.eINSTANCE.createXSDComplexTypeDefinition();
         objList.add(xsdComplexTypeDefinition1);
         findElements = Util.findElementsUsingType(objList, xsdComplexTypeDefinition1);
         assertFalse(findElements);
-        
+
         //
         objList.clear();
         xsdComplexTypeDefinition1.setName(typenameA);
@@ -972,7 +983,7 @@ public class UtilTest {
             String method_isReferenced = "isReferrenced"; //$NON-NLS-1$
             PowerMockito.when(Util.class, method_isReferenced, Mockito.any(XSDElementDeclaration.class),
                     Mockito.any(XSDElementDeclaration.class))
-                    .thenCallRealMethod();
+            .thenCallRealMethod();
             XSDElementDeclaration xsdElementDeclaration1 = XSDFactory.eINSTANCE.createXSDElementDeclaration();
             XSDElementDeclaration xsdElementDeclaration2 = XSDFactory.eINSTANCE.createXSDElementDeclaration();
 
@@ -1039,9 +1050,9 @@ public class UtilTest {
         xsdComplexTypeDefinition1.setName(c_name + 1);
         xsdComplexTypeDefinition2.setName(c_name + 2);
         xsdSimpleTypeDefinition1
-                .setBaseTypeDefinition(xsdSchema.resolveSimpleTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "string")); //$NON-NLS-1$ anyType
+        .setBaseTypeDefinition(xsdSchema.resolveSimpleTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "string")); //$NON-NLS-1$ anyType
         xsdSimpleTypeDefinition2
-                .setBaseTypeDefinition(xsdSchema.resolveSimpleTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "string")); //$NON-NLS-1$
+        .setBaseTypeDefinition(xsdSchema.resolveSimpleTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "string")); //$NON-NLS-1$
         xsdComplexTypeDefinition1.setBaseTypeDefinition(
                 xsdSchema.resolveComplexTypeDefinition(xsdSchema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$
         xsdComplexTypeDefinition2.setBaseTypeDefinition(
@@ -1336,7 +1347,7 @@ public class UtilTest {
             //
 
             PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), any(XSDComplexTypeDefinition.class))
-                    .thenReturn(particleElementList1);
+            .thenReturn(particleElementList1);
             Object result = Whitebox.invokeMethod(Util.class, method_findspecial, parent, xsdElementDeclaration1, complexTypes);
             assertSame(parent, result);
 
@@ -1349,7 +1360,7 @@ public class UtilTest {
             particleElementList2.add(xsdEleDeclaration1);
             particleElementList2.add(xsdEleDeclaration2);
             PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), any(XSDComplexTypeDefinition.class))
-                    .thenReturn(particleElementList1, particleElementList2);
+            .thenReturn(particleElementList1, particleElementList2);
             result = Whitebox.invokeMethod(Util.class, method_findspecial, parent, xsdEleDeclaration1, complexTypes);
             assertSame(xsdElementDeclaration1, result);
 
@@ -1376,7 +1387,7 @@ public class UtilTest {
         xsdElementDeclaration.setAnonymousTypeDefinition(xsdComplexTypeDef);
         XSDParticle typeParticle = factory.createXSDParticle();
         xsdComplexTypeDef.setContent(typeParticle);
-        
+
 
         XSDModelGroup xsdModelGroup = factory.createXSDModelGroup();
         for (int i = 0; i < names.length; i++) {
@@ -1479,7 +1490,7 @@ public class UtilTest {
 
                 //
                 PowerMockito.when(Util.class, method_getall, any(), anyList(), any(IStructuredContentProvider.class))
-                        .thenReturn(allNodes);
+                .thenReturn(allNodes);
                 Util.updateReferenceToXSDTypeDefinition(new Object(), newType, mock(IStructuredContentProvider.class));
 
                 Mockito.verify(mockElementDecl).setTypeDefinition(newType);
@@ -1505,7 +1516,7 @@ public class UtilTest {
         PowerMockito.mockStatic(Util.class);
         try {
             PowerMockito.when(Util.class, method_private, any(XSDElementDeclaration.class), anyString(), anyString())
-                    .thenCallRealMethod();
+            .thenCallRealMethod();
 
             XSDElementDeclaration concept = factory.createXSDElementDeclaration();
             XSDAnnotation conceptAnnotation = factory.createXSDAnnotation();
@@ -1551,13 +1562,13 @@ public class UtilTest {
         String oldValue = "oldValue", newValue = "newValue"; //$NON-NLS-1$ //$NON-NLS-2$
         String methodToExecute = "updateReference"; //$NON-NLS-1$
         String method_private = "updatePrimaryKeyInfo"; //$NON-NLS-1$
-        
+
         XSDFactory factory = XSDFactory.eINSTANCE;
         PowerMockito.mockStatic(Util.class);
         try {
             PowerMockito
-                    .when(Util.class, methodToExecute, any(), any(Object[].class), any(Object[].class), anyString(), anyString())
-                    .thenCallRealMethod();
+            .when(Util.class, methodToExecute, any(), any(Object[].class), any(Object[].class), anyString(), anyString())
+            .thenCallRealMethod();
 
             Object[] objs = new Object[4];
             Object[] allForeignKeyAndInfos = new Object[0];
@@ -1602,7 +1613,7 @@ public class UtilTest {
             PowerMockito.verifyStatic();
             Util.updateForeignKeyRelatedInfo(oldValue, newValue, allForeignKeyAndInfos);
             Whitebox.invokeMethod(Util.class, method_private, any(XSDElementDeclaration.class), eq(oldValue), eq(newValue));
-            
+
             verify(particle1).setTerm(xsdEleDecl);
             verify(particle1).updateElement();
             verify(mockDeclaration1).setResolvedElementDeclaration(xsdEleDecl);
@@ -1627,7 +1638,7 @@ public class UtilTest {
         //
         Element[] allForeignKeyAndInfos = new Element[appFKRelated.length];
         String[] oldValue = { "ProductFamily/Id$$Contains$$aaa$$#ProductFamily/Name$$Contains$$bbb$$#", "ProductFamily/Name", //$NON-NLS-1$ //$NON-NLS-2$
-                "ProductFamily/Id" }; //$NON-NLS-1$
+        "ProductFamily/Id" }; //$NON-NLS-1$
         String newValue = "ProductFamily/Names1"; //$NON-NLS-1$
 
         try {
@@ -1678,10 +1689,10 @@ public class UtilTest {
         allForeignKeyRelatedInfos = Util.getAllForeignKeyRelatedInfos(new Object(), new ArrayList<Object>(), provider, visited);
         assertNotNull(allForeignKeyRelatedInfos);
         assertTrue(allForeignKeyRelatedInfos.length == 0);
-        
+
         try {
             Document doc = getEmptyDocument();
-            
+
             Object[] elems1 = new Object[4];
             for(int i=0; i<elems1.length-1;i++) {
                 Element fkRelatedElement = doc.createElementNS(namespaceURI, localName);
@@ -1690,7 +1701,7 @@ public class UtilTest {
             }
             Object elem2 = XSDFactory.eINSTANCE.createXSDElementDeclaration();
             elems1[3] = elem2;
-            
+
             Object[] elems2 = new Object[3];
             for(int i=0; i<elems2.length;i++) {
                 Element fkRelatedElement = doc.createElementNS(namespaceURI, localName);
@@ -1734,8 +1745,8 @@ public class UtilTest {
         PowerMockito.mockStatic(Util.class);
         try {
             PowerMockito
-                    .when(Util.class, methodToExecute, anyString(), any(XSDComplexTypeDefinition.class), anyBoolean(), anySet())
-                    .thenCallRealMethod();
+            .when(Util.class, methodToExecute, anyString(), any(XSDComplexTypeDefinition.class), anyBoolean(), anySet())
+            .thenCallRealMethod();
 
             Map<String, XSDParticle> complexChilds = Whitebox.invokeMethod(Util.class, methodToExecute, parentxpath,
                     complexTypeDef, true, null);
@@ -1749,7 +1760,7 @@ public class UtilTest {
             childElements1.put(childpath[0], childParticle1);
             childElements1.put(childpath[1], childParticle2);
             PowerMockito
-                    .when(Util.class, method_getChildElements, anyString(), any(XSDComplexTypeDefinition.class), anyBoolean(),
+            .when(Util.class, method_getChildElements, anyString(), any(XSDComplexTypeDefinition.class), anyBoolean(),
                     anySet()).thenReturn(childElements1);
 
             XSDModelGroup group = factory.createXSDModelGroup();
@@ -1937,7 +1948,7 @@ public class UtilTest {
 
         XSDComplexTypeDefinition complexTypeDefinition = factory.createXSDComplexTypeDefinition();
         complexTypeDefinition
-                .setBaseTypeDefinition(xschema.resolveComplexTypeDefinition(xschema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$ );
+        .setBaseTypeDefinition(xschema.resolveComplexTypeDefinition(xschema.getSchemaForSchemaNamespace(), "anyType")); //$NON-NLS-1$ );
         xschema.getContents().add(complexTypeDefinition);
 
         XSDSimpleTypeDefinition simpleTypeDefinition = factory.createXSDSimpleTypeDefinition();
@@ -1948,7 +1959,7 @@ public class UtilTest {
         XSDParticle typeparticle = factory.createXSDParticle();
         complexTypeDefinition.setContent(typeparticle);
         typeparticle.setContent(modelGroup);
-        
+
         XSDParticle childParticle = factory.createXSDParticle();
         XSDElementDeclaration childelement = factory.createXSDElementDeclaration();
         childelement.setName(childelementName);
@@ -1959,11 +1970,11 @@ public class UtilTest {
         XSDIdentityConstraintDefinition IdConsDef = factory.createXSDIdentityConstraintDefinition();
         IdConsDef.setName(identityName );
         concept.getIdentityConstraintDefinitions().add(IdConsDef);
-        
+
         XSDXPathDefinition xsdXPathDefinition = factory.createXSDXPathDefinition();
         xsdXPathDefinition.setValue(xsdxpathValue);
         IdConsDef.getFields().add(xsdXPathDefinition);
-        
+
         XSDAnnotation conceptAnnotation = factory.createXSDAnnotation();
         concept.setAnnotation(conceptAnnotation);
 
@@ -2018,7 +2029,7 @@ public class UtilTest {
         assertTrue(xsdComponentPath.contains("//xsd:element[@name='" + conceptName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
         assertTrue(xsdComponentPath.contains("//xsd:unique[@name='" + identityName + "']")); //$NON-NLS-1$ //$NON-NLS-2$
         assertTrue(xsdComponentPath.contains("//xsd:field[@xpath='" + xsdxpathValue + "']")); //$NON-NLS-1$ //$NON-NLS-2$
-        
+
         //
         buffer.clear();
         xsdComponentPath = Util.retrieveXSDComponentPath(conceptAnnotation, xschema, buffer);
@@ -2113,7 +2124,7 @@ public class UtilTest {
 
         XSDSimpleTypeDefinition simpleTypeDefinition = factory.createXSDSimpleTypeDefinition();
         simpleTypeDefinition
-                .setBaseTypeDefinition(xSchema.resolveSimpleTypeDefinition(xSchema.getSchemaForSchemaNamespace(), "string")); //$NON-NLS-1$ );
+        .setBaseTypeDefinition(xSchema.resolveSimpleTypeDefinition(xSchema.getSchemaForSchemaNamespace(), "string")); //$NON-NLS-1$ );
         xSchema.getContents().add(simpleTypeDefinition);
         complexTypes = Util.getComplexTypes(xSchema);
         assertNotNull(complexTypes);
@@ -2154,12 +2165,101 @@ public class UtilTest {
 
     @Test
     public void testGetSimpleTypeDefinitionChildren() {
-        fail();
+        String methodToExpect = "isBuildInType"; //$NON-NLS-1$
+        String methodToExecute = "getSimpleTypeDefinitionChildren"; //$NON-NLS-1$
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        XSDSimpleTypeDefinition simpleTypeDefinition = factory.createXSDSimpleTypeDefinition();
+
+        PowerMockito.mockStatic(Util.class);
+        try {
+            PowerMockito.when(Util.class, methodToExecute, any(XSDSimpleTypeDefinition.class)).thenCallRealMethod();
+
+            //
+            PowerMockito.when(Util.class, methodToExpect, any(XSDSimpleTypeDefinition.class)).thenReturn(true);
+            List<Object> children = Util.getSimpleTypeDefinitionChildren(simpleTypeDefinition);
+            assertNotNull(children);
+            assertTrue(children.size() == 1);
+            assertTrue(children.contains(simpleTypeDefinition));
+
+            //
+            PowerMockito.when(Util.class, methodToExpect, any(XSDSimpleTypeDefinition.class)).thenReturn(false);
+            children = Util.getSimpleTypeDefinitionChildren(simpleTypeDefinition);
+            assertNotNull(children);
+            assertTrue(children.size() == 1);
+            assertTrue(children.contains(simpleTypeDefinition));
+
+            //
+            XSDAnnotation annotation1 = factory.createXSDAnnotation();
+            XSDAnnotation annotation2 = factory.createXSDAnnotation();
+            simpleTypeDefinition.getAnnotations().add(annotation1);
+            simpleTypeDefinition.getAnnotations().add(annotation2);
+            children = Util.getSimpleTypeDefinitionChildren(simpleTypeDefinition);
+            assertNotNull(children);
+            assertTrue(children.size() == 3);
+            assertTrue(children.contains(simpleTypeDefinition));
+            assertTrue(children.contains(annotation1));
+            assertTrue(children.contains(annotation2));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+
     }
 
     @Test
     public void testFilterOutDuplicatedElems() {
-        fail();
+        String simpletypeName = "simpletype"; //$NON-NLS-1$
+        String complextypeName = "complextype"; //$NON-NLS-1$
+        String concepName = "concept"; //$NON-NLS-1$
+        String idconstraintName = "identityconstraint"; //$NON-NLS-1$
+        String modelgroupName = "modelgroup"; //$NON-NLS-1$
+
+        XSDFactory factory = XSDFactory.eINSTANCE;
+
+        XSDSimpleTypeDefinition simpleTypeDefinition = factory.createXSDSimpleTypeDefinition();
+        XSDComplexTypeDefinition complexTypeDefinition = factory.createXSDComplexTypeDefinition();
+        XSDElementDeclaration elementDeclaration = factory.createXSDElementDeclaration();
+        XSDIdentityConstraintDefinition identityConstraintDefinition = factory.createXSDIdentityConstraintDefinition();
+        XSDModelGroupDefinition modelGroupDefinition = factory.createXSDModelGroupDefinition();
+
+        simpleTypeDefinition.setName(simpletypeName);
+        complexTypeDefinition.setName(complextypeName);
+        elementDeclaration.setName(concepName);
+        identityConstraintDefinition.setName(idconstraintName);
+        modelGroupDefinition.setName(modelgroupName);
+
+        XSDNamedComponent[] checkedElements = { simpleTypeDefinition, complexTypeDefinition, elementDeclaration,
+                identityConstraintDefinition, modelGroupDefinition };
+        Object[] duplicatedElems = Util.filterOutDuplicatedElems(checkedElements);
+        List<XSDNamedComponent> allElements = Arrays.asList(checkedElements);
+        assertNotNull(duplicatedElems);
+        assertTrue(checkedElements.length == duplicatedElems.length);
+        for (int i = 0; i < duplicatedElems.length; i++) {
+            assertTrue(allElements.contains(duplicatedElems[i]));
+        }
+
+        //
+        XSDSimpleTypeDefinition simpleTypeDefinition2 = factory.createXSDSimpleTypeDefinition();
+        XSDComplexTypeDefinition complexTypeDefinition2 = factory.createXSDComplexTypeDefinition();
+        XSDElementDeclaration elementDeclaration2 = factory.createXSDElementDeclaration();
+        XSDIdentityConstraintDefinition identityConstraintDefinition2 = factory.createXSDIdentityConstraintDefinition();
+        XSDModelGroupDefinition modelGroupDefinition2 = factory.createXSDModelGroupDefinition();
+
+        simpleTypeDefinition2.setName(simpletypeName);
+        complexTypeDefinition2.setName(complextypeName);
+        elementDeclaration2.setName(concepName);
+        identityConstraintDefinition2.setName(idconstraintName);
+        modelGroupDefinition2.setName(modelgroupName);
+
+        XSDNamedComponent[] checkedElements2 = { simpleTypeDefinition, complexTypeDefinition, elementDeclaration,
+                identityConstraintDefinition, modelGroupDefinition, simpleTypeDefinition2, complexTypeDefinition2,
+                elementDeclaration2, identityConstraintDefinition2, modelGroupDefinition2 };
+
+        duplicatedElems = Util.filterOutDuplicatedElems(checkedElements2);
+        assertNotNull(duplicatedElems);
+        assertTrue(checkedElements.length == duplicatedElems.length);
+        for (int i = 0; i < duplicatedElems.length; i++) {
+            assertTrue(allElements.contains(duplicatedElems[i]));
+        }
     }
 
     @Test
@@ -2188,16 +2288,120 @@ public class UtilTest {
 
     @Test
     public void testFindReference() {
-        fail();
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        String conceptName1 = "Product", conceptName2 = "Store"; //$NON-NLS-1$ //$NON-NLS-2$
+        String refName = conceptName2;
+        XSDSchema xschema = factory.createXSDSchema();
+
+        XSDElementDeclaration referencedEntity = Util.findReference(null, null);
+        assertNull(referencedEntity);
+
+        referencedEntity = Util.findReference(refName, null);
+        assertNull(referencedEntity);
+
+        referencedEntity = Util.findReference(null, xschema);
+        assertNull(referencedEntity);
+
+        referencedEntity = Util.findReference(refName, xschema);
+        assertNull(referencedEntity);
+
+        XSDElementDeclaration concept1 = factory.createXSDElementDeclaration();
+        concept1.setName(conceptName1);
+        XSDElementDeclaration concept2 = factory.createXSDElementDeclaration();
+        concept2.setName(conceptName2);
+        xschema.getContents().add(concept1);
+        xschema.getContents().add(concept2);
+        referencedEntity = Util.findReference(refName, xschema);
+        assertNotNull(referencedEntity);
+        assertSame(concept2, referencedEntity);
+
+        refName = refName + " : " + "fair"; //$NON-NLS-1$//$NON-NLS-2$
+        referencedEntity = Util.findReference(refName, xschema);
+        assertNotNull(referencedEntity);
+        assertSame(concept2, referencedEntity);
+
+        refName = "ProductFamily"; //$NON-NLS-1$
+        referencedEntity = Util.findReference(refName, xschema);
+        assertNull(referencedEntity);
     }
 
     @Test
     public void testUnZipFile() {
-        fail();
+        String usrDir = System.getProperty("java.io.tmpdir");//$NON-NLS-1$
+
+        File zipFolder = new File(usrDir + File.separator + System.currentTimeMillis());
+        if (!zipFolder.exists()) {
+            zipFolder.mkdirs();
+        }
+        File unzipFolder = new File(usrDir + File.separator + System.currentTimeMillis());
+        if (!unzipFolder.exists()) {
+            unzipFolder.mkdirs();
+        }
+
+        String file = new File(zipFolder, "testzp.zip").getAbsolutePath(); //$NON-NLS-1$
+        createZipFile(file);
+
+        try {
+            Util.unZipFile(file, unzipFolder.getAbsolutePath(), 8, new NullProgressMonitor());
+            String[] unzippedFiles = unzipFolder.list();
+            assertNotNull(unzippedFiles);
+            assertTrue(unzippedFiles.length == 1);
+
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    private void createZipFile(String zipfile) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Test String"); //$NON-NLS-1$
+
+        ZipOutputStream out = null;
+        try {
+            File f = new File(zipfile);
+            out = new ZipOutputStream(new FileOutputStream(f));
+            ZipEntry e = new ZipEntry("mytext.txt"); //$NON-NLS-1$
+            out.putNextEntry(e);
+
+            byte[] data = sb.toString().getBytes();
+            out.write(data, 0, data.length);
+        } catch (Exception e) {//
+            log.error(e.getMessage(), e);
+        } finally {
+            if (out != null) {
+                try {
+                    out.closeEntry();
+                    out.close();
+                } catch (IOException e) {//
+                    log.error(e.getMessage(), e);
+                }
+            }
+        }
     }
 
     @Test
     public void testGetContextPath() {
-        fail();
+        String urlPath = "/talendmdm/services/soap"; //$NON-NLS-1$
+        String expectedContextPath = "/talendmdm"; //$NON-NLS-1$
+
+        String contextPath = Util.getContextPath(null);
+        assertTrue(contextPath.isEmpty());
+
+        contextPath = Util.getContextPath(urlPath);
+        assertEquals(expectedContextPath, contextPath);
+    }
+
+    @Test
+    public void getFields() {
+        Method[] methods = Util.class.getMethods();
+        List<String> methodns = new ArrayList<String>();
+        for (Method method : methods) {
+            int modifiers = method.getModifiers();
+            if ((modifiers | Modifier.PUBLIC) != 0) {
+                methodns.add(method.getName());
+                System.out.println(method.getName());
+            }
+        }
+        System.out.println(methodns.size());
     }
 }
