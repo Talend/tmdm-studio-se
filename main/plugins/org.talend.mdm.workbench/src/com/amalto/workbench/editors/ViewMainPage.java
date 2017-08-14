@@ -407,7 +407,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             combox_sortdirection.add(SORTING_DIRECTION[1]);
             String sortField = wsObject.getSortField();
             WSBoolean ascOrder = wsObject.getIsAsc();
-            if (sortField == null) {
+            if (sortField == null || sortField.trim().isEmpty()) {
                 sortField = SORT_FIELD[0];
             }
             lastSortField = sortField;
