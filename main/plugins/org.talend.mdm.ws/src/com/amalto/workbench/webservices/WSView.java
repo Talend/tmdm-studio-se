@@ -19,6 +19,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
+ *         &lt;element name="customForm" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="description" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="isAsc" type="{http://www.talend.com/mdm}WSBoolean" minOccurs="0"/>
  *         &lt;element name="isTransformerActive" type="{http://www.talend.com/mdm}WSBoolean" minOccurs="0"/>
@@ -38,6 +39,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "WSView", propOrder = {
+    "customForm",
     "description",
     "isAsc",
     "isTransformerActive",
@@ -50,6 +52,7 @@ import javax.xml.bind.annotation.XmlType;
 })
 public class WSView {
 
+    protected String customForm;
     protected String description;
     protected WSBoolean isAsc;
     protected WSBoolean isTransformerActive;
@@ -75,7 +78,8 @@ public class WSView {
      * Fully-initialising value constructor
      * 
      */
-    public WSView(final String description, final WSBoolean isAsc, final WSBoolean isTransformerActive, final String name, final List<String> searchableBusinessElements, final String sortField, final String transformerPK, final List<String> viewableBusinessElements, final List<WSWhereCondition> whereConditions) {
+    public WSView(final String customForm, final String description, final WSBoolean isAsc, final WSBoolean isTransformerActive, final String name, final List<String> searchableBusinessElements, final String sortField, final String transformerPK, final List<String> viewableBusinessElements, final List<WSWhereCondition> whereConditions) {
+        this.customForm = customForm;
         this.description = description;
         this.isAsc = isAsc;
         this.isTransformerActive = isTransformerActive;
@@ -85,6 +89,30 @@ public class WSView {
         this.transformerPK = transformerPK;
         this.viewableBusinessElements = viewableBusinessElements;
         this.whereConditions = whereConditions;
+    }
+
+    /**
+     * Gets the value of the customForm property.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getCustomForm() {
+        return customForm;
+    }
+
+    /**
+     * Sets the value of the customForm property.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setCustomForm(String value) {
+        this.customForm = value;
     }
 
     /**

@@ -743,13 +743,22 @@ public interface MdmserverobjectPackage extends EPackage {
     int WS_VIEW_E__IS_ASC = MDM_SERVER_OBJECT_FEATURE_COUNT + 7;
 
     /**
+     * The feature id for the '<em><b>Custom Form</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WS_VIEW_E__CUSTOM_FORM = MDM_SERVER_OBJECT_FEATURE_COUNT + 8;
+
+    /**
      * The number of structural features of the '<em>WS View E</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WS_VIEW_E_FEATURE_COUNT = MDM_SERVER_OBJECT_FEATURE_COUNT + 8;
+    int WS_VIEW_E_FEATURE_COUNT = MDM_SERVER_OBJECT_FEATURE_COUNT + 9;
 
     /**
      * The meta object id for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSWhereConditionEImpl <em>WS Where Condition E</em>}' class.
@@ -3219,6 +3228,17 @@ public interface MdmserverobjectPackage extends EPackage {
     EReference getWSViewE_IsAsc();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getCustomForm <em>Custom Form</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Custom Form</em>'.
+     * @see org.talend.mdm.repository.model.mdmserverobject.WSViewE#getCustomForm()
+     * @see #getWSViewE()
+     * @generated
+     */
+    EAttribute getWSViewE_CustomForm();
+
+    /**
      * Returns the meta object for class '{@link org.talend.mdm.repository.model.mdmserverobject.WSWhereConditionE <em>WS Where Condition E</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -4438,6 +4458,14 @@ public interface MdmserverobjectPackage extends EPackage {
          * @generated
          */
         EReference WS_VIEW_E__IS_ASC = eINSTANCE.getWSViewE_IsAsc();
+
+        /**
+         * The meta object literal for the '<em><b>Custom Form</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute WS_VIEW_E__CUSTOM_FORM = eINSTANCE.getWSViewE_CustomForm();
 
         /**
          * The meta object literal for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSWhereConditionEImpl <em>WS Where Condition E</em>}' class.

@@ -43,6 +43,7 @@ import org.talend.mdm.repository.model.mdmserverobject.WSWhereConditionE;
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSViewEImpl#getTransformerPK <em>Transformer PK</em>}</li>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSViewEImpl#getSortField <em>Sort Field</em>}</li>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSViewEImpl#getIsAsc <em>Is Asc</em>}</li>
+ *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSViewEImpl#getCustomForm <em>Custom Form</em>}</li>
  * </ul>
  *
  * @generated
@@ -157,6 +158,26 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
      * @ordered
      */
     protected WSBooleanE isAsc;
+
+    /**
+     * The default value of the '{@link #getCustomForm() <em>Custom Form</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getCustomForm()
+     * @generated
+     * @ordered
+     */
+    protected static final String CUSTOM_FORM_EDEFAULT = null;
+
+    /**
+     * The cached value of the '{@link #getCustomForm() <em>Custom Form</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getCustomForm()
+     * @generated
+     * @ordered
+     */
+    protected String customForm = CUSTOM_FORM_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -367,6 +388,27 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
      * <!-- end-user-doc -->
      * @generated
      */
+    public String getCustomForm() {
+        return customForm;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setCustomForm(String newCustomForm) {
+        String oldCustomForm = customForm;
+        customForm = newCustomForm;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, MdmserverobjectPackage.WS_VIEW_E__CUSTOM_FORM, oldCustomForm, customForm));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -404,6 +446,8 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
                 return getSortField();
             case MdmserverobjectPackage.WS_VIEW_E__IS_ASC:
                 return getIsAsc();
+            case MdmserverobjectPackage.WS_VIEW_E__CUSTOM_FORM:
+                return getCustomForm();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -444,6 +488,9 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
             case MdmserverobjectPackage.WS_VIEW_E__IS_ASC:
                 setIsAsc((WSBooleanE)newValue);
                 return;
+            case MdmserverobjectPackage.WS_VIEW_E__CUSTOM_FORM:
+                setCustomForm((String)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -480,6 +527,9 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
             case MdmserverobjectPackage.WS_VIEW_E__IS_ASC:
                 setIsAsc((WSBooleanE)null);
                 return;
+            case MdmserverobjectPackage.WS_VIEW_E__CUSTOM_FORM:
+                setCustomForm(CUSTOM_FORM_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -508,6 +558,8 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
                 return SORT_FIELD_EDEFAULT == null ? sortField != null : !SORT_FIELD_EDEFAULT.equals(sortField);
             case MdmserverobjectPackage.WS_VIEW_E__IS_ASC:
                 return isAsc != null;
+            case MdmserverobjectPackage.WS_VIEW_E__CUSTOM_FORM:
+                return CUSTOM_FORM_EDEFAULT == null ? customForm != null : !CUSTOM_FORM_EDEFAULT.equals(customForm);
         }
         return super.eIsSet(featureID);
     }
@@ -532,6 +584,8 @@ public class WSViewEImpl extends MDMServerObjectImpl implements WSViewE {
         result.append(transformerPK);
         result.append(", sortField: ");
         result.append(sortField);
+        result.append(", customForm: ");
+        result.append(customForm);
         result.append(')');
         return result.toString();
     }

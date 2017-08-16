@@ -64,6 +64,7 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="sortField" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="isAsc" eType="#//WSBooleanE"
         containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="customForm" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WSWhereConditionE">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="leftPath" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

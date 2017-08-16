@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getTransformerPK <em>Transformer PK</em>}</li>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getSortField <em>Sort Field</em>}</li>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getIsAsc <em>Is Asc</em>}</li>
+ *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getCustomForm <em>Custom Form</em>}</li>
  * </ul>
  *
  * @see org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectPackage#getWSViewE()
@@ -209,5 +210,31 @@ public interface WSViewE extends MDMServerObject {
      * @generated
      */
     void setIsAsc(WSBooleanE value);
+
+    /**
+     * Returns the value of the '<em><b>Custom Form</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Custom Form</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Custom Form</em>' attribute.
+     * @see #setCustomForm(String)
+     * @see org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectPackage#getWSViewE_CustomForm()
+     * @model
+     * @generated
+     */
+    String getCustomForm();
+
+    /**
+     * Sets the value of the '{@link org.talend.mdm.repository.model.mdmserverobject.WSViewE#getCustomForm <em>Custom Form</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Custom Form</em>' attribute.
+     * @see #getCustomForm()
+     * @generated
+     */
+    void setCustomForm(String value);
 
 } // WSViewE

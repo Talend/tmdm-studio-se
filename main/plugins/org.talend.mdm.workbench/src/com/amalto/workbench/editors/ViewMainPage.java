@@ -59,6 +59,7 @@ import com.amalto.workbench.detailtabs.sections.IMDMRepositoryViewServiceExt;
 import com.amalto.workbench.detailtabs.sections.util.MDMRepositoryViewExtensionService;
 import com.amalto.workbench.dialogs.XpathSelectDialog;
 import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
+import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -126,6 +127,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
 
     private final String[] SORTING_DIRECTION = { Messages.ViewMainPage_ascOrder, Messages.ViewMainPage_descOrder };
 
+    private IViewMainPageExAdapter adapter;
     /*
      * private ComplexTableViewerColumn[] conditionsColumns= new ComplexTableViewerColumn[]{ new
      * ComplexTableViewerColumn("XPath", false, "newXPath", "newXPath", "",ComplexTableViewerColumn.XPATH_STYLE,new
@@ -143,6 +145,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
         // this.treeParent = this.getXObject().getParent();
         Object model = ((XObjectEditorInput) editor.getEditorInput()).getModel();
         this.viewName = ((TreeObject) model).getName();
+        adapter = ExAdapterManager.getAdapter(this, IViewMainPageExAdapter.class);
 
     }
 
@@ -186,6 +189,10 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             initProcessCombo();
 
             createSortPart(toolkit, comp);
+
+            if (adapter != null) {
+                adapter.createComposite(this, toolkit, comp);
+            }
 
             // add listener
             btnRunProcess.addSelectionListener(new SelectionListener() {
@@ -427,6 +434,10 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             combox_policy.setItems(policys);
             combox_policy.setText(sortField);
 
+            if (adapter != null) {
+                adapter.refreshData(wsObject, getDatamodelName());
+            }
+
             ////////////////////
             java.util.List<Line> vlines = new ArrayList<Line>();
             java.util.List<String> vis = wsObject.getViewableBusinessElements();
@@ -521,6 +532,10 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
                 wsObject.setIsAsc(new WSBoolean(isAscOrder));
             } else {
                 wsObject.setIsAsc(null);
+            }
+
+            if (adapter != null) {
+                adapter.saveData(wsObject);
             }
 
             java.util.List<Line> vlines = (java.util.List<Line>) viewableViewer.getViewer().getInput();

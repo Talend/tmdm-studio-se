@@ -787,6 +787,15 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getWSViewE_CustomForm() {
+        return (EAttribute)wsViewEEClass.getEStructuralFeatures().get(8);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public EClass getWSWhereConditionE() {
         return wsWhereConditionEEClass;
@@ -1661,6 +1670,7 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
         createEAttribute(wsViewEEClass, WS_VIEW_E__TRANSFORMER_PK);
         createEAttribute(wsViewEEClass, WS_VIEW_E__SORT_FIELD);
         createEReference(wsViewEEClass, WS_VIEW_E__IS_ASC);
+        createEAttribute(wsViewEEClass, WS_VIEW_E__CUSTOM_FORM);
 
         wsWhereConditionEEClass = createEClass(WS_WHERE_CONDITION_E);
         createEAttribute(wsWhereConditionEEClass, WS_WHERE_CONDITION_E__LEFT_PATH);
@@ -1874,6 +1884,7 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
         initEAttribute(getWSViewE_TransformerPK(), ecorePackage.getEString(), "transformerPK", null, 0, 1, WSViewE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getWSViewE_SortField(), ecorePackage.getEString(), "sortField", null, 0, 1, WSViewE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getWSViewE_IsAsc(), this.getWSBooleanE(), null, "isAsc", null, 0, 1, WSViewE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getWSViewE_CustomForm(), theEcorePackage.getEString(), "customForm", null, 0, 1, WSViewE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(wsWhereConditionEEClass, WSWhereConditionE.class, "WSWhereConditionE", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getWSWhereConditionE_LeftPath(), ecorePackage.getEString(), "leftPath", null, 0, 1, WSWhereConditionE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
