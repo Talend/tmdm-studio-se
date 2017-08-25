@@ -27,7 +27,7 @@ public interface IViewMainPageExAdapter extends IExAdapter<ViewMainPage> {
 
     void createComposite(ViewMainPage viewMainPage, FormToolkit toolkit, Composite parent);
 
-    void refreshData(WSView wsObject, String datamodel);
+    void refreshData(WSView wsObject);
 
     void saveData(WSView wsObject);
 

@@ -435,7 +435,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             combox_policy.setText(sortField);
 
             if (adapter != null) {
-                adapter.refreshData(wsObject, getDatamodelName());
+                adapter.refreshData(wsObject);
             }
 
             ////////////////////
