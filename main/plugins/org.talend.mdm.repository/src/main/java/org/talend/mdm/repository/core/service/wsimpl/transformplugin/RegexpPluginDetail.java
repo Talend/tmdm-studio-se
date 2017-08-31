@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.mdm.repository.core.service.wsimpl.transformplugin;
 
+import org.talend.mdm.repository.core.service.ws.AbstractPluginDetail;
 
 /**
  * DOC hbhong class global comment. Detailled comment

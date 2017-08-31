@@ -13,6 +13,8 @@
 package org.talend.mdm.repository.ui.editors;
 
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.talend.mdm.repository.core.service.ITriggerProcessService;
 import org.talend.mdm.repository.core.service.RepositoryWebServiceAdapter;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.ui.dialogs.xpath.XpathSelectDialog2;
@@ -63,18 +66,24 @@ public class RoutingRuleMainPage2 extends RoutingRuleMainPage {
         ExternalInfoHolder<?> allJobInfosHolder = RepositoryExternalInfoHolder.getAllJobInfosHolder(null);
         ExternalInfoHolder<?> allVarCandidatesHolder = ExternalInfoHolder.getTriggerAllCallJobVarsCandidatesHolder();
         ExternalInfoHolder<?> mdmServerInfoHolder = RepositoryExternalInfoHolder.getAllMDMServerInfoHolder2(null);
-        ExternalInfoHolder<?> workflowInfoHolder = RepositoryExternalInfoHolder.getAllWorkflowInfoHolder(null);
-        ExternalInfoHolder<?> allDataModelHolderProxy = RepositoryExternalInfoHolder.getAllDataModelInfoHolderProxy(null);
 
         initExternalInfoHolderForEachType("callprocess", new ExternalInfoHolder<?>[] { allProcessNamesHolder });//$NON-NLS-1$
         initExternalInfoHolderForEachType("callJob", new ExternalInfoHolder<?>[] { allJobInfosHolder, mdmServerInfoHolder,//$NON-NLS-1$
-                allVarCandidatesHolder });
-        initExternalInfoHolderForEachType("workflow", new ExternalInfoHolder<?>[] { workflowInfoHolder, //$NON-NLS-1$
-                allDataModelHolderProxy });
+            allVarCandidatesHolder });
 
-        initExternalInfoHolderForEachType("workflowcontext", new ExternalInfoHolder<?>[] { workflowInfoHolder, //$NON-NLS-1$
-                allDataModelHolderProxy });
-
+        ITriggerProcessService triggerProcessService = RepositoryWebServiceAdapter.getTriggerProcessService();
+        if (triggerProcessService != null) {
+            Map<String, ExternalInfoHolder<?>[]> extraExternalInfoHolderForType = triggerProcessService
+                    .getTriggerExtraExternalInfoHolderForType();
+            if (extraExternalInfoHolderForType != null) {
+                Iterator<String> iterator = extraExternalInfoHolderForType.keySet().iterator();
+                while (iterator.hasNext()) {
+                    String operaType = iterator.next();
+                    ExternalInfoHolder<?>[] externalInfoHolders = extraExternalInfoHolderForType.get(operaType);
+                    initExternalInfoHolderForEachType(operaType, externalInfoHolders);
+                }
+            }
+        }
         //
 
     }

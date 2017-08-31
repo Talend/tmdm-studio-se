@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.mdm.repository.core.service.wsimpl.servicedoc;
+package org.talend.mdm.repository.core.service.ws;
 
 import com.amalto.workbench.webservices.WSServiceGetDocument;
 

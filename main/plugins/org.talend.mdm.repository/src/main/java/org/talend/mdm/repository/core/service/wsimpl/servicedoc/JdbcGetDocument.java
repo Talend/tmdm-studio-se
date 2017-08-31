@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.mdm.repository.core.service.wsimpl.servicedoc;
 
+import org.talend.mdm.repository.core.service.ws.AbstractGetDocument;
 import org.talend.mdm.repository.i18n.Messages;
 
 /**

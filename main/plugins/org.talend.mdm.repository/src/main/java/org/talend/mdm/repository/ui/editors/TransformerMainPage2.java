@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.editors;
 
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,8 +28,9 @@ import org.talend.mdm.repository.core.command.CommandManager;
 import org.talend.mdm.repository.core.command.CommandStack;
 import org.talend.mdm.repository.core.command.ICommand;
 import org.talend.mdm.repository.core.service.DeployService;
+import org.talend.mdm.repository.core.service.ITriggerProcessService;
 import org.talend.mdm.repository.core.service.RepositoryWebServiceAdapter;
-import org.talend.mdm.repository.core.service.wsimpl.transformplugin.AbstractPluginDetail;
+import org.talend.mdm.repository.core.service.ws.AbstractPluginDetail;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.ui.navigator.MDMRepositoryView;
@@ -67,16 +70,23 @@ public class TransformerMainPage2 extends TransformerMainPage {
         ExternalInfoHolder<?> mdmServerInfoHolder = RepositoryExternalInfoHolder.getAllMDMServerInfoHolder2(null);
         ExternalInfoHolder<?> allVarCandidatesHolder = RepositoryExternalInfoHolder
                 .getProcessAllCallJobVarsCandidatesHolder((WSTransformerV2) getXObject().getWsObject());
-        ExternalInfoHolder<?> workflowInfoHolder = RepositoryExternalInfoHolder.getAllWorkflowInfoHolder(null);
-        ExternalInfoHolder<?> allDataModelHolderProxy = RepositoryExternalInfoHolder.getAllDataModelInfoHolderProxy(getXObject());
 
         initExternalInfoHolderForEachType("callJob", new ExternalInfoHolder<?>[] { allJobInfosHolder, mdmServerInfoHolder, //$NON-NLS-1$
-                allVarCandidatesHolder });
-        initExternalInfoHolderForEachType("workflowtrigger", new ExternalInfoHolder<?>[] { workflowInfoHolder, //$NON-NLS-1$
-                allDataModelHolderProxy });
+            allVarCandidatesHolder });
 
-        initExternalInfoHolderForEachType("workflowcontexttrigger", new ExternalInfoHolder<?>[] { workflowInfoHolder, //$NON-NLS-1$
-                allDataModelHolderProxy });
+        ITriggerProcessService triggerProcessService = RepositoryWebServiceAdapter.getTriggerProcessService();
+        if (triggerProcessService != null) {
+            Map<String, ExternalInfoHolder<?>[]> extraExternalInfoHolderForType = triggerProcessService
+                    .getProcessExtraExternalInfoHolderForType();
+            if (extraExternalInfoHolderForType != null) {
+                Iterator<String> iterator = extraExternalInfoHolderForType.keySet().iterator();
+                while (iterator.hasNext()) {
+                    String operaType = iterator.next();
+                    ExternalInfoHolder<?>[] externalInfoHolders = extraExternalInfoHolderForType.get(operaType);
+                    initExternalInfoHolderForEachType(operaType, externalInfoHolders);
+                }
+            }
+        }
     }
 
     @Override

@@ -22,16 +22,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.mdm.repository.core.service.wsimpl.servicedoc.AbstractGetDocument;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.mdm.repository.core.service.ws.AbstractGetDocument;
+import org.talend.mdm.repository.core.service.ws.AbstractPluginDetail;
 import org.talend.mdm.repository.core.service.wsimpl.servicedoc.CallJobGetDocument;
 import org.talend.mdm.repository.core.service.wsimpl.servicedoc.CallTransformerGetDocument;
 import org.talend.mdm.repository.core.service.wsimpl.servicedoc.DumpToConsoleGetDocument;
 import org.talend.mdm.repository.core.service.wsimpl.servicedoc.ItemDispatcherGetDocument;
 import org.talend.mdm.repository.core.service.wsimpl.servicedoc.JdbcGetDocument;
 import org.talend.mdm.repository.core.service.wsimpl.servicedoc.LoggingGetDocument;
-import org.talend.mdm.repository.core.service.wsimpl.servicedoc.WorkflowContextGetDocument;
-import org.talend.mdm.repository.core.service.wsimpl.servicedoc.WorkflowGetDocument;
-import org.talend.mdm.repository.core.service.wsimpl.transformplugin.AbstractPluginDetail;
 import org.talend.mdm.repository.core.service.wsimpl.transformplugin.CodeProjectPluginDetail;
 import org.talend.mdm.repository.core.service.wsimpl.transformplugin.DumpAndGoPluginDetail;
 import org.talend.mdm.repository.core.service.wsimpl.transformplugin.GroovyPluginDetail;
@@ -39,8 +38,6 @@ import org.talend.mdm.repository.core.service.wsimpl.transformplugin.RegexpPlugi
 import org.talend.mdm.repository.core.service.wsimpl.transformplugin.ReplacePluginDetail;
 import org.talend.mdm.repository.core.service.wsimpl.transformplugin.RoutePluginDetail;
 import org.talend.mdm.repository.core.service.wsimpl.transformplugin.TISCallJobPluginDetail;
-import org.talend.mdm.repository.core.service.wsimpl.transformplugin.WorkflowContextTriggerPluginDetail;
-import org.talend.mdm.repository.core.service.wsimpl.transformplugin.WorkflowTriggerPluginDetail;
 import org.talend.mdm.repository.core.service.wsimpl.transformplugin.XPathPluginDetail;
 import org.talend.mdm.repository.core.service.wsimpl.transformplugin.XSLTPluginDetail;
 import org.talend.mdm.repository.i18n.Messages;
@@ -66,6 +63,8 @@ public class RepositoryWebServiceAdapter {
     private static Map<String, AbstractPluginDetail> transformerPluginMap;
 
     private static Map<String, AbstractGetDocument> documentServiceMap;
+
+    private static ITriggerProcessService triggerProcessService;
 
     public static TMDMService getMDMService(MDMServerDef serverDef) throws XtentisException {
         return getMDMService(serverDef, true);
@@ -160,8 +159,10 @@ public class RepositoryWebServiceAdapter {
             addGetDoc(documentServiceMap, new ItemDispatcherGetDocument(twoLettersLanguageCode));
             addGetDoc(documentServiceMap, new JdbcGetDocument(twoLettersLanguageCode));
             addGetDoc(documentServiceMap, new LoggingGetDocument(twoLettersLanguageCode));
-            addGetDoc(documentServiceMap, new WorkflowGetDocument(twoLettersLanguageCode));
-            addGetDoc(documentServiceMap, new WorkflowContextGetDocument(twoLettersLanguageCode));
+            ITriggerProcessService service = getTriggerProcessService();
+            if (service != null) {
+                service.addExtraGetDoc(documentServiceMap, twoLettersLanguageCode);
+            }
         }
     }
 
@@ -176,8 +177,10 @@ public class RepositoryWebServiceAdapter {
             addDetail(transformerPluginMap, new ReplacePluginDetail(twoLettersLanguageCode));
             addDetail(transformerPluginMap, new RoutePluginDetail(twoLettersLanguageCode));
             addDetail(transformerPluginMap, new TISCallJobPluginDetail(twoLettersLanguageCode));
-            addDetail(transformerPluginMap, new WorkflowTriggerPluginDetail(twoLettersLanguageCode));
-            addDetail(transformerPluginMap, new WorkflowContextTriggerPluginDetail(twoLettersLanguageCode));
+            ITriggerProcessService service = getTriggerProcessService();
+            if (service != null) {
+                service.addDetail(transformerPluginMap, twoLettersLanguageCode);
+            }
             addDetail(transformerPluginMap, new XPathPluginDetail(twoLettersLanguageCode));
             addDetail(transformerPluginMap, new XSLTPluginDetail(twoLettersLanguageCode));
         }
@@ -229,5 +232,14 @@ public class RepositoryWebServiceAdapter {
 
         xobject.setServerRoot(serverRoot);
 
+    }
+
+    public static ITriggerProcessService getTriggerProcessService() {
+        if (triggerProcessService == null
+                && GlobalServiceRegister.getDefault().isServiceRegistered(ITriggerProcessService.class)) {
+            triggerProcessService = (ITriggerProcessService) GlobalServiceRegister.getDefault()
+                    .getService(ITriggerProcessService.class);
+        }
+        return triggerProcessService;
     }
 }
