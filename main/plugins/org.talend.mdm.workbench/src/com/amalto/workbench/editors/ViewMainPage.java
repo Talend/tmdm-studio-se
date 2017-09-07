@@ -295,12 +295,14 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
         comp.setLayout(slayout);
         comp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 2, 1));
 
-        Label label_sortpolicy = toolkit.createLabel(comp, "Order by ", SWT.NONE); //$NON-NLS-1$
-        label_sortpolicy.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
+        Label label_sortpolicy = toolkit.createLabel(comp, "Order by", SWT.NONE);
+        GridData label_layoutData = new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1);
+        label_layoutData.widthHint = 85;
+        label_sortpolicy.setLayoutData(label_layoutData);
 
         combox_policy = new Combo(comp, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.BORDER | SWT.SINGLE);
         GridData policyLayout = new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1);
-        policyLayout.widthHint = 120;
+        policyLayout.widthHint = 110;
         combox_policy.setLayoutData(policyLayout);
 
         combox_sortdirection = new Combo(comp, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.BORDER | SWT.SINGLE);
