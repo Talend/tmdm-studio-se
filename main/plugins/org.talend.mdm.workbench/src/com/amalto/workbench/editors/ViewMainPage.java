@@ -295,7 +295,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
         comp.setLayout(slayout);
         comp.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 2, 1));
 
-        Label label_sortpolicy = toolkit.createLabel(comp, "Order by", SWT.NONE);
+        Label label_sortpolicy = toolkit.createLabel(comp, Messages.ViewMainPage_OrderBy, SWT.NONE);
         GridData label_layoutData = new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1);
         label_layoutData.widthHint = 85;
         label_sortpolicy.setLayoutData(label_layoutData);
