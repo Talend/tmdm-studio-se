@@ -297,7 +297,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
 
         Label label_sortpolicy = toolkit.createLabel(comp, Messages.ViewMainPage_OrderBy, SWT.NONE);
         GridData label_layoutData = new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1);
-        label_layoutData.widthHint = 85;
+        label_layoutData.widthHint = 105;
         label_sortpolicy.setLayoutData(label_layoutData);
 
         combox_policy = new Combo(comp, SWT.READ_ONLY | SWT.DROP_DOWN | SWT.BORDER | SWT.SINGLE);
