@@ -341,7 +341,6 @@ public abstract class ComplexAnnotaionInfoComposite<T> extends Composite {
             infos.add(eachInputedObj);
         }
 
-        tvInfos.setInput(infos);
         tvInfos.refresh();
     }
 
