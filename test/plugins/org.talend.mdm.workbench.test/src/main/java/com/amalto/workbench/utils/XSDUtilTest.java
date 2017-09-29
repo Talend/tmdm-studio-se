@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.util.BasicEList;
@@ -26,12 +27,16 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDFactory;
+import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDParticleContent;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTerm;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.XSDXPathDefinition;
 import org.junit.Test;
 import org.talend.commons.utils.StringUtils;
 
@@ -206,6 +211,179 @@ public class XSDUtilTest {
             assertTrue(expected.containsAll(validElementPaths));
             assertTrue(validElementPaths.containsAll(expected));
         }
+    }
+
+    @Test
+    public void testIsEntity() throws Exception {
+        String fileName = "Product_0.1.xsd"; //$NON-NLS-1$
+        String elementName = "Product"; //$NON-NLS-1$
+        String xsdString = TestUtil.readTestResource(XSDUtilTest.this.getClass(), fileName);
+        assertNotNull(xsdString);
+        XSDSchema xsdSchema = Util.getXSDSchema(xsdString);
+
+        XSDElementDeclaration decl = null;
+        for (XSDElementDeclaration element : xsdSchema.getElementDeclarations()) {
+            if (element.getName().equals(elementName)) {
+                decl = element;
+            }
+            assertTrue(XSDUtil.isEntity(element));
+        }
+
+        if(decl != null) {
+            XSDComplexTypeDefinition ctypeDefinition = (XSDComplexTypeDefinition) decl.getTypeDefinition();
+            XSDComplexTypeContent content = ctypeDefinition.getContent();
+            if(content instanceof XSDParticle) {
+                XSDParticle xsdParticle = (XSDParticle)content;
+                XSDParticleContent particleContent = xsdParticle.getContent();
+                if(particleContent instanceof XSDModelGroup) {
+                    XSDModelGroup modelGroup = (XSDModelGroup) particleContent;
+                    EList<XSDParticle> contents = modelGroup.getContents();
+                    for(XSDParticle particle:contents) {
+                        if(particle.getContent() instanceof XSDElementDeclaration) {
+                            assertFalse(XSDUtil.isEntity(particle.getContent()));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testIsFirstLevelChild() throws Exception{
+        String fileName = "Product_0.1.xsd"; //$NON-NLS-1$
+        String elementName = "Product"; //$NON-NLS-1$
+        String xsdString = TestUtil.readTestResource(XSDUtilTest.this.getClass(), fileName);
+        assertNotNull(xsdString);
+        XSDSchema xsdSchema = Util.getXSDSchema(xsdString);
+
+        XSDElementDeclaration decl = null;
+        for (XSDElementDeclaration element : xsdSchema.getElementDeclarations()) {
+            if (element.getName().equals(elementName)) {
+                decl = element;
+            }
+        }
+
+        if(decl != null) {
+            XSDComplexTypeDefinition ctypeDefinition = (XSDComplexTypeDefinition) decl.getTypeDefinition();
+            XSDComplexTypeContent content = ctypeDefinition.getContent();
+            if(content instanceof XSDParticle) {
+                XSDParticle xsdParticle = (XSDParticle)content;
+                XSDParticleContent particleContent = xsdParticle.getContent();
+                if(particleContent instanceof XSDModelGroup) {
+                    XSDModelGroup modelGroup = (XSDModelGroup) particleContent;
+                    EList<XSDParticle> contents = modelGroup.getContents();
+                    for(XSDParticle particle:contents) {
+                        assertTrue(XSDUtil.isFirstLevelChild(particle));
+                        if(particle.getTerm() instanceof XSDElementDeclaration) {
+                            XSDElementDeclaration xsdElementDecl = (XSDElementDeclaration) particle.getTerm();
+                            XSDTypeDefinition typeDefinition = xsdElementDecl.getTypeDefinition();
+                            if(typeDefinition instanceof XSDComplexTypeDefinition) {
+                                XSDParticle childPart = (XSDParticle) ((XSDComplexTypeDefinition)typeDefinition).getContent();
+                                XSDModelGroup childModelGroup = (XSDModelGroup) childPart.getContent();
+                                for(XSDParticle childParticle:childModelGroup.getContents()) {
+                                    assertFalse(XSDUtil.isFirstLevelChild(childParticle));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testBuildEntityUsedComplexTypeMap() throws Exception{
+        String fileName = "Product_0.1.xsd"; //$NON-NLS-1$
+        String xsdString = TestUtil.readTestResource(XSDUtilTest.this.getClass(), fileName);
+        assertNotNull(xsdString);
+        XSDSchema xsdSchema = Util.getXSDSchema(xsdString);
+
+        Map<XSDElementDeclaration, List<XSDComplexTypeDefinition>> entityMapComplexType = XSDUtil.buildEntityUsedComplexTypeMap(xsdSchema);
+        assertNotNull(entityMapComplexType);
+        assertTrue(entityMapComplexType.size() == 3);
+        for(List<XSDComplexTypeDefinition> ctypes:entityMapComplexType.values()) {
+            assertTrue(ctypes.size() == 1);
+        }
+    }
+
+    @Test
+    public void testIsSimpleTypeElement(){
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        XSDParticle particle = factory.createXSDParticle();
+        XSDElementDeclaration xsdElementDeclaration = factory.createXSDElementDeclaration();
+        XSDSimpleTypeDefinition xsdSimpleTypeDefinition = factory.createXSDSimpleTypeDefinition();
+        xsdElementDeclaration.setTypeDefinition(xsdSimpleTypeDefinition);
+        particle.setContent(xsdElementDeclaration);
+        boolean isSimpleTypeElement = XSDUtil.isSimpleTypeElement(particle);
+        assertTrue(isSimpleTypeElement);
+
+        xsdElementDeclaration.setTypeDefinition(factory.createXSDComplexTypeDefinition());
+        isSimpleTypeElement = XSDUtil.isSimpleTypeElement(particle);
+        assertFalse(isSimpleTypeElement);
+    }
+
+    @Test
+    public void testIsPrimaryKeyElement() throws Exception {
+        String fileName = "Product_0.1.xsd"; //$NON-NLS-1$
+        String elementName = "Product"; //$NON-NLS-1$
+        String xsdString = TestUtil.readTestResource(XSDUtilTest.this.getClass(), fileName);
+        assertNotNull(xsdString);
+        XSDSchema xsdSchema = Util.getXSDSchema(xsdString);
+
+        XSDElementDeclaration decl = null;
+        for (XSDElementDeclaration element : xsdSchema.getElementDeclarations()) {
+            if (element.getName().equals(elementName)) {
+                decl = element;
+            }
+        }
+
+        if (decl != null) {
+            XSDComplexTypeDefinition ctypeDefinition = (XSDComplexTypeDefinition) decl.getTypeDefinition();
+            XSDComplexTypeContent ctypeContent = ctypeDefinition.getContent();
+            if (ctypeContent instanceof XSDParticle) {
+                XSDParticle typeParticle = (XSDParticle) ctypeContent;
+                XSDParticleContent particleContent = typeParticle.getContent();
+                if (particleContent instanceof XSDModelGroup) {
+                    XSDModelGroup particleGroup = (XSDModelGroup) particleContent;
+                    for (XSDParticle particle : particleGroup.getContents()) {
+                        if (particle.getContent() instanceof XSDElementDeclaration
+                                && ((XSDElementDeclaration) particle.getContent()).getName().equals("Id")) { //$NON-NLS-1$
+                            assertTrue(XSDUtil.isPrimaryKeyElement(particle));
+                        } else {
+                            assertFalse(XSDUtil.isPrimaryKeyElement(particle));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testGetKeyFields() throws Exception {
+        XSDFactory factory = XSDFactory.eINSTANCE;
+        String conceptName = "Product"; //$NON-NLS-1$
+        String[] fields = {"Id","code"}; //$NON-NLS-1$ //$NON-NLS-2$
+        XSDElementDeclaration concept = factory.createXSDElementDeclaration();
+        concept.setName(conceptName);
+        XSDIdentityConstraintDefinition ideCDef = factory.createXSDIdentityConstraintDefinition();
+        XSDXPathDefinition xpathDefinition1 = factory.createXSDXPathDefinition();
+        xpathDefinition1.setValue(fields[0]);
+        ideCDef.getFields().add(xpathDefinition1);
+        concept.getIdentityConstraintDefinitions().add(ideCDef);
+
+        List<String> keyFields = XSDUtil.getKeyFields(concept);
+        assertTrue(keyFields.isEmpty());
+
+        //
+        ideCDef.setName(conceptName);
+        XSDXPathDefinition xpathDefinition2 = factory.createXSDXPathDefinition();
+        xpathDefinition2.setValue(fields[1]);
+        ideCDef.getFields().add(xpathDefinition2);
+
+        keyFields = XSDUtil.getKeyFields(concept);
+        assertTrue(keyFields.size() ==2);
+        assertTrue(keyFields.contains(fields[0]));
+        assertTrue(keyFields.contains(fields[1]));
     }
 
     @Test

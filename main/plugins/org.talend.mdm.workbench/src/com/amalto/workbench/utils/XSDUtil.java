@@ -302,7 +302,7 @@ public class XSDUtil {
 
         EList<XSDIdentityConstraintDefinition> identityConstraintDefinitions = concept.getIdentityConstraintDefinitions();
         for(XSDIdentityConstraintDefinition icd:identityConstraintDefinitions) {
-            if(icd.getName().equals(concept.getName())) {
+            if(concept.getName().equals(icd.getName())) {
                 EList<XSDXPathDefinition> fields = icd.getFields();
                 for(XSDXPathDefinition xpathdef:fields) {
                     keyFields.add(xpathdef.getValue());
