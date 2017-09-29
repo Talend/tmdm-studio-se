@@ -12,21 +12,31 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xsd.XSDAnnotation;
+import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDParticleContent;
 import org.eclipse.xsd.XSDSchema;
+import org.eclipse.xsd.XSDSchemaContent;
+import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTerm;
 import org.eclipse.xsd.XSDTypeDefinition;
+import org.eclipse.xsd.XSDXPathDefinition;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -178,6 +188,128 @@ public class XSDUtil {
 
             }
         }
+    }
+
+    public static boolean isEntity(Object obj) {
+        if (obj instanceof XSDElementDeclaration) {
+            XSDElementDeclaration xsdElementDec = (XSDElementDeclaration) obj;
+            if (xsdElementDec.getRootContainer() == xsdElementDec.getContainer()
+                    && !xsdElementDec.getIdentityConstraintDefinitions().isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isFirstLevelChild(XSDParticle particle) {
+        XSDSchema schema = (XSDSchema) particle.getRootContainer();
+        Map<XSDElementDeclaration, List<XSDComplexTypeDefinition>> entityMapComplexTypes = buildEntityUsedComplexTypeMap(schema);
+
+        Iterator<XSDElementDeclaration> iterator = entityMapComplexTypes.keySet().iterator();
+        while(iterator.hasNext()) {
+            XSDElementDeclaration concept = iterator.next();
+            List<XSDComplexTypeDefinition> ctypes = entityMapComplexTypes.get(concept);
+            for (XSDComplexTypeDefinition ctype : ctypes) {
+                XSDComplexTypeContent ctypeContent = ctype.getContent();
+                if (ctypeContent instanceof XSDParticle) {
+                    XSDParticle typeParticle = (XSDParticle) ctypeContent;
+                    XSDParticleContent particleContent = typeParticle.getContent();
+                    if (particleContent instanceof XSDModelGroup) {
+                        XSDModelGroup particleGroup = (XSDModelGroup) particleContent;
+                        if (particleGroup.getContents().contains(particle)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public static Map<XSDElementDeclaration,List<XSDComplexTypeDefinition>> buildEntityUsedComplexTypeMap(XSDSchema schema) {
+        Map<XSDElementDeclaration, List<XSDComplexTypeDefinition>> entityMapComplexType = new HashMap<XSDElementDeclaration, List<XSDComplexTypeDefinition>>();
+
+        EList<XSDSchemaContent> contents = schema.getContents();
+        for (XSDSchemaContent content : contents) {
+            if (content instanceof XSDElementDeclaration) {
+                XSDElementDeclaration concept = (XSDElementDeclaration) content;
+                XSDComplexTypeDefinition ctypeDef = (XSDComplexTypeDefinition) concept.getTypeDefinition();
+                List<XSDComplexTypeDefinition> ctypes = new ArrayList<XSDComplexTypeDefinition>();
+                ctypes.add(ctypeDef);
+                while (ctypeDef.getBaseTypeDefinition() != ((XSDComplexTypeDefinition) ctypeDef.getBaseTypeDefinition())
+                        .getBaseTypeDefinition()) {
+                    ctypes.add((XSDComplexTypeDefinition) ctypeDef.getBaseTypeDefinition());
+                    ctypeDef = (XSDComplexTypeDefinition) ctypeDef.getBaseTypeDefinition();
+                }
+
+                entityMapComplexType.put(concept, ctypes);
+            }
+        }
+
+        return entityMapComplexType;
+    }
+
+    public static boolean isSimpleTypeElement(XSDParticle particle) {
+        XSDTerm term = particle.getTerm();
+        if (term instanceof XSDElementDeclaration) {
+            XSDElementDeclaration element = ((XSDElementDeclaration) term);
+            XSDTypeDefinition type = element.getType();
+            if (type instanceof XSDSimpleTypeDefinition) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean isPrimaryKeyElement(XSDParticle particle) {
+        if(isSimpleTypeElement(particle)) {
+            Map<XSDElementDeclaration, List<XSDComplexTypeDefinition>> entityMapComplexTypes = buildEntityUsedComplexTypeMap(
+                    (XSDSchema) particle.getRootContainer());
+
+            Iterator<XSDElementDeclaration> iterator = entityMapComplexTypes.keySet().iterator();
+            while(iterator.hasNext()) {
+                XSDElementDeclaration concept = iterator.next();
+                List<String> keyFields  = getKeyFields(concept);
+
+                if(keyFields.contains(((XSDElementDeclaration)particle.getTerm()).getName())) {
+                    List<XSDComplexTypeDefinition> ctypes = entityMapComplexTypes.get(concept);
+                    for (XSDComplexTypeDefinition ctype : ctypes) {
+                        XSDComplexTypeContent ctypeContent = ctype.getContent();
+                        if (ctypeContent instanceof XSDParticle) {
+                            XSDParticle typeParticle = (XSDParticle) ctypeContent;
+                            XSDParticleContent particleContent = typeParticle.getContent();
+                            if (particleContent instanceof XSDModelGroup) {
+                                XSDModelGroup particleGroup = (XSDModelGroup) particleContent;
+                                if(particleGroup.getContents().contains(particle)) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        return false;
+    }
+
+    public static List<String> getKeyFields(XSDElementDeclaration concept) {
+        List<String> keyFields = new ArrayList<String>();
+
+        EList<XSDIdentityConstraintDefinition> identityConstraintDefinitions = concept.getIdentityConstraintDefinitions();
+        for(XSDIdentityConstraintDefinition icd:identityConstraintDefinitions) {
+            if(icd.getName().equals(concept.getName())) {
+                EList<XSDXPathDefinition> fields = icd.getFields();
+                for(XSDXPathDefinition xpathdef:fields) {
+                    keyFields.add(xpathdef.getValue());
+                }
+            }
+        }
+        return keyFields;
     }
 
     public static boolean isValidatedXSDDate(String newText) {

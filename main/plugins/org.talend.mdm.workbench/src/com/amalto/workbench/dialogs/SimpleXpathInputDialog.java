@@ -29,6 +29,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
+import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
+import com.amalto.workbench.dialogs.filter.SimpleXPathSelectionFilter;
 import com.amalto.workbench.editors.DataModelMainPage;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
@@ -73,6 +75,7 @@ public class SimpleXpathInputDialog extends Dialog {
     public void setFkSep(boolean sepFk) {
         this.sepFk = sepFk;
     }
+    @Override
     protected Control createDialogArea(Composite parent) {
         // Should not really be here but well,....
         parent.getShell().setText(this.title);
@@ -101,11 +104,14 @@ public class SimpleXpathInputDialog extends Dialog {
         xpathButton.setImage(ImageCache.getCreatedImage(EImage.DOTS_BUTTON.getPath()));
         xpathButton.setToolTipText(Messages.SchematronExpressBuilder_selectXPath);
         xpathButton.addSelectionListener(new SelectionAdapter() {
+            private IXPathSelectionFilter xpathSelectionFilter;
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 XpathSelectDialog dlg = getNewXpathSelectDialog(parentPage, dataModelName);
                 // new XpathSelectDialog(parentPage.getSite().getShell(), parentPage.getXObject()
                 // .getParent(), "Select Xpath", parentPage.getSite(), false, dataModelName);
+                dlg.setSelectionFilter(getXPathSelectionFilter());
                 dlg.setLock(lock);
                 dlg.setBlockOnOpen(true);
                 dlg.open();
@@ -117,6 +123,14 @@ public class SimpleXpathInputDialog extends Dialog {
 
             }
 
+            private IXPathSelectionFilter getXPathSelectionFilter() {
+                if(xpathSelectionFilter == null) {
+                    xpathSelectionFilter = new SimpleXPathSelectionFilter();
+                }
+
+                return xpathSelectionFilter;
+            }
+
         });
 
         textControl.forceFocus();
@@ -126,6 +140,7 @@ public class SimpleXpathInputDialog extends Dialog {
         btnSep.setText(Messages.SimpleXpathInputDialog_sepFkTabPanel);
         btnSep.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 sepFk = btnSep.getSelection();
             }
@@ -137,6 +152,7 @@ public class SimpleXpathInputDialog extends Dialog {
         return composite;
     }
 
+    @Override
     protected void createButtonsForButtonBar(Composite parent) {
         super.createButtonsForButtonBar(parent);
         getButton(IDialogConstants.OK_ID).addSelectionListener(this.caller);

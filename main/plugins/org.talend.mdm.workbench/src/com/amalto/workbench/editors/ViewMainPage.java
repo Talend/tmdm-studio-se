@@ -59,6 +59,7 @@ import com.amalto.workbench.detailtabs.sections.IMDMRepositoryViewServiceExt;
 import com.amalto.workbench.detailtabs.sections.util.MDMRepositoryViewExtensionService;
 import com.amalto.workbench.dialogs.XpathSelectDialog;
 import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
+import com.amalto.workbench.dialogs.filter.SortFieldSelectionFilter;
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;

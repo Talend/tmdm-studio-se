@@ -112,7 +112,7 @@ public class XpathSelectDialog extends Dialog {
 
     private boolean lock;
 
-    private final IXPathSelectionFilter selectionFilter;
+    private IXPathSelectionFilter selectionFilter;
 
     public XpathSelectDialog(Shell parentShell, TreeParent parent, String title, IWorkbenchPartSite site, boolean isMulti,
             String dataModelName) {
@@ -439,4 +439,9 @@ public class XpathSelectDialog extends Dialog {
     public static void setContext(String c) {
         context = c;
     }
+
+    public void setSelectionFilter(IXPathSelectionFilter selectionFilter) {
+        this.selectionFilter = selectionFilter;
+    }
+
 }

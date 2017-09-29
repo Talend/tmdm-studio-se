@@ -27,7 +27,9 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 
 import com.amalto.workbench.detailtabs.sections.BasePropertySection;
+import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
 import com.amalto.workbench.dialogs.datamodel.SelectXPathDialog;
+import com.amalto.workbench.dialogs.filter.SimpleXPathSelectionFilter;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -172,20 +174,30 @@ public class SimpleXPathComposite extends Composite {
     private void initUIListeners() {
 
         btnSelectXPath.addSelectionListener(new SelectionAdapter() {
+            private IXPathSelectionFilter xpathSelectionFilter;
 
             @Override
             public void widgetSelected(SelectionEvent e) {
 
                 SelectXPathDialog dialog = new SelectXPathDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                        allDataModelHolder, defaultDataModelForSelect);
+                        allDataModelHolder, defaultDataModelForSelect,null, getXPathSelectionFilter());
 
-                if (dialog.open() != Window.OK)
+                if (dialog.open() != Window.OK) {
                     return;
+                }
 
                 txtXPath.setText(dialog.getSelectedXPath());
                 if(section!=null ){
-                	section.autoCommit();
+                    section.autoCommit();
                 }
+            }
+
+            private IXPathSelectionFilter getXPathSelectionFilter() {
+                if(xpathSelectionFilter == null) {
+                    xpathSelectionFilter = new SimpleXPathSelectionFilter();
+                }
+
+                return xpathSelectionFilter;
             }
         });
     }

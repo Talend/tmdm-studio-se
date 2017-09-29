@@ -12,11 +12,14 @@
 // ============================================================================
 package com.amalto.workbench.widgets.composites;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -40,6 +43,7 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDParticle;
 
 import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
+import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter.FilterResult;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.models.infoextractor.IAllDataModelHolder;
 import com.amalto.workbench.providers.XSDTreeLabelProvider;
@@ -69,6 +73,8 @@ public class SelectXPathComposite extends Composite {
 
     private boolean isAbsolutePath = false;
 
+    private IXPathSelectionFilter xpathSelectionFilter;
+
     public SelectXPathComposite(Composite parent, int style, IAllDataModelHolder allDataModelHolder,
             String defaultSelectedDataModel) {
         this(parent, style, allDataModelHolder, defaultSelectedDataModel, null, false);
@@ -92,6 +98,7 @@ public class SelectXPathComposite extends Composite {
         this.defaultSelectedDataModel = defaultSelectedDataModel;
         this.conceptName = conceptName;
         this.isAbsolutePath = isAbsolutePath;
+        this.xpathSelectionFilter = filter;
 
         final GridLayout gridLayout = new GridLayout();
         gridLayout.numColumns = 2;
@@ -119,7 +126,7 @@ public class SelectXPathComposite extends Composite {
 
         tvXPath = new TreeViewer(this, SWT.BORDER);
         tvXPath.setContentProvider(new XPathContentProvider());
-        tvXPath.setLabelProvider(new XSDTreeLabelProvider());
+        tvXPath.setLabelProvider(new XSDTreeLabelProvider(xpathSelectionFilter));
         xpathTopElementNameFilter = new SchemaNameFilter(new SchemaElementNameFilterDes(true, "*")); //$NON-NLS-1$
         tvXPath.setFilters(new ViewerFilter[] { xpathTopElementNameFilter });
 
@@ -224,9 +231,15 @@ public class SelectXPathComposite extends Composite {
         ISelectionChangedListener listener = new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
-
                 txtXPath.setText(getXpath());
-
+                IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+                boolean enable = false;
+                if(xpathSelectionFilter != null) {
+                    enable = xpathSelectionFilter.check(sel.getFirstElement()) == FilterResult.ENABLE;
+                }
+                if(propertyListener != null) {
+                    propertyListener.propertyChange(new PropertyChangeEvent(event.getSource(), "selection", null, enable)); //$NON-NLS-1$
+                }
             }
         };
         addSelectionChangedListener(listener);
@@ -234,6 +247,8 @@ public class SelectXPathComposite extends Composite {
     }
 
     List<ISelectionChangedListener> selectionChangedListeners = new ArrayList<ISelectionChangedListener>();
+
+    private PropertyChangeListener propertyListener;
 
     public void addSelectionChangedListener(ISelectionChangedListener listener) {
         selectionChangedListeners.add(listener);
@@ -332,4 +347,9 @@ public class SelectXPathComposite extends Composite {
     public static void setContext(String c) {
         context = c;
     }
+
+    public void setPropertyChangeListener(PropertyChangeListener propertyListener) {
+        this.propertyListener = propertyListener;        
+    }
+
 }

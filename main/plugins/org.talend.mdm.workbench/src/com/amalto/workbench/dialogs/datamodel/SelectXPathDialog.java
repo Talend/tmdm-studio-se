@@ -12,6 +12,9 @@
 // ============================================================================
 package com.amalto.workbench.dialogs.datamodel;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.SWT;
@@ -25,7 +28,7 @@ import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.models.infoextractor.IAllDataModelHolder;
 import com.amalto.workbench.widgets.composites.SelectXPathComposite;
 
-public class SelectXPathDialog extends Dialog {
+public class SelectXPathDialog extends Dialog implements PropertyChangeListener{
 
     private SelectXPathComposite selectXPathComposite;
 
@@ -72,6 +75,7 @@ public class SelectXPathDialog extends Dialog {
         Composite container = (Composite) super.createDialogArea(parent);
         selectXPathComposite = new SelectXPathComposite(container, SWT.NONE, allDataModelHolder, defaultSelectedDataModel,
                 conceptName, false, filter);
+        selectXPathComposite.setPropertyChangeListener(this);
         selectXPathComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
         selectXPathComposite.lockCombo(lock);
         return container;
@@ -111,4 +115,8 @@ public class SelectXPathDialog extends Dialog {
         this.lock = lock;
     }
 
+    public void propertyChange(PropertyChangeEvent evt) {
+        Boolean enabled = (Boolean) evt.getNewValue();
+        getButton(OK).setEnabled(enabled);
+    }
 }
