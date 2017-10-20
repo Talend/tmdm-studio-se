@@ -312,6 +312,25 @@ public class XSDUtil {
         return keyFields;
     }
 
+    public static List<String> getAllPKXpaths(XSDSchema schema) {
+        List<String> entity2xpaths = new LinkedList<String>();
+
+        if (schema != null) {
+            for (XSDSchemaContent content : schema.getContents()) {
+                if (isEntity(content)) {
+                    XSDElementDeclaration concept = (XSDElementDeclaration) content;
+                    List<String> keyFields = getKeyFields(concept);
+                    entity2xpaths.add(0, concept.getName());
+                    for (String pkfield : keyFields) {
+                        entity2xpaths.add(concept.getName() + "/" + pkfield); //$NON-NLS-1$
+                    }
+                }
+            }
+        }
+
+        return entity2xpaths;
+    }
+
     public static boolean isValidatedXSDDate(String newText) {
         if (newText == null || newText.trim().isEmpty()) {
             return true;

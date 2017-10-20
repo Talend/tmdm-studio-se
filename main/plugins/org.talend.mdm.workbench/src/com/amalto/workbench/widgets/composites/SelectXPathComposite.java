@@ -233,7 +233,7 @@ public class SelectXPathComposite extends Composite {
             public void selectionChanged(SelectionChangedEvent event) {
                 txtXPath.setText(getXpath());
                 IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-                boolean enable = false;
+                boolean enable = true;
                 if(xpathSelectionFilter != null) {
                     enable = xpathSelectionFilter.check(sel.getFirstElement()) == FilterResult.ENABLE;
                 }

@@ -37,6 +37,7 @@ import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XSDAnnotationsStructure;
+import com.amalto.workbench.utils.XSDUtil;
 
 public class XSDSetAnnotationForeignKeyAction extends UndoAction {
 
@@ -79,6 +80,7 @@ public class XSDSetAnnotationForeignKeyAction extends UndoAction {
 
             sxid = getNewSimpleXpathInputDlg(struc.getForeignKey());
             sxid.setLock(true);
+            sxid.setPKXpaths(XSDUtil.getAllPKXpaths(schema));
             String fksep = struc.getForeignKeyNotSep();
             if (fksep != null) {
                 sxid.setFkSep(Boolean.valueOf(fksep));

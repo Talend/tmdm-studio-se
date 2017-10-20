@@ -12,12 +12,17 @@
 // ============================================================================
 package com.amalto.workbench.widgets.composites;
 
+import java.util.List;
+
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -25,6 +30,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.xsd.XSDSchema;
 
 import com.amalto.workbench.detailtabs.sections.BasePropertySection;
 import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
@@ -34,6 +40,7 @@ import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.models.infoextractor.IAllDataModelHolder;
+import com.amalto.workbench.utils.XSDUtil;
 
 public class SimpleXPathComposite extends Composite {
 
@@ -57,6 +64,11 @@ public class SimpleXPathComposite extends Composite {
     private Button btnSep;
 
     private Boolean sepFk = false;
+
+    private List<String> allPKXpaths;
+
+    private ControlDecoration deco;
+
     public SimpleXPathComposite(Composite parent, int style, String title, IAllDataModelHolder allDataModelHolder,
             String defaultDataModelForSelect, final BasePropertySection section, boolean btnsp) {
         super(parent, style);
@@ -89,6 +101,11 @@ public class SimpleXPathComposite extends Composite {
         txtXPath.addModifyListener(getXpathModifyListener());
         final GridData gd_txtXPath = new GridData(SWT.FILL, SWT.CENTER, true, false);
         txtXPath.setLayoutData(gd_txtXPath);
+        deco = new ControlDecoration(txtXPath, SWT.TOP | SWT.LEFT);
+        // re-use an existing image
+        Image image = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
+        deco.setImage(image);
+        deco.hide();
 
         btnSelectXPath = new Button(composite, SWT.NONE);
         btnSelectXPath.setImage(ImageCache.getCreatedImage(EImage.DOTS_BUTTON.getPath()));
@@ -114,10 +131,15 @@ public class SimpleXPathComposite extends Composite {
             xpathModifyListener = new ModifyListener() {
 
                 public void modifyText(ModifyEvent e) {
-                    caretOffset = txtXPath.getCaretPosition();
-                    if (section != null) {
-                        section.autoCommit();
+                    boolean valid = allPKXpaths.contains(txtXPath.getText());
+                    if (valid) {
+                        caretOffset = txtXPath.getCaretPosition();
+                        if (section != null) {
+                            section.autoCommit();
+                        }
                     }
+
+                    decorateXPathText(valid);
                 }
             };
         }
@@ -160,6 +182,19 @@ public class SimpleXPathComposite extends Composite {
             } else {
                 txtXPath.setSelection(length, length);
             }
+
+            if (!xpath.isEmpty()) {
+                decorateXPathText(allPKXpaths.contains(txtXPath.getText()));
+            }
+        }
+    }
+
+    private void decorateXPathText(boolean valid) {
+        if (valid) {
+            deco.hide();
+        } else {
+            deco.show();
+            deco.setDescriptionText(Messages.InvalidXpathForFK);
         }
     }
 
@@ -202,4 +237,7 @@ public class SimpleXPathComposite extends Composite {
         });
     }
 
+    public void setXSDSchema(XSDSchema schema) {
+        allPKXpaths = XSDUtil.getAllPKXpaths(schema);
+    }
 }

@@ -39,9 +39,11 @@ public class ElementFKSection extends XSDComponentSection {
 
     @Override
     public void refresh() {
+        compSimpleXPath.setXSDSchema(curXSDComponent.getSchema());
         compSimpleXPath.setXPath(xpath);
-        if (fksep != null)
+        if (fksep != null) {
             compSimpleXPath.setFKSep(Boolean.valueOf(fksep));
+        }
         fkIntegrityConfig.setXSDComponent(curXSDComponent);
         updateSectionEnabled();
     }
@@ -51,11 +53,13 @@ public class ElementFKSection extends XSDComponentSection {
         super.initUIContents(editedObj);
 
         xpath = new XSDAnnotationsStructure(curXSDComponent).getForeignKey();
-        if (xpath == null)
+        if (xpath == null) {
             xpath = "";//$NON-NLS-1$
+        }
         fksep = new XSDAnnotationsStructure(curXSDComponent).getForeignKeyNotSep();
         dataModelHolder.setDefaultDataModel(getDataModelName());
         compSimpleXPath.setDefaultDataModelForSelect(getDataModelName());
+        compSimpleXPath.setXSDSchema(curXSDComponent.getSchema());
         dataModelHolder.setDefaultEntity(getEntityName());
     }
 

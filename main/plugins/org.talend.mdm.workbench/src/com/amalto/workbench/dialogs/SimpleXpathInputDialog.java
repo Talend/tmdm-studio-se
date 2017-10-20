@@ -12,8 +12,12 @@
 // ============================================================================
 package com.amalto.workbench.dialogs;
 
+import java.util.List;
+
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -21,6 +25,7 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -55,9 +60,12 @@ public class SimpleXpathInputDialog extends Dialog {
     private String dataModelName;
 
     private Button btnSep;
-    
+
     private boolean lock;
 
+    private List<String> pkXPaths;
+
+    // private ControlDecoration deco;
     /**
      * @param parentShell
      */
@@ -75,6 +83,7 @@ public class SimpleXpathInputDialog extends Dialog {
     public void setFkSep(boolean sepFk) {
         this.sepFk = sepFk;
     }
+
     @Override
     protected Control createDialogArea(Composite parent) {
         // Should not really be here but well,....
@@ -91,11 +100,26 @@ public class SimpleXpathInputDialog extends Dialog {
         final Text textControl = new Text(composite, SWT.BORDER | SWT.SINGLE);
         textControl.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         ((GridData) textControl.getLayoutData()).minimumWidth = 300;
+        final ControlDecoration deco = new ControlDecoration(textControl, SWT.TOP | SWT.LEFT);
+        Image image = FieldDecorationRegistry.getDefault().getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
+        deco.setImage(image);
+        deco.hide();
         textControl.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
                 SimpleXpathInputDialog.this.xpath = textControl.getText();
                 btnSep.setEnabled(xpath != null && xpath.length() > 0);
+
+                boolean validXpath = pkXPaths.contains(xpath);
+                if (getButton(IDialogConstants.OK_ID) != null) {
+                    getButton(IDialogConstants.OK_ID).setEnabled(validXpath);
+                }
+                if (validXpath) {
+                    deco.hide();
+                } else {
+                    deco.show();
+                    deco.setDescriptionText(Messages.InvalidXpathForFK);
+                }
             }
         });
 
@@ -157,6 +181,7 @@ public class SimpleXpathInputDialog extends Dialog {
         super.createButtonsForButtonBar(parent);
         getButton(IDialogConstants.OK_ID).addSelectionListener(this.caller);
         getButton(IDialogConstants.CANCEL_ID).addSelectionListener(this.caller);
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
     }
 
     protected XpathSelectDialog getNewXpathSelectDialog(DataModelMainPage parentPage, String dataModelName) {
@@ -185,11 +210,15 @@ public class SimpleXpathInputDialog extends Dialog {
         return sepFk;
     }
 
-	public boolean isLock() {
-		return lock;
-	}
+    public boolean isLock() {
+        return lock;
+    }
 
-	public void setLock(boolean lock) {
-		this.lock = lock;
-	}
+    public void setLock(boolean lock) {
+        this.lock = lock;
+    }
+
+    public void setPKXpaths(List<String> allPKXpaths) {
+        this.pkXPaths = allPKXpaths;
+    }
 }

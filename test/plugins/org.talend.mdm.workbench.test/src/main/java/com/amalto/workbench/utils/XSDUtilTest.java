@@ -401,6 +401,18 @@ public class XSDUtilTest {
     }
 
     @Test
+    public void testGetAllPKXpaths() throws Exception {
+        String fileName = "Product_0.1.xsd"; //$NON-NLS-1$
+        String[] xpaths = { "Store", "ProductFamily", "Product", "Product/Id", "ProductFamily/Id", "Store/Id" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+        List<String> resultXpaths = Arrays.asList(xpaths);
+        String xsdString = TestUtil.readTestResource(XSDUtilTest.this.getClass(), fileName);
+        XSDSchema xsdSchema = Util.getXSDSchema(xsdString);
+        List<String> allPKXpaths = XSDUtil.getAllPKXpaths(xsdSchema);
+        assertTrue(allPKXpaths.size() == 6);
+        assertTrue(allPKXpaths.containsAll(resultXpaths));
+    }
+
+    @Test
     public void testIsValidatedXSDTime() {
         assertTrue(XSDUtil.isValidatedXSDTime("23:01:59")); //$NON-NLS-1$
         assertFalse(XSDUtil.isValidatedXSDTime("23:01:61")); //$NON-NLS-1$
