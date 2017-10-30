@@ -239,5 +239,6 @@ public class SimpleXPathComposite extends Composite {
 
     public void setXSDSchema(XSDSchema schema) {
         allPKXpaths = XSDUtil.getAllPKXpaths(schema);
+        allPKXpaths.add(0, "");
     }
 }

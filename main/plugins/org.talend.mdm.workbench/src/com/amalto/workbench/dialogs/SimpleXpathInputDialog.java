@@ -220,5 +220,6 @@ public class SimpleXpathInputDialog extends Dialog {
 
     public void setPKXpaths(List<String> allPKXpaths) {
         this.pkXPaths = allPKXpaths;
+        this.pkXPaths.add(0, "");
     }
 }
