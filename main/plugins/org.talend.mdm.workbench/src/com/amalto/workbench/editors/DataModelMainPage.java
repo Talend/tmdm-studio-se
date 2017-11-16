@@ -301,10 +301,6 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
 
     private XSDSetAnnotationForeignKeyInfoAction setAnnotationForeignKeyInfoAction = null;
 
-    private XSDSetAnnotationForeignKeyInfoAction setAnnotationFKIntegrity = null;
-
-    private XSDSetAnnotationForeignKeyInfoAction setAnnotationFKIntegrityOverride = null;
-
     private XSDSetAnnotationLabelAction setAnnotationLabelAction = null;
 
     private XSDSetAnnotationDescriptionsAction setAnnotationDescriptionsAction = null;
@@ -2654,12 +2650,6 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
                 if (exAdapter != null) {
                     exAdapter.doubleClick(elem);
                 }
-                break;
-            case 121:
-                setAnnotationFKIntegrity.run();
-                break;
-            case 122:
-                setAnnotationFKIntegrityOverride.run();
                 break;
             case -1:
                 if (drillDownAdapter.canGoInto() == true) {
