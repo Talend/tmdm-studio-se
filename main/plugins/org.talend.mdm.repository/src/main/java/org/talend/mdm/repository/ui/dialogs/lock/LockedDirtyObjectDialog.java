@@ -94,28 +94,30 @@ public class LockedDirtyObjectDialog extends LockedObjectDialog {
             }
 
             //
-            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            for (IEditorReference ref : activePage.getEditorReferences()) {
-                try {
-                    String id = null;
-                    IEditorInput editorInput = ref.getEditorInput();
-                    if (editorInput instanceof IRepositoryViewEditorInput) {
-                        IRepositoryViewObject viewObject = ((IRepositoryViewEditorInput) editorInput).getViewObject();
-                        if (viewObject != null) {
-                            id = viewObject.getId();
+            if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                for (IEditorReference ref : activePage.getEditorReferences()) {
+                    try {
+                        String id = null;
+                        IEditorInput editorInput = ref.getEditorInput();
+                        if (editorInput instanceof IRepositoryViewEditorInput) {
+                            IRepositoryViewObject viewObject = ((IRepositoryViewEditorInput) editorInput).getViewObject();
+                            if (viewObject != null) {
+                                id = viewObject.getId();
+                            }
+                        } else if (editorInput instanceof ProcessEditorInput) {
+                            id = ((ProcessEditorInput) editorInput).getId();
                         }
-                    } else if (editorInput instanceof ProcessEditorInput) {
-                        id = ((ProcessEditorInput) editorInput).getId();
-                    }
 
-                    if (id != null && ids.contains(id)) {
-                        IEditorPart editor = ref.getEditor(false);
-                        if (editor != null && editor.isDirty()) {
-                            editorRefMap.put(id, editor);
+                        if (id != null && ids.contains(id)) {
+                            IEditorPart editor = ref.getEditor(false);
+                            if (editor != null && editor.isDirty()) {
+                                editorRefMap.put(id, editor);
+                            }
                         }
+                    } catch (PartInitException e) {
+                        log.error(e.getMessage(), e);
                     }
-                } catch (PartInitException e) {
-                    log.error(e.getMessage(), e);
                 }
             }
         }

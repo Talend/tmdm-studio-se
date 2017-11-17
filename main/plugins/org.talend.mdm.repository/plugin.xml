@@ -717,6 +717,13 @@
             </parameter>
          </importItemsHandler>
       </importItemsProvider>
+      <importResourcesProvider
+            id="org.talend.mdm.repository.datamodel.importResourcesProvider"
+            name="MDM DataModel importer"
+            priority="NORMAL">
+         <importResoucesHandler
+               class="org.talend.mdm.repository.ui.wizards.imports.handlers.DataModelImportHandler"></importResoucesHandler>
+      </importResourcesProvider>
 
    </extension>
    <extension
