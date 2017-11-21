@@ -61,7 +61,7 @@ public class ValidateAction extends AbstractRepositoryAction {
         }
         IModelValidationService service = (IModelValidationService) GlobalServiceRegister.getDefault().getService(IModelValidationService.class);
 
-        service.validate(viewObjs, IModelValidationService.VALIDATE_IMMEDIATE);
+        service.validate(viewObjs, IModelValidationService.VALIDATE_IMMEDIATE, false);
 
     }
 }

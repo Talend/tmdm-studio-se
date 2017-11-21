@@ -201,15 +201,15 @@ public class MDMValidationService implements IModelValidationService {
      * @see org.talend.mdm.repository.core.service.IValidationService#validate(java.util.List, int)
      */
     @Override
-    public IModelValidateResult validate(List<IRepositoryViewObject> viewObjs, int condition) {
+    public IModelValidateResult validate(List<IRepositoryViewObject> viewObjs, int condition, boolean forbidShowResultDialog) {
         if (viewObjs != null && viewObjs.size() > 0) {
             switch (condition) {
             case VALIDATE_IMMEDIATE:
-                return MDMValidationRunner.validate(viewObjs, immediatePref);
+                return MDMValidationRunner.validate(viewObjs, immediatePref, forbidShowResultDialog);
             case VALIDATE_AFTER_SAVE:
-                return MDMValidationRunner.validate(viewObjs, afterSavingPref);
+                return MDMValidationRunner.validate(viewObjs, afterSavingPref, forbidShowResultDialog);
             case VALIDATE_BEFORE_DEPLOY:
-                return MDMValidationRunner.validate(viewObjs, beforeDeployingPref);
+                return MDMValidationRunner.validate(viewObjs, beforeDeployingPref, forbidShowResultDialog);
             default:
                 break;
             }

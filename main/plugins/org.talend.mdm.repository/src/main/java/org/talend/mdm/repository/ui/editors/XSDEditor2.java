@@ -279,7 +279,7 @@ public class XSDEditor2 extends XSDEditor implements ISvnHistory, IPostOpenActio
                         IModelValidationService.class);
                 List<IRepositoryViewObject> viewObjs = new ArrayList<IRepositoryViewObject>();
                 viewObjs.add(viewObject);
-                service.validate(viewObjs, IModelValidationService.VALIDATE_AFTER_SAVE);
+                service.validate(viewObjs, IModelValidationService.VALIDATE_AFTER_SAVE, false);
 
             }
         });

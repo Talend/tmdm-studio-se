@@ -78,7 +78,7 @@ public class DataModelImportHandler extends CommonMdmImportHandler implements II
                 public void run() {
                     IModelValidationService service = (IModelValidationService) GlobalServiceRegister.getDefault()
                             .getService(IModelValidationService.class);
-                    service.validate(viewObjs, IModelValidationService.VALIDATE_IMMEDIATE);
+                    service.validate(viewObjs, IModelValidationService.VALIDATE_IMMEDIATE, true);
                 }
             });
         }

@@ -234,7 +234,7 @@ public class DeployService {
             return mainStatus;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            String url = serverDef.getProtocol() + serverDef.getHost() + ":" + serverDef.getPort() //$NON-NLS-1$ 
+            String url = serverDef.getProtocol() + serverDef.getHost() + ":" + serverDef.getPort() //$NON-NLS-1$
                     + serverDef.getPath();
             String title = Messages.bind(Messages.Server_cannot_connected, url);
             MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), title,
@@ -341,7 +341,7 @@ public class DeployService {
         IModelValidationService service = (IModelValidationService) GlobalServiceRegister.getDefault().getService(
                 IModelValidationService.class);
 
-        IModelValidateResult validateResult = service.validate(viewObjs, IModelValidationService.VALIDATE_BEFORE_DEPLOY);
+        IModelValidateResult validateResult = service.validate(viewObjs, IModelValidationService.VALIDATE_BEFORE_DEPLOY, false);
         return validateResult;
     }
 

@@ -88,6 +88,8 @@ public class MDMValidationRunner extends WorkspaceJob {
 
     private LockedDirtyObjectDialog lockDirtyDialog;
 
+    private boolean forbidShowResultDialog;
+
     /**
      * Getter for returnCode.
      * 
@@ -108,12 +110,15 @@ public class MDMValidationRunner extends WorkspaceJob {
 
     /**
      * DOC HHB ValidationRunner constructor comment.
+     * @param allowShowResultDialog
      * 
      * @param name
      */
-    public MDMValidationRunner(List<IRepositoryViewObject> viewObjs, IValidationPreference validationPref) {
+    public MDMValidationRunner(List<IRepositoryViewObject> viewObjs, IValidationPreference validationPref,
+            Boolean forbidShowResultDialog) {
         super("MDM Validation"); //$NON-NLS-1$
         this.validationPref = validationPref;
+        this.forbidShowResultDialog = forbidShowResultDialog;
         init(viewObjs);
     }
 
@@ -128,8 +133,9 @@ public class MDMValidationRunner extends WorkspaceJob {
 
     }
 
-    public static IModelValidateResult validate(List<IRepositoryViewObject> viewObjs, IValidationPreference validationPref) {
-        MDMValidationRunner runner = new MDMValidationRunner(viewObjs, validationPref);
+    public static IModelValidateResult validate(List<IRepositoryViewObject> viewObjs, IValidationPreference validationPref,
+            boolean forbidShowResultDialog) {
+        MDMValidationRunner runner = new MDMValidationRunner(viewObjs, validationPref, forbidShowResultDialog);
         IJobChangeListener listener = new JobChangeAdapter() {
 
             @Override
@@ -219,7 +225,7 @@ public class MDMValidationRunner extends WorkspaceJob {
         }
         final ValidationResultSummary result = vo.getResult();
         final IModelValidateResult validateResult = new MDMValidationService.ModelValidateResult(viewObjMap);
-        if (validationPref.shouldShowResults(result)) {
+        if (needShowValidationResults(result)) {
             final Set<IResource> resources = toValidate.values().iterator().next();
             Display.getDefault().syncExec(new Runnable() {
 
@@ -243,6 +249,10 @@ public class MDMValidationRunner extends WorkspaceJob {
         }
         activeProblemView(result);
         return Status.OK_STATUS;
+    }
+
+    private boolean needShowValidationResults(final ValidationResultSummary result) {
+        return !forbidShowResultDialog && UIUtil.isWorkInUI() && validationPref.shouldShowResults(result);
     }
 
     private void activeProblemView(ValidationResultSummary result) {

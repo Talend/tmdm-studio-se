@@ -70,5 +70,5 @@ public interface IModelValidationService extends IService {
      * @param condition defined in current interface VALIDATE_XXXX
      * @return TODO
      */
-    public IModelValidateResult validate(List<IRepositoryViewObject> viewObjs, int condition);
+    public IModelValidateResult validate(List<IRepositoryViewObject> viewObjs, int condition, boolean forbidShowResultDialog);
 }
