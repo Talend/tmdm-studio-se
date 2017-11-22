@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -31,12 +32,14 @@ import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDParticle;
@@ -58,7 +61,7 @@ class UserVariableDialog extends Dialog {
     private final String USER = "User"; //$NON-NLS-1$
 
     private TreeViewer tv;
-    
+
     private String schema;
 
     private String result;
@@ -104,47 +107,72 @@ class UserVariableDialog extends Dialog {
     }
 
     private ILabelProvider getLabelProvider() {
-        ILabelProvider labelProvider = new LabelProvider() {
-
-            Image IMG = EclipseResourceManager.getImage(RepositoryPlugin.PLUGIN_ID, "icons/methpub_obj.gif"); //$NON-NLS-1$;
-            @Override
-            public Image getImage(Object element) {
-                if (USER.equals(element)) {
-                    return null;
-                }
-                return IMG;
+        return new CustomLabelProvider();
+    }
+    
+    class CustomLabelProvider extends LabelProvider implements IColorProvider {
+        Image IMG = EclipseResourceManager.getImage(RepositoryPlugin.PLUGIN_ID, "icons/methpub_obj.gif"); //$NON-NLS-1$;
+        
+        @Override
+        public Image getImage(Object element) {
+            if (USER.equals(element)) {
+                return null;
             }
+            return IMG;
+        }
 
-            @Override
-            public String getText(Object element) {
-                return element.toString();
+        @Override
+        public String getText(Object element) {
+            return element.toString();
+        }
+
+        @Override
+        public Color getForeground(Object element) {
+            if(!isValid(element.toString())) {
+                return getColor(SWT.COLOR_GRAY);
             }
+            return null;
+        }
 
-        };
-        return labelProvider;
+        @Override
+        public Color getBackground(Object element) {
+            return null;
+        }
+
+        private Color getColor(int systemColorID) {
+            Display display = Display.getCurrent();
+
+            return display.getSystemColor(systemColorID);
+        }
     }
 
     private IContentProvider getContentProvider() {
         return new ITreeContentProvider() {
 
+            @Override
             public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
             }
 
+            @Override
             public void dispose() {
             }
 
+            @Override
             public boolean hasChildren(Object element) {
                 return getChildren(element).length > 0;
             }
 
+            @Override
             public Object getParent(Object element) {
                 return null;
             }
 
+            @Override
             public Object[] getElements(Object inputElement) {
                 return new String[] { USER };
             }
 
+            @Override
             public Object[] getChildren(Object parentElement) {
                 if (USER.equals(parentElement)) {
                     return getUserFields().toArray();
@@ -157,16 +185,29 @@ class UserVariableDialog extends Dialog {
     protected ISelectionChangedListener getSelectionChangedListener() {
         return new ISelectionChangedListener() {
 
+            @Override
             public void selectionChanged(SelectionChangedEvent event) {
                 IStructuredSelection selection = (IStructuredSelection) event.getSelection();
                 Object firstElement = selection.getFirstElement();
-                if (firstElement != null && !USER.equals(firstElement.toString())) {
+                if (firstElement != null && !USER.equals(firstElement.toString()) && isValid(firstElement.toString())) {
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
                 } else {
                     getButton(IDialogConstants.OK_ID).setEnabled(false);
                 }
             }
+
         };
+    }
+    
+    private boolean isValid(String ufield) {
+        boolean contains = false;
+        for(UserField userfield:UserField.values()) {
+            if(userfield.field.equals(ufield)) {
+                contains = true;
+                break;
+            }
+        }
+        return contains;
     }
 
     private List<String> getUserFields() {
@@ -214,5 +255,22 @@ class UserVariableDialog extends Dialog {
 
     public String getResult() {
         return result;
+    }
+
+    static enum UserField {
+        // TAC
+        User_Name("username"), //$NON-NLS-1$
+        First_Name("givenname"), //$NON-NLS-1$
+        Last_Name("familyname"), //$NON-NLS-1$
+        //MDM
+        Id("id"), //$NON-NLS-1$
+        Language("language"), //$NON-NLS-1$
+        Properties("properties"); //$NON-NLS-1$
+        
+        ////////
+        String field;
+        UserField(String f) {
+            this.field = f;
+        }
     }
 }
