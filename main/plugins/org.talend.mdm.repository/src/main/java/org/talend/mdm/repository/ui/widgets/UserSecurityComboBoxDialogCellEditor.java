@@ -13,12 +13,14 @@
 package org.talend.mdm.repository.ui.widgets;
 
 import java.net.MalformedURLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.FocusAdapter;
@@ -54,10 +56,15 @@ import com.amalto.workbench.widgets.celleditor.EditableComboBoxDialogCellEditor;
  */
 public class UserSecurityComboBoxDialogCellEditor extends EditableComboBoxDialogCellEditor {
 
+    /**
+     * 
+     */
+    private final String _PREFIX_USER_VAR = "${user_context."; //$NON-NLS-1$
+    private final String _SURFIX_USER_VAR = "}"; //$NON-NLS-1$
+
     private static Logger log = Logger.getLogger(UserSecurityComboBoxDialogCellEditor.class);
 
-    private static final List<String> SPECIAL_FIELDS = Arrays.asList("roles", "applications", "properties"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
+    private static final List<String> SPECIAL_FIELDS = Arrays.asList("properties"); //$NON-NLS-1$
     private IWorkbenchPartSite site;
 
     private String dataModelName = "PROVISIONING"; //$NON-NLS-1$
@@ -81,6 +88,43 @@ public class UserSecurityComboBoxDialogCellEditor extends EditableComboBoxDialog
         getButton().setText("..."); //$NON-NLS-1$
     }
 
+    @Override
+    protected Control createContents(Composite cell) {
+        Control createdContents = super.createContents(cell);
+        setValidator(new ICellEditorValidator() {
+            @Override
+            public String isValid(Object value) {
+                String userVar = value.toString();
+                return validate(userVar);
+            }
+            
+            private String validate(String userVar){
+                String msg = null;
+                List<String> validUserVars = new ArrayList<String>();
+                validUserVars.add(_PREFIX_USER_VAR+UserField.Id.field+_SURFIX_USER_VAR);
+                validUserVars.add(_PREFIX_USER_VAR+UserField.First_Name.field+_SURFIX_USER_VAR);
+                validUserVars.add(_PREFIX_USER_VAR+UserField.Last_Name.field+_SURFIX_USER_VAR);
+                validUserVars.add(_PREFIX_USER_VAR+UserField.User_Name.field+_SURFIX_USER_VAR);
+                validUserVars.add(_PREFIX_USER_VAR+UserField.Language.field+_SURFIX_USER_VAR);
+                
+                if(userVar.startsWith(_PREFIX_USER_VAR)) {
+                    if(!validUserVars.contains(userVar)){
+                        String propertyFieldHead = _PREFIX_USER_VAR+UserField.Properties.field+"[\""; //$NON-NLS-1$
+                        String propertyFieldTail = "\"]"+_SURFIX_USER_VAR; //$NON-NLS-1$
+                        if(!(userVar.startsWith(propertyFieldHead) && userVar.endsWith(propertyFieldTail))) {
+                            msg = "Value \"{0}\" in Where Conditions of View is not valid";
+                        }
+                    }
+                } else {
+                    msg = "Value \"{0}\" in Where Conditions of View does not exist";
+                }
+
+                return msg;
+            }
+        });
+        return createdContents;
+    }
+    
     @Override
     protected FocusListener getComboFocusListener() {
         if (comboFocusListener == null) {
@@ -128,7 +172,7 @@ public class UserSecurityComboBoxDialogCellEditor extends EditableComboBoxDialog
         if (SPECIAL_FIELDS.contains(userVariable)) {
             userVariable += "[\"\"]"; //$NON-NLS-1$
         }
-        userVariable = "${user_context." + userVariable + "}"; //$NON-NLS-1$ //$NON-NLS-2$
+        userVariable = _PREFIX_USER_VAR + userVariable + _SURFIX_USER_VAR;
         doSetValue(userVariable);
         fireApplyEditorValue();
     }
