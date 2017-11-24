@@ -128,7 +128,7 @@ class UserVariableDialog extends Dialog {
 
         @Override
         public Color getForeground(Object element) {
-            if(!isValid(element.toString())) {
+            if(!UserField.isValidUserField(element.toString())) {
                 return getColor(SWT.COLOR_GRAY);
             }
             return null;
@@ -189,7 +189,7 @@ class UserVariableDialog extends Dialog {
             public void selectionChanged(SelectionChangedEvent event) {
                 IStructuredSelection selection = (IStructuredSelection) event.getSelection();
                 Object firstElement = selection.getFirstElement();
-                if (firstElement != null && !USER.equals(firstElement.toString()) && isValid(firstElement.toString())) {
+                if (firstElement != null && !USER.equals(firstElement.toString()) && UserField.isValidUserField(firstElement.toString())) {
                     getButton(IDialogConstants.OK_ID).setEnabled(true);
                 } else {
                     getButton(IDialogConstants.OK_ID).setEnabled(false);
@@ -199,17 +199,6 @@ class UserVariableDialog extends Dialog {
         };
     }
     
-    private boolean isValid(String ufield) {
-        boolean contains = false;
-        for(UserField userfield:UserField.values()) {
-            if(userfield.field.equals(ufield)) {
-                contains = true;
-                break;
-            }
-        }
-        return contains;
-    }
-
     private List<String> getUserFields() {
         try {
             if (schema != null) {

@@ -182,6 +182,14 @@ public class MDMValidationRunner extends WorkspaceJob {
                     // }
 
                 }
+                if (type == IServerObjectRepositoryType.TYPE_VIEW) {
+                    Item item = viewObj.getProperty().getItem();
+                    file = RepositoryResourceUtil.findReferenceFile(type, item, "item"); //$NON-NLS-1$
+                    if (file != null) {
+                        files.add(file);
+                    }
+
+                }
                 viewObjMap.put(viewObj, file);
             }
 
@@ -197,6 +205,7 @@ public class MDMValidationRunner extends WorkspaceJob {
      * 
      * @see org.eclipse.core.resources.WorkspaceJob#runInWorkspace(org.eclipse.core.runtime.IProgressMonitor)
      */
+    @SuppressWarnings({ "restriction", "hiding" })
     @Override
     public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
         if (UIUtil.isWorkInUI() && lockDirtyDialog.needShowDialog()) {

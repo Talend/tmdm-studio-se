@@ -23,4 +23,6 @@ public interface IValidationMarker {
     public static final String MARKER_DATA_MODEL = "org.talend.mdm.error.datamodel.model"; //$NON-NLS-1$
 
     public static final String MARKER_XSD_ERR = "org.eclipse.xsd.diagnostic"; //$NON-NLS-1$
+    
+    public static final String MARKER_VIEW = "org.talend.mdm.viewmarker"; //$NON-NLS-1$
 }

@@ -15,4 +15,15 @@ public enum UserField {
         UserField(String f) {
             this.field = f;
         }
+        
+        public static boolean isValidUserField(String ufield){
+            boolean contains = false;
+            for(UserField userfield:values()) {
+                if(userfield.field.equals(ufield)) {
+                    contains = true;
+                    break;
+                }
+            }
+            return contains;
+        }
     }

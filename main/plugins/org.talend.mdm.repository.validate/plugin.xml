@@ -338,6 +338,41 @@
             name="Open DataModel Error">
       </handler>
    </extension>
+   <extension
+         id="view"
+         name="View Validator"
+         point="org.eclipse.wst.validation.validatorV2">
+      <validator
+            build="false"
+            class="org.talend.mdm.repository.core.validate.view.ViewDelegatingValidator"
+            manual="true"
+            markerId="org.talend.mdm.viewmarker">
+         <include>
+            <rules>
+               <fileext
+                     caseSensitive="false"
+                     ext="item">
+               </fileext>
+            </rules>
+         </include>
+      </validator>
+   </extension>
+   <extension
+         point="org.eclipse.wst.validation.validatorDelegates">
+      <delegate
+            class="org.talend.mdm.repository.core.validate.view.ViewValidator"
+            name="View Delegate Validator"
+            target="org.talend.mdm.repository.core.validate.view.ViewDelegatingValidator">
+      </delegate>
+   </extension>
+   <extension
+         id="org.talend.mdm.viewmarker"
+         name="View Content"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.talend.mdm.problemmarker">
+      </super>
+   </extension>
  
   
 </plugin>

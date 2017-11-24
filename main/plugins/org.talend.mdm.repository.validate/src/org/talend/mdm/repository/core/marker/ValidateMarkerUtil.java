@@ -44,6 +44,7 @@ public class ValidateMarkerUtil implements IValidationMarker {
     private static void initMarkerMap() {
         // DATA Model
         viewTypeMarkerMap.put(IServerObjectRepositoryType.TYPE_DATAMODEL, new String[] { MARKER_DATA_MODEL, MARKER_XSD_ERR });
+        viewTypeMarkerMap.put(IServerObjectRepositoryType.TYPE_VIEW, new String[]{MARKER_VIEW});
     }
 
     private static String[] allMarkers = null;

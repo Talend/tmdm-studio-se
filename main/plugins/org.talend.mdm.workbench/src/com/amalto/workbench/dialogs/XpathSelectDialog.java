@@ -90,6 +90,8 @@ public class XpathSelectDialog extends Dialog {
     protected Text xpathText;
 
     private Text filterText;
+    
+    private boolean keepFilterContent;
 
     protected Button add;
 
@@ -97,6 +99,8 @@ public class XpathSelectDialog extends Dialog {
 
     // TODO:check This two static String and there related static methods may cause some problems.
     public String dataModelName;
+    
+    protected boolean keepOneDatamodel;
 
     private String xpath = "";//$NON-NLS-1$
 
@@ -253,6 +257,10 @@ public class XpathSelectDialog extends Dialog {
             avaiList = MDMRepositoryViewExtensionService.findAllDataModelNames();
         }
 
+        if(keepOneDatamodel && dataModelName != null) {
+            avaiList.clear();
+            avaiList.add(dataModelName);
+        }
         dataModelCombo.setItems(avaiList.toArray(new String[avaiList.size()]));
         dataModelCombo.addSelectionListener(new SelectionListener() {
 
@@ -280,6 +288,9 @@ public class XpathSelectDialog extends Dialog {
         filterText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         if (conceptName != null) {
             filterText.setText(conceptName);
+            if(keepFilterContent){
+                filterText.setEditable(false);
+            }
         } else {
             filterText.setText("");//$NON-NLS-1$
         }
@@ -430,6 +441,14 @@ public class XpathSelectDialog extends Dialog {
 
     public void setConceptName(String conceptName) {
         this.conceptName = conceptName;
+    }
+    
+    public void setKeepFilterContent(boolean keepFilterContent) {
+        this.keepFilterContent = keepFilterContent;
+    }
+
+    public void setOnlyOneDataModel(boolean onlyOneDataModel) {
+        this.keepOneDatamodel = onlyOneDataModel;
     }
 
     public static String getContext() {

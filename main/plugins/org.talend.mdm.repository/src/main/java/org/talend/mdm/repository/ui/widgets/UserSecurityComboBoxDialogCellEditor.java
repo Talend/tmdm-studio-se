@@ -33,6 +33,9 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPartSite;
+import org.eclipse.xsd.XSDElementDeclaration;
+import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDParticleContent;
 import org.talend.mdm.repository.core.service.RepositoryQueryService;
 import org.talend.mdm.repository.core.service.RepositoryWebServiceAdapter;
 import org.talend.mdm.repository.i18n.Messages;
@@ -43,6 +46,7 @@ import org.talend.mdm.repository.ui.navigator.MDMRepositoryView;
 import org.talend.mdm.workbench.serverexplorer.core.ServerDefService;
 import org.talend.mdm.workbench.serverexplorer.ui.dialogs.SelectServerDefDialog;
 
+import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.utils.XtentisException;
 import com.amalto.workbench.webservices.TMDMService;
@@ -55,12 +59,6 @@ import com.amalto.workbench.widgets.celleditor.EditableComboBoxDialogCellEditor;
  * created by liusongbo on 2014-3-24
  */
 public class UserSecurityComboBoxDialogCellEditor extends EditableComboBoxDialogCellEditor {
-
-    /**
-     * 
-     */
-    private final String _PREFIX_USER_VAR = "${user_context."; //$NON-NLS-1$
-    private final String _SURFIX_USER_VAR = "}"; //$NON-NLS-1$
 
     private static Logger log = Logger.getLogger(UserSecurityComboBoxDialogCellEditor.class);
 
@@ -95,31 +93,7 @@ public class UserSecurityComboBoxDialogCellEditor extends EditableComboBoxDialog
             @Override
             public String isValid(Object value) {
                 String userVar = value.toString();
-                return validate(userVar);
-            }
-            
-            private String validate(String userVar){
-                String msg = null;
-                List<String> validUserVars = new ArrayList<String>();
-                validUserVars.add(_PREFIX_USER_VAR+UserField.Id.field+_SURFIX_USER_VAR);
-                validUserVars.add(_PREFIX_USER_VAR+UserField.First_Name.field+_SURFIX_USER_VAR);
-                validUserVars.add(_PREFIX_USER_VAR+UserField.Last_Name.field+_SURFIX_USER_VAR);
-                validUserVars.add(_PREFIX_USER_VAR+UserField.User_Name.field+_SURFIX_USER_VAR);
-                validUserVars.add(_PREFIX_USER_VAR+UserField.Language.field+_SURFIX_USER_VAR);
-                
-                if(userVar.startsWith(_PREFIX_USER_VAR)) {
-                    if(!validUserVars.contains(userVar)){
-                        String propertyFieldHead = _PREFIX_USER_VAR+UserField.Properties.field+"[\""; //$NON-NLS-1$
-                        String propertyFieldTail = "\"]"+_SURFIX_USER_VAR; //$NON-NLS-1$
-                        if(!(userVar.startsWith(propertyFieldHead) && userVar.endsWith(propertyFieldTail))) {
-                            msg = "Value \"{0}\" in Where Conditions of View is not valid";
-                        }
-                    }
-                } else {
-                    msg = "Value \"{0}\" in Where Conditions of View does not exist";
-                }
-
-                return msg;
+                return UserVarValueValidator.validate(userVar);
             }
         });
         return createdContents;
@@ -172,7 +146,7 @@ public class UserSecurityComboBoxDialogCellEditor extends EditableComboBoxDialog
         if (SPECIAL_FIELDS.contains(userVariable)) {
             userVariable += "[\"\"]"; //$NON-NLS-1$
         }
-        userVariable = _PREFIX_USER_VAR + userVariable + _SURFIX_USER_VAR;
+        userVariable = "${user_context." + userVariable + "}"; //$NON-NLS-1$ //$NON-NLS-2$
         doSetValue(userVariable);
         fireApplyEditorValue();
     }
@@ -274,10 +248,58 @@ public class UserSecurityComboBoxDialogCellEditor extends EditableComboBoxDialog
         XpathSelectDialog2 dlg = new XpathSelectDialog2(site.getShell(),
                 Messages.UserSecurityComboBoxDialogCellEditor_SelectXpath, site, false, dataModelName);
         dlg.setConceptName(conceptName);
+        dlg.setOnlyOneDataModel(true);
+        dlg.setKeepFilterContent(true);
+        dlg.setSelectionFilter(new IXPathSelectionFilter() {
+            
+            @Override
+            public FilterResult check(Object obj) {
+                if(obj instanceof XSDParticle) {
+                    XSDParticleContent content = ((XSDParticle)obj).getContent();
+                    if(content instanceof XSDElementDeclaration) {
+                        String field = ((XSDElementDeclaration)content).getName();
+                        if(UserField.isValidUserField(field)) {
+                            return FilterResult.ENABLE;
+                        }
+                    }
+                }
+                return FilterResult.DISABLE;
+            }
+        });
         if (dlg.open() == IDialogConstants.OK_ID) {
             return dlg.getXpath();
         }
 
         return null;
+    }
+    
+    public static class UserVarValueValidator {
+        private static final String _PREFIX_USER_VAR = "${user_context."; //$NON-NLS-1$
+        private static final String _SURFIX_USER_VAR = "}"; //$NON-NLS-1$
+        
+        public static String validate(String userVarValue){
+            String msg = null;
+            List<String> validUserVars = new ArrayList<String>();
+            validUserVars.add(_PREFIX_USER_VAR+UserField.Id.field+_SURFIX_USER_VAR);
+            validUserVars.add(_PREFIX_USER_VAR+UserField.First_Name.field+_SURFIX_USER_VAR);
+            validUserVars.add(_PREFIX_USER_VAR+UserField.Last_Name.field+_SURFIX_USER_VAR);
+            validUserVars.add(_PREFIX_USER_VAR+UserField.User_Name.field+_SURFIX_USER_VAR);
+            validUserVars.add(_PREFIX_USER_VAR+UserField.Language.field+_SURFIX_USER_VAR);
+            
+            String error = "Value \"{0}\" in Where Conditions of View is not valid"; //$NON-NLS-1$
+            if(userVarValue.startsWith(_PREFIX_USER_VAR)) {
+                if(!validUserVars.contains(userVarValue)){
+                    String propertyFieldHead = _PREFIX_USER_VAR+UserField.Properties.field+"[\""; //$NON-NLS-1$
+                    String propertyFieldTail = "\"]"+_SURFIX_USER_VAR; //$NON-NLS-1$
+                    if(!(userVarValue.startsWith(propertyFieldHead) && userVarValue.endsWith(propertyFieldTail))) {
+                        msg = error;
+                    }
+                }
+            } else {
+                msg = error;
+            }
+
+            return msg;
+        }
     }
 }

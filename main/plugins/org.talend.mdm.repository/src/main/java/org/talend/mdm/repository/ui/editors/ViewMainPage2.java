@@ -12,9 +12,11 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.editors;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
@@ -24,6 +26,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -33,6 +36,7 @@ import org.talend.mdm.repository.core.command.CommandStack;
 import org.talend.mdm.repository.core.command.ICommand;
 import org.talend.mdm.repository.core.service.ContainerCacheService;
 import org.talend.mdm.repository.core.service.DeployService;
+import org.talend.mdm.repository.core.service.IModelValidationService;
 import org.talend.mdm.repository.core.service.RepositoryQueryService;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
@@ -105,6 +109,23 @@ public class ViewMainPage2 extends ViewMainPage {
         XpathSelectDialog dlg = new XpathSelectDialog2(getEditorSite().getShell(), null, title, getSite(), false, modelName,
                 false, filter);
         return dlg;
+    }
+
+    @Override
+    public void doSave(IProgressMonitor monitor) {
+        super.doSave(monitor);
+        doValidation();
+    }
+
+    private void doValidation() {
+        IModelValidationService service = (IModelValidationService) GlobalServiceRegister.getDefault().getService(
+                IModelValidationService.class);
+        if (service != null) {
+            IRepositoryViewObject viewObject = ((IRepositoryViewEditorInput) getEditorInput()).getViewObject();
+            java.util.List<IRepositoryViewObject> viewObjs = new ArrayList<IRepositoryViewObject>();
+            viewObjs.add(viewObject);
+            service.validate(viewObjs, IModelValidationService.VALIDATE_AFTER_SAVE);
+        }
     }
 
     @Override
