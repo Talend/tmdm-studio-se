@@ -13,14 +13,12 @@
 package org.talend.mdm.repository.ui.widgets;
 
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.FocusAdapter;
@@ -89,13 +87,6 @@ public class UserSecurityComboBoxDialogCellEditor extends EditableComboBoxDialog
     @Override
     protected Control createContents(Composite cell) {
         Control createdContents = super.createContents(cell);
-        setValidator(new ICellEditorValidator() {
-            @Override
-            public String isValid(Object value) {
-                String userVar = value.toString();
-                return UserVarValueValidator.validate(userVar);
-            }
-        });
         return createdContents;
     }
     
@@ -273,33 +264,4 @@ public class UserSecurityComboBoxDialogCellEditor extends EditableComboBoxDialog
         return null;
     }
     
-    public static class UserVarValueValidator {
-        private static final String _PREFIX_USER_VAR = "${user_context."; //$NON-NLS-1$
-        private static final String _SURFIX_USER_VAR = "}"; //$NON-NLS-1$
-        
-        public static String validate(String userVarValue){
-            String msg = null;
-            List<String> validUserVars = new ArrayList<String>();
-            validUserVars.add(_PREFIX_USER_VAR+UserField.Id.field+_SURFIX_USER_VAR);
-            validUserVars.add(_PREFIX_USER_VAR+UserField.First_Name.field+_SURFIX_USER_VAR);
-            validUserVars.add(_PREFIX_USER_VAR+UserField.Last_Name.field+_SURFIX_USER_VAR);
-            validUserVars.add(_PREFIX_USER_VAR+UserField.User_Name.field+_SURFIX_USER_VAR);
-            validUserVars.add(_PREFIX_USER_VAR+UserField.Language.field+_SURFIX_USER_VAR);
-            
-            String error = "Value \"{0}\" in Where Conditions of View is not valid"; //$NON-NLS-1$
-            if(userVarValue.startsWith(_PREFIX_USER_VAR)) {
-                if(!validUserVars.contains(userVarValue)){
-                    String propertyFieldHead = _PREFIX_USER_VAR+UserField.Properties.field+"[\""; //$NON-NLS-1$
-                    String propertyFieldTail = "\"]"+_SURFIX_USER_VAR; //$NON-NLS-1$
-                    if(!(userVarValue.startsWith(propertyFieldHead) && userVarValue.endsWith(propertyFieldTail))) {
-                        msg = error;
-                    }
-                }
-            } else {
-                msg = error;
-            }
-
-            return msg;
-        }
-    }
 }

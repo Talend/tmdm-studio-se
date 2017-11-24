@@ -12,9 +12,11 @@ import org.eclipse.wst.xml.core.internal.validation.core.ValidationMessage;
 import org.eclipse.wst.xml.core.internal.validation.core.ValidationReport;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.mdm.repository.core.IServerObjectRepositoryType;
+import org.talend.mdm.repository.core.validate.i18n.Messages;
 import org.talend.mdm.repository.model.mdmproperties.WSViewItem;
+import org.talend.mdm.repository.model.mdmserverobject.WSViewE;
 import org.talend.mdm.repository.model.mdmserverobject.WSWhereConditionE;
-import org.talend.mdm.repository.ui.widgets.UserSecurityComboBoxDialogCellEditor.UserVarValueValidator;
+import org.talend.mdm.repository.ui.widgets.UserVarValueValidator;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 
 
@@ -27,19 +29,23 @@ public class ViewValidator extends AbstractNestedValidator implements IValidator
         IRepositoryViewObject viewObj = RepositoryResourceUtil.findViewObjectByName(IServerObjectRepositoryType.TYPE_VIEW,
                 viewName);
         if (viewObj != null) {
+            ViewValidationReport viewValidationReport = null;
+            
             WSViewItem item = (WSViewItem) viewObj.getProperty().getItem();
-            EList<WSWhereConditionE> whereConditions = item.getWsView().getWhereConditions();
-            for (WSWhereConditionE conditionE : whereConditions) {
-                String userVarValue = conditionE.getRightValueOrPath();
-                String validateMsg = UserVarValueValidator.validate(userVarValue);
-                System.out.println(userVarValue);
-                if(validateMsg != null) {
-                    validateMsg = "Value \"" + userVarValue + "\" in where condition of view \"" + viewName +"\" is not valid.";
-                    ViewValidationReport viewValidationReport = new ViewValidationReport(uri);
-                    viewValidationReport.messages.add(new ValidationMessage(validateMsg, -1, -1));
-                    return viewValidationReport;
+            WSViewE view = (WSViewE)item.getMDMServerObject();
+            EList<WSWhereConditionE> whereConditions = view.getWhereConditions();
+            if(whereConditions != null && whereConditions.size() >0) {
+                viewValidationReport = new ViewValidationReport(uri);
+                for (WSWhereConditionE conditionE : whereConditions) {
+                    String userVarValue = conditionE.getRightValueOrPath();
+                    boolean isValid = UserVarValueValidator.validate(userVarValue);
+                    if(!isValid) {
+                        String validateMsg = Messages.ViewValidator_0 + userVarValue + Messages.ViewValidator_1 + viewName +Messages.ViewValidator_2;
+                        viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
+                    }
                 }
             }
+            return viewValidationReport;
         }
         return null;
     }

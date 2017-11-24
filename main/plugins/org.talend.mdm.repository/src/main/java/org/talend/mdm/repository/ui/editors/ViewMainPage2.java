@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -114,7 +115,13 @@ public class ViewMainPage2 extends ViewMainPage {
     @Override
     public void doSave(IProgressMonitor monitor) {
         super.doSave(monitor);
-        doValidation();
+        Display.getDefault().asyncExec(new Runnable() {
+            
+            @Override
+            public void run() {
+                doValidation();
+            }
+        });
     }
 
     private void doValidation() {

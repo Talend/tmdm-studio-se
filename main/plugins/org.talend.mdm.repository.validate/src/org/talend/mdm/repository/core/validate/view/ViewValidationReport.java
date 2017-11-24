@@ -49,6 +49,13 @@ public class ViewValidationReport implements ValidationReport {
     public ValidationMessage[] getValidationMessages() {
         return messages.toArray(new ValidationMessage[0]);
     }
+    
+    public void addValidationMessage(ValidationMessage message) {
+        if(message != null) {
+            messages.add(message);
+            isValid = true;
+        }
+    }
 
     @Override
     public HashMap getNestedMessages() {
