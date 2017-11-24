@@ -32,6 +32,6 @@ public class UserVarValueValidator {
                 result = false;
             }
 
-            return msg;
+            return result;
         }
     }
