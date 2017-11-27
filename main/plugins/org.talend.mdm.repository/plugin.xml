@@ -724,6 +724,14 @@
          <importResoucesHandler
                class="org.talend.mdm.repository.ui.wizards.imports.handlers.DataModelImportHandler"></importResoucesHandler>
       </importResourcesProvider>
+      <importResourcesProvider
+            id="org.talend.mdm.repository.viewprocess.importResourcesProvider"
+            name="View and Process importer"
+            priority="NORMAL">
+         <importResoucesHandler
+               class="org.talend.mdm.repository.ui.wizards.imports.handlers.ViewProcessImportHandler">
+         </importResoucesHandler>
+      </importResourcesProvider>
 
    </extension>
    <extension
