@@ -40,7 +40,7 @@ public class ViewValidator extends AbstractNestedValidator implements IValidator
                     String userVarValue = conditionE.getRightValueOrPath();
                     boolean isValid = UserVarValueValidator.validate(userVarValue);
                     if(!isValid) {
-                        String validateMsg = Messages.ViewValidator_0 + userVarValue + Messages.ViewValidator_1 + viewName +Messages.ViewValidator_2;
+                        String validateMsg = Messages.bind(Messages.ViewValidator_error, userVarValue,viewName);
                         viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
                     }
                 }
