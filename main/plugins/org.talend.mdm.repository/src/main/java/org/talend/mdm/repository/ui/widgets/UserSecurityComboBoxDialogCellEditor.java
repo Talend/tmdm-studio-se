@@ -31,9 +31,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbenchPartSite;
-import org.eclipse.xsd.XSDElementDeclaration;
-import org.eclipse.xsd.XSDParticle;
-import org.eclipse.xsd.XSDParticleContent;
 import org.talend.mdm.repository.core.service.RepositoryQueryService;
 import org.talend.mdm.repository.core.service.RepositoryWebServiceAdapter;
 import org.talend.mdm.repository.i18n.Messages;
@@ -44,7 +41,6 @@ import org.talend.mdm.repository.ui.navigator.MDMRepositoryView;
 import org.talend.mdm.workbench.serverexplorer.core.ServerDefService;
 import org.talend.mdm.workbench.serverexplorer.ui.dialogs.SelectServerDefDialog;
 
-import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.utils.XtentisException;
 import com.amalto.workbench.webservices.TMDMService;
@@ -84,12 +80,6 @@ public class UserSecurityComboBoxDialogCellEditor extends EditableComboBoxDialog
         getButton().setText("..."); //$NON-NLS-1$
     }
 
-    @Override
-    protected Control createContents(Composite cell) {
-        Control createdContents = super.createContents(cell);
-        return createdContents;
-    }
-    
     @Override
     protected FocusListener getComboFocusListener() {
         if (comboFocusListener == null) {
@@ -239,24 +229,6 @@ public class UserSecurityComboBoxDialogCellEditor extends EditableComboBoxDialog
         XpathSelectDialog2 dlg = new XpathSelectDialog2(site.getShell(),
                 Messages.UserSecurityComboBoxDialogCellEditor_SelectXpath, site, false, dataModelName);
         dlg.setConceptName(conceptName);
-        dlg.setOnlyOneDataModel(true);
-        dlg.setKeepFilterContent(true);
-        dlg.setSelectionFilter(new IXPathSelectionFilter() {
-            
-            @Override
-            public FilterResult check(Object obj) {
-                if(obj instanceof XSDParticle) {
-                    XSDParticleContent content = ((XSDParticle)obj).getContent();
-                    if(content instanceof XSDElementDeclaration) {
-                        String field = ((XSDElementDeclaration)content).getName();
-                        if(UserField.isValidUserField(field)) {
-                            return FilterResult.ENABLE;
-                        }
-                    }
-                }
-                return FilterResult.DISABLE;
-            }
-        });
         if (dlg.open() == IDialogConstants.OK_ID) {
             return dlg.getXpath();
         }

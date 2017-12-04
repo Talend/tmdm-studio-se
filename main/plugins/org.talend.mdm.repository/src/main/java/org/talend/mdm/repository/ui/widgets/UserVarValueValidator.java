@@ -3,6 +3,8 @@ package org.talend.mdm.repository.ui.widgets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 public class UserVarValueValidator {
         private static final String _PREFIX_USER_VAR = "${user_context."; //$NON-NLS-1$
         private static final String _SURFIX_USER_VAR = "}"; //$NON-NLS-1$
@@ -11,7 +13,6 @@ public class UserVarValueValidator {
          * true: valid
          */
         public static boolean validate(String userVarValue){
-            String msg = null;
             List<String> validUserVars = new ArrayList<String>();
             validUserVars.add(_PREFIX_USER_VAR+UserField.Id.field+_SURFIX_USER_VAR);
             validUserVars.add(_PREFIX_USER_VAR+UserField.First_Name.field+_SURFIX_USER_VAR);
@@ -28,7 +29,7 @@ public class UserVarValueValidator {
                         result = false;
                     }
                 }
-            } else {
+            } else if(StringUtils.isBlank(userVarValue)) {
                 result = false;
             }
 

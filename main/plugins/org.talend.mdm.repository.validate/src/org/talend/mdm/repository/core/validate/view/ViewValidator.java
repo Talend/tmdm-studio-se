@@ -24,18 +24,19 @@ public class ViewValidator extends AbstractNestedValidator implements IValidator
 
     @Override
     public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context) {
+        ViewValidationReport viewValidationReport = new ViewValidationReport(uri);
+        
         String fileName = uri.substring(uri.lastIndexOf("/")+1); //$NON-NLS-1$
         String viewName = getViewName(fileName);
+        viewName = viewName.replace("$", "#"); //$NON-NLS-1$ //$NON-NLS-2$
         IRepositoryViewObject viewObj = RepositoryResourceUtil.findViewObjectByName(IServerObjectRepositoryType.TYPE_VIEW,
                 viewName);
         if (viewObj != null) {
-            ViewValidationReport viewValidationReport = null;
             
             WSViewItem item = (WSViewItem) viewObj.getProperty().getItem();
             WSViewE view = (WSViewE)item.getMDMServerObject();
             EList<WSWhereConditionE> whereConditions = view.getWhereConditions();
             if(whereConditions != null && whereConditions.size() >0) {
-                viewValidationReport = new ViewValidationReport(uri);
                 for (WSWhereConditionE conditionE : whereConditions) {
                     String userVarValue = conditionE.getRightValueOrPath();
                     boolean isValid = UserVarValueValidator.validate(userVarValue);
@@ -45,13 +46,12 @@ public class ViewValidator extends AbstractNestedValidator implements IValidator
                     }
                 }
             }
-            return viewValidationReport;
         }
-        return null;
+        return viewValidationReport;
     }
 
     private String getViewName(String fileName) {
-        Pattern pattern = Pattern.compile("(\\w*?)_(\\d*?)\\.(\\d*?)\\.item"); //$NON-NLS-1$
+        Pattern pattern = Pattern.compile("(\\w*?\\$?\\w*?)_(\\d*?)\\.(\\d*?)\\.item"); //$NON-NLS-1$
         Matcher matcher = pattern.matcher(fileName);
         if (matcher.find()) {
             return matcher.group(1);
