@@ -21,7 +21,9 @@ public class UserVarValueValidator {
             validUserVars.add(_PREFIX_USER_VAR+UserField.Language.field+_SURFIX_USER_VAR);
             
             boolean result = true;
-            if(userVarValue.startsWith(_PREFIX_USER_VAR)) {
+            if(StringUtils.isBlank(userVarValue)) {
+                result = false;
+            } else if(userVarValue.startsWith(_PREFIX_USER_VAR) && userVarValue.endsWith(_SURFIX_USER_VAR)) {
                 if(!validUserVars.contains(userVarValue)){
                     String propertyFieldHead = _PREFIX_USER_VAR+UserField.Properties.field+"[\""; //$NON-NLS-1$
                     String propertyFieldTail = "\"]"+_SURFIX_USER_VAR; //$NON-NLS-1$
@@ -29,8 +31,6 @@ public class UserVarValueValidator {
                         result = false;
                     }
                 }
-            } else if(StringUtils.isBlank(userVarValue)) {
-                result = false;
             }
 
             return result;

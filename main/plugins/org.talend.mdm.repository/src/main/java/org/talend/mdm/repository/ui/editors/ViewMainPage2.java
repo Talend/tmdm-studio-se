@@ -131,7 +131,7 @@ public class ViewMainPage2 extends ViewMainPage {
             IRepositoryViewObject viewObject = ((IRepositoryViewEditorInput) getEditorInput()).getViewObject();
             java.util.List<IRepositoryViewObject> viewObjs = new ArrayList<IRepositoryViewObject>();
             viewObjs.add(viewObject);
-            service.validate(viewObjs, IModelValidationService.VALIDATE_AFTER_SAVE,false);
+            service.validate(viewObjs, IModelValidationService.VALIDATE_AFTER_SAVE, true);
         }
     }
 
