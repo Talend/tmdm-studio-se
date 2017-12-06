@@ -248,6 +248,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
 
     private Element getTopElementWithUser(String user, String ip) {
         Document doc = credentials.get(ip).doc;
+        user = transformForXPath(user);
         List<Element> userRoots = doc.selectNodes(rootPath + "/" + user);//$NON-NLS-1$
         Element elementUser;
         if (userRoots.isEmpty()) {
@@ -481,7 +482,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
             list.add(rootPath);
             return;
         } else if (theObj instanceof TreeParent && theObj.getServerRoot() == theObj) {
-            list.add(theObj.getUser().getUsername());
+            list.add(transformForXPath(theObj.getUser().getUsername()));
             list.add(ICoreConstants.DEFAULT_CATEGORY_ROOT);
             return;
         } else {
@@ -585,7 +586,8 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
                     return DEFAULT_CATALOG;
                 }
                 if (theObj.getServerRoot() != null) {
-                    String xpath = "//" + theObj.getServerRoot().getUser().getUsername() + "/"//$NON-NLS-1$//$NON-NLS-2$
+                    String username = theObj.getServerRoot().getUser().getUsername();
+                    String xpath = "//" + transformForXPath(username) + "/"//$NON-NLS-1$//$NON-NLS-2$
                             + filterOutBlank(folder.getDisplayName()) + "//child::*[name() = 'System'"//$NON-NLS-1$
                             + " and @Url='" + getURLFromTreeObject(theObj) + "']";//$NON-NLS-1$//$NON-NLS-2$
 
@@ -650,11 +652,19 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
         return catalogPath;
     }
 
+    /*
+     * '@' is not a valid xpath charactor,just substitute with another char for xpath building
+     */
+    private String transformForXPath(String username) {
+        return username.replace("@", "."); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+    
     private void checkUpAllCategoryForModel(TreeParent model) {
         if (model.getServerRoot() == null) {
             return;
         }
-        String xpath = "//" + model.getServerRoot().getUser().getUsername() + "/" + filterOutBlank(model.getDisplayName())//$NON-NLS-1$//$NON-NLS-2$
+        String username = model.getServerRoot().getUser().getUsername();
+        String xpath = "//" + transformForXPath(username) + "/" + filterOutBlank(model.getDisplayName())//$NON-NLS-1$//$NON-NLS-2$
                 + "//child::*[text() = '" + TreeObject.CATEGORY_FOLDER + "' and @Url='" + getURLFromTreeObject(model) + "']";//$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
         Document doc = credentials.get(UnifyUrl(model.getServerRoot().getWsKey().toString())).doc;
         String xpathForModel = getXPathForTreeObject(model);
@@ -737,7 +747,8 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
                 accmds += "//";//$NON-NLS-1$
             }
         }
-        String xpath = "//" + theObj.getServerRoot().getUser().getUsername() + accmds + "/"//$NON-NLS-1$//$NON-NLS-2$
+        String username = theObj.getServerRoot().getUser().getUsername();
+        String xpath = "//" + transformForXPath(username) + accmds + "/"//$NON-NLS-1$//$NON-NLS-2$
                 + filterOutBlank(folder.getDisplayName()) + "//child::*[text() = '" + TreeObject.CATEGORY_FOLDER//$NON-NLS-1$
                 + "' and @Url='" + getURLFromTreeObject(theObj)//$NON-NLS-1$
                 + "' and count(child::*) = 0]";//$NON-NLS-1$
@@ -994,7 +1005,8 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
             return null;
         }
 
-        String xpath = "//" + category.getServerRoot().getUser().getUsername() + "//"//$NON-NLS-1$//$NON-NLS-2$
+        String username = category.getServerRoot().getUser().getUsername();
+        String xpath = "//" + transformForXPath(username) + "//"//$NON-NLS-1$//$NON-NLS-2$
                 + filterOutBlank(category.getParent().getDisplayName()) + "//child::*/.[text() = '" + TreeObject.CATEGORY_FOLDER//$NON-NLS-1$
                 + "' and name()='" + filterOutBlank(category.getDisplayName()) + "' and @Url = '" + getURLFromTreeObject(category) + "']";//$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
