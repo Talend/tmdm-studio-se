@@ -12,10 +12,17 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.wizards.imports.handlers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EMap;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.ReferenceFileItem;
@@ -24,15 +31,17 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.mdm.repository.core.command.CommandManager;
 import org.talend.mdm.repository.core.command.ICommand;
 import org.talend.mdm.repository.core.service.ContainerCacheService;
+import org.talend.mdm.repository.core.service.IModelValidationService;
 import org.talend.mdm.repository.core.service.ImportService;
 import org.talend.mdm.repository.model.mdmproperties.MDMServerObjectItem;
 import org.talend.mdm.repository.model.mdmserverobject.MDMServerObject;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
+import org.talend.repository.items.importexport.handlers.imports.IImportResourcesHandler;
 import org.talend.repository.items.importexport.handlers.imports.ImportRepTypeHandler;
 import org.talend.repository.items.importexport.handlers.model.ImportItem;
 import org.talend.repository.items.importexport.manager.ResourcesManager;
 
-public class CommonMdmImportHandler extends ImportRepTypeHandler {
+public class CommonMdmImportHandler extends ImportRepTypeHandler implements IImportResourcesHandler{
 
     private ProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
 
@@ -103,5 +112,53 @@ public class CommonMdmImportHandler extends ImportRepTypeHandler {
         }
         // update cache
         ContainerCacheService.put(object);
+    }
+    
+    @Override
+    public void postImport(IProgressMonitor monitor, ResourcesManager resManager, ImportItem[] importedItemRecords) {
+        if(importedItemRecords.length > 0) {
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(IModelValidationService.class)) {
+                List<IRepositoryViewObject> viewObjs = new ArrayList<IRepositoryViewObject>();
+                for (ImportItem item : importedItemRecords) {
+                    if(todoValidate(item)) {
+                        IRepositoryViewObject viewObj = RepositoryResourceUtil.findViewObjectById(item.getProperty().getId());
+                        viewObjs.add(viewObj);
+                    }
+                }
+                
+                if(!viewObjs.isEmpty()) {
+                    Job validationJob = new Job("Do Validation") { //$NON-NLS-1$
+                        
+                        @Override
+                        protected IStatus run(IProgressMonitor monitor) {
+                            IModelValidationService service = (IModelValidationService) GlobalServiceRegister.getDefault()
+                                    .getService(IModelValidationService.class);
+                            service.validate(viewObjs, IModelValidationService.VALIDATE_IMMEDIATE, true);
+                            
+                            return Status.OK_STATUS;
+                        }
+                    };
+                    validationJob.schedule();
+                }
+            }
+        }
+    }
+    
+    public boolean todoValidate(ImportItem item) {
+        return false;
+    }
+    
+    /////////////////////////
+    @Override
+    public void prePopulate(IProgressMonitor monitor, ResourcesManager resManager) {
+    }
+
+    @Override
+    public void postPopulate(IProgressMonitor monitor, ResourcesManager resManager, ImportItem[] populatedItemRecords) {
+    }
+
+    @Override
+    public void preImport(IProgressMonitor monitor, ResourcesManager resManager, ImportItem[] checkedItemRecords,
+            ImportItem[] allImportItemRecords) {
     }
 }
