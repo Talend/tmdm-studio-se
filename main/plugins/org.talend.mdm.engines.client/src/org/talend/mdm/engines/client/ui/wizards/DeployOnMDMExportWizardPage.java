@@ -65,9 +65,12 @@ import org.talend.core.model.properties.ProcessItem;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.SpagoBiServer;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.prefs.ITalendCorePrefConstants;
 import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.core.runtime.process.IBuildJobHandler;
+import org.talend.core.runtime.repository.build.IBuildResourceParametes;
 import org.talend.core.ui.export.ArchiveFileExportOperationFullPath;
 import org.talend.designer.core.model.utils.emf.talendfile.ProcessType;
 import org.talend.designer.runprocess.IProcessor;
@@ -82,9 +85,11 @@ import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.utils.ZipToFile;
 import org.talend.repository.ui.wizards.exportjob.JavaJobExportReArchieveCreator;
+import org.talend.repository.ui.wizards.exportjob.scriptsmanager.BuildJobFactory;
 import org.talend.repository.ui.wizards.exportjob.scriptsmanager.JobJavaScriptsWSManager;
 import org.talend.repository.ui.wizards.exportjob.scriptsmanager.JobScriptsManager;
 import org.talend.repository.ui.wizards.exportjob.scriptsmanager.JobScriptsManager.ExportChoice;
+import org.talend.repository.ui.wizards.exportjob.scriptsmanager.JobScriptsManagerFactory;
 import org.talend.repository.ui.wizards.exportjob.util.ExportJobUtil;
 
 import com.amalto.workbench.service.ILegendServerDefService;
@@ -551,6 +556,9 @@ public abstract class DeployOnMDMExportWizardPage extends WizardFileSystemResour
         }
         List<ExportFileResource> resourcesToExport = null;
         try {
+            // quick fix code start: for compile job before deploy
+            compilejob(p.getItem());
+            // quick fix code end
             resourcesToExport = getExportResources(p);
         } catch (ProcessorException e) {
             MessageBoxExceptionHandler.process(e);
@@ -570,6 +578,39 @@ public abstract class DeployOnMDMExportWizardPage extends WizardFileSystemResour
         ProcessorUtilities.resetExportConfig();
         monitor.worked(W_EXPORT_PROCESS);
         return true;
+    }
+
+    private void compilejob(Item item) {
+        ProcessItem processItem = (ProcessItem) item;
+        Map<ExportChoice, Object> exportChoiceMap = JobScriptsManagerFactory.getDefaultExportChoiceMap();
+        exportChoiceMap.put(ExportChoice.needDependencies, true);
+        exportChoiceMap.put(ExportChoice.addStatistics, false);
+        exportChoiceMap.put(ExportChoice.addTracs, false);
+        exportChoiceMap.put(ExportChoice.needAntScript, false);
+        exportChoiceMap.put(ExportChoice.needMavenScript, false);
+        exportChoiceMap.put(ExportChoice.applyToChildren, false);
+        exportChoiceMap.put(ExportChoice.needContext, true);
+        exportChoiceMap.put(ExportChoice.binaries, true);
+        exportChoiceMap.put(ExportChoice.needSourceCode, false);
+        exportChoiceMap.put(ExportChoice.includeLibs, true);
+        exportChoiceMap.put(ExportChoice.needLog4jLevel, false);
+
+        // set like the method export(...) for buildJob
+        exportChoiceMap.put(ExportChoice.jobType, ERepositoryObjectType.PROCESS);
+        exportChoiceMap.put(ExportChoice.contextName, processItem.getProcess().getDefaultContext());
+        try {
+            IBuildJobHandler handler = BuildJobFactory.createBuildJobHandler(processItem, processItem.getProcess().getDefaultContext(),
+                    processItem.getProperty().getVersion(), exportChoiceMap);
+
+            Map<String, Object> prepareParams = new HashMap<String, Object>();
+            prepareParams.put(IBuildResourceParametes.OPTION_ITEMS, true);
+            prepareParams.put(IBuildResourceParametes.OPTION_ITEMS_DEPENDENCIES, true);
+
+            handler.prepare(null, prepareParams);
+
+        } catch (Exception e) {
+            log.error(e.getMessage(),e);
+        }
     }
 
     protected void doSaveWidgetValues() {
