@@ -592,8 +592,6 @@ public abstract class DeployOnMDMExportWizardPage extends WizardFileSystemResour
         exportChoiceMap.put(ExportChoice.needContext, true);
         exportChoiceMap.put(ExportChoice.binaries, true);
         exportChoiceMap.put(ExportChoice.needSourceCode, false);
-        exportChoiceMap.put(ExportChoice.executeTests, false);
-        exportChoiceMap.put(ExportChoice.includeTestSource, true);
         exportChoiceMap.put(ExportChoice.includeLibs, true);
         exportChoiceMap.put(ExportChoice.needLog4jLevel, false);
 
@@ -610,10 +608,8 @@ public abstract class DeployOnMDMExportWizardPage extends WizardFileSystemResour
 
             handler.prepare(null, prepareParams);
 
-        } catch (ProcessorException e) {
-            ExceptionHandler.process(e);
         } catch (Exception e) {
-            ExceptionHandler.process(e);
+            log.error(e.getMessage(),e);
         }
     }
 
