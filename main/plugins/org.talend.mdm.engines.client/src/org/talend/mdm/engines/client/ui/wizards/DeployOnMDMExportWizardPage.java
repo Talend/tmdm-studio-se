@@ -583,7 +583,6 @@ public abstract class DeployOnMDMExportWizardPage extends WizardFileSystemResour
     private void compilejob(Item item) {
         ProcessItem processItem = (ProcessItem) item;
         Map<ExportChoice, Object> exportChoiceMap = JobScriptsManagerFactory.getDefaultExportChoiceMap();
-        exportChoiceMap.put(ExportChoice.doNotCompileCode, true);
         exportChoiceMap.put(ExportChoice.needDependencies, true);
         exportChoiceMap.put(ExportChoice.addStatistics, false);
         exportChoiceMap.put(ExportChoice.addTracs, false);
