@@ -146,7 +146,7 @@ public class RepositoryResourceUtil {
         } catch (Exception e) {
             log.debug(e.getMessage(), e);
             if (shell != null) {
-                String url = serverDef.getProtocol() + serverDef.getHost() + ":" + serverDef.getPort() //$NON-NLS-1$ 
+                String url = serverDef.getProtocol() + serverDef.getHost() + ":" + serverDef.getPort() //$NON-NLS-1$
                         + serverDef.getPath();
                 String title = Messages.bind(Messages.Server_cannot_connected, url);
                 MessageDialog.openError(shell, title, Messages.AbstractDataClusterAction_ConnectFailed);
@@ -390,6 +390,9 @@ public class RepositoryResourceUtil {
 
         String fileName = ResourceFilenameHelper.getExpectedFileName(property.getLabel(), property.getVersion()) + DOT
                 + (fileExtension != null ? fileExtension : ""); //$NON-NLS-1$
+        if(type == IServerObjectRepositoryType.TYPE_WORKFLOW && exAdapter != null && fileExtension != null && fileExtension.equals("conf")) { //$NON-NLS-1$
+            fileName = exAdapter.getWorkflowConfigFilename(item);
+        }
         IFile file = folder.getFile(fileName);
         return file;
     }
@@ -1260,6 +1263,7 @@ public class RepositoryResourceUtil {
 
     private static IRunnableWithProgress initializeProcess = new IRunnableWithProgress() {
 
+        @Override
         public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             try {
                 final ProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
@@ -1479,6 +1483,9 @@ public class RepositoryResourceUtil {
                     if (type == IServerObjectRepositoryType.TYPE_DATAMODEL) {
                         IFile xsdFile = findReferenceFile(type, item, "xsd"); //$NON-NLS-1$
                         return new Object[] { xsdFile, itemFile };
+                    } else if(type == IServerObjectRepositoryType.TYPE_WORKFLOW) {
+                        IFile configFile = findReferenceFile(type, item, "conf"); //$NON-NLS-1$
+                        return new Object[]{configFile};
                     } else {
                         return new Object[] { itemFile };
                     }

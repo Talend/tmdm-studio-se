@@ -190,6 +190,14 @@ public class MDMValidationRunner extends WorkspaceJob {
                     }
 
                 }
+                if (type == IServerObjectRepositoryType.TYPE_WORKFLOW) {
+                    Item item = viewObj.getProperty().getItem();
+                    file = RepositoryResourceUtil.findReferenceFile(type, item, "conf"); //$NON-NLS-1$
+                    if (file != null) {
+                        files.add(file);
+                    }
+                    
+                }
                 viewObjMap.put(viewObj, file);
             }
 
