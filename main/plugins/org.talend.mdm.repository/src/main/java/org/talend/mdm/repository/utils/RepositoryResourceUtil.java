@@ -393,7 +393,7 @@ public class RepositoryResourceUtil {
         if(type == IServerObjectRepositoryType.TYPE_WORKFLOW && exAdapter != null && fileExtension != null && fileExtension.equals("conf")) { //$NON-NLS-1$
             fileName = exAdapter.getWorkflowConfigFilename(item);
         }
-        IFile file = folder.getFile(fileName);
+        IFile file = fileName != null?folder.getFile(fileName):null;
         return file;
     }
 
