@@ -367,6 +367,7 @@ public class RepositoryDropAssistant extends CommonDropAdapterAssistant {
         InputDialog dlg = new InputDialog(getShell(), Messages.RepositoryDropAssistant_pasteObject, Messages.Common_inputName,
                 initLabel, new IInputValidator() {
 
+            @Override
             public String isValid(String newText) {
                 if (newText == null || newText.trim().length() == 0) {
                     return Messages.Common_nameCanNotBeEmpty;
@@ -388,6 +389,10 @@ public class RepositoryDropAssistant extends CommonDropAdapterAssistant {
                             return Messages.Common_nameInvalid;
                         }
                     }
+                        } else if (type.equals(IServerObjectRepositoryType.TYPE_ROLE)) {
+                            if (!ValidateUtil.matchRoleRegex(newText)) {
+                                return Messages.Common_nameInvalid;
+                            }
                 } else if (!ValidateUtil.matchCommonRegex(newText)) {
                     return Messages.Common_nameInvalid;
                 }
@@ -409,6 +414,7 @@ public class RepositoryDropAssistant extends CommonDropAdapterAssistant {
     private void refreshContainer(final IRepositoryViewObject viewObj) {
         Display.getDefault().asyncExec(new Runnable() {
 
+            @Override
             public void run() {
                 if (viewObj != null) {
                     try {

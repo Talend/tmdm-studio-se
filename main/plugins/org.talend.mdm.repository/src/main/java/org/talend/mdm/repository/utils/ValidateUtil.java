@@ -14,6 +14,8 @@ package org.talend.mdm.repository.utils;
 
 import java.util.regex.Pattern;
 
+import org.talend.mdm.commmon.util.core.ICoreConstants;
+
 public class ValidateUtil {
 
     public static boolean matchCommonRegex(String newText) {
@@ -49,7 +51,17 @@ public class ValidateUtil {
         String regex = "\\w(#|\\w)*";//$NON-NLS-1$
         String tailRegex = ".*\\w";//$NON-NLS-1$
 
-        return matches(regex, tailRegex, newText);
+        boolean matches = matches(regex, tailRegex, newText);
+        matches &= isNotSystemRole(newText);
+        return matches;
+    }
+
+    private static boolean isNotSystemRole(String role) {
+        if (role.toLowerCase().startsWith(ICoreConstants.SYSTEM_ROLE_PREFIX.toLowerCase())
+                || role.equalsIgnoreCase(ICoreConstants.ADMIN_PERMISSION)) {
+            return false;
+        }
+        return true;
     }
 
     private static boolean matches(String regex, String tailRegex, String newText) {

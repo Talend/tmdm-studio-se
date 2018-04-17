@@ -126,6 +126,7 @@ public class RenameObjectAction extends AbstractRepositoryAction {
         InputDialog dlg = new InputDialog(getShell(), Messages.RenameObjectAction_rename, Messages.Common_rename, originalName,
                 new IInputValidator() {
 
+                    @Override
                     public String isValid(String newText) {
                         if (newText == null || newText.trim().length() == 0) {
                             return Messages.Common_nameCanNotBeEmpty;
@@ -134,6 +135,10 @@ public class RenameObjectAction extends AbstractRepositoryAction {
                         if (type.equals(IServerObjectRepositoryType.TYPE_TRANSFORMERV2)
                                 || type.equals(IServerObjectRepositoryType.TYPE_VIEW)) {
                             if (!ValidateUtil.matchViewProcessRegex(newText)) {
+                                return Messages.Common_nameInvalid;
+                            }
+                        } else if (type.equals(IServerObjectRepositoryType.TYPE_ROLE)) {
+                            if (!ValidateUtil.matchRoleRegex(newText)) {
                                 return Messages.Common_nameInvalid;
                             }
                         } else if (!ValidateUtil.matchCommonRegex(newText)) {

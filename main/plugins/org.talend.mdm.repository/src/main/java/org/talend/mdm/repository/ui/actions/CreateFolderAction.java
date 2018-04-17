@@ -57,11 +57,15 @@ public class CreateFolderAction extends AbstractRepositoryAction {
             InputDialog dlg = new InputDialog(getShell(), Messages.CreateFolderAction_newCategory,
                     Messages.CreateFolderAction_inputCategoryName, null, new IInputValidator() {
 
+                        @Override
                         public String isValid(String newText) {
                             if ((newText == null) || "".equals(newText)) {
                                 return Messages.Common_nameCanNotBeEmpty;
                             }
-                            Pattern p = Pattern.compile("([\\s*|\\W*]+)");//$NON-NLS-1$ 
+                            if(newText.equalsIgnoreCase("System")) { //$NON-NLS-1$
+                                return Messages.Common_nameInvalid;
+                            }
+                            Pattern p = Pattern.compile("([\\s*|\\W*]+)");//$NON-NLS-1$
                             Matcher m = p.matcher(newText);
                             if (m.find()) {
                                 m.group(1);
