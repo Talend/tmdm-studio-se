@@ -14,6 +14,8 @@ package org.talend.mdm.repository.utils;
 
 import static org.junit.Assert.*;
 
+import java.util.Random;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -126,7 +128,7 @@ public class ValidateUtilTest {
             assertTrue(match1);
             assertFalse(match2);
         }
-        assertTrue(ValidateUtil.matchViewProcessRegex(str + "#")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertTrue(ValidateUtil.matchViewProcessRegex(str + "#")); //$NON-NLS-1$
 
         // invalid char in this middle or back
         String sep[] = { " ", "+", "-", "*", "/", "\\", "(", ")", "[", "]", "{", "}", "|", "`", "~", "@", "$", "%", "^", "&" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$//$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$ //$NON-NLS-16$ //$NON-NLS-17$ //$NON-NLS-18$ //$NON-NLS-19$ //$NON-NLS-20$
@@ -205,6 +207,40 @@ public class ValidateUtilTest {
         boolean match1 = ValidateUtil.matchRoleRegex(str + ss[0]);
 
         assertFalse(match1);
+        
+        String[] sys_buf = buildSystemRole();
+
+        for (String sysRole : sys_buf) {
+            assertFalse(ValidateUtil.matchRoleRegex(sysRole));
+        }
     }
 
+    private String[] buildSystemRole() {
+        String sys_like = "system_";
+        String sys_admin = "administration";
+        Random random = new Random();
+        int randomNum = random.nextInt(3) + 1;
+        for (int i = 0; i < randomNum; i++) {
+            int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;
+            sys_like += (char) (random.nextInt(26) + temp);
+        }
+        
+        StringBuffer syslike_buf = new StringBuffer();
+        for (int i = 0; i < sys_like.length(); i++) {
+            if (random.nextBoolean()) {
+                syslike_buf.append(Character.toUpperCase(sys_like.charAt(i)));
+            } else {
+                syslike_buf.append(sys_like.charAt(i));
+            }
+        }
+        StringBuffer sysadmin_buf = new StringBuffer();
+        for (int i = 0; i < sys_admin.length(); i++) {
+            if (random.nextBoolean()) {
+                sysadmin_buf.append(Character.toUpperCase(sys_admin.charAt(i)));
+            } else {
+                sysadmin_buf.append(sys_admin.charAt(i));
+            }
+        }
+        return new String[] { syslike_buf.toString(), sysadmin_buf.toString() };
+    }
 }

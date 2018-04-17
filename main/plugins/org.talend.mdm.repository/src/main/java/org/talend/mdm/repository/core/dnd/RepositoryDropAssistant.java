@@ -367,42 +367,42 @@ public class RepositoryDropAssistant extends CommonDropAdapterAssistant {
         InputDialog dlg = new InputDialog(getShell(), Messages.RepositoryDropAssistant_pasteObject, Messages.Common_inputName,
                 initLabel, new IInputValidator() {
 
-            @Override
-            public String isValid(String newText) {
-                if (newText == null || newText.trim().length() == 0) {
-                    return Messages.Common_nameCanNotBeEmpty;
-                }
-                if (type.equals(IServerObjectRepositoryType.TYPE_TRANSFORMERV2)
-                        || type.equals(IServerObjectRepositoryType.TYPE_VIEW)) {
-                    if (type.equals(IServerObjectRepositoryType.TYPE_TRANSFORMERV2)) {
-                        if (newText.startsWith(ITransformerV2NodeConsDef.PREFIX_SMARTVIEW_UPPER)) {
-                            if (!ValidateUtil.matchSmartViewRegex(newText)) {
-                                return Messages.Common_nameInvalid;
-                            }
+                    @Override
+                    public String isValid(String newText) {
+                        if (newText == null || newText.trim().length() == 0) {
+                            return Messages.Common_nameCanNotBeEmpty;
                         }
+                        if (type.equals(IServerObjectRepositoryType.TYPE_TRANSFORMERV2)
+                                || type.equals(IServerObjectRepositoryType.TYPE_VIEW)) {
+                            if (type.equals(IServerObjectRepositoryType.TYPE_TRANSFORMERV2)) {
+                                if (newText.startsWith(ITransformerV2NodeConsDef.PREFIX_SMARTVIEW_UPPER)) {
+                                    if (!ValidateUtil.matchSmartViewRegex(newText)) {
+                                        return Messages.Common_nameInvalid;
+                                    }
+                                }
 
-                        if (!ValidateUtil.matchViewProcessRegex(newText)) {
-                            return Messages.Common_nameInvalid;
-                        }
-                    } else if (type.equals(IServerObjectRepositoryType.TYPE_VIEW)) {
-                        if (!ValidateUtil.matchViewProcessRegex(newText)) {
-                            return Messages.Common_nameInvalid;
-                        }
-                    }
+                                if (!ValidateUtil.matchViewProcessRegex(newText)) {
+                                    return Messages.Common_nameInvalid;
+                                }
+                            } else if (type.equals(IServerObjectRepositoryType.TYPE_VIEW)) {
+                                if (!ValidateUtil.matchViewProcessRegex(newText)) {
+                                    return Messages.Common_nameInvalid;
+                                }
+                            }
                         } else if (type.equals(IServerObjectRepositoryType.TYPE_ROLE)) {
                             if (!ValidateUtil.matchRoleRegex(newText)) {
                                 return Messages.Common_nameInvalid;
                             }
-                } else if (!ValidateUtil.matchCommonRegex(newText)) {
-                    return Messages.Common_nameInvalid;
-                }
-                //
-                if (RepositoryResourceUtil.isExistByName(parentItem.getRepObjType(), newText.trim())) {
-                    return Messages.Common_nameIsUsed;
-                }
-                return null;
-            };
-        });
+                        } else if (!ValidateUtil.matchCommonRegex(newText)) {
+                            return Messages.Common_nameInvalid;
+                        }
+                        //
+                        if (RepositoryResourceUtil.isExistByName(parentItem.getRepObjType(), newText.trim())) {
+                            return Messages.Common_nameIsUsed;
+                        }
+                        return null;
+                    };
+                });
         dlg.setBlockOnOpen(true);
         if (dlg.open() == Window.CANCEL) {
             return null;
