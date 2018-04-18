@@ -216,21 +216,26 @@ public class ValidateUtilTest {
     }
 
     private String[] buildSystemRole() {
-        String sys_like = "system_";
-        String sys_admin = "administration";
+        String sys_like = "system_"; //$NON-NLS-1$
+        String sys_admin = "administration"; //$NON-NLS-1$
         Random random = new Random();
-        int randomNum = random.nextInt(3) + 1;
+        int randomNum = random.nextInt(10) + 1;
         for (int i = 0; i < randomNum; i++) {
             int temp = random.nextInt(2) % 2 == 0 ? 65 : 97;
-            sys_like += (char) (random.nextInt(26) + temp);
+            if (random.nextBoolean()) {
+                sys_like += (char) (random.nextInt(26) + temp);
+            } else {
+                sys_like += random.nextInt(10);
+            }
         }
         
         StringBuffer syslike_buf = new StringBuffer();
         for (int i = 0; i < sys_like.length(); i++) {
-            if (random.nextBoolean()) {
-                syslike_buf.append(Character.toUpperCase(sys_like.charAt(i)));
+            char charA = sys_like.charAt(i);
+            if (random.nextBoolean() && Character.isLetter(charA)) {
+                syslike_buf.append(Character.toUpperCase(charA));
             } else {
-                syslike_buf.append(sys_like.charAt(i));
+                syslike_buf.append(charA);
             }
         }
         StringBuffer sysadmin_buf = new StringBuffer();
