@@ -154,6 +154,7 @@ public class MdmPropertiesWizard extends PropertiesWizard {
                     if (imageCatalog != null) {
                         imageCatalog.addModifyListener(new ModifyListener() {
 
+                            @Override
                             public void modifyText(ModifyEvent e) {
                                 item.getResource().setImageCatalog(imageCatalog.getText());
                                 updatePageStatus();
@@ -202,7 +203,7 @@ public class MdmPropertiesWizard extends PropertiesWizard {
                             }
                         } else if (objectType.equals(IServerObjectRepositoryType.TYPE_ROLE)) {
                             if (!ValidateUtil.matchRoleRegex(newText)) {
-                                errorMsg = Messages.Common_nameInvalid;
+                                errorMsg = Messages.shouldNotBeSystemRoleName;
                             }
                         } else {
                             if (!ValidateUtil.matchCommonRegex(newText)) {

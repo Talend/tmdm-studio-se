@@ -59,11 +59,11 @@ public class CreateFolderAction extends AbstractRepositoryAction {
 
                         @Override
                         public String isValid(String newText) {
-                            if ((newText == null) || "".equals(newText)) {
+                            if ((newText == null) || "".equals(newText)) { //$NON-NLS-1$
                                 return Messages.Common_nameCanNotBeEmpty;
                             }
                             if(newText.equalsIgnoreCase("System")) { //$NON-NLS-1$
-                                return Messages.Common_nameInvalid;
+                                return Messages.cannotCreateSystemCategory;
                             }
                             Pattern p = Pattern.compile("([\\s*|\\W*]+)");//$NON-NLS-1$
                             Matcher m = p.matcher(newText);

@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.window.Window;
+import org.eclipse.swt.widgets.Shell;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -123,8 +124,11 @@ public class RenameObjectAction extends AbstractRepositoryAction {
 
     private String showRenameDlg(final ERepositoryObjectType type, final ContainerItem parentItem, final String originalName) {
 
-        InputDialog dlg = new InputDialog(getShell(), Messages.RenameObjectAction_rename, Messages.Common_rename, originalName,
-                new IInputValidator() {
+        CustomInputDialog dlg = new CustomInputDialog(getShell(), Messages.RenameObjectAction_rename, Messages.Common_rename, originalName,
+                null);
+        dlg.setBlockOnOpen(true);
+        dlg.create();
+        dlg.setValidator(new IInputValidator() {
 
                     @Override
                     public String isValid(String newText) {
@@ -139,7 +143,7 @@ public class RenameObjectAction extends AbstractRepositoryAction {
                             }
                         } else if (type.equals(IServerObjectRepositoryType.TYPE_ROLE)) {
                             if (!ValidateUtil.matchRoleRegex(newText)) {
-                                return Messages.Common_nameInvalid;
+                                return Messages.shouldNotBeSystemRoleName;
                             }
                         } else if (!ValidateUtil.matchCommonRegex(newText)) {
                             return Messages.Common_nameInvalid;
@@ -151,7 +155,6 @@ public class RenameObjectAction extends AbstractRepositoryAction {
                         return null;
                     };
                 });
-        dlg.setBlockOnOpen(true);
         if (dlg.open() == Window.CANCEL) {
             return null;
         }
@@ -169,5 +172,34 @@ public class RenameObjectAction extends AbstractRepositoryAction {
             return true;
         }
         return false;
+    }
+
+    class CustomInputDialog extends InputDialog {
+
+        private IInputValidator validator;
+        public CustomInputDialog(Shell parentShell, String dialogTitle, String dialogMessage, String initialValue,
+                IInputValidator validator) {
+            super(parentShell, dialogTitle, dialogMessage, initialValue, validator);
+            this.validator = validator;
+        }
+
+        @Override
+        protected void validateInput() {
+            String errorMessage = null;
+            if (getValidator() != null) {
+                errorMessage = getValidator().isValid(getText().getText());
+            }
+            setErrorMessage(errorMessage);
+        }
+
+        public void setValidator(IInputValidator validator) {
+            this.validator = validator;
+            validateInput();
+        }
+
+        @Override
+        protected IInputValidator getValidator() {
+            return validator;
+        }
     }
 }

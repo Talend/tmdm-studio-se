@@ -389,7 +389,7 @@ public class RepositoryDropAssistant extends CommonDropAdapterAssistant {
                             }
                         } else if (type.equals(IServerObjectRepositoryType.TYPE_ROLE)) {
                             if (!ValidateUtil.matchRoleRegex(newText)) {
-                                return Messages.Common_nameInvalid;
+                                return Messages.shouldNotBeSystemRoleName;
                             }
                         } else if (!ValidateUtil.matchCommonRegex(newText)) {
                             return Messages.Common_nameInvalid;

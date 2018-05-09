@@ -798,6 +798,8 @@ public class Messages extends NLS {
 
     public static String BuildValidationRuleExpression;
 
+    public static String cannotCreateSystemCategory;
+
     public static String GenerateJobXX_UrlString;
 
     public static String LoggingGetDocument_Desc1;
@@ -963,6 +965,8 @@ public class Messages extends NLS {
     public static String ConsistencyConflictt_Deployed;
 
     public static String ConsistencyConflictt_NotDeployed;
+
+    public static String shouldNotBeSystemRoleName;
 
     public static String UnableConnectToServer;
 
