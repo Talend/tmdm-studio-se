@@ -628,6 +628,12 @@ public class Messages extends NLS {
 
     public static String MenuInteractiveHandler_label;
 
+    public static String MessageType_Error;
+
+    public static String MessageType_Info;
+
+    public static String MessageType_Warning;
+
     public static String SelectItemsPage_Title;
 
     public static String Select_Server;

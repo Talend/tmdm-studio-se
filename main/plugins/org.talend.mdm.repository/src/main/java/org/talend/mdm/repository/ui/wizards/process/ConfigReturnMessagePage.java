@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.wizards.process;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -28,6 +29,7 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.mdm.repository.core.impl.transformerV2.ITransformerV2NodeConsDef;
 import org.talend.mdm.repository.i18n.Messages;
 
 import com.amalto.workbench.dialogs.AnnotationLanguageLabelsDialog;
@@ -35,7 +37,7 @@ import com.amalto.workbench.dialogs.AnnotationLanguageLabelsDialog;
 /**
  * DOC hbhong class global comment. Detailled comment
  */
-public class ConfigReturnMessagePage extends WizardPage {
+public class ConfigReturnMessagePage extends WizardPage implements ITransformerV2NodeConsDef {
 
     public static final String PAGE_ID = "org.talend.mdm.repository.ui.wizards.process.ConfigReturnMessagePage"; //$NON-NLS-1$
 
@@ -49,6 +51,7 @@ public class ConfigReturnMessagePage extends WizardPage {
 
     private Combo typeCombo;
 
+    private String lastSelectedMessageType;
     /**
      * Create the wizard.
      */
@@ -58,11 +61,34 @@ public class ConfigReturnMessagePage extends WizardPage {
         setDescription(Messages.ConfigReturnMessagePage_description);
     }
 
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+
+        if (visible) {
+            InputProcessNamePage page = (InputProcessNamePage) getWizard().getPage(InputProcessNamePage.PAGE_ID);
+            int processType = page.getProcessType();
+            if (processType == TYPE_BEFORESAVE) {
+                typeCombo.setItems(new String[] { Messages.MessageType_Error, Messages.MessageType_Warning, Messages.MessageType_Info });
+            } else {
+                typeCombo.setItems(new String[] { Messages.MessageType_Error, Messages.MessageType_Info });
+            }
+
+            typeCombo.select(0);
+            if (Arrays.asList(typeCombo.getItems()).contains(lastSelectedMessageType)) {
+                typeCombo.setText(lastSelectedMessageType);
+            }
+        } else {
+            lastSelectedMessageType = typeCombo.getText();
+        }
+    }
+
     /**
      * Create contents of the wizard.
      * 
      * @param parent
      */
+    @Override
     public void createControl(Composite parent) {
         Composite container = new Composite(parent, SWT.NULL);
 
@@ -74,12 +100,10 @@ public class ConfigReturnMessagePage extends WizardPage {
         lblNewLabel.setText(Messages.ConfigReturnMessagePage_type);
 
         typeCombo = new Combo(container, SWT.READ_ONLY);
-
-        typeCombo.setItems(new String[] { "error", "info" }); //$NON-NLS-1$ //$NON-NLS-2$ 
         typeCombo.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, false, 2, 1));
-        typeCombo.select(0);
         typeCombo.addModifyListener(new ModifyListener() {
 
+            @Override
             public void modifyText(ModifyEvent e) {
                 getWizard().getContainer().updateButtons();
             }
@@ -97,7 +121,7 @@ public class ConfigReturnMessagePage extends WizardPage {
                 if (dialog.open() == IDialogConstants.OK_ID) {
                     StringBuffer output = new StringBuffer();
                     for (Map.Entry<String, String> m : dialog.getDescriptionsMap().entrySet()) {
-                        output.append("[").append(m.getKey().toUpperCase()).append(":").append(m.getValue()).append("]");//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ 
+                        output.append("[").append(m.getKey().toUpperCase()).append(":").append(m.getValue()).append("]");//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
                     }
                     messageText.setText(output.toString());
                 }
@@ -108,6 +132,7 @@ public class ConfigReturnMessagePage extends WizardPage {
         messageText = new Text(container, SWT.BORDER);
         messageText.addModifyListener(new ModifyListener() {
 
+            @Override
             public void modifyText(ModifyEvent e) {
                 getWizard().getContainer().updateButtons();
             }
