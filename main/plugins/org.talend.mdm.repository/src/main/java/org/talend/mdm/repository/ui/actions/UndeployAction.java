@@ -84,7 +84,7 @@ public class UndeployAction extends AbstractBridgeRepositoryAction {
     @Override
     public boolean isVisible(IRepositoryViewObject viewObj) {
         if (getSelectedObject().size() > 0) {
-            if (RepositoryResourceUtil.isSystemViewObject(viewObj.getProperty().getItem())) {
+            if (RepositoryResourceUtil.isSystemViewObject(viewObj)) {
                 return false;
             }
             return true;

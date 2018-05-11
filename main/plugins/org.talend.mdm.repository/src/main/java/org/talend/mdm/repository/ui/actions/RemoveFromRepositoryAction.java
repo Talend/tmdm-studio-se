@@ -302,7 +302,7 @@ public class RemoveFromRepositoryAction extends AbstractRepositoryAction {
 
     @Override
     public boolean isVisible(IRepositoryViewObject viewObj) {
-        if (RepositoryResourceUtil.isSystemViewObject(viewObj.getProperty().getItem())) {
+        if (RepositoryResourceUtil.isSystemViewObject(viewObj)) {
             return false;
         }
         return true;
