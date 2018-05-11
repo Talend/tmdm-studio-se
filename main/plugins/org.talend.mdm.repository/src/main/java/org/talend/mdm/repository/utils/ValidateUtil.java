@@ -52,16 +52,16 @@ public class ValidateUtil {
         String tailRegex = ".*\\w";//$NON-NLS-1$
 
         boolean matches = matches(regex, tailRegex, newText);
-        matches &= isNotSystemRole(newText);
+        matches &= !isSystemRoleName(newText);
         return matches;
     }
 
-    private static boolean isNotSystemRole(String role) {
+    public static boolean isSystemRoleName(String role) {
         if (role.toLowerCase().startsWith(ICoreConstants.SYSTEM_ROLE_PREFIX.toLowerCase())
                 || role.equalsIgnoreCase(ICoreConstants.ADMIN_PERMISSION)) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     private static boolean matches(String regex, String tailRegex, String newText) {

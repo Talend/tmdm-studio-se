@@ -165,8 +165,7 @@ public class RenameObjectAction extends AbstractRepositoryAction {
     @Override
     public boolean isVisible(IRepositoryViewObject viewObj) {
         if (getSelectedObject().size() == 1) {
-            String path = viewObj.getPath();
-            if (path != null && path.equalsIgnoreCase("system")) {//$NON-NLS-1$
+            if (RepositoryResourceUtil.isSystemViewObject(viewObj.getProperty().getItem())) {
                 return false;
             }
             return true;

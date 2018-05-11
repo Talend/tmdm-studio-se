@@ -415,6 +415,15 @@ public class RepositoryResourceUtil {
         return objectFolder;
     }
 
+    public static boolean isSystemViewObject(Item item) {
+        String path = item.getState().getPath().toLowerCase();
+        if (path != null && (path.startsWith("system") || path.startsWith("/system"))) { //$NON-NLS-1$ //$NON-NLS-2$
+            return true;
+        }
+
+        return false;
+    }
+
     private static boolean isSystemFolder(Item pItem, String folderName) {
         if (pItem instanceof ContainerItem) {
             return ((ContainerItem) pItem).getType().equals(FolderType.SYSTEM_FOLDER_LITERAL)

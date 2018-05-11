@@ -21,6 +21,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.mdm.repository.core.AbstractRepositoryAction;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.ui.wizards.MdmPropertiesWizard;
+import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -75,8 +76,7 @@ public class MDMEditPropertyAction extends AbstractRepositoryAction {
     @Override
     public boolean isVisible(IRepositoryViewObject viewObj) {
         if (getSelectedObject().size() == 1) {
-            String path = viewObj.getPath();
-            if (path != null && path.equalsIgnoreCase("system")) {//$NON-NLS-1$
+            if (RepositoryResourceUtil.isSystemViewObject(viewObj.getProperty().getItem())) {
                 return false;
             }
             return true;
