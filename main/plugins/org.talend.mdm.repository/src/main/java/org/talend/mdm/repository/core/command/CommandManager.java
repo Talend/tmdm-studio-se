@@ -333,6 +333,8 @@ public class CommandManager implements IMementoAware {
                         ICommandParameter param = paramMap.get(viewObj);
                         deployCommand.setParameter(param);
                     }
+                    //initialize deploy status
+                    deployCommand.setDeployStatus(null);
                     cmds.add(deployCommand);
                 } else if (validCommand instanceof NOPCommand && defaultCmdType > 0) {
                     ICommand cmd = getNewCommand(defaultCmdType);
