@@ -203,6 +203,8 @@ public class MdmPropertiesWizard extends PropertiesWizard {
                             }
                         } else if (objectType.equals(IServerObjectRepositoryType.TYPE_ROLE)) {
                             if (!ValidateUtil.matchRoleRegex(newText)) {
+                                errorMsg = Messages.Common_nameInvalid;
+                            } else if (ValidateUtil.isSystemRoleName(newText)) {
                                 errorMsg = Messages.shouldNotBeSystemRoleName;
                             }
                         } else {

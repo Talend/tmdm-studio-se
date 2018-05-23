@@ -52,7 +52,6 @@ public class ValidateUtil {
         String tailRegex = ".*\\w";//$NON-NLS-1$
 
         boolean matches = matches(regex, tailRegex, newText);
-        matches &= !isSystemRoleName(newText);
         return matches;
     }
 

@@ -130,31 +130,33 @@ public class RenameObjectAction extends AbstractRepositoryAction {
         dlg.create();
         dlg.setValidator(new IInputValidator() {
 
-                    @Override
-                    public String isValid(String newText) {
-                        if (newText == null || newText.trim().length() == 0) {
-                            return Messages.Common_nameCanNotBeEmpty;
-                        }
+            @Override
+            public String isValid(String newText) {
+                if (newText == null || newText.trim().length() == 0) {
+                    return Messages.Common_nameCanNotBeEmpty;
+                }
 
-                        if (type.equals(IServerObjectRepositoryType.TYPE_TRANSFORMERV2)
-                                || type.equals(IServerObjectRepositoryType.TYPE_VIEW)) {
-                            if (!ValidateUtil.matchViewProcessRegex(newText)) {
-                                return Messages.Common_nameInvalid;
-                            }
-                        } else if (type.equals(IServerObjectRepositoryType.TYPE_ROLE)) {
-                            if (!ValidateUtil.matchRoleRegex(newText)) {
-                                return Messages.shouldNotBeSystemRoleName;
-                            }
-                        } else if (!ValidateUtil.matchCommonRegex(newText)) {
-                            return Messages.Common_nameInvalid;
-                        }
-                        //
-                        if (RepositoryResourceUtil.isExistByName(parentItem.getRepObjType(), newText.trim())) {
-                            return Messages.Common_nameIsUsed;
-                        }
-                        return null;
-                    };
-                });
+                if (type.equals(IServerObjectRepositoryType.TYPE_TRANSFORMERV2)
+                        || type.equals(IServerObjectRepositoryType.TYPE_VIEW)) {
+                    if (!ValidateUtil.matchViewProcessRegex(newText)) {
+                        return Messages.Common_nameInvalid;
+                    }
+                } else if (type.equals(IServerObjectRepositoryType.TYPE_ROLE)) {
+                    if (!ValidateUtil.matchRoleRegex(newText)) {
+                        return Messages.Common_nameInvalid;
+                    } else if (ValidateUtil.isSystemRoleName(newText)) {
+                        return Messages.shouldNotBeSystemRoleName;
+                    }
+                } else if (!ValidateUtil.matchCommonRegex(newText)) {
+                    return Messages.Common_nameInvalid;
+                }
+                //
+                if (RepositoryResourceUtil.isExistByName(parentItem.getRepObjType(), newText.trim())) {
+                    return Messages.Common_nameIsUsed;
+                }
+                return null;
+            };
+        });
         if (dlg.open() == Window.CANCEL) {
             return null;
         }

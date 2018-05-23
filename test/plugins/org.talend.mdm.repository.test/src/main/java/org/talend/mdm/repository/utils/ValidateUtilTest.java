@@ -211,7 +211,7 @@ public class ValidateUtilTest {
         String[] sys_buf = buildSystemRole();
 
         for (String sysRole : sys_buf) {
-            assertFalse(ValidateUtil.matchRoleRegex(sysRole));
+            assertFalse(ValidateUtil.matchRoleRegex(sysRole) && !ValidateUtil.isSystemRoleName(sysRole));
         }
     }
 
