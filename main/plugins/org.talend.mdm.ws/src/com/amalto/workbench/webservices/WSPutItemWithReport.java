@@ -31,11 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "WSPutItemWithReport", propOrder = {
-    "invokeBeforeSaving",
-    "source",
-    "wsPutItem"
-})
+@XmlType(name = "WSPutItemWithReport")
 public class WSPutItemWithReport {
 
     protected Boolean invokeBeforeSaving;
