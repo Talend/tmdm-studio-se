@@ -43,9 +43,11 @@ public class WSPutItemWithReport {
     protected String message;
 
     protected String messageType;
+
     protected String source;
 
     protected Boolean warningApprovedBeforeSave = false;
+
     protected WSPutItem wsPutItem;
 
     /**
