@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.wizards.process.composite;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -31,6 +32,7 @@ import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.ui.wizards.process.ConfigRedirectURLPage;
 
 import com.amalto.workbench.dialogs.AnnotationLanguageLabelsDialog;
+import com.amalto.workbench.widgets.MultilingualDescParser;
 
 /**
  * DOC hbhong class global comment. Detailled comment
@@ -74,12 +76,14 @@ public class RunnableTypeComposite extends AbstractProcessTypeComposite {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                AnnotationLanguageLabelsDialog dialog = new AnnotationLanguageLabelsDialog(null, null, getShell(),
+                Map<String, String> descriptionsMap = new LinkedHashMap<String, String>();
+                MultilingualDescParser.parseMultiLanguageString(messageText.getText().trim(), descriptionsMap);
+                AnnotationLanguageLabelsDialog dialog = new AnnotationLanguageLabelsDialog(descriptionsMap, null, getShell(),
                         Messages.ConfigReturnMessagePage_setMessage);
                 if (dialog.open() == IDialogConstants.OK_ID) {
                     StringBuffer output = new StringBuffer();
                     for (Map.Entry<String, String> m : dialog.getDescriptionsMap().entrySet()) {
-                        output.append("[").append(m.getKey().toUpperCase()).append(":").append(m.getValue()).append("]");//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$ 
+                        output.append("[").append(m.getKey().toUpperCase()).append(":").append(m.getValue()).append("]");//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
                     }
                     messageText.setText(output.toString());
                 }
@@ -90,6 +94,7 @@ public class RunnableTypeComposite extends AbstractProcessTypeComposite {
         messageText = new Text(descContainer, SWT.BORDER);
         messageText.addModifyListener(new ModifyListener() {
 
+            @Override
             public void modifyText(ModifyEvent e) {
                 // getWizard().getContainer().updateButtons();
             }
@@ -136,22 +141,28 @@ public class RunnableTypeComposite extends AbstractProcessTypeComposite {
         messageText.setEnabled(selected);
     }
 
+    @Override
     public int getCurrentProcessType() {
-        if (runnableBun.getSelection())
+        if (runnableBun.getSelection()) {
             return TYPE_ENTITYACTION;
-        if (standaloneBun.getSelection())
+        }
+        if (standaloneBun.getSelection()) {
             return TYPE_WELCOMEACTION;
+        }
         return -1;
     }
 
+    @Override
     public String getDesc() {
         return messageText.getText();
     }
 
+    @Override
     public boolean needShowSelectEntityBun() {
         return true;
     }
 
+    @Override
     public String getProcessPrefix() {
         switch (getCurrentProcessType()) {
         case TYPE_ENTITYACTION:
@@ -162,6 +173,7 @@ public class RunnableTypeComposite extends AbstractProcessTypeComposite {
         return ""; //$NON-NLS-1$
     }
 
+    @Override
     public String getConfigWizardPageId() {
         return ConfigRedirectURLPage.PAGE_ID;
     }

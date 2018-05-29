@@ -13,7 +13,7 @@
 package com.amalto.workbench.actions;
 
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -51,6 +51,7 @@ public class XSDSetAnnotationDescriptionsAction extends UndoAction {
         setToolTipText(Messages.XSDSetAnnotationXX_SetDescOfThisItem);
     }
 
+    @Override
     public IStatus doAction() {
         try {
 
@@ -59,11 +60,13 @@ public class XSDSetAnnotationDescriptionsAction extends UndoAction {
             if (selection.getFirstElement() instanceof Element) {
                 TreePath tPath = ((TreeSelection) selection).getPaths()[0];
                 for (int i = 0; i < tPath.getSegmentCount(); i++) {
-                    if (tPath.getSegment(i) instanceof XSDAnnotation)
+                    if (tPath.getSegment(i) instanceof XSDAnnotation) {
                         xSDCom = (XSDAnnotation) (tPath.getSegment(i));
+                    }
                 }
-            } else
+            } else {
                 xSDCom = (XSDComponent) selection.getFirstElement();
+            }
             XSDAnnotationsStructure struc = new XSDAnnotationsStructure(xSDCom);
             if (struc.getAnnotation() == null) {
                 throw new RuntimeException(Messages.bind(Messages.XSDSetAnnotationXX_ExceptionInfo2, xSDCom.getClass().getName()));
@@ -79,7 +82,7 @@ public class XSDSetAnnotationDescriptionsAction extends UndoAction {
                 // remove existing annotations with labels
                 struc.removeAllDescriptions();
                 // add the new ones
-                LinkedHashMap<String, String> descriptions = dlg.getDescriptionsMap();
+                Map<String, String> descriptions = dlg.getDescriptionsMap();
                 Set<String> isoCodes = descriptions.keySet();
                 for (Iterator iter = isoCodes.iterator(); iter.hasNext();) {
                     String isoCode = (String) iter.next();
@@ -105,6 +108,7 @@ public class XSDSetAnnotationDescriptionsAction extends UndoAction {
         return Status.OK_STATUS;
     }
 
+    @Override
     public void runWithEvent(Event event) {
         super.runWithEvent(event);
     }

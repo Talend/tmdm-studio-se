@@ -13,7 +13,7 @@
 package com.amalto.workbench.actions;
 
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -83,7 +83,7 @@ public class XSDSetAnnotationLabelAction extends UndoAction {
                 // remove existing annotations with labels
                 struc.removeAllLabels();
                 // add the new ones
-                LinkedHashMap<String, String> descriptions = dlg.getDescriptionsMap();
+                Map<String, String> descriptions = dlg.getDescriptionsMap();
                 Set<String> isoCodes = descriptions.keySet();
                 for (Iterator iter = isoCodes.iterator(); iter.hasNext();) {
                     String isoCode = (String) iter.next();

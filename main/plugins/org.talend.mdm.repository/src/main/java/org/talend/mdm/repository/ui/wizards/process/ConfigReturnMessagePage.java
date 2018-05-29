@@ -13,6 +13,7 @@
 package org.talend.mdm.repository.ui.wizards.process;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -33,6 +34,7 @@ import org.talend.mdm.repository.core.impl.transformerV2.ITransformerV2NodeConsD
 import org.talend.mdm.repository.i18n.Messages;
 
 import com.amalto.workbench.dialogs.AnnotationLanguageLabelsDialog;
+import com.amalto.workbench.widgets.MultilingualDescParser;
 
 /**
  * DOC hbhong class global comment. Detailled comment
@@ -116,7 +118,9 @@ public class ConfigReturnMessagePage extends WizardPage implements ITransformerV
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                AnnotationLanguageLabelsDialog dialog = new AnnotationLanguageLabelsDialog(null, null, getShell(),
+                Map<String, String> descriptionsMap = new LinkedHashMap<String, String>();
+                MultilingualDescParser.parseMultiLanguageString(messageText.getText().trim(), descriptionsMap);
+                AnnotationLanguageLabelsDialog dialog = new AnnotationLanguageLabelsDialog(descriptionsMap, null, getShell(),
                         Messages.ConfigReturnMessagePage_setMessage);
                 if (dialog.open() == IDialogConstants.OK_ID) {
                     StringBuffer output = new StringBuffer();
