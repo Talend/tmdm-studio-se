@@ -192,7 +192,7 @@ public class AddBrowseItemsWizard extends Wizard {
         view.getViewableBusinessElements().addAll(keys);
 
         StringBuffer desc = new StringBuffer();
-        LinkedHashMap<String, String> labels = new LinkedHashMap<String, String>();
+        Map<String, String> labels = new LinkedHashMap<String, String>();
         if (decl.getAnnotation() != null) {
             labels = new XSDAnnotationsStructure(decl.getAnnotation()).getLabels();
         }

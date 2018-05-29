@@ -37,9 +37,10 @@ public class FacetMsgCommitHandler extends LanguageInfoCommitHandler<FacetMsgInf
 
         XSDAnnotationsStructure xsdAnnoStruct = getXSDAnnotationStruct();
 
-        LinkedHashMap<String, String> langCode2Value = new LinkedHashMap<String, String>();
-        for (Entry<String, LanguageInfo> eachLangCode2LangInfo : getCommitedObj().getLangCode2LangInfo().entrySet())
+        Map<String, String> langCode2Value = new LinkedHashMap<String, String>();
+        for (Entry<String, LanguageInfo> eachLangCode2LangInfo : getCommitedObj().getLangCode2LangInfo().entrySet()) {
             langCode2Value.put(eachLangCode2LangInfo.getKey(), eachLangCode2LangInfo.getValue().getLabel());
+        }
 
         return xsdAnnoStruct.setFactMessage(langCode2Value);
 

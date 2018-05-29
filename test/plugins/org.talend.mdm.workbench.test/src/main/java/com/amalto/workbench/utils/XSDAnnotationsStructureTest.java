@@ -12,11 +12,12 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDSchema;
@@ -80,7 +81,7 @@ public class XSDAnnotationsStructureTest {
     @Test
     public void testSetLabels() {
         strct.getLabels().clear();
-        LinkedHashMap<String, String> hm = new LinkedHashMap<String, String>();
+        Map<String, String> hm = new LinkedHashMap<String, String>();
         hm.put("zh", "china");
         hm.put("en", "english");
         strct.setLabels(hm);
@@ -93,7 +94,7 @@ public class XSDAnnotationsStructureTest {
     @Test
     public void testGetLabels() {
         strct.getLabels().clear();
-        LinkedHashMap<String, String> hm = new LinkedHashMap<String, String>();
+        Map<String, String> hm = new LinkedHashMap<String, String>();
         hm.put("zh", "china");
         hm.put("en", "english");
         strct.setLabels(hm);
@@ -138,7 +139,7 @@ public class XSDAnnotationsStructureTest {
     @Test
     public void testSetDescriptions() {
         strct.getDescriptions().clear();
-        LinkedHashMap<String, String> hm = new LinkedHashMap<String, String>();
+        Map<String, String> hm = new LinkedHashMap<String, String>();
         hm.put("zh", "china");
         strct.setDescriptions(hm);
         assertTrue(strct.getDescriptions().size() == 1);
@@ -150,7 +151,7 @@ public class XSDAnnotationsStructureTest {
     @Test
     public void testGetDescriptions() {
         strct.getDescriptions().clear();
-        LinkedHashMap<String, String> hm = new LinkedHashMap<String, String>();
+        Map<String, String> hm = new LinkedHashMap<String, String>();
         hm.put("zh", "china");
         strct.setDescriptions(hm);
         assertTrue(strct.getDescriptions().containsKey("zh"));
@@ -406,7 +407,7 @@ public class XSDAnnotationsStructureTest {
      */
     @Test
     public void testGetFactMessage() {
-        LinkedHashMap<String, String> facts = new LinkedHashMap<String, String>();
+        Map<String, String> facts = new LinkedHashMap<String, String>();
         facts.put("fact", "fact");
         strct.setFactMessage(facts);
         assertTrue("fact".equals(facts.get("fact")));

@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -65,7 +66,7 @@ public class AnnotationLanguageLabelsDialog extends Dialog {
 
     protected TableViewer descriptionsViewer;
 
-    protected LinkedHashMap<String, String> descriptionsMap = new LinkedHashMap<String, String>();
+    protected Map<String, String> descriptionsMap = new LinkedHashMap<String, String>();
 
     private SelectionListener caller = null;
 
@@ -74,7 +75,7 @@ public class AnnotationLanguageLabelsDialog extends Dialog {
     /**
      * @param parentShell
      */
-    public AnnotationLanguageLabelsDialog(LinkedHashMap<String, String> descriptionsMap, SelectionListener caller,
+    public AnnotationLanguageLabelsDialog(Map<String, String> descriptionsMap, SelectionListener caller,
             Shell parentShell, String title) {
         super(parentShell);
         if (descriptionsMap != null) {
@@ -84,6 +85,7 @@ public class AnnotationLanguageLabelsDialog extends Dialog {
         this.title = title;
     }
 
+    @Override
     protected Control createDialogArea(Composite parent) {
 
         // Should not really be here but well,....
@@ -332,6 +334,7 @@ public class AnnotationLanguageLabelsDialog extends Dialog {
         descriptionsViewer.refresh();
     }
 
+    @Override
     protected void createButtonsForButtonBar(Composite parent) {
         super.createButtonsForButtonBar(parent);
         if (caller != null) {
@@ -368,7 +371,7 @@ public class AnnotationLanguageLabelsDialog extends Dialog {
      * public TableViewer getDescriptionsTableViewer() { return descriptionsViewer; }
      */
 
-    public LinkedHashMap<String, String> getDescriptionsMap() {
+    public Map<String, String> getDescriptionsMap() {
         return descriptionsMap;
     }
 

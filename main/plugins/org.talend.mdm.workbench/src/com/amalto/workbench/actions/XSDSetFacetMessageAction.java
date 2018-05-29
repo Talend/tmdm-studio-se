@@ -12,7 +12,7 @@
 // ============================================================================
 package com.amalto.workbench.actions;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -57,6 +57,7 @@ public class XSDSetFacetMessageAction extends UndoAction {
         setToolTipText(Messages.XSDSetFacetMessageAction_ActionTip);
     }
 
+    @Override
     public IStatus doAction() {
         try {
             IStructuredSelection selection = (TreeSelection) page.getTreeViewer().getSelection();
@@ -64,11 +65,13 @@ public class XSDSetFacetMessageAction extends UndoAction {
             if (selection.getFirstElement() instanceof Element) {
                 TreePath tPath = ((TreeSelection) selection).getPaths()[0];
                 for (int i = 0; i < tPath.getSegmentCount(); i++) {
-                    if (tPath.getSegment(i) instanceof XSDAnnotation)
+                    if (tPath.getSegment(i) instanceof XSDAnnotation) {
                         xSDCom = (XSDAnnotation) (tPath.getSegment(i));
+                    }
                 }
-            } else
+            } else {
                 xSDCom = (XSDComponent) selection.getFirstElement();
+            }
             XSDAnnotationsStructure struc = new XSDAnnotationsStructure(xSDCom);
             // IStructuredSelection selection = (IStructuredSelection)page.getTreeViewer().getSelection();
             // XSDAnnotationsStructure struc = new XSDAnnotationsStructure((XSDComponent)selection.getFirstElement());
@@ -91,7 +94,7 @@ public class XSDSetFacetMessageAction extends UndoAction {
             if (ret == Window.CANCEL) {
                 return Status.CANCEL_STATUS;
             }
-            LinkedHashMap<String, String> facets = dlg.getDescriptionsMap();
+            Map<String, String> facets = dlg.getDescriptionsMap();
             struc.setFactMessage(facets);
 
             if (struc.hasChanged()) {
@@ -110,6 +113,7 @@ public class XSDSetFacetMessageAction extends UndoAction {
         return Status.OK_STATUS;
     }
 
+    @Override
     public void runWithEvent(Event event) {
         super.runWithEvent(event);
     }

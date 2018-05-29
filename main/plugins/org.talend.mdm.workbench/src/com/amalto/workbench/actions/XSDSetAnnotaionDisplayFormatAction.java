@@ -12,7 +12,7 @@
 // ============================================================================
 package com.amalto.workbench.actions;
 
-import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,6 +52,7 @@ public class XSDSetAnnotaionDisplayFormatAction extends UndoAction {
         setToolTipText(Messages.XSDSetAnnoXX_ActionTip2);
     }
 
+    @Override
     public IStatus doAction() {
         try {
             IStructuredSelection selection = (TreeSelection) page.getTreeViewer().getSelection();
@@ -59,11 +60,13 @@ public class XSDSetAnnotaionDisplayFormatAction extends UndoAction {
             if (selection.getFirstElement() instanceof Element) {
                 TreePath tPath = ((TreeSelection) selection).getPaths()[0];
                 for (int i = 0; i < tPath.getSegmentCount(); i++) {
-                    if (tPath.getSegment(i) instanceof XSDAnnotation)
+                    if (tPath.getSegment(i) instanceof XSDAnnotation) {
                         xSDCom = (XSDAnnotation) (tPath.getSegment(i));
+                    }
                 }
-            } else
+            } else {
                 xSDCom = (XSDComponent) selection.getFirstElement();
+            }
             XSDAnnotationsStructure struc = new XSDAnnotationsStructure(xSDCom);
             // IStructuredSelection selection = (IStructuredSelection)page.getTreeViewer().getSelection();
             // XSDAnnotationsStructure struc = new XSDAnnotationsStructure((XSDComponent)selection.getFirstElement());
@@ -87,7 +90,7 @@ public class XSDSetAnnotaionDisplayFormatAction extends UndoAction {
             if (ret == Window.CANCEL) {
                 return Status.CANCEL_STATUS;
             }
-            LinkedHashMap<String, String> fomats = dlg.getDescriptionsMap();
+            Map<String, String> fomats = dlg.getDescriptionsMap();
             struc.setDisplayFormat(fomats);
 
             if (struc.hasChanged()) {
@@ -106,6 +109,7 @@ public class XSDSetAnnotaionDisplayFormatAction extends UndoAction {
         return Status.OK_STATUS;
     }
 
+    @Override
     public void runWithEvent(Event event) {
         super.runWithEvent(event);
     }
