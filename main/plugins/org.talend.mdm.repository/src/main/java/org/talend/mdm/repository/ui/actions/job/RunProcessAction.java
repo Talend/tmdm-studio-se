@@ -43,7 +43,7 @@ public class RunProcessAction extends AbstractBridgeRepositoryAction {
     static class MDMRunProcess extends RunProcess {
 
         @Override
-        protected RepositoryNode getCurrentRepositoryNode() {
+        protected RepositoryNode initCurrentRepositoryNode() {
             ISelection selection = getSelection();
             if (selection == null || selection.isEmpty() || !(selection instanceof IStructuredSelection)) {
                 return null;
