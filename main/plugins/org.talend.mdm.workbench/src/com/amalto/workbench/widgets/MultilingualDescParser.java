@@ -39,12 +39,12 @@ public class MultilingualDescParser {
      * 
      * The map between language code and message is stored in m.
      * 
-     * @param s Multiple language message string to be parsed
-     * @param m Map between language codes and messages in which to store results
+     * @param msg Multiple language message string to be parsed
+     * @param msgMap Map between language codes and messages in which to store results
      */
-    public static void parseMultiLanguageString(String s, Map<String, String> m) {
+    public static void parseMultiLanguageString(String msg, Map<String, String> msgMap) {
 
-        if (s != null && m != null) {
+        if (msg != null && msgMap != null) {
 
             // Parse states
             final byte PARSE_ERROR = 0;
@@ -59,8 +59,8 @@ public class MultilingualDescParser {
             StringBuffer countryCodeBuffer = new StringBuffer(); // string buffer for constructing current country code
             StringBuffer messageBuffer = new StringBuffer(); // string buffer for constructing current error message
 
-            for (int i = 0, l = s.length(); i < l && parseState != PARSE_ERROR; ++i) {
-                char c = s.charAt(i);
+            for (int i = 0, l = msg.length(); i < l && parseState != PARSE_ERROR; ++i) {
+                char c = msg.charAt(i);
 
                 switch (parseState) {
                 case LOOKING_FOR_OPENING_BRACKET:
@@ -97,7 +97,7 @@ public class MultilingualDescParser {
                     if (c == ']') {
                         String countryCode = countryCodeBuffer.toString().toLowerCase();
                         if (Util.iso2lang.get(countryCode) != null) {
-                            m.put(countryCode, messageBuffer.toString());
+                            msgMap.put(countryCode, messageBuffer.toString());
                         }
                         countryCodeBuffer = new StringBuffer();
                         messageBuffer = new StringBuffer();
@@ -131,33 +131,33 @@ public class MultilingualDescParser {
      * Encode multi-language message as a string using format [cc:mmm][cc:mmm] where cc is the language code and mmm is
      * the user specified message. ']' and '\' are automatically backslash escaped.
      * 
-     * @param m Map between two letter language code and message in that language
+     * @param msgMap Map between two letter language code and message in that language
      * @return Multi-language message encoded as a string, with ']' and '\' escaped
      */
-    public static String escapeMultiLanguageString(Map<String, String> m) {
+    public static String escapeMultiLanguageString(Map<String, String> msgMap) {
 
         StringBuffer resultBuffer = new StringBuffer();
 
-        if (m != null) {
+        if (msgMap != null) {
 
-            for (Map.Entry<String, String> entry : m.entrySet()) {
-                String k = entry.getKey();
-                String v = entry.getValue();
+            for (Map.Entry<String, String> entry : msgMap.entrySet()) {
+                String countryCode = entry.getKey();
+                String msg = entry.getValue();
 
-                if (k != null) {
-                    k = k.toLowerCase();
+                if (countryCode != null) {
+                    countryCode = countryCode.toLowerCase();
 
-                    if (Util.iso2lang.get(k) != null) {
+                    if (Util.iso2lang.get(countryCode) != null) {
 
                         resultBuffer.append('[');
-                        resultBuffer.append(k.toUpperCase());
+                        resultBuffer.append(countryCode.toUpperCase());
                         resultBuffer.append(':');
 
-                        if (v != null) {
+                        if (msg != null) {
 
-                            for (int i = 0, l = v.length(); i < l; ++i) {
+                            for (int i = 0, l = msg.length(); i < l; ++i) {
 
-                                char c = v.charAt(i);
+                                char c = msg.charAt(i);
                                 if (c == '\\' || c == ']') {
                                     resultBuffer.append('\\');
                                 }
