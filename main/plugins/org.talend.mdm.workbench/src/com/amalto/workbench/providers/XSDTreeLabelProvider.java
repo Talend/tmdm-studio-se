@@ -265,6 +265,10 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
                                             .getNodeValue());
                         } else if (source.equals("X_Write")) {//$NON-NLS-1$
                             return Messages.bind(Messages.XSDTreeLabelProvider_11, e.getChildNodes().item(0).getNodeValue());
+                        } else if (source.equals("X_No_Add")) {//$NON-NLS-1$
+                            return Messages.bind(Messages.XSDTreeLabelProvider_29, e.getChildNodes().item(0).getNodeValue());
+                        } else if (source.equals("X_No_Remove")) {//$NON-NLS-1$
+                            return Messages.bind(Messages.XSDTreeLabelProvider_30, e.getChildNodes().item(0).getNodeValue());
                         } else if (source.equals("X_Deny_Create")) {//$NON-NLS-1$
                             return Messages.bind(Messages.XSDTreeLabelProvider_12, e.getChildNodes().item(0).getNodeValue());
                         } else if (source.equals("X_Deny_LogicalDelete")) {//$NON-NLS-1$
@@ -526,7 +530,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
                             return ImageCache.getCreatedImage(EImage.TARGETSYSTEM.getPath());
                         } else if (source.startsWith("X_Description_")) {//$NON-NLS-1$
                             return ImageCache.getCreatedImage(EImage.DOCUMENTATION.getPath());
-                        } else if (source.equals("X_Write")) {//$NON-NLS-1$
+                        } else if (source.equals("X_Write") || source.equals("X_No_Add") || source.equals("X_No_Remove")) {//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                             return ImageCache.getCreatedImage(EImage.SECURITYANNOTATION.getPath());
                         } else if (source.equals("X_Deny_Create")) {//$NON-NLS-1$
                             return ImageCache.getCreatedImage(EImage.SECURITYANNOTATION.getPath());
@@ -627,6 +631,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
 
     private XSDElementDeclaration entity;
 
+    @Override
     public void updateLabel(ViewerLabel label, TreePath elementPath) {
         if (elementPath.getFirstSegment() instanceof XSDElementDeclaration) {
             entity = (XSDElementDeclaration) elementPath.getFirstSegment();
@@ -637,6 +642,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
         label.setImage(getImage(lastSegment));
     }
 
+    @Override
     public Font getFont(Object element) {
         if (filter != null) {
             if (filter.check(element) == FilterResult.ENABLE) {
@@ -651,6 +657,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
      * 
      * @see org.eclipse.jface.viewers.IColorProvider#getForeground(java.lang.Object)
      */
+    @Override
     public Color getForeground(Object element) {
         if (filter != null) {
 
@@ -670,6 +677,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
      * 
      * @see org.eclipse.jface.viewers.IColorProvider#getBackground(java.lang.Object)
      */
+    @Override
     public Color getBackground(Object element) {
         return null;
     }

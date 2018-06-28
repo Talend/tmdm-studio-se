@@ -22,6 +22,7 @@ import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.ui.dialogs.xpath.XpathSelectDialog2;
 
 import com.amalto.workbench.dialogs.AnnotationOrderedListsDialog;
+import com.amalto.workbench.dialogs.IAnnotationOrderedListsDialogExtender;
 import com.amalto.workbench.dialogs.XpathSelectDialog;
 import com.amalto.workbench.editors.DataModelMainPage;
 
@@ -45,6 +46,11 @@ public class AnnotationOrderedListsDialogR extends AnnotationOrderedListsDialog 
     public AnnotationOrderedListsDialogR(ArrayList<String> xPaths, SelectionListener caller, Shell parentShell, String title,
             String columnName, DataModelMainPage parentPage, int actionType, String dataModelName) {
         super(xPaths, caller, parentShell, title, columnName, parentPage, actionType, dataModelName);
+    }
+
+    public AnnotationOrderedListsDialogR(SelectionListener caller, Shell parentShell, String title, DataModelMainPage parentPage,
+            int actionType, String dataModelName, IAnnotationOrderedListsDialogExtender extender) {
+        super(caller, parentShell, title, parentPage, actionType, dataModelName, extender);
     }
 
     @Override

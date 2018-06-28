@@ -575,6 +575,12 @@ public class Messages extends NLS {
 
     public static String Warnning;
 
+    public static String WriteAccessAnnotationDialogExtender_AddAccess;
+
+    public static String WriteAccessAnnotationDialogExtender_RemoveAccess;
+
+    public static String WriteAccessAnnotationDialogExtender_Roles;
+
     public static String NotContainEmpty;
 
     public static String NameConfigComposite_Name;
@@ -1793,7 +1799,11 @@ public class Messages extends NLS {
 
     public static String XSDTreeLabelProvider_28;
 
+    public static String XSDTreeLabelProvider_29;
+
     public static String XSDTreeLabelProvider_3;
+
+    public static String XSDTreeLabelProvider_30;
 
     public static String XSDTreeLabelProvider_4;
 

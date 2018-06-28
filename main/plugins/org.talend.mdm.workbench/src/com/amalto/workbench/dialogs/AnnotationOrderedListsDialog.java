@@ -15,6 +15,7 @@ package com.amalto.workbench.dialogs;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.logging.Log;
@@ -89,19 +90,17 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
 
     protected Button checkBox;
 
-    // protected Text labelText;
-    // protected Combo combo;
     protected TableViewer viewer;
 
     private List<String> roles;
 
-    protected ArrayList<String> xPaths = new ArrayList<String>();
+    protected List<String> xPaths = new ArrayList<String>();
 
     private SelectionListener caller = null;
 
     private String title = "";//$NON-NLS-1$
 
-    private String columnName = "";//$NON-NLS-1$
+    private String[] columnNames = null;
 
     private boolean recursive = true;
 
@@ -143,17 +142,25 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
 
     private ElementFKInfoFormatViewer formatEditor;
 
+    private IAnnotationOrderedListsDialogExtender extender;
+
     /**
      * @param parentShell
      */
-    public AnnotationOrderedListsDialog(ArrayList<String> xPaths, SelectionListener caller, Shell parentShell, String title,
+    public AnnotationOrderedListsDialog(List<String> xPaths, SelectionListener caller, Shell parentShell, String title,
             String columnName, DataModelMainPage parentPage, int actionType, String dataModelName) {
-        super(parentShell);
-        setShellStyle(this.getShellStyle() | SWT.RESIZE);
+        this(caller, parentShell, title, parentPage, actionType, dataModelName, null);
+        this.columnNames = new String[] { columnName };
         this.xPaths = xPaths;
+    }
+
+    public AnnotationOrderedListsDialog(SelectionListener caller, Shell parentShell, String title, DataModelMainPage parentPage,
+            int actionType, String dataModelName, IAnnotationOrderedListsDialogExtender extender) {
+        super(parentShell);
+        this.extender = extender;
+        setShellStyle(this.getShellStyle() | SWT.RESIZE);
         this.caller = caller;
         this.title = title;
-        this.columnName = columnName;
         this.parentPage = parentPage;
         this.xObject = parentPage.getXObject();
         this.actionType = actionType;
@@ -203,19 +210,15 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
         GridLayout layout = (GridLayout) composite.getLayout();
         layout.numColumns = 3;
         layout.makeColumnsEqualWidth = false;
-        // layout.verticalSpacing = 10;
 
         if (actionType == AnnotationWrite_ActionType || actionType == AnnotationHidden_ActionType) {
             textControl = new CCombo(composite, SWT.BORDER | SWT.READ_ONLY);
-
-            // roles=Util.getCachedXObjectsNameSet(this.xObject, TreeObject.ROLE);
             roles = getAllRolesStr();
             ((CCombo) textControl).setItems(roles.toArray(new String[roles.size()]));
 
         } else if (actionType == AnnotationLookupField_ActionType || actionType == AnnotationPrimaKeyInfo_ActionType) {
             textControl = new CCombo(composite, SWT.BORDER | SWT.READ_ONLY);
 
-            // roles=Util.getCachedXObjectsNameSet(this.xObject, TreeObject.ROLE);
             roles = getConceptElements();
             ((CCombo) textControl).setItems(roles.toArray(new String[roles.size()]));
 
@@ -241,12 +244,14 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
 
         textControl.addKeyListener(new KeyListener() {
 
+            @Override
             public void keyPressed(KeyEvent e) {
             }
 
+            @Override
             public void keyReleased(KeyEvent e) {
                 if ((e.stateMask == 0) && (e.character == SWT.CR)) {
-                    xPaths.add(AnnotationOrderedListsDialog.getControlText(textControl));
+                    addXPath(-1, AnnotationOrderedListsDialog.getControlText(textControl));
                     viewer.refresh();
                     fireXPathsChanges();
                 }
@@ -260,10 +265,12 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
             xpathButton.setToolTipText(Messages.AnnotationOrderedListsDialog_SelectXpath);
             xpathButton.addSelectionListener(new SelectionListener() {
 
+                @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
 
                 }
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     XpathSelectDialog dlg = getNewXpathSelectDialog(parentPage, dataModelName);
 
@@ -286,201 +293,222 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
 
         Button addLabelButton = new Button(composite, SWT.PUSH);
         addLabelButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
-        // addLabelButton.setText("Set");
         addLabelButton.setImage(ImageCache.getCreatedImage(EImage.ADD_OBJ.getPath()));
         addLabelButton.setToolTipText(Messages.AnnotationOrderedListsDialog_Add);
         addLabelButton.addSelectionListener(new SelectionListener() {
 
+            @Override
             public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
             };
 
+            @Override
             public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
                 boolean exist = false;
-                for (String string : xPaths) {
+                for (String string : getXPaths()) {
                     if (string.equals(getControlText(textControl))) {
                         exist = true;
                     }
                 }
                 if (!exist && getControlText(textControl) != null && getControlText(textControl) != "") {
-                    xPaths.add(getControlText(textControl));
+                    addXPath(-1, getControlText(textControl));
                 }
                 viewer.refresh();
                 fireXPathsChanges();
             };
         });
 
-        final String COLUMN = columnName;
-
         viewer = new TableViewer(composite, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER | SWT.FULL_SELECTION);
         viewer.getControl().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 2, 1));
         ((GridData) viewer.getControl().getLayoutData()).heightHint = 100;
         // Set up the underlying table
         Table table = viewer.getTable();
-        // table.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        new TableColumn(table, SWT.CENTER).setText(COLUMN);
-        table.getColumn(0).setWidth(500);
-        for (int i = 1, n = table.getColumnCount(); i < n; i++) {
-            table.getColumn(i).pack();
-        }
-
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
 
-        // Create the cell editors --> We actually discard those later: not natural for an user
-        CellEditor[] editors = new CellEditor[1];
-        if (actionType == AnnotationOrderedListsDialog.AnnotationWrite_ActionType
-                || actionType == AnnotationOrderedListsDialog.AnnotationHidden_ActionType
-                || actionType == AnnotationLookupField_ActionType || actionType == AnnotationPrimaKeyInfo_ActionType) {
-            editors[0] = new ComboBoxCellEditor(table, roles.toArray(new String[] {}), SWT.READ_ONLY);
+        if (extender != null) {
+            String[] roleNames = roles.toArray(new String[0]);
+            extender.configTableViewer(viewer, roleNames);
+            viewer.addSelectionChangedListener(extender.getViewerSelectionChangedListener(viewer, textControl));
         } else {
-            editors[0] = new TextCellEditor(table);
+            // Set the column properties
+            viewer.setColumnProperties(this.columnNames);
+            for (int i = 0; i < this.columnNames.length; i++) {
+                String columnName = columnNames[i];
+                TableColumn column = new TableColumn(table, SWT.CENTER);
+                column.setText(columnName);
+                table.getColumn(i).pack();
+            }
+            table.getColumn(0).setWidth(500);
+            for (int i = 1, n = table.getColumnCount(); i < n; i++) {
+
+            }
+            // default
+            // Create the cell editors --> We actually discard those later: not natural for an user
+            CellEditor[] editors = new CellEditor[1];
+            if (actionType == AnnotationOrderedListsDialog.AnnotationWrite_ActionType
+                    || actionType == AnnotationOrderedListsDialog.AnnotationHidden_ActionType
+                    || actionType == AnnotationLookupField_ActionType || actionType == AnnotationPrimaKeyInfo_ActionType) {
+                editors[0] = new ComboBoxCellEditor(table, roles.toArray(new String[] {}), SWT.READ_ONLY);
+            } else {
+                editors[0] = new TextCellEditor(table);
+            }
+
+            viewer.setCellEditors(editors);
+
+            // set the content provider
+            viewer.setContentProvider(new IStructuredContentProvider() {
+
+                @Override
+                public void dispose() {
+                }
+
+                @Override
+                public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+                }
+
+                @Override
+                public Object[] getElements(Object inputElement) {
+                    @SuppressWarnings("unchecked")
+                    ArrayList<String> xPaths = (ArrayList<String>) inputElement;
+                    ArrayList<DescriptionLine> lines = new ArrayList<DescriptionLine>();
+                    for (String xPath : xPaths) {
+                        DescriptionLine line = new DescriptionLine(xPath);
+                        lines.add(line);
+                    }
+                    // we return an instance line made of a Sring and a boolean
+                    return lines.toArray(new DescriptionLine[lines.size()]);
+                }
+            });
+
+            // set the label provider
+            viewer.setLabelProvider(new ITableLabelProvider() {
+
+                @Override
+                public boolean isLabelProperty(Object element, String property) {
+                    return false;
+                }
+
+                @Override
+                public void dispose() {
+                }
+
+                @Override
+                public void addListener(ILabelProviderListener listener) {
+                }
+
+                @Override
+                public void removeListener(ILabelProviderListener listener) {
+                }
+
+                @Override
+                public String getColumnText(Object element, int columnIndex) {
+                    DescriptionLine line = (DescriptionLine) element;
+                    switch (columnIndex) {
+                    case 0:
+                        return line.getLabel();
+                    }
+                    return "";//$NON-NLS-1$
+                }
+
+                @Override
+                public Image getColumnImage(Object element, int columnIndex) {
+                    return null;
+                }
+            });
+
+            // set the Cell Modifier
+            viewer.setCellModifier(new ICellModifier() {
+
+                @Override
+                public boolean canModify(Object element, String property) {
+                    return true;
+                }
+
+                @Override
+                public void modify(Object element, String property, Object value) {
+
+                    TableItem item = (TableItem) element;
+                    DescriptionLine line = (DescriptionLine) item.getData();
+                    String orgValue = line.getLabel();
+                    if (actionType != AnnotationWrite_ActionType && actionType != AnnotationHidden_ActionType
+                            && actionType != AnnotationLookupField_ActionType
+                            && actionType != AnnotationPrimaKeyInfo_ActionType) {
+                        int targetPos = getXPaths().indexOf(value.toString());
+                        if (targetPos < 0) {
+                            line.setLabel(value.toString());
+                            int index = getXPaths().indexOf(orgValue);
+                            removeXPath(index);
+                            addXPath(index, value.toString());
+                            viewer.update(line, null);
+                        } else if (targetPos >= 0 && !value.toString().equals(orgValue)) {
+                            MessageDialog.openInformation(null, Messages.Warning,
+                                    Messages.AnnotationOrderedListsDialog_ValueAlreadyExists);
+                        }
+                    } else {
+                        String[] attrs = roles.toArray(new String[] {});
+                        int index = Integer.parseInt(value.toString());
+                        if (index == -1) {
+                            return;
+                        }
+                        value = attrs[index];
+                        int pos = getXPaths().indexOf(value.toString());
+                        if (pos >= 0 && !(orgValue.equals(value))) {
+                            MessageDialog.openInformation(null, Messages.Warning, Messages.AnnotationOrderedListsDialog_);
+                            return;
+                        } else if (pos < 0) {
+                            index = getXPaths().indexOf(orgValue);
+                            line.setLabel(value.toString());
+                            removeXPath(index);
+                            addXPath(index, value.toString());
+                            viewer.update(line, null);
+                        }
+                    }
+
+                    fireXPathsChanges();
+                }
+
+                @Override
+                public Object getValue(Object element, String property) {
+                    DescriptionLine line = (DescriptionLine) element;
+                    String value = line.getLabel();
+
+                    if (actionType == AnnotationWrite_ActionType || actionType == AnnotationHidden_ActionType
+                            || actionType == AnnotationLookupField_ActionType
+                            || actionType == AnnotationPrimaKeyInfo_ActionType) {
+                        String[] attrs = roles.toArray(new String[] {});
+                        return Arrays.asList(attrs).indexOf(value);
+                    } else {
+                        return value;
+                    }
+
+                }
+            });
+            // Listen for changes in the selection of the viewer to display additional parameters
+            viewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+                @Override
+                public void selectionChanged(SelectionChangedEvent event) {
+                    DescriptionLine line = (DescriptionLine) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
+                    if (line != null) {
+                        if (textControl instanceof CCombo) {
+                            ((CCombo) textControl).setText(line.getLabel());
+                        }
+                        if (textControl instanceof Text) {
+                            ((Text) textControl).setText(line.getLabel());
+                        }
+                    }
+                }
+            });
         }
-
-        viewer.setCellEditors(editors);
-
-        // set the content provider
-        viewer.setContentProvider(new IStructuredContentProvider() {
-
-            public void dispose() {
-            }
-
-            public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-            }
-
-            public Object[] getElements(Object inputElement) {
-                @SuppressWarnings("unchecked")
-                ArrayList<String> xPaths = (ArrayList<String>) inputElement;
-                ArrayList<DescriptionLine> lines = new ArrayList<DescriptionLine>();
-                for (String xPath : xPaths) {
-                    DescriptionLine line = new DescriptionLine(xPath);
-                    lines.add(line);
-                }
-                // we return an instance line made of a Sring and a boolean
-                return lines.toArray(new DescriptionLine[lines.size()]);
-            }
-        });
-
-        // set the label provider
-        viewer.setLabelProvider(new ITableLabelProvider() {
-
-            public boolean isLabelProperty(Object element, String property) {
-                return false;
-            }
-
-            public void dispose() {
-            }
-
-            public void addListener(ILabelProviderListener listener) {
-            }
-
-            public void removeListener(ILabelProviderListener listener) {
-            }
-
-            public String getColumnText(Object element, int columnIndex) {
-                // System.out.println("getColumnText() "+columnIndex);
-                DescriptionLine line = (DescriptionLine) element;
-                switch (columnIndex) {
-                case 0:
-                    return line.getLabel();
-                }
-                return "";//$NON-NLS-1$
-            }
-
-            public Image getColumnImage(Object element, int columnIndex) {
-                return null;
-            }
-        });
-
-        // Set the column properties
-        viewer.setColumnProperties(new String[] { COLUMN });
-
-        // set the Cell Modifier
-        viewer.setCellModifier(new ICellModifier() {
-
-            public boolean canModify(Object element, String property) {
-                // if (INSTANCE_ACCESS.equals(property)) return true; Deactivated
-                return true;
-                // return false;
-            }
-
-            public void modify(Object element, String property, Object value) {
-
-                TableItem item = (TableItem) element;
-                DescriptionLine line = (DescriptionLine) item.getData();
-                String orgValue = line.getLabel();
-                if (actionType != AnnotationWrite_ActionType && actionType != AnnotationHidden_ActionType
-                        && actionType != AnnotationLookupField_ActionType && actionType != AnnotationPrimaKeyInfo_ActionType) {
-                    int targetPos = xPaths.indexOf(value.toString());
-                    if (targetPos < 0) {
-                        line.setLabel(value.toString());
-                        int index = xPaths.indexOf(orgValue);
-                        xPaths.remove(index);
-                        xPaths.add(index, value.toString());
-                        viewer.update(line, null);
-                    } else if (targetPos >= 0 && !value.toString().equals(orgValue)) {
-                        MessageDialog.openInformation(null, Messages.Warning,
-                                Messages.AnnotationOrderedListsDialog_ValueAlreadyExists);
-                    }
-                } else {
-
-                    String[] attrs = roles.toArray(new String[] {});
-                    int index = Integer.parseInt(value.toString());
-                    if (index == -1) {
-                        return;
-                    }
-                    value = attrs[index];
-                    int pos = xPaths.indexOf(value.toString());
-                    if (pos >= 0 && !(orgValue.equals(value))) {
-                        MessageDialog.openInformation(null, Messages.Warning, Messages.AnnotationOrderedListsDialog_);
-                        return;
-                    } else if (pos < 0) {
-                        line.setLabel(value.toString());
-                        xPaths.set(index, value.toString());
-                        viewer.update(line, null);
-                    }
-                }
-
-                fireXPathsChanges();
-            }
-
-            public Object getValue(Object element, String property) {
-                DescriptionLine line = (DescriptionLine) element;
-                String value = line.getLabel();
-
-                if (actionType == AnnotationWrite_ActionType || actionType == AnnotationHidden_ActionType
-                        || actionType == AnnotationLookupField_ActionType || actionType == AnnotationPrimaKeyInfo_ActionType) {
-                    String[] attrs = roles.toArray(new String[] {});
-                    return Arrays.asList(attrs).indexOf(value);
-                } else {
-                    return value;
-                }
-
-            }
-        });
-
-        // Listen for changes in the selection of the viewer to display additional parameters
-        viewer.addSelectionChangedListener(new ISelectionChangedListener() {
-
-            public void selectionChanged(SelectionChangedEvent event) {
-                DescriptionLine line = (DescriptionLine) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-                if (line != null) {
-                    if (textControl instanceof CCombo) {
-                        ((CCombo) textControl).setText(line.getLabel());
-                    }
-                    if (textControl instanceof Text) {
-                        ((Text) textControl).setText(line.getLabel());
-                    }
-                }
-            }
-        });
 
         // display for Delete Key events to delete an instance
         viewer.getTable().addKeyListener(new KeyListener() {
 
+            @Override
             public void keyPressed(KeyEvent e) {
             }
 
+            @Override
             public void keyReleased(KeyEvent e) {
                 // System.out.println("Table keyReleased() ");
                 if ((e.stateMask == 0) && (e.character == SWT.DEL) && (viewer.getSelection() != null)) {
@@ -493,7 +521,7 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
             }
         });
 
-        viewer.setInput(xPaths);
+        viewer.setInput(extender != null ? extender.getInput() : getXPaths());
         viewer.refresh();
 
         Composite rightButtonsComposite = new Composite(composite, SWT.NULL);
@@ -506,20 +534,21 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
         upButton.setToolTipText(Messages.AnnotationOrderedListsDialog_MoveUpTheItem);
         upButton.addSelectionListener(new SelectionListener() {
 
+            @Override
             public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
             };
 
+            @Override
             public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-                DescriptionLine line = (DescriptionLine) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-                if (line == null) {
+                String selected = getLineLabel(((IStructuredSelection) viewer.getSelection()).getFirstElement());
+                if (selected == null) {
                     return;
                 }
                 int i = 0;
-                for (String xPath : xPaths) {
-                    if (xPath.equals(line.getLabel())) {
+                for (String xPath : getXPaths()) {
+                    if (xPath.equals(selected)) {
                         if (i > 0) {
-                            xPaths.remove(i);
-                            xPaths.add(i - 1, xPath);
+                            switchXPath(i, i - 1);
                             viewer.refresh();
                             viewer.getTable().setSelection(i - 1);
                             viewer.getTable().showSelection();
@@ -537,20 +566,21 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
         downButton.setToolTipText(Messages.AnnotationOrderedListsDialog_MoveDownTheItem);
         downButton.addSelectionListener(new SelectionListener() {
 
+            @Override
             public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
             };
 
+            @Override
             public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-                DescriptionLine line = (DescriptionLine) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-                if (line == null) {
+                String selected = getLineLabel(((IStructuredSelection) viewer.getSelection()).getFirstElement());
+                if (selected == null) {
                     return;
                 }
                 int i = 0;
-                for (String xPath : xPaths) {
-                    if (xPath.equals(line.getLabel())) {
-                        if (i < xPaths.size() - 1) {
-                            xPaths.remove(i);
-                            xPaths.add(i + 1, xPath);
+                for (String xPath : getXPaths()) {
+                    if (xPath.equals(selected)) {
+                        if (i < getXPaths().size() - 1) {
+                            switchXPath(i, i + 1);
                             viewer.refresh();
                             viewer.getTable().setSelection(i + 1);
                             viewer.getTable().showSelection();
@@ -569,18 +599,21 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
 
         delButton.addSelectionListener(new SelectionListener() {
 
+            @Override
             public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
             };
 
+            @Override
             public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-                DescriptionLine line = (DescriptionLine) ((IStructuredSelection) viewer.getSelection()).getFirstElement();
-                if (line != null) {
-                    @SuppressWarnings("unchecked")
-                    ArrayList<String> xPaths = (ArrayList<String>) viewer.getInput();
-                    xPaths.remove(line.getLabel());
-                    viewer.refresh();
-                    fireXPathsChanges();
+                String selected = getLineLabel(((IStructuredSelection) viewer.getSelection()).getFirstElement());
+                if (selected == null) {
+                    return;
                 }
+                int index = getXPaths().indexOf(selected);
+                removeXPath(index);
+                viewer.refresh();
+                fireXPathsChanges();
+
             };
         });
 
@@ -594,19 +627,17 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
             checkBox.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true, 2, 1));
             checkBox.addSelectionListener(new SelectionListener() {
 
+                @Override
                 public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
                 };
 
+                @Override
                 public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
                     recursive = checkBox.getSelection();
                 };
             });
             checkBox.setSelection(recursive);
             checkBox.setText(Messages.AnnotationOrderedListsDialog_SetRoleRecursively);
-            // Label label = new Label(composite, SWT.LEFT);
-            // label.setText("set role recursively");
-            // label.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, true,
-            // 1, 1));
         }
 
         if (actionType == AnnotationForeignKeyInfo_ActionType) {
@@ -640,25 +671,24 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
         formatEditor.configure(new ElementFKInfoConfiguration());
         formatEditor.initilize();
 
-
         GridData layoutData = new GridData(GridData.FILL_BOTH);
         layoutData.heightHint = 150;
         formatEditor.getControl().setLayoutData(layoutData);
-        formatEditor.setFkinfos(xPaths);
+        formatEditor.setFkinfos(getXPaths());
         formatEditor.setFormatFKInfo(formatFKInfo);
     }
 
     private void fireXPathsChanges() {
         if (actionType == AnnotationForeignKeyInfo_ActionType) {
-            Set<Annotation> updatedAnnotations = formatEditor.setFkinfos(xPaths);
+            Set<Annotation> updatedAnnotations = formatEditor.setFkinfos(getXPaths());
             updateOKBtnState(updatedAnnotations.size() == 0);
         }
     }
 
-
     private void addDoubleClickListener() {
         viewer.addDoubleClickListener(new IDoubleClickListener() {
 
+            @Override
             public void doubleClick(DoubleClickEvent event) {
                 IStructuredSelection selection = (IStructuredSelection) viewer.getSelection();
                 DescriptionLine line = (DescriptionLine) selection.getFirstElement();
@@ -718,22 +748,69 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
         // no close let Action Handler handle it
     }
 
+    @Override
     public void propertyChange(PropertyChangeEvent event) {
         Object newValue = event.getNewValue();
         if (newValue instanceof Boolean) {
             updateOKBtnState(((Boolean) newValue).booleanValue());
         }
     }
+
     /**************************************************************************************************
      * Public getters read by caller
      ***************************************************************************************************/
-
-    /*
-     * public TableViewer getDescriptionsTableViewer() { return descriptionsViewer; }
-     */
-
-    public ArrayList<String> getXPaths() {
+    public List<String> getXPaths() {
+        if (extender != null) {
+            return extender.getXPaths();
+        }
         return xPaths;
+    }
+
+    public Map<String, List<String>> getXPathMap() {
+        if (extender != null) {
+            return extender.getXPathMap();
+        }
+        return null;
+    }
+
+    protected String getLineLabel(Object value) {
+        if (value == null) {
+            return null;
+        }
+        if (extender != null) {
+            return extender.getLineLabel(value);
+        }
+        return ((DescriptionLine) value).getLabel();
+    }
+
+    protected void addXPath(int index, String xpath) {
+        if (extender != null) {
+            extender.addXPath(index, xpath);
+        }
+        if (index < 0) {
+            xPaths.add(xpath);
+        } else {
+            xPaths.add(index, xpath);
+        }
+
+    }
+
+    protected void removeXPath(int index) {
+        if (extender != null) {
+            extender.removeXPath(index);
+        } else {
+            xPaths.remove(index);
+        }
+    }
+
+    protected void switchXPath(int beforeIndex, int afterIndex) {
+        if (extender != null) {
+            extender.switchXPath(beforeIndex, afterIndex);
+        } else {
+            String path = getXPaths().get(beforeIndex);
+            removeXPath(beforeIndex);
+            addXPath(afterIndex, path);
+        }
     }
 
     public boolean getRecursive() {

@@ -28,6 +28,10 @@ public interface IAnnotationConst {
 
     String KEY_NO_PHYSICAL_DELETE = "X_Deny_PhysicalDelete"; //$NON-NLS-1$
 
+    String KEY_NO_ADD = "X_No_Add"; //$NON-NLS-1$
+
+    String KEY_NO_REMOVE = "X_No_Remove"; //$NON-NLS-1$
+
     //
     String KEY_PK_INFO = "X_PrimaryKeyInfo"; //$NON-NLS-1$
 
@@ -43,6 +47,11 @@ public interface IAnnotationConst {
 
     String KEY_DEFAULT_VALUE = "X_Default_Value_Rule"; //$NON-NLS-1$
 
+    String KEY_SOURCE_SYSTEM = "X_SourceSystem"; //$NON-NLS-1$
+
+    String KEY_TARGET_SYSTEM = "X_TargetSystem"; //$NON-NLS-1$
+
+    String KEY_LABEL = "X_Label"; //$NON-NLS-1$
     // foreign key
     String KEY_FOREIGN_KEY = "X_ForeignKey"; //$NON-NLS-1$
 
@@ -58,6 +67,8 @@ public interface IAnnotationConst {
 
     String KEY_FOREIGN_KEY_INFO_FORMAT = "X_ForeignKeyInfoFormat"; //$NON-NLS-1$
 
+    String KEY_RETRIEVE_FK_INFOS = "X_Retrieve_FKinfos"; //$NON-NLS-1$
+
     // prefix
     String KEY_PREFIX_FACET = "X_Facet_"; //$NON-NLS-1$
 
@@ -67,4 +78,12 @@ public interface IAnnotationConst {
 
     String KEY_PREFIX_DISPLAY_FORMAT = "X_Display_Format_"; //$NON-NLS-1$
 
+    String KEY_PREFIX_FOREIGN_KEY_INFO = "X_ForeignKeyInfo_"; //$NON-NLS-1$
+
+    String KEY_PREFIX_NO_ACESS = "X_Hide_"; //$NON-NLS-1$
+    // regex
+
+    String KEY_REGEX_LABEL = "X_Label_.*"; //$NON-NLS-1$
+
+    String KEY_REGEX_DESCRIPTION = "X_Description_.*"; //$NON-NLS-1$
 }

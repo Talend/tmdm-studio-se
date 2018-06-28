@@ -14,6 +14,7 @@ package com.amalto.workbench.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,8 +43,13 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.amalto.workbench.i18n.Messages;
+import com.amalto.workbench.models.IAnnotationConst;
 
 public class XSDAnnotationsStructure {
+
+    private static final String SOURCE = "source";
+
+    private static final String APPINFO = "appinfo";
 
     private static Log log = LogFactory.getLog(XSDAnnotationsStructure.class);
 
@@ -54,9 +60,13 @@ public class XSDAnnotationsStructure {
     XSDElementDeclaration declaration;
 
     XSDSchema schema;
+
     XSDComponent componet;
 
+    private Integer particleMaxOccurs = null;
+
     private XSDComplexTypeDefinition complexTypeDef;
+
     /**
      * "Clever" Constructor that finds or creates annotations of an XSDComponent object
      *
@@ -85,19 +95,19 @@ public class XSDAnnotationsStructure {
                 annotation = declaration.getAnnotation();
             }
         }
-        if(component instanceof XSDComplexTypeDefinition){
-        	complexTypeDef = (XSDComplexTypeDefinition) component;
+        if (component instanceof XSDComplexTypeDefinition) {
+            complexTypeDef = (XSDComplexTypeDefinition) component;
             componet = complexTypeDef;
-        	if (complexTypeDef.getAnnotation() == null) {
+            if (complexTypeDef.getAnnotation() == null) {
                 XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
                 annotation = factory.createXSDAnnotation();
             } else {
                 annotation = complexTypeDef.getAnnotation();
             }
         }
-        if(component instanceof XSDModelGroup) {
+        if (component instanceof XSDModelGroup) {
             XSDModelGroup group = (XSDModelGroup) component;
-            if(group.getContainer().getContainer() instanceof XSDComplexTypeDefinition) {
+            if (group.getContainer().getContainer() instanceof XSDComplexTypeDefinition) {
                 complexTypeDef = (XSDComplexTypeDefinition) group.getContainer().getContainer();
                 if (complexTypeDef.getAnnotation() == null) {
                     XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
@@ -106,8 +116,11 @@ public class XSDAnnotationsStructure {
                     annotation = complexTypeDef.getAnnotation();
                 }
             }
+            if (group.getContainer() instanceof XSDParticle) {
+                particleMaxOccurs = ((XSDParticle) group.getContainer()).getMaxOccurs();
+            }
         }
-        
+
         if (component instanceof XSDParticle) {
             XSDTerm term = ((XSDParticle) component).getTerm();
             if (term instanceof XSDElementDeclaration) {
@@ -119,7 +132,12 @@ public class XSDAnnotationsStructure {
                     annotation = declaration.getAnnotation();
                 }
             }
+            particleMaxOccurs = ((XSDParticle) component).getMaxOccurs();
         }
+    }
+
+    public Integer getParticleMaxOccurs() {
+        return particleMaxOccurs;
     }
 
     /****************************************************************************
@@ -130,8 +148,7 @@ public class XSDAnnotationsStructure {
         Element documentation = null;
         ArrayList<Element> list = new ArrayList<Element>();
         list.addAll(annotation.getUserInformation());
-        for (Iterator<Element> iter = list.iterator(); iter.hasNext();) {
-            Element ann = iter.next();
+        for (Element ann : list) {
             String name = ann.getLocalName();
             if ("documentation".equals(name.toLowerCase())) {//$NON-NLS-1$
                 documentation = ann;
@@ -207,13 +224,13 @@ public class XSDAnnotationsStructure {
      ****************************************************************************/
 
     public boolean removeLabel(String countryCode) {
-        boolean somethingChanged = removeAppInfos("X_Label_" + countryCode.toUpperCase());//$NON-NLS-1$
+        boolean somethingChanged = removeAppInfos(IAnnotationConst.KEY_PREFIX_LABEL + countryCode.toUpperCase());
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
 
     public boolean removeAllLabels() {
-        boolean somethingChanged = removeAppInfos("X_Label_.*");//$NON-NLS-1$
+        boolean somethingChanged = removeAppInfos(IAnnotationConst.KEY_REGEX_LABEL);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
@@ -222,7 +239,7 @@ public class XSDAnnotationsStructure {
         if (countryCode == null) {
             return false;
         }
-        boolean somethingChanged = setAppInfo("X_Label_" + countryCode.toUpperCase(), label, true);//$NON-NLS-1$
+        boolean somethingChanged = setAppInfo(IAnnotationConst.KEY_PREFIX_LABEL + countryCode.toUpperCase(), label, true);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
@@ -230,8 +247,7 @@ public class XSDAnnotationsStructure {
     public boolean setLabels(Map<String, String> labels) {
         boolean somethingChanged = false;
         Set<String> isoCodes = labels.keySet();
-        for (Iterator<String> iter = isoCodes.iterator(); iter.hasNext();) {
-            String code = iter.next();
+        for (String code : isoCodes) {
             String label = labels.get(code);
             somethingChanged = somethingChanged | setLabel(code, label);
         }
@@ -241,10 +257,9 @@ public class XSDAnnotationsStructure {
 
     public Map<String, String> getLabels() {
         Map<String, String> labels = new LinkedHashMap<String, String>();
-        Map<String, String> appInfos = getAppInfos("X_Label_.*");//$NON-NLS-1$
+        Map<String, String> appInfos = getAppInfos(IAnnotationConst.KEY_REGEX_LABEL);
         Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
+        for (String key : keys) {
             labels.put(key.substring(8).toLowerCase(), appInfos.get(key));
         }
         return labels;
@@ -255,13 +270,13 @@ public class XSDAnnotationsStructure {
      ****************************************************************************/
 
     public boolean removeDescription(String countryCode) {
-        boolean somethingChanged = removeAppInfos("X_Description_" + countryCode.toUpperCase());//$NON-NLS-1$
+        boolean somethingChanged = removeAppInfos(IAnnotationConst.KEY_PREFIX_DESCRIPTION + countryCode.toUpperCase());
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
 
     public boolean removeAllDescriptions() {
-        boolean somethingChanged = removeAppInfos("X_Description_.*");//$NON-NLS-1$
+        boolean somethingChanged = removeAppInfos(IAnnotationConst.KEY_REGEX_DESCRIPTION);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
@@ -270,7 +285,8 @@ public class XSDAnnotationsStructure {
         if (countryCode == null) {
             return false;
         }
-        boolean somethingChanged = setAppInfo("X_Description_" + countryCode.toUpperCase(), description, true);//$NON-NLS-1$
+        boolean somethingChanged = setAppInfo(IAnnotationConst.KEY_PREFIX_DESCRIPTION + countryCode.toUpperCase(), description,
+                true);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
@@ -278,8 +294,7 @@ public class XSDAnnotationsStructure {
     public boolean setDescriptions(Map<String, String> descriptions) {
         boolean somethingChanged = false;
         Set<String> isoCodes = descriptions.keySet();
-        for (Iterator<String> iter = isoCodes.iterator(); iter.hasNext();) {
-            String code = iter.next();
+        for (String code : isoCodes) {
             String description = descriptions.get(code);
             somethingChanged = somethingChanged | setDescription(code, description);
         }
@@ -289,10 +304,9 @@ public class XSDAnnotationsStructure {
 
     public Map<String, String> getDescriptions() {
         Map<String, String> descriptions = new LinkedHashMap<String, String>();
-        Map<String, String> appInfos = getAppInfos("X_Description_.*");//$NON-NLS-1$
+        Map<String, String> appInfos = getAppInfos(IAnnotationConst.KEY_REGEX_DESCRIPTION);
         Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
+        for (String key : keys) {
             descriptions.put(key.substring(14).toLowerCase(), appInfos.get(key));
         }
         return descriptions;
@@ -303,30 +317,31 @@ public class XSDAnnotationsStructure {
      ****************************************************************************/
 
     public boolean setFKFilter(String xPath) {
-        boolean somethingChanged = setAppInfo("X_ForeignKey_Filter", xPath, true);//$NON-NLS-1$
+        boolean somethingChanged = setAppInfo(IAnnotationConst.KEY_FOREIGN_KEY_FILTER, xPath, true);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
 
     public String getFKFilter() {
-        return getAppInfoValue("X_ForeignKey_Filter");//$NON-NLS-1$
+        return getAppInfoValue(IAnnotationConst.KEY_FOREIGN_KEY_FILTER);
     }
 
     /****************************************************************************
      * Auto Expand
+     * 
      * @throws Exception
      ****************************************************************************/
 
     public boolean setAutoExpand(String value) throws Exception {
-    	if(!(declaration.getTypeDefinition() instanceof XSDComplexTypeDefinition)){
-    		return false;
-    	}
+        if (!(declaration.getTypeDefinition() instanceof XSDComplexTypeDefinition)) {
+            return false;
+        }
 
         XSDSchema xsd = schema != null ? schema : declaration.getSchema();
-        String auto="X_AutoExpand"; //$NON-NLS-1$
+        String auto = IAnnotationConst.KEY_AUTO_EXPAND;
         String xsdString = Util.nodeToString(xsd.getDocument().getDocumentElement());
         ArrayList<Object> objs = Util.getAllComplexTypeChildren(declaration);
-        for(Object obj: objs){
+        for (Object obj : objs) {
             if (obj instanceof XSDElementDeclaration || obj instanceof XSDParticle) {
                 boolean isImported = false;
 
@@ -348,18 +363,17 @@ public class XSDAnnotationsStructure {
                     }
                 }
 
-
                 if (!isImported) {
                     XSDAnnotationsStructure annotion = new XSDAnnotationsStructure((XSDComponent) obj);
-                    annotion.setAppInfo(auto, value,true);
+                    annotion.setAppInfo(auto, value, true);
                 }
-           }
+            }
         }
         return true;
     }
 
     public String getAutoExpand() {
-        return getAppInfoValue("X_AutoExpand");//$NON-NLS-1$
+        return getAppInfoValue(IAnnotationConst.KEY_AUTO_EXPAND);
     }
 
     /****************************************************************************
@@ -367,23 +381,24 @@ public class XSDAnnotationsStructure {
      ****************************************************************************/
 
     public boolean setForeignKey(String xPath) {
-        boolean somethingChanged = setAppInfo("X_ForeignKey", xPath, true);//$NON-NLS-1$
+        boolean somethingChanged = setAppInfo(IAnnotationConst.KEY_FOREIGN_KEY, xPath, true);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
 
     public String getForeignKey() {
-        return getAppInfoValue("X_ForeignKey");//$NON-NLS-1$
+        return getAppInfoValue(IAnnotationConst.KEY_FOREIGN_KEY);
     }
 
     public boolean setForeignKeyNotSep(Boolean sep) {
-        boolean somethingChanged = setAppInfo("X_ForeignKey_NotSep", sep == null ? null : sep.toString(), true);//$NON-NLS-1$
+        boolean somethingChanged = setAppInfo(IAnnotationConst.KEY_FOREIGN_KEY_NOT_SEP, sep == null ? null : sep.toString(),
+                true);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
 
     public String getForeignKeyNotSep() {
-        return getAppInfoValue("X_ForeignKey_NotSep");//$NON-NLS-1$
+        return getAppInfoValue(IAnnotationConst.KEY_FOREIGN_KEY_NOT_SEP);
     }
 
     /****************************************************************************
@@ -391,13 +406,13 @@ public class XSDAnnotationsStructure {
      ****************************************************************************/
 
     public boolean setVisibleRule(String xPath) {
-        boolean somethingChanged = setAppInfo("X_Visible_Rule", xPath, true);//$NON-NLS-1$
+        boolean somethingChanged = setAppInfo(IAnnotationConst.KEY_VISIBLE_RULE, xPath, true);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
 
     public String getVisibleRule() {
-        return getAppInfoValue("X_Visible_Rule");//$NON-NLS-1$
+        return getAppInfoValue(IAnnotationConst.KEY_VISIBLE_RULE);
     }
 
     /****************************************************************************
@@ -405,33 +420,33 @@ public class XSDAnnotationsStructure {
      ****************************************************************************/
 
     public boolean setDefaultValueRule(String xPath) {
-        boolean somethingChanged = setAppInfo("X_Default_Value_Rule", xPath, true);//$NON-NLS-1$
+        boolean somethingChanged = setAppInfo(IAnnotationConst.KEY_DEFAULT_VALUE, xPath, true);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
 
     public String getDefaultValueRule() {
-        return getAppInfoValue("X_Default_Value_Rule");//$NON-NLS-1$
+        return getAppInfoValue(IAnnotationConst.KEY_DEFAULT_VALUE);
     }
-    //PRIMARY KEY INFOS
+
+    // PRIMARY KEY INFOS
     public boolean setPrimaryKeyInfos(List<String> xPaths) {
-        removeAppInfos("X_PrimaryKeyInfo");//$NON-NLS-1$
-        for (Iterator<String> iter = xPaths.iterator(); iter.hasNext();) {
-            String xPath = iter.next();
-            addAppInfo("X_PrimaryKeyInfo", xPath);//$NON-NLS-1$
+        removeAppInfos(IAnnotationConst.KEY_PK_INFO);
+        for (String xPath : xPaths) {
+            addAppInfo(IAnnotationConst.KEY_PK_INFO, xPath);
         }
         hasChanged = true;
         return true;
     }
+
     /****************************************************************************
      * FOREIGN KEY INFOS
      ****************************************************************************/
     public boolean setForeignKeyInfos(List<String> xPaths) {
-        boolean somethingChanged = removeAppInfos("X_ForeignKeyInfo");//$NON-NLS-1$
+        boolean somethingChanged = removeAppInfos(IAnnotationConst.KEY_FOREIGN_KEY_INFO);
         boolean added = false;
-        for (Iterator<String> iter = xPaths.iterator(); iter.hasNext();) {
-            String xPath = iter.next();
-            addAppInfo("X_ForeignKeyInfo", xPath);//$NON-NLS-1$
+        for (String xPath : xPaths) {
+            addAppInfo(IAnnotationConst.KEY_FOREIGN_KEY_INFO, xPath);
             added = true;
         }
         hasChanged |= somethingChanged | added;
@@ -439,10 +454,10 @@ public class XSDAnnotationsStructure {
     }
 
     public boolean setFormatForeignKeyInfo(String formatedForeignKeyinfo) {
-        boolean somethingChanged = removeAppInfos("X_ForeignKeyInfoFormat");//$NON-NLS-1$
+        boolean somethingChanged = removeAppInfos(IAnnotationConst.KEY_FOREIGN_KEY_INFO_FORMAT);
         boolean added = false;
         if (formatedForeignKeyinfo != null && !formatedForeignKeyinfo.isEmpty()) {
-            added = addAppInfo("X_ForeignKeyInfoFormat", formatedForeignKeyinfo);//$NON-NLS-1$
+            added = addAppInfo(IAnnotationConst.KEY_FOREIGN_KEY_INFO_FORMAT, formatedForeignKeyinfo);
         }
 
         hasChanged |= somethingChanged | added;
@@ -450,7 +465,7 @@ public class XSDAnnotationsStructure {
     }
 
     public String getFormatForeignKeyInfo() {
-        Map<String, String> appInfos = getAppInfos("X_ForeignKeyInfoFormat");//$NON-NLS-1$
+        Map<String, String> appInfos = getAppInfos(IAnnotationConst.KEY_FOREIGN_KEY_INFO_FORMAT);
 
         Collection<String> values = appInfos.values();
         if (values.size() > 0) {
@@ -461,9 +476,9 @@ public class XSDAnnotationsStructure {
     }
 
     public boolean setRetrieveFKinfos(Boolean retrieveFKinfos) {
-        boolean somethingChanged = removeAppInfos("X_Retrieve_FKinfos");//$NON-NLS-1$
+        boolean somethingChanged = removeAppInfos(IAnnotationConst.KEY_RETRIEVE_FK_INFOS);
         if (retrieveFKinfos != null) {
-            hasChanged = addAppInfo("X_Retrieve_FKinfos", retrieveFKinfos.toString());//$NON-NLS-1$
+            hasChanged = addAppInfo(IAnnotationConst.KEY_RETRIEVE_FK_INFOS, retrieveFKinfos.toString());
             return true;
         }
         hasChanged |= somethingChanged;
@@ -471,14 +486,13 @@ public class XSDAnnotationsStructure {
     }
 
     public boolean getRetrieveFKinfos() {
-        Map<String, String> appInfos = getAppInfos("X_Retrieve_FKinfos");//$NON-NLS-1$
+        Map<String, String> appInfos = getAppInfos(IAnnotationConst.KEY_RETRIEVE_FK_INFOS);
         Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
+        for (String key : keys) {
             return "true".equals(appInfos.get(key));//$NON-NLS-1$
         }
-        //Starting from 5.0 onwards, always resolve FKInfos by default
-        if(log.isDebugEnabled()) {
+        // Starting from 5.0 onwards, always resolve FKInfos by default
+        if (log.isDebugEnabled()) {
             log.debug(Messages.XSDAnnotationsStructure_DebugInfo);
         }
         return true;
@@ -486,16 +500,15 @@ public class XSDAnnotationsStructure {
 
     public boolean setForeignKeyInfo(int num, String xPath) {
         TreeMap<String, String> infos = getForeignKeyInfos();
-        infos.put("X_ForeignKeyInfo_" + num, xPath);//$NON-NLS-1$
+        infos.put(IAnnotationConst.KEY_PREFIX_FOREIGN_KEY_INFO + num, xPath);
         return setForeignKeyInfos(new ArrayList<String>(infos.values()));
     }
 
     public TreeMap<String, String> getForeignKeyInfos() {
         TreeMap<String, String> foreignKeyInfos = new TreeMap<String, String>();
-        Map<String, String> appInfos = getAppInfos("X_ForeignKeyInfo");//$NON-NLS-1$
+        Map<String, String> appInfos = getAppInfos(IAnnotationConst.KEY_FOREIGN_KEY_INFO);
         Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
+        for (String key : keys) {
             foreignKeyInfos.put(key, appInfos.get(key));
         }
         return foreignKeyInfos;
@@ -508,14 +521,20 @@ public class XSDAnnotationsStructure {
      ****************************************************************************/
     public boolean setAccessRole(Collection<String> roles, boolean recursive, IStructuredContentProvider provider, String access)
             throws Exception {
+        Map<String, List<String>> roleMap = Collections.singletonMap(access, new ArrayList(roles));
+        return setAccessRole(roleMap, recursive, provider);
+    }
+
+    public boolean setAccessRole(Map<String, List<String>> roleMap, boolean recursive, IStructuredContentProvider provider)
+            throws Exception {
         XSDSchema xsd = schema != null ? schema : declaration.getSchema();
 
         String xsdString = Util.nodeToString(xsd.getDocument().getDocumentElement());
         if (recursive) {
             ArrayList<Object> objList = new ArrayList<Object>();
-            XSDComponent  component=declaration;
-            if(declaration==null){
-            	component=this.componet;
+            XSDComponent component = declaration;
+            if (declaration == null) {
+                component = this.componet;
             }
             Object[] objs = Util.getAllObject(component, objList, provider);
 
@@ -556,10 +575,13 @@ public class XSDAnnotationsStructure {
                                     continue;
                                 }
                             }
-                            annotion.removeAppInfos(access); // X_Write
-                            for (Iterator<String> iter = roles.iterator(); iter.hasNext();) {
-                                String role = iter.next();
-                                annotion.addAppInfo(access, role);
+
+                            for (String access : roleMap.keySet()) {
+                                Collection<String> values = roleMap.get(access);
+                                annotion.removeAppInfos(access); // X_Write
+                                for (String value : values) {
+                                    annotion.addAppInfo(access, value);
+                                }
                             }
                         }
                     }
@@ -568,19 +590,26 @@ public class XSDAnnotationsStructure {
                 }
             }
 
-            return setAccessRole(roles, access);
+            for (String access : roleMap.keySet()) {
+                List<String> values = roleMap.get(access);
+                setAccessRole(values, access);
+            }
+
         } else {
             if (Util.IsAImporedElement(declaration, xsdString)) {
                 return false;
             }
-            return setAccessRole(roles, access);
+            for (String access : roleMap.keySet()) {
+                List<String> values = roleMap.get(access);
+                setAccessRole(values, access);
+            }
         }
+        return true;
     }
 
-    private boolean setAccessRole(Collection<String> roles, String access) {
+    private boolean setAccessRole(List<String> roles, String access) {
         removeAppInfos(access); // X_Write X_Hide
-        for (Iterator<String> iter = roles.iterator(); iter.hasNext();) {
-            String role = iter.next();
+        for (String role : roles) {
             addAppInfo(access, role);
         }
 
@@ -588,81 +617,47 @@ public class XSDAnnotationsStructure {
         return true;
     }
 
-    public TreeMap<String, String> getWriteAccesses() {
-        TreeMap<String, String> writeAccesses = new TreeMap<String, String>();
-        Map<String, String> appInfos = getAppInfos("X_Write");//$NON-NLS-1$
-        Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
-            writeAccesses.put(key, appInfos.get(key));
-        }
-        return writeAccesses;
+    public Map<String, String> getWriteAccesses() {
+        return getAppInfos(IAnnotationConst.KEY_WRITE);
+    }
+
+    public Map<String, String> getNoAdd() {
+        return getAppInfos(IAnnotationConst.KEY_NO_ADD);
+    }
+
+    public Map<String, String> getNoRemove() {
+        return getAppInfos(IAnnotationConst.KEY_NO_REMOVE);
     }
 
     /****************************************************************************
      * X_Deny_PhysicalDelete
      ****************************************************************************/
 
-    public TreeMap<String, String> getDenyPhysicalDelete() {
-        TreeMap<String, String> writeAccesses = new TreeMap<String, String>();
-        Map<String, String> appInfos = getAppInfos("X_Deny_PhysicalDelete");//$NON-NLS-1$
-        Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
-            writeAccesses.put(key, appInfos.get(key));
-        }
-        return writeAccesses;
+    public Map<String, String> getDenyPhysicalDelete() {
+        return getAppInfos(IAnnotationConst.KEY_NO_PHYSICAL_DELETE);
     }
 
     /****************************************************************************
      * X_Deny_Create
      ****************************************************************************/
-    public TreeMap<String, String> getDenyCreate() {
-        TreeMap<String, String> writeAccesses = new TreeMap<String, String>();
-        Map<String, String> appInfos = getAppInfos("X_Deny_Create");//$NON-NLS-1$
-        Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
-            writeAccesses.put(key, appInfos.get(key));
-        }
-        return writeAccesses;
+    public Map<String, String> getDenyCreate() {
+        return getAppInfos(IAnnotationConst.KEY_NO_CREATE);
     }
 
     /****************************************************************************
      * X_Deny_LogicalDelete
      ****************************************************************************/
 
-    public TreeMap<String, String> getDenyLogicalDelete() {
-        TreeMap<String, String> writeAccesses = new TreeMap<String, String>();
-        Map<String, String> appInfos = getAppInfos("X_Deny_LogicalDelete");//$NON-NLS-1$
-        Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
-            writeAccesses.put(key, appInfos.get(key));
-        }
-        return writeAccesses;
+    public Map<String, String> getDenyLogicalDelete() {
+        return getAppInfos(IAnnotationConst.KEY_NO_LOGIC_DELETE);
     }
 
-    public TreeMap<String, String> getLookupFields() {
-        TreeMap<String, String> writeAccesses = new TreeMap<String, String>();
-        Map<String, String> appInfos = getAppInfos("X_Lookup_Field");//$NON-NLS-1$
-        Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
-            writeAccesses.put(key, appInfos.get(key));
-        }
-        return writeAccesses;
+    public Map<String, String> getLookupFields() {
+        return getAppInfos(IAnnotationConst.KEY_LOOKUP_FIELD);
     }
 
-    public TreeMap<String, String> getPrimaryKeyInfos() {
-        TreeMap<String, String> writeAccesses = new TreeMap<String, String>();
-        Map<String, String> appInfos = getAppInfos("X_PrimaryKeyInfo");//$NON-NLS-1$
-        Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
-            writeAccesses.put(key, appInfos.get(key));
-        }
-        return writeAccesses;
+    public Map<String, String> getPrimaryKeyInfos() {
+        return getAppInfos(IAnnotationConst.KEY_PK_INFO);
     }
 
     /****************************************************************************
@@ -670,20 +665,13 @@ public class XSDAnnotationsStructure {
      ****************************************************************************/
 
     public boolean setHiddenAccess(int num, String role) {
-        TreeMap<String, String> infos = getHiddenAccesses();
-        infos.put("X_Hide_" + num, role);//$NON-NLS-1$
+        Map<String, String> infos = getHiddenAccesses();
+        infos.put(IAnnotationConst.KEY_PREFIX_NO_ACESS + num, role);
         return setForeignKeyInfos(new ArrayList<String>(infos.values()));
     }
 
-    public TreeMap<String, String> getHiddenAccesses() {
-        TreeMap<String, String> hiddenAccesses = new TreeMap<String, String>();
-        Map<String, String> appInfos = getAppInfos("X_Hide");//$NON-NLS-1$
-        Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
-            hiddenAccesses.put(key, appInfos.get(key));
-        }
-        return hiddenAccesses;
+    public Map<String, String> getHiddenAccesses() {
+        return getAppInfos(IAnnotationConst.KEY_NO_ACESS);
     }
 
     /****************************************************************************
@@ -691,43 +679,35 @@ public class XSDAnnotationsStructure {
      ****************************************************************************/
 
     public boolean setSourceSystem(String sourceSystem) {
-        boolean somethingChanged = setAppInfo("X_SourceSystem", sourceSystem, true);//$NON-NLS-1$
+        boolean somethingChanged = setAppInfo(IAnnotationConst.KEY_SOURCE_SYSTEM, sourceSystem, true);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
 
     public String getSourceSystem() {
-        return getAppInfoValue("X_SourceSystem");//$NON-NLS-1$
+        return getAppInfoValue(IAnnotationConst.KEY_SOURCE_SYSTEM);
     }
 
     /****************************************************************************
      * TARGET SYSTEMS
      ****************************************************************************/
-    public boolean setTargetSystems(ArrayList<String> systems) {
-        removeAppInfos("X_TargetSystem");//$NON-NLS-1$
-        for (Iterator<String> iter = systems.iterator(); iter.hasNext();) {
-            String role = iter.next();
-            addAppInfo("X_TargetSystem", role);//$NON-NLS-1$
+    public boolean setTargetSystems(List<String> systems) {
+        removeAppInfos(IAnnotationConst.KEY_TARGET_SYSTEM);
+        for (String role : systems) {
+            addAppInfo(IAnnotationConst.KEY_TARGET_SYSTEM, role);
         }
         hasChanged = true;
         return true;
     }
 
     public boolean setTargetSystem(int num, String system) {
-        TreeMap<String, String> infos = getTargetSystems();
+        Map<String, String> infos = getTargetSystems();
         infos.put("X_TargetSystem_" + num, system);//$NON-NLS-1$
         return setForeignKeyInfos(new ArrayList<String>(infos.values()));
     }
 
-    public TreeMap<String, String> getTargetSystems() {
-        TreeMap<String, String> targetSystems = new TreeMap<String, String>();
-        Map<String, String> appInfos = getAppInfos("X_TargetSystem");//$NON-NLS-1$
-        Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
-            targetSystems.put(key, appInfos.get(key));
-        }
-        return targetSystems;
+    public Map<String, String> getTargetSystems() {
+        return getAppInfos(IAnnotationConst.KEY_TARGET_SYSTEM);
     }
 
     /*************************************************************
@@ -735,9 +715,7 @@ public class XSDAnnotationsStructure {
      *************************************************************/
     public boolean setSchematrons(Collection<String> systems) {
         removeAppInfos(ICoreConstants.X_Schematron);
-        for (Iterator<String> iter = systems.iterator(); iter.hasNext();) {
-            String role = iter.next();
-
+        for (String role : systems) {
             addAppInfo(ICoreConstants.X_Schematron, role);
         }
         hasChanged = true;
@@ -745,7 +723,7 @@ public class XSDAnnotationsStructure {
     }
 
     public boolean setSchematron(int num, String system) {
-        TreeMap<String, String> infos = getSchematrons();
+        Map<String, String> infos = getSchematrons();
         infos.put(ICoreConstants.X_Schematron + "_" + num, system);//$NON-NLS-1$
         setSchematrons(infos.values());
         // return setForeignKeyInfos(new ArrayList(infos.values()));
@@ -753,13 +731,13 @@ public class XSDAnnotationsStructure {
     }
 
     public void addSchematron(String pattern) {
-        TreeMap<String, String> infos = getSchematrons();
+        Map<String, String> infos = getSchematrons();
         infos.put(ICoreConstants.X_Schematron + "_" + (infos.size() + 1), pattern);//$NON-NLS-1$
         setSchematrons(infos.values());
     }
 
     public void removeSchematron(String pattern) {
-        TreeMap<String, String> infos = getSchematrons();
+        Map<String, String> infos = getSchematrons();
         for (Entry<String, String> entry : infos.entrySet()) {
             if (pattern.equals(entry.getValue())) {
                 infos.remove(entry.getKey());
@@ -769,12 +747,11 @@ public class XSDAnnotationsStructure {
         setSchematrons(infos.values());
     }
 
-    public TreeMap<String, String> getSchematrons() {
-        TreeMap<String, String> targetSystems = new TreeMap<String, String>();
+    public Map<String, String> getSchematrons() {
+        Map<String, String> targetSystems = new TreeMap<String, String>();
         Map<String, String> appInfos = getAppInfos(ICoreConstants.X_Schematron);
         Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
+        for (String key : keys) {
             String v = appInfos.get(key);
             if (v == null || v.trim().length() == 0) {
                 continue;
@@ -789,9 +766,7 @@ public class XSDAnnotationsStructure {
      *************************************************************/
     public boolean setWorkflows(Collection<String> systems) {
         removeAppInfos(ICoreConstants.X_Workflow);
-        for (Iterator<String> iter = systems.iterator(); iter.hasNext();) {
-            String role = iter.next();
-
+        for (String role : systems) {
             addAppInfo(ICoreConstants.X_Workflow, role);
         }
         hasChanged = true;
@@ -799,21 +774,20 @@ public class XSDAnnotationsStructure {
     }
 
     public boolean setWorkflow(int num, String system) {
-        TreeMap<String, String> infos = getSchematrons();
+        Map<String, String> infos = getSchematrons();
         infos.put(ICoreConstants.X_Workflow + "_" + num, system);//$NON-NLS-1$
         setSchematrons(infos.values());
-        // return setForeignKeyInfos(new ArrayList(infos.values()));
         return true;
     }
 
     public void addWorkflow(String pattern) {
-        TreeMap<String, String> infos = getSchematrons();
+        Map<String, String> infos = getSchematrons();
         infos.put(ICoreConstants.X_Workflow + "_" + (infos.size() + 1), pattern);//$NON-NLS-1$
         setSchematrons(infos.values());
     }
 
     public void removeWorkflow(String pattern) {
-        TreeMap<String, String> infos = getSchematrons();
+        Map<String, String> infos = getSchematrons();
         for (Entry<String, String> entry : infos.entrySet()) {
             if (pattern.equals(entry.getValue())) {
                 infos.remove(entry.getKey());
@@ -823,12 +797,11 @@ public class XSDAnnotationsStructure {
         setSchematrons(infos.values());
     }
 
-    public TreeMap<String, String> getWorkflows() {
-        TreeMap<String, String> targetSystems = new TreeMap<String, String>();
+    public Map<String, String> getWorkflows() {
+        Map<String, String> targetSystems = new TreeMap<String, String>();
         Map<String, String> appInfos = getAppInfos(ICoreConstants.X_Workflow);
         Set<String> keys = appInfos.keySet();
-        for (Iterator<String> iter = keys.iterator(); iter.hasNext();) {
-            String key = iter.next();
+        for (String key : keys) {
             String v = appInfos.get(key);
             if (v == null || v.trim().length() == 0) {
                 continue;
@@ -848,14 +821,14 @@ public class XSDAnnotationsStructure {
         Iterator<String> isos = Util.iso2lang.keySet().iterator();
         while (isos.hasNext()) {
             String lang = isos.next();
-            removeAppInfos("X_Facet_" + lang.toUpperCase());//$NON-NLS-1$
+            removeAppInfos(IAnnotationConst.KEY_PREFIX_FACET + lang.toUpperCase());
         }
 
         Iterator<String> isoIter = facts.keySet().iterator();
         while (isoIter.hasNext()) {
             String iso = isoIter.next();
-            removeAppInfos("X_Facet_" + iso.toUpperCase());//$NON-NLS-1$
-            addAppInfo("X_Facet_" + iso.toUpperCase(), facts.get(iso));//$NON-NLS-1$
+            removeAppInfos(IAnnotationConst.KEY_PREFIX_FACET + iso.toUpperCase());
+            addAppInfo(IAnnotationConst.KEY_PREFIX_FACET + iso.toUpperCase(), facts.get(iso));
         }
 
         hasChanged = true;
@@ -870,7 +843,7 @@ public class XSDAnnotationsStructure {
         Iterator<String> isoIter = Util.iso2lang.keySet().iterator();
         while (isoIter.hasNext()) {
             String iso = isoIter.next().toUpperCase();
-            String prefix = "X_Facet_" + iso;//$NON-NLS-1$
+            String prefix = IAnnotationConst.KEY_PREFIX_FACET + iso;
             String infoValue = getAppInfoValue(prefix);
             if (infoValue != null) {
                 descriptionsMap.put(iso.toLowerCase(), infoValue);
@@ -889,14 +862,14 @@ public class XSDAnnotationsStructure {
         Iterator<String> isos = Util.iso2lang.keySet().iterator();
         while (isos.hasNext()) {
             String lang = isos.next();
-            removeAppInfos("X_Display_Format_" + lang.toUpperCase());//$NON-NLS-1$
+            removeAppInfos(IAnnotationConst.KEY_PREFIX_DISPLAY_FORMAT + lang.toUpperCase());
         }
 
         Iterator<String> isoIter = fomats.keySet().iterator();
         while (isoIter.hasNext()) {
             String iso = isoIter.next();
-            removeAppInfos("X_Display_Format_" + iso.toUpperCase());//$NON-NLS-1$
-            addAppInfo("X_Display_Format_" + iso.toUpperCase(), fomats.get(iso));//$NON-NLS-1$
+            removeAppInfos(IAnnotationConst.KEY_PREFIX_DISPLAY_FORMAT + iso.toUpperCase());
+            addAppInfo(IAnnotationConst.KEY_PREFIX_DISPLAY_FORMAT + iso.toUpperCase(), fomats.get(iso));
         }
 
         hasChanged = true;
@@ -913,7 +886,7 @@ public class XSDAnnotationsStructure {
         Iterator<String> isoIter = Util.iso2lang.keySet().iterator();
         while (isoIter.hasNext()) {
             String iso = isoIter.next().toUpperCase();
-            String prefix = "X_Display_Format_" + iso;//$NON-NLS-1$
+            String prefix = IAnnotationConst.KEY_PREFIX_DISPLAY_FORMAT + iso;
             String infoValue = getAppInfoValue(prefix);
             if (infoValue != null) {
                 descriptionsMap.put(iso.toLowerCase(), infoValue);
@@ -928,14 +901,15 @@ public class XSDAnnotationsStructure {
      ****************************************************************************/
 
     public boolean setFKIntegrity(Boolean integrity) {
-        boolean somethingChanged = setAppInfo("X_FKIntegrity", integrity == null ? null : integrity.toString(), true);//$NON-NLS-1$
+        boolean somethingChanged = setAppInfo(IAnnotationConst.KEY_FOREIGN_KEY_INTEGRITY,
+                integrity == null ? null : integrity.toString(), true);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
 
     public boolean setFKIntegrityOverride(Boolean integrityOverride) {
-        boolean somethingChanged = setAppInfo(
-                "X_FKIntegrity_Override", integrityOverride == null ? null : integrityOverride.toString(), true);//$NON-NLS-1$
+        boolean somethingChanged = setAppInfo(IAnnotationConst.KEY_FOREIGN_KEY_INTEGRITY_OVERRIDE,
+                integrityOverride == null ? null : integrityOverride.toString(), true);
         hasChanged = hasChanged | somethingChanged;
         return somethingChanged;
     }
@@ -952,11 +926,10 @@ public class XSDAnnotationsStructure {
             return null;
         }
         list.addAll(annotation.getApplicationInformation());
-        for (Iterator<Element> iter = list.iterator(); iter.hasNext();) {
-            Element ann = iter.next();
+        for (Element ann : list) {
             String name = ann.getLocalName();
-            if ("appinfo".equals(name.toLowerCase())) {//$NON-NLS-1$
-                name = ann.getAttribute("source");//$NON-NLS-1$
+            if (APPINFO.equals(name.toLowerCase())) {
+                name = ann.getAttribute(SOURCE);
                 if (name.matches(regex)) {
                     appInfo = ann;
                     break;
@@ -980,11 +953,10 @@ public class XSDAnnotationsStructure {
         // list.addAll(annotation.getUserInformation());
         list.addAll(annotation.getApplicationInformation());
         int i = 0;
-        for (Iterator<Element> iter = list.iterator(); iter.hasNext();) {
-            Element ann = iter.next();
+        for (Element ann : list) {
             String name = ann.getLocalName();
-            if ("appinfo".equals(name.toLowerCase())) {//$NON-NLS-1$
-                name = ann.getAttribute("source");//$NON-NLS-1$
+            if (APPINFO.equals(name.toLowerCase())) {
+                name = ann.getAttribute(SOURCE);
                 if (name.equals(regex)) {
                     appInfos.put(name + "_" + i, ann.getFirstChild().getNodeValue());//$NON-NLS-1$
                     i++;
@@ -1049,7 +1021,7 @@ public class XSDAnnotationsStructure {
             if (declaration.getAnnotation() == null) {
                 declaration.setAnnotation(annotation);
             }
-        } else if (complexTypeDef != null && type.startsWith("X_Label")) { //$NON-NLS-1$
+        } else if (complexTypeDef != null && type.startsWith(IAnnotationConst.KEY_LABEL)) {
             if (complexTypeDef.getAnnotation() == null) {
                 complexTypeDef.setAnnotation(annotation);
             }
@@ -1070,19 +1042,19 @@ public class XSDAnnotationsStructure {
         list.addAll(annotation.getApplicationInformation());
         list.addAll(annotation.getUserInformation());
 
-        if(componet!=null) {
+        if (componet != null) {
             hasChanged = true;
         }
         if (list.size() == 0) {
             // remove the annotation from the declaration
-            if (declaration!=null && declaration.getAnnotation() != null) {
+            if (declaration != null && declaration.getAnnotation() != null) {
                 declaration.getElement().removeChild(annotation.getElement());
                 declaration.setAnnotation(null);
                 hasChanged = true;
             }
         } else {
             // attach the annotation to the declaration
-            if (declaration!=null && declaration.getAnnotation() == null) {
+            if (declaration != null && declaration.getAnnotation() == null) {
                 declaration.setAnnotation(annotation);
                 hasChanged = true;
             }
