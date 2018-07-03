@@ -14,6 +14,7 @@ package com.amalto.workbench.dialogs;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -76,6 +77,7 @@ import com.amalto.workbench.editors.DataModelMainPage;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
+import com.amalto.workbench.models.IAnnotationConst;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.widgets.composites.ElementFKInfoConfiguration;
@@ -339,9 +341,6 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
                 table.getColumn(i).pack();
             }
             table.getColumn(0).setWidth(500);
-            for (int i = 1, n = table.getColumnCount(); i < n; i++) {
-
-            }
             // default
             // Create the cell editors --> We actually discard those later: not natural for an user
             CellEditor[] editors = new CellEditor[1];
@@ -369,8 +368,8 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
                 @Override
                 public Object[] getElements(Object inputElement) {
                     @SuppressWarnings("unchecked")
-                    ArrayList<String> xPaths = (ArrayList<String>) inputElement;
-                    ArrayList<DescriptionLine> lines = new ArrayList<DescriptionLine>();
+                    List<String> xPaths = (List<String>) inputElement;
+                    List<DescriptionLine> lines = new ArrayList<DescriptionLine>();
                     for (String xPath : xPaths) {
                         DescriptionLine line = new DescriptionLine(xPath);
                         lines.add(line);
@@ -770,7 +769,9 @@ public class AnnotationOrderedListsDialog extends Dialog implements IPropertyCha
         if (extender != null) {
             return extender.getXPathMap();
         }
-        return null;
+        Map<String, List<String>> map = new HashMap<String, List<String>>();
+        map.put(IAnnotationConst.KEY_WRITE, getXPaths());
+        return map;
     }
 
     protected String getLineLabel(Object value) {
