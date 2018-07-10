@@ -202,6 +202,7 @@ import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
+import com.amalto.workbench.models.IAnnotationConst;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.models.TreeObjectTransfer;
 import com.amalto.workbench.models.TreeParent;
@@ -392,6 +393,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
     public void setDirty(final boolean dirty) {
         Display.getDefault().asyncExec(new Runnable() {
 
+            @Override
             public void run() {
                 doSetDirty(dirty);
                 firePropertyChange(PROP_DIRTY);
@@ -403,6 +405,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
     public void firePropertyChange() {
         Display.getDefault().asyncExec(new Runnable() {
 
+            @Override
             public void run() {
                 firePropertyChange(PROP_DIRTY);
             }
@@ -439,11 +442,11 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
             descriptionComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false, 2, 1));
             descriptionComposite.setLayout(new GridLayout());
             desAntionComposite = new DescAnnotationComposite(Messages.DescriptionText, " ...", toolkit, descriptionComposite, //$NON-NLS-1$
-                    null,
-                    false);
+                    null, false);
             desAntionComposite.setText(wsObject.getDescription() == null ? "" : wsObject.getDescription());//$NON-NLS-1$
             desAntionComposite.getTextWidget().addModifyListener(new ModifyListener() {
 
+                @Override
                 public void modifyText(ModifyEvent e) {
                     markDirty();
                 }
@@ -790,6 +793,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
          * 
          * @see org.eclipse.jface.viewers.IElementComparer#equals(java.lang.Object, java.lang.Object)
          */
+        @Override
         public boolean equals(Object a, Object b) {
             if (a instanceof XSDElementDeclaration && b instanceof XSDElementDeclaration) {
                 String aURL = ((XSDElementDeclaration) a).getURI();
@@ -804,6 +808,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
          * 
          * @see org.eclipse.jface.viewers.IElementComparer#hashCode(java.lang.Object)
          */
+        @Override
         public int hashCode(Object element) {
             return element.hashCode();
         }
@@ -1206,56 +1211,58 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
         }
         if (decl instanceof Element) {
             Element e = (Element) decl;
-            if (e.getLocalName().equals("appinfo")) {//$NON-NLS-1$
-            }
             String source = e.getAttribute("source");//$NON-NLS-1$
             if (source != null) {
-                if (source.startsWith("X_Label_")) {//$NON-NLS-1$
+                if (source.startsWith(IAnnotationConst.KEY_PREFIX_LABEL)) {
                     return 101;
-                } else if (source.equals("X_ForeignKey")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_FOREIGN_KEY)) {
                     return 102;
-                } else if (source.equals("X_ForeignKeyInfo")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_FOREIGN_KEY_INFO)) {
                     return 103;
-                } else if (source.equals("X_SourceSystem")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_SOURCE_SYSTEM)) {
                     return 104;
-                } else if (source.equals("X_TargetSystem")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_TARGET_SYSTEM)) {
                     return 105;
-                } else if (source.startsWith("X_Description_")) {//$NON-NLS-1$
+                } else if (source.startsWith(IAnnotationConst.KEY_PREFIX_DESCRIPTION)) {
                     return 106;
-                } else if (source.equals("X_Write")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_WRITE)) {
                     return 107;
-                } else if (source.equals("X_Hide")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_NO_ACESS)) {
                     return 108;
-                } else if (source.equals("X_Schematron")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_VALIDATION_RULE)) {
                     return 109;
-                } else if (source.startsWith("X_Facet_")) {//$NON-NLS-1$
+                } else if (source.startsWith(IAnnotationConst.KEY_PREFIX_FACET)) {
                     return 110;
-                } else if (source.startsWith("X_Workflow")) {//$NON-NLS-1$
+                } else if (source.startsWith(IAnnotationConst.KEY_WORKFLOW)) {
                     return 111;
-                } else if (source.startsWith("X_ForeignKey_Filter")) {//$NON-NLS-1$
+                } else if (source.startsWith(IAnnotationConst.KEY_FOREIGN_KEY_FILTER)) {
                     return 112;
-                } else if (source.startsWith("X_Display_Format_")) {//$NON-NLS-1$
+                } else if (source.startsWith(IAnnotationConst.KEY_PREFIX_DISPLAY_FORMAT)) {
                     return 113;
-                } else if (source.equals("X_Lookup_Field")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_LOOKUP_FIELD)) {
                     return 114;
-                } else if (source.equals("X_PrimaryKeyInfo")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_PK_INFO)) {
                     return 115;
-                } else if (source.equals("X_Visible_Rule")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_VISIBLE_RULE)) {
                     return 116;
-                } else if (source.equals("X_Default_Value_Rule")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_DEFAULT_VALUE)) {
                     return 117;
-                } else if (source.equals("X_Deny_Create")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_NO_CREATE)) {
                     return 118;
-                } else if (source.equals("X_Deny_PhysicalDelete")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_NO_PHYSICAL_DELETE)) {
                     return 119;
-                } else if (source.equals("X_Deny_LogicalDelete")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_NO_LOGIC_DELETE)) {
                     return 120;
-                } else if (source.equals("X_FKIntegrity")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_FOREIGN_KEY_INTEGRITY)) {
                     return 121;
-                } else if (source.equals("X_FKIntegrity_Override")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_FOREIGN_KEY_INTEGRITY_OVERRIDE)) {
                     return 122;
-                } else if (source.equals("X_ForeignKeyInfoFormat")) {//$NON-NLS-1$
+                } else if (source.equals(IAnnotationConst.KEY_FOREIGN_KEY_INFO_FORMAT)) {
                     return 123;
+                } else if (source.equals(IAnnotationConst.KEY_NO_ADD)) {
+                    return 124;
+                } else if (source.equals(IAnnotationConst.KEY_NO_REMOVE)) {
+                    return 125;
                 }
             }
 
@@ -1278,6 +1285,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
         menuMgr.setRemoveAllWhenShown(true);
         menuMgr.addMenuListener(new IMenuListener() {
 
+            @Override
             public void menuAboutToShow(IMenuManager manager) {
                 DataModelMainPage.this.fillContextMenu(manager, false);
             }
@@ -1291,6 +1299,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
         typesMenuMgr.setRemoveAllWhenShown(true);
         typesMenuMgr.addMenuListener(new IMenuListener() {
 
+            @Override
             public void menuAboutToShow(IMenuManager manager) {
                 DataModelMainPage.this.fillContextMenu(manager, true);
             }
@@ -2540,6 +2549,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
             this.viewer = viewer;
         }
 
+        @Override
         public void doubleClick(DoubleClickEvent event) {
             IStructuredSelection selection = ((IStructuredSelection) viewer.getSelection());
             if (selection.isEmpty()) {
@@ -2650,6 +2660,8 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
             case 108:
             case 116:
             case 117:
+            case 124:
+            case 125:
                 if (exAdapter != null) {
                     exAdapter.doubleClick(elem);
                 }
@@ -2874,6 +2886,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
     private void popupImportDialog() {
         Display.getDefault().syncExec(new Runnable() {
 
+            @Override
             public void run() {
                 IEditorPart part = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
                 if (part.isDirty()) {
@@ -3014,6 +3027,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
      * 
      * @see org.eclipse.ui.ide.IGotoMarker#gotoMarker(org.eclipse.core.resources.IMarker)
      */
+    @Override
     public void gotoMarker(IMarker marker) {
         MultiPageEditorSite site = (MultiPageEditorSite) getEditorSite();
         MultiPageEditorPart part = site.getMultiPageEditor();

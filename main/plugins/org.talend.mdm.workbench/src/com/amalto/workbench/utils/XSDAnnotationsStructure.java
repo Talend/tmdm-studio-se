@@ -29,6 +29,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDComponent;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDModelGroup;
@@ -81,6 +82,10 @@ public class XSDAnnotationsStructure {
             annotation = (XSDAnnotation) component;
             if (annotation.getContainer() instanceof XSDElementDeclaration) {
                 declaration = (XSDElementDeclaration) annotation.getContainer();
+                XSDConcreteComponent elementContainer = declaration.getContainer();
+                if (elementContainer != null && elementContainer instanceof XSDParticle) {
+                    particleMaxOccurs = ((XSDParticle) elementContainer).getMaxOccurs();
+                }
             } else if (annotation.getContainer() instanceof XSDComplexTypeDefinition) {
                 complexTypeDef = (XSDComplexTypeDefinition) annotation.getContainer();
             }
