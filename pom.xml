@@ -47,6 +47,7 @@
 		<module>main/plugins/org.talend.mdm.workbench</module>
 		<module>main/plugins/org.talend.mdm.workbench.serverexplorer</module>
 		<module>main/plugins/org.talend.mdm.ws</module>
+		<module>main/plugins/org.talend.designer.components.temprovider</module>
 		<module>main/plugins/org.talend.rcp.branding.tombundle</module>
 
 		<module>test/plugins/org.talend.designer.routines.mdmprovider.test</module>
