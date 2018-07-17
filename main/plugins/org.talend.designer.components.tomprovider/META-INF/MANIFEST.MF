@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Tomprovider
+Bundle-SymbolicName: org.talend.designer.components.tomprovider;singleton:=true
+Bundle-Version: 7.1.1.qualifier
+Bundle-Activator: org.talend.designer.components.tomprovider.TomComponentsProviderPlugin
+Import-Package: org.osgi.framework;version="1.3.0"
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.talend.core,
+ org.eclipse.ui.workbench,
+ org.eclipse.core.runtime,
+ org.eclipse.equinox.registry

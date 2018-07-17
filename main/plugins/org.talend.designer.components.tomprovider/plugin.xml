@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?eclipse version="3.4"?>
+
+<plugin> 
+  <extension point="org.talend.core.components_provider"> 
+    <ComponentsProvider class="org.talend.designer.components.tomprovider.TomLocalComponentsProvider" folderName="components" id="org.talend.designer.components.tomprovider.TomLocalComponentsProvider"></ComponentsProvider> 
+  </extension> 
+</plugin>
