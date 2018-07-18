@@ -5,6 +5,8 @@ import org.osgi.framework.BundleContext;
 
 public class TomComponentsProviderPlugin extends AbstractUIPlugin {
 
+    public static final String PLUGIN_ID = "org.talend.designer.components.tomprovider"; //$NON-NLS-1$
+
 	private static BundleContext context;
 
 	static BundleContext getContext() {

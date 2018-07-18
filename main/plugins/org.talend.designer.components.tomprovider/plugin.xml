@@ -4,5 +4,12 @@
 <plugin> 
   <extension point="org.talend.core.components_provider"> 
     <ComponentsProvider class="org.talend.designer.components.tomprovider.TomLocalComponentsProvider" folderName="components" id="org.talend.designer.components.tomprovider.TomLocalComponentsProvider"></ComponentsProvider> 
+  </extension>
+  <extension
+        point="org.talend.designer.codegen.additional_jetfile">
+     <jetProvider
+           class="org.talend.designer.components.tomprovider.MDMTriggerJetFileProvider"
+           id="org.talend.designer.components.tomprovider.MDMTriggerJetFileProvider">
+     </jetProvider>
   </extension> 
 </plugin>

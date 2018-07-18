@@ -9,5 +9,6 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: org.talend.core,
  org.eclipse.ui.workbench,
  org.eclipse.core.runtime,
- org.eclipse.equinox.registry
+ org.eclipse.equinox.registry,
+ org.talend.designer.codegen
 Eclipse-BundleShape: dir
