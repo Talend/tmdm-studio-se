@@ -10,3 +10,4 @@ Require-Bundle: org.talend.core,
  org.eclipse.ui.workbench,
  org.eclipse.core.runtime,
  org.eclipse.equinox.registry
+Eclipse-BundleShape: dir
