@@ -106,6 +106,7 @@ public class SimpleXpathInputDialog extends Dialog {
         deco.hide();
         textControl.addModifyListener(new ModifyListener() {
 
+            @Override
             public void modifyText(ModifyEvent e) {
                 SimpleXpathInputDialog.this.xpath = textControl.getText();
                 btnSep.setEnabled(xpath != null && xpath.length() > 0);
@@ -167,6 +168,10 @@ public class SimpleXpathInputDialog extends Dialog {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 sepFk = btnSep.getSelection();
+                boolean validXpath = pkXPaths.contains(xpath);
+                if (validXpath && getButton(IDialogConstants.OK_ID) != null) {
+                    getButton(IDialogConstants.OK_ID).setEnabled(true);
+                }
             }
         });
 
