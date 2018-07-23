@@ -46,7 +46,8 @@ import com.amalto.workbench.webservices.WSLong;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ UIUtil.class, PlatformUI.class, ConsistencyService.class, RepositoryWebServiceAdapter.class,
-        ERepositoryObjectType.class, RepositoryResourceUtil.class, ExAdapterManager.class, RepositoryQueryService.class })
+        ERepositoryObjectType.class, RepositoryResourceUtil.class, ExAdapterManager.class, RepositoryQueryService.class,
+        IRepositoryViewObject.class })
 @PowerMockIgnore({ "org.eclipse.core.runtime.*" })
 public class ConsistencyServiceTest {
 
@@ -65,7 +66,7 @@ public class ConsistencyServiceTest {
         serverDef.setPasswd("talend"); //$NON-NLS-1$
 
         Map<IRepositoryViewObject, Integer> viewObCmdOpjMap = new HashMap<IRepositoryViewObject, Integer>();
-        IRepositoryViewObject mockViewObj = Mockito.mock(IRepositoryViewObject.class);
+        IRepositoryViewObject mockViewObj = PowerMockito.mock(IRepositoryViewObject.class);
         int cmdType = 1;
         viewObCmdOpjMap.put(mockViewObj, cmdType);
 
@@ -320,7 +321,7 @@ public class ConsistencyServiceTest {
 
     @Test
     public void testUpdateLocalDigestValue() {
-        IRepositoryViewObject mockViewObj = Mockito.mock(IRepositoryViewObject.class);
+        IRepositoryViewObject mockViewObj = PowerMockito.mock(IRepositoryViewObject.class);
         Item mockItem = Mockito.mock(Item.class);
         ERepositoryObjectType mockType = Mockito.mock(ERepositoryObjectType.class);
         Property mockProperty = Mockito.mock(Property.class);
@@ -333,7 +334,7 @@ public class ConsistencyServiceTest {
         try {
             Mockito.when(mockCService.calculateDigestValue(mockItem, mockType)).thenReturn(digestValue);
             when(mockCService, "updateLocalDigestValue", mockViewObj).thenCallRealMethod(); //$NON-NLS-1$
-            mockCService.updateCurrentDigestValue(mockViewObj);
+            mockCService.updateLocalDigestValue(mockViewObj);
 
             Mockito.verify(mockCService, Mockito.atLeastOnce()).calculateDigestValue(mockItem, mockType);
             PowerMockito.verifyPrivate(mockCService, atLeastOnce()).invoke("updateLocalDigestValue", mockItem, eq(digestValue)); //$NON-NLS-1$
@@ -344,7 +345,7 @@ public class ConsistencyServiceTest {
 
     @Test
     public void testUpdateCurrentDigestValue() {
-        IRepositoryViewObject mockViewObj = Mockito.mock(IRepositoryViewObject.class);
+        IRepositoryViewObject mockViewObj = PowerMockito.mock(IRepositoryViewObject.class);
         Item mockItem = Mockito.mock(Item.class);
         ERepositoryObjectType mockType = Mockito.mock(ERepositoryObjectType.class);
         Property mockProperty = Mockito.mock(Property.class);
