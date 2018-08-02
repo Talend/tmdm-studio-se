@@ -158,6 +158,14 @@ public class RepositoryDropAssistant extends CommonDropAdapterAssistant {
             return false;
         }
 
+        if (!dragPath.startsWith("" + IPath.SEPARATOR)) {
+            dragPath = IPath.SEPARATOR + dragPath;
+        }
+
+        if (!dropPath.startsWith("" + IPath.SEPARATOR)) {
+            dropPath = IPath.SEPARATOR + dropPath;
+        }
+
         String webTypePrefix = IPath.SEPARATOR + IViewNodeConstDef.PATH_WEBFILTER;
         if (dragPath.startsWith(webTypePrefix) && !dropPath.startsWith(webTypePrefix)) {
             return false;
