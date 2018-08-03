@@ -138,22 +138,27 @@ public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListe
             ((GridData) wcListViewer.getControl().getLayoutData()).minimumHeight = 100;
             wcListViewer.setContentProvider(new IStructuredContentProvider() {
 
+                @Override
                 public void dispose() {
                 }
 
+                @Override
                 public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
                 }
 
+                @Override
                 public Object[] getElements(Object inputElement) {
                     return ((WSView) inputElement).getWhereConditions().toArray();
                 }
             });
             wcListViewer.setLabelProvider(new ILabelProvider() {
 
+                @Override
                 public Image getImage(Object element) {
                     return null;
                 }
 
+                @Override
                 public String getText(Object element) {
                     WSWhereCondition wc = (WSWhereCondition) element;
                     String text = wc.getLeftPath() + " ";//$NON-NLS-1$
@@ -204,16 +209,20 @@ public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListe
                     return text;
                 }
 
+                @Override
                 public void addListener(ILabelProviderListener listener) {
                 }
 
+                @Override
                 public void dispose() {
                 }
 
+                @Override
                 public boolean isLabelProperty(Object element, String property) {
                     return false;
                 }
 
+                @Override
                 public void removeListener(ILabelProviderListener listener) {
                 }
             });
@@ -265,9 +274,11 @@ public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListe
             searchText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
             searchText.addKeyListener(new KeyListener() {
 
+                @Override
                 public void keyPressed(KeyEvent e) {
                 }
 
+                @Override
                 public void keyReleased(KeyEvent e) {
                     if ((e.stateMask == 0) && (e.character == SWT.CR)) {
                         ViewBrowserMainPage.this.resultsViewer.setInput(getResults());
@@ -280,6 +291,7 @@ public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListe
             bSearch.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
             bSearch.addListener(SWT.Selection, new Listener() {
 
+                @Override
                 public void handleEvent(Event event) {
                     ViewBrowserMainPage.this.resultsViewer.setInput(getResults());
                 };
@@ -300,6 +312,7 @@ public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListe
             resultsViewer.setLabelProvider(new XMLTableLabelProvider());
             resultsViewer.addDoubleClickListener(new IDoubleClickListener() {
 
+                @Override
                 public void doubleClick(DoubleClickEvent event) {
                     resultsViewer.setSelection(event.getSelection());
                     try {
@@ -355,7 +368,9 @@ public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListe
             if (paths != null) {
                 for (String path : paths) {
                     searchableBEsList.add(path);
-                    searchItemCombo.add(path);
+                    if (path.contains("/")) { //$NON-NLS-1$
+                        searchItemCombo.add(path);
+                    }
                 }
             }
             searchItemCombo.add(FULL_TEXT);
@@ -421,6 +436,7 @@ public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListe
         menuMgr.setRemoveAllWhenShown(true);
         menuMgr.addMenuListener(new IMenuListener() {
 
+            @Override
             public void menuAboutToShow(IMenuManager manager) {
                 manager.add(new DOMViewAction(ViewBrowserMainPage.this.getSite().getShell(),
                         ViewBrowserMainPage.this.resultsViewer));
@@ -553,6 +569,7 @@ public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListe
                 final DOMViewDialog d = new DOMViewDialog(ViewBrowserMainPage.this.getSite().getShell(), Util.parse(xml));
                 d.addListener(new Listener() {
 
+                    @Override
                     public void handleEvent(Event event) {
                         if (event.button == DOMViewDialog.BUTTON_CLOSE) {
                             d.close();
@@ -589,10 +606,12 @@ public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListe
 
     class XMLTableLabelProvider implements ITableLabelProvider {
 
+        @Override
         public Image getColumnImage(Object element, int columnIndex) {
             return null;
         }
 
+        @Override
         public String getColumnText(Object element, int columnIndex) {
             String xml = (String) element;
             xml = highlightLeft.matcher(xml).replaceAll("");//$NON-NLS-1$
@@ -606,16 +625,20 @@ public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListe
             return xml;
         }
 
+        @Override
         public void addListener(ILabelProviderListener listener) {
         }
 
+        @Override
         public void dispose() {
         }
 
+        @Override
         public boolean isLabelProperty(Object element, String property) {
             return false;
         }
 
+        @Override
         public void removeListener(ILabelProviderListener listener) {
         }
 
@@ -624,6 +647,7 @@ public class ViewBrowserMainPage extends AMainPage implements IXObjectModelListe
     /*********************************
      * IXObjectModelListener interface
      */
+    @Override
     public void handleEvent(int type, TreeObject parent, TreeObject child) {
         refreshData();
     }
