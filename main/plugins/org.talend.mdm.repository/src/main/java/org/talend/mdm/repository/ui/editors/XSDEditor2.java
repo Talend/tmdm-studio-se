@@ -61,7 +61,7 @@ import com.amalto.workbench.utils.Util;
 /**
  * DOC hbhong class global comment. Detailled comment
  */
-public class XSDEditor2 extends XSDEditor implements ISvnHistory, IPostOpenAction {
+public class XSDEditor2 extends XSDEditor implements ISvnGitHistory, IPostOpenAction {
 
     public static final String EDITOR_ID = "org.talend.mdm.repository.ui.editors.XSDEditor2"; //$NON-NLS-1$
 
