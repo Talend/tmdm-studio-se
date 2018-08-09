@@ -49,7 +49,7 @@ import com.amalto.workbench.views.MDMPerspective;
 /**
  * DOC hbhong class global comment. Detailled comment
  */
-public class XObjectEditor2 extends XObjectEditor implements ISvnHistory {
+public class XObjectEditor2 extends XObjectEditor implements ISvnGitHistory {
 
     static Logger log = Logger.getLogger(XObjectEditor2.class);
 

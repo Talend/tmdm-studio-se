@@ -34,7 +34,7 @@ import com.amalto.workbench.views.MDMPerspective;
 /**
  * DOC achen  class global comment. Detailled comment
  */
-public class XObjectBrowser2 extends XObjectBrowser implements ISvnHistory {
+public class XObjectBrowser2 extends XObjectBrowser implements ISvnGitHistory {
 
     static Logger log = Logger.getLogger(XObjectBrowser2.class);
 

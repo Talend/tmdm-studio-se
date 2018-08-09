@@ -16,7 +16,7 @@ package org.talend.mdm.repository.ui.editors;
 /**
  * DOC achen  class global comment. Detailled comment
  */
-public interface ISvnHistory {
+public interface ISvnGitHistory {
 
     void setName(String name);
 }
