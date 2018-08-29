@@ -441,9 +441,9 @@
                     BundleID=""
                     />
                  <IMPORT
-                    NAME="woodstox-core-5.0.3.jar"
-                    MODULE="woodstox-core-5.0.3.jar"
-                    MVN="mvn:com.fasterxml.woodstox/woodstox-core/5.0.3"
+                    NAME="woodstox-core-5.1.0.jar"
+                    MODULE="woodstox-core-5.1.0.jar"
+                    MVN="mvn:com.fasterxml.woodstox/woodstox-core/5.1.0"
                     REQUIRED="true"
                     BundleID=""
                     />
