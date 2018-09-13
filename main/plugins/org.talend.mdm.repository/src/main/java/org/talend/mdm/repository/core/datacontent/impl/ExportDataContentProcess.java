@@ -258,7 +258,7 @@ public class ExportDataContentProcess extends AbstractDataContentProcess {
 
         protected void writeString(String exportFolder, String outputStr, String filename) {
 
-            File f = new File(exportFolder + "/" + filename);//$NON-NLS-1$
+            File f = new File(exportFolder + "/" + filename + ".txt");//$NON-NLS-1$
 
             if (!f.getParentFile().exists()) {
                 f.getParentFile().mkdir();
