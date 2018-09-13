@@ -762,7 +762,7 @@
             context="plugin:org.talend.mdm.repository"
             language="java"
             message="Required for using this component."
-            name="xstream-1.4.7.jar" mvn_uri="mvn:org.talend.libraries/xstream-1.4.7/6.1.0" 
+            name="xstream-1.4.7.jar" mvn_uri="mvn:org.talend.libraries/xstream-1.4.7/6.0.0" 
             required="true">
       </libraryNeeded>
     </extension>
