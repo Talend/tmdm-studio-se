@@ -17,7 +17,7 @@ import java.util.GregorianCalendar;
 
 import org.talend.core.model.migration.AbstractItemMigrationTask;
 import org.talend.core.model.properties.Item;
-import org.talend.mdm.repository.ui.wizards.imports.DatamodelSchemaUpdator;
+import org.talend.mdm.repository.ui.wizards.imports.UpdatorProvider;
 
 /**
  * @author sbliu
@@ -33,7 +33,7 @@ public class DatamodelMigrationTask extends AbstractItemMigrationTask {
 
     @Override
     public ExecutionResult execute(Item item) {
-        new DatamodelSchemaUpdator().updateSchema(item);
+        UpdatorProvider.instance().updateDataModelSchema(item);
         return ExecutionResult.SUCCESS_NO_ALERT;
     }
 

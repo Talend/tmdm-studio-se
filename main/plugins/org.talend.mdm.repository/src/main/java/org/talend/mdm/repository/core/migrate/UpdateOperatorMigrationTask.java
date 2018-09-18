@@ -17,7 +17,7 @@ import java.util.GregorianCalendar;
 
 import org.talend.core.model.migration.AbstractItemMigrationTask;
 import org.talend.core.model.properties.Item;
-import org.talend.mdm.repository.ui.wizards.imports.OperatorUpdatorProvider;
+import org.talend.mdm.repository.ui.wizards.imports.UpdatorProvider;
 
 
 /**
@@ -33,7 +33,7 @@ public class UpdateOperatorMigrationTask extends AbstractItemMigrationTask {
 
     @Override
     public ExecutionResult execute(Item item) {
-        OperatorUpdatorProvider.instance().updateOperator(item);
+        UpdatorProvider.instance().updateOperator(item);
 
         return ExecutionResult.SUCCESS_NO_ALERT;
     }
