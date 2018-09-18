@@ -13,6 +13,7 @@
 package org.talend.mdm.repository.ui.wizards.imports;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -33,6 +34,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.amalto.workbench.utils.Util;
 
@@ -44,7 +46,19 @@ public class DatamodelSchemaUpdator {
 
     private static Logger log = Logger.getLogger(DatamodelSchemaUpdator.class);
 
+    private static final String TAG_XSD_UNIQUE = "xsd:unique"; //$NON-NLS-1$
+
+    private static final String TAG_XSD_ELEMENT = "xsd:element"; //$NON-NLS-1$
+
+    private static final String TAG_XSD_FIELD = "xsd:field"; //$NON-NLS-1$
+
+    private static final String TAG_XSD_SEQUENCE = "xsd:sequence"; //$NON-NLS-1$
+
+    private static final String ATTR_XPATH = "xpath"; //$NON-NLS-1$
+
     private static final String ID = "ID"; //$NON-NLS-1$
+
+    private static final String TIME_IN_MILLIS = "TimeInMillis"; //$NON-NLS-1$
 
     public boolean updateSchema(Item item) {
         boolean modified = false;
@@ -89,58 +103,18 @@ public class DatamodelSchemaUpdator {
 
             boolean modified = false;
             try {
-                DocumentBuilder documentBuilder = getDocumentBuilder();
-                InputSource source = new InputSource(new ByteArrayInputStream(byteContent));
-                Document document = documentBuilder.parse(source);
+                Document document = getSchemaDocument(byteContent);
 
-                NodeList element_fields = document.getElementsByTagName("xsd:field"); //$NON-NLS-1$
+                NodeList element_fields = document.getElementsByTagName(TAG_XSD_FIELD);
                 if (element_fields.getLength() > 0) {
-                    Node field = element_fields.item(0);
-                    Node xpathAttr = field.getAttributes().getNamedItem("xpath"); //$NON-NLS-1$
-                    if (!ID.equals(xpathAttr.getNodeValue())) {
-                        xpathAttr.setNodeValue(ID);
-                        modified = true;
-                    }
-                    Node parentNode = field.getParentNode();
-                    for(int i =1; i<element_fields.getLength(); i++) {
-                        Node item = element_fields.item(i);
-                        if (item.getNextSibling().getNodeType() == Node.TEXT_NODE) {
-                            parentNode.removeChild(item.getNextSibling());
-                        }
-                        parentNode.removeChild(item);
+                    modified = handlePKFileds(element_fields);
+                } else {
+                    addPKFields(document);
+                    modified = true;
+                }
 
-                        modified = true;
-                    }
-
-                    if (modified) {
-                        NodeList sequence = document.getElementsByTagName("xsd:sequence"); //$NON-NLS-1$
-                        Node sequenceNode = sequence.item(0);
-
-                        boolean foundIDElement = false;
-                        NodeList childNodes = sequenceNode.getChildNodes();
-                        for (int i = 0; i < childNodes.getLength(); i++) {
-                            NamedNodeMap attrs = childNodes.item(i).getAttributes();
-                            if (attrs != null) {
-                                Node namedItem = attrs.getNamedItem("name"); //$NON-NLS-1$
-                                if (namedItem != null && ID.equals(namedItem.getNodeValue())) {
-                                    foundIDElement = true;
-                                    break;
-                                }
-                            }
-                        }
-                        
-                        if (!foundIDElement) {
-                            Node firstChild = sequenceNode.getFirstChild();
-                            Element idElement = createIDElement(document);
-                            sequenceNode.insertBefore(idElement, firstChild);
-
-                            if (firstChild.getNodeType() == Node.TEXT_NODE) {
-                                String textNodeValue = firstChild.getNodeValue();
-                                Text textNode = document.createTextNode(textNodeValue);
-                                sequenceNode.insertBefore(textNode, idElement);
-                            }
-                        }
-                    }
+                if (modified) {
+                    handlePKElement(document);
                 }
 
                 if (modified) {
@@ -155,22 +129,140 @@ public class DatamodelSchemaUpdator {
         return result;
     }
 
-    private Element createIDElement(Document document) {
-        Element idElement = document.createElement("xsd:element"); //$NON-NLS-1$
+
+    private boolean handlePKFileds(NodeList element_fields) {
+        boolean modified = true;
+
+        Node item0 = element_fields.item(0);
+        Node item0Sibling = item0.getNextSibling();
+        Node parentNode = item0.getParentNode();
+
+        Node idN = null;
+        Node timeInMillisNode = null;
+        for (int index = 0; index < element_fields.getLength(); index++) {
+            Node field = element_fields.item(index);
+            Node xpathAttr = field.getAttributes().getNamedItem(ATTR_XPATH);
+            if (idN == null && ID.equals(xpathAttr.getNodeValue())) {
+                idN = field;
+                continue;
+            } else if (TIME_IN_MILLIS == null && TIME_IN_MILLIS.equals(xpathAttr.getNodeValue())) {
+                timeInMillisNode = field;
+                continue;
+            }
+
+
+            if (field.getNextSibling().getNodeType() == Node.TEXT_NODE) {
+                parentNode.removeChild(field.getNextSibling());
+            }
+            parentNode.removeChild(field);
+            modified = true;
+        }
+
+        if (idN == null) {
+            addNode(parentNode, item0, item0Sibling, ID);
+            modified = true;
+        }
+
+        if (timeInMillisNode == null) {
+            addNode(parentNode, item0, item0Sibling, TIME_IN_MILLIS);
+            modified = true;
+        }
+
+        return modified;
+    }
+
+    private void addNode(Node parentNode, Node item0, Node item0Sibling, String xpathValue) {
+        if (item0Sibling.getNodeType() == Node.TEXT_NODE) {
+            Node textNode = item0Sibling.cloneNode(true);
+            parentNode.appendChild(textNode);
+        }
+
+        Node idNode = item0.cloneNode(true);
+        Node xpath = idNode.getAttributes().getNamedItem(ATTR_XPATH);
+        xpath.setNodeValue(xpathValue);
+        parentNode.appendChild(idNode);
+    }
+
+    private boolean addPKFields(Document document) {
+        NodeList xsdelementNode = document.getElementsByTagName(TAG_XSD_ELEMENT);
+        Element xsdUnique = document.createElement(TAG_XSD_UNIQUE);
+        xsdelementNode.item(0).appendChild(xsdUnique);
+
+        for (String xpath : new String[] { ID, TIME_IN_MILLIS }) {
+            Element pkElement = document.createElement(TAG_XSD_FIELD);
+            pkElement.setAttribute(ATTR_XPATH, xpath);
+            xsdUnique.appendChild(pkElement);
+        }
+
+        return true;
+    }
+
+    private void handlePKElement(Document document) {
+        NodeList sequence = document.getElementsByTagName(TAG_XSD_SEQUENCE);
+        if (sequence.getLength() > 0) {
+            Node sequenceNode = sequence.item(0);
+
+            boolean foundIDElement = false;
+            boolean foundTimeInMillisElement = false;
+            NodeList childNodes = sequenceNode.getChildNodes();
+            for (int i = 0; i < childNodes.getLength(); i++) {
+                NamedNodeMap attrs = childNodes.item(i).getAttributes();
+                if (attrs != null) {
+                    Node namedItem = attrs.getNamedItem("name"); //$NON-NLS-1$
+                    if (namedItem != null && ID.equals(namedItem.getNodeValue())) {
+                        foundIDElement = true;
+                    }
+                    if (namedItem != null && TIME_IN_MILLIS.equals(namedItem.getNodeValue())) {
+                        foundTimeInMillisElement = true;
+                    }
+                }
+
+                if (foundIDElement && foundTimeInMillisElement) {
+                    break;
+                }
+            }
+
+            if (!foundIDElement) {
+                addChildToSequence(document, sequenceNode, ID);
+            }
+
+            if (!foundTimeInMillisElement) {
+                addChildToSequence(document, sequenceNode, TIME_IN_MILLIS);
+            }
+        }
+    }
+
+    private void addChildToSequence(Document document, Node sequenceNode, String nameValue) {
+        Node firstChild = sequenceNode.getFirstChild();
+        Element element = createElement(document, nameValue);
+        sequenceNode.insertBefore(element, firstChild);
+
+        if (firstChild.getNodeType() == Node.TEXT_NODE) {
+            String textNodeValue = firstChild.getNodeValue();
+            Text textNode = document.createTextNode(textNodeValue);
+            sequenceNode.insertBefore(textNode, element);
+        }
+    }
+
+    private Element createElement(Document document, String nameValue) {
+        Element idElement = document.createElement(TAG_XSD_ELEMENT);
         idElement.setAttribute("maxOccurs", "1"); //$NON-NLS-1$ //$NON-NLS-2$
         idElement.setAttribute("minOccurs", "1"); //$NON-NLS-1$ //$NON-NLS-2$
-        idElement.setAttribute("name", ID); //$NON-NLS-1$
-        idElement.setAttribute("nillable", "false"); //$NON-NLS-1$ //$NON-NLS-2$
+        idElement.setAttribute("name", nameValue); //$NON-NLS-1$
         idElement.setAttribute("nillable", "false"); //$NON-NLS-1$ //$NON-NLS-2$
         idElement.setAttribute("type", "xsd:string"); //$NON-NLS-1$ //$NON-NLS-2$
+
         return idElement;
     }
 
-    private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
+    private Document getSchemaDocument(byte[] byteContent) throws ParserConfigurationException, SAXException, IOException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         documentBuilderFactory.setValidating(false);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-        return documentBuilder;
+
+        InputSource source = new InputSource(new ByteArrayInputStream(byteContent));
+        Document document = documentBuilder.parse(source);
+        return document;
     }
 }

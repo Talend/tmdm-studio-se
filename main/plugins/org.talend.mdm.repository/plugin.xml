@@ -619,6 +619,14 @@
                   name="Update Operator MigrationTask"
                   version="6.2.0">
             </projecttask>
+            <projecttask
+                  beforeLogon="true"
+                  breaks="7.1.1"
+                  class="org.talend.mdm.repository.core.migrate.DatamodelMigrationTask"
+                  id="org.talend.mdm.repository.core.migrate.DatamodeMigrationTask"
+                  name="Datamodel MigrationTask"
+                  version="7.1.1">
+            </projecttask>
       
    </extension>
    <extension
