@@ -770,7 +770,7 @@ public class RepositoryResourceUtil {
         List<IRepositoryViewObject> viewObjects = findAllViewObjects(type, false, false);
         if (viewObjects != null) {
             for (IRepositoryViewObject viewObj : viewObjects) {
-                if (viewObj.getProperty().getLabel().equalsIgnoreCase(name)) {
+                if (viewObj.getProperty().getLabel().equals(name)) {
                     return viewObj;
                 }
             }
