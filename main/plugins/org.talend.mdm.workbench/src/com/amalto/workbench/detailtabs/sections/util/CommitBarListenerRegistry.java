@@ -39,51 +39,65 @@ public class CommitBarListenerRegistry {
 
     public static CommitBarListenerRegistry getInstance() {
 
-        if (INSTANCE == null)
+        if (INSTANCE == null) {
             INSTANCE = new CommitBarListenerRegistry();
+        }
 
         return INSTANCE;
     }
 
     public void registListener(String tabID, CommitBarListener listener) {
+        if (tabID != null && listener != null) {
+            List<CommitBarListener> listeners = tabId2Listeners.get(tabID);
+            if (listeners == null) {
+                listeners = new ArrayList<CommitBarListener>();
+                tabId2Listeners.put(tabID, listeners);
+            }
 
-        List<CommitBarListener> listeners = tabId2Listeners.get(tabID);
-        if (listeners == null) {
-            listeners = new ArrayList<CommitBarListener>();
-            tabId2Listeners.put(tabID, listeners);
+            if (!listeners.contains(listener)) {
+                listeners.add(listener);
+            }
         }
-
-        if (listener != null && !listeners.contains(listener))
-            listeners.add(listener);
     }
 
     public void registCommitSection(String tabID, CommitSection commitSec){
-    	tabId2CommitSection.put(tabID, commitSec);
+        if (tabID != null) {
+            tabId2CommitSection.put(tabID, commitSec);
+        }
     }
     public void unregistCommitSection(String tabID){
-    	tabId2CommitSection.remove(tabID);
+        if (tabID != null) {
+            tabId2CommitSection.remove(tabID);
+        }
     }
     public CommitSection getRegistCommitSection(String tabID){
-    	return tabId2CommitSection.get(tabID);
+        if (tabID != null) {
+            return tabId2CommitSection.get(tabID);
+        }
+        return null;
     }
     public CommitBarListener[] getRegistedListeners(String tabID) {
 
-        if (!tabId2Listeners.containsKey(tabID))
+        if (tabID == null || !tabId2Listeners.containsKey(tabID)) {
             return new CommitBarListener[0];
+        }
 
         return tabId2Listeners.get(tabID).toArray(new CommitBarListener[0]);
     }
 
     public void removeRegistedListeners(String tabID) {
-        tabId2Listeners.remove(tabID);
+        if (tabID != null) {
+            tabId2Listeners.remove(tabID);
+        }
     }
 
     public CommitBarListener[] moveOutRegistedListeners(String tabID) {
-
-        CommitBarListener[] movedListeners = getRegistedListeners(tabID);
-        removeRegistedListeners(tabID);
-
-        return movedListeners;
+        if (tabID != null) {
+            CommitBarListener[] movedListeners = getRegistedListeners(tabID);
+            removeRegistedListeners(tabID);
+            return movedListeners;
+        }
+        return new CommitBarListener[0];
     }
 
     public void unregistListener(CommitBarListener listener) {
@@ -94,8 +108,9 @@ public class CommitBarListenerRegistry {
 
         Set<String> needRemovedTabIds = new HashSet<String>();
         for (Entry<String, List<CommitBarListener>> eachTabID2Listeners : tabId2Listeners.entrySet()) {
-            if (eachTabID2Listeners.getValue().size() == 0)
+            if (eachTabID2Listeners.getValue().size() == 0) {
                 needRemovedTabIds.add(eachTabID2Listeners.getKey());
+            }
         }
 
         for (String eachNeedRemovedTabId : needRemovedTabIds) {
@@ -119,8 +134,6 @@ public class CommitBarListenerRegistry {
 		  for (List<CommitBarListener> tabListeners : tabId2Listeners.values()) {
 		   listeners.addAll(tabListeners);
 		  }
-		  // System.out.println("GetAllRegisteredListeners  Size="
-		  // + listeners.size());
 		  return listeners;
 	}
     

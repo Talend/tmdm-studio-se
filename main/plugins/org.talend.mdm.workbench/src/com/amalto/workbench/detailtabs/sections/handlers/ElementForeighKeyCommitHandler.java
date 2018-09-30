@@ -12,6 +12,11 @@
 // ============================================================================
 package com.amalto.workbench.detailtabs.sections.handlers;
 
+import org.eclipse.xsd.XSDComponent;
+import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDParticleContent;
+import org.eclipse.xsd.XSDTerm;
+
 import com.amalto.workbench.detailtabs.exception.CommitException;
 import com.amalto.workbench.detailtabs.exception.CommitValidationException;
 import com.amalto.workbench.detailtabs.sections.model.annotationinfo.relationship.ForeignKeyAnnoInfo;
@@ -42,12 +47,21 @@ public class ElementForeighKeyCommitHandler extends ListContentsCommitHandler<Fo
 
     @Override
     protected boolean doSubmit() throws CommitException {
-
+        XSDComponent sourceXSDComponent = this.submittedObj.getSourceXSDComponent();
+        if (sourceXSDComponent != null && sourceXSDComponent instanceof XSDParticle) {
+            XSDParticle particle = (XSDParticle) sourceXSDComponent;
+            XSDParticleContent content = particle.getContent();
+            XSDTerm term = particle.getTerm();
+            if (content != null && term != null && content != term) {
+                return false;
+            }
+        }
         XSDAnnotationsStructure xsdAnnoStruct = getXSDAnnotationStruct();
         String[] values = getCommitedObj().getValues();
         if (Util.getForeignKeys() != null && values != null) {
-            if (xsdAnnoStruct.getForeignKey() != null)
+            if (xsdAnnoStruct.getForeignKey() != null) {
                 Util.getForeignKeys().remove(Util.getConceptFromPath(xsdAnnoStruct.getForeignKey()));
+            }
             Util.getForeignKeys().add(Util.getConceptFromPath(values[0]));
         }
 

@@ -29,11 +29,13 @@ import com.amalto.workbench.i18n.Messages;
 
 public abstract class CommitBarListenerSection<T> extends BasePropertySection implements CommitBarListener {
 
+    @Override
     public void onReset() {
 
         refreshUIByEditedObj();
     }
 
+    @Override
     public void onSubmit() {
 
         try {
@@ -70,9 +72,9 @@ public abstract class CommitBarListenerSection<T> extends BasePropertySection im
     }
 
     protected boolean doSubmit() throws CommitException, CommitValidationException {
-        CommitHandler<?> createCommotHandler = createCommotHandler();
-        if (createCommotHandler != null) {
-            return createCommotHandler.submit();
+        CommitHandler<?> createCommitHandler = createCommitHandler();
+        if (createCommitHandler != null) {
+            return createCommitHandler.submit();
         }
         return false;
     }
@@ -89,47 +91,17 @@ public abstract class CommitBarListenerSection<T> extends BasePropertySection im
     public void createControls(Composite parent, TabbedPropertySheetPage aTabbedPropertySheetPage) {
         super.createControls(parent, aTabbedPropertySheetPage);
 
-        registToGolbalCommitBarListenerReg();
-    }
-
-    protected void registToGolbalCommitBarListenerReg() {
         CommitBarListenerRegistry.getInstance().registListener(getParentTabID(), this);
-
-        registCommitSectionListener();
-
-        registCommitSection();
-
-    }
-
-    protected void registCommitSection() {
-        CommitSection commitsec = CommitBarListenerRegistry.getInstance().getRegistCommitSection(getParentTabID());
-        if (commitsec != null) {
-            CommitBarListenerRegistry.getInstance().registCommitSection(getParentTabID(), commitsec);
-        }
-    }
-
-    /**
-     * regist current tab's commit section listener to current section if it failed to register in case: commit bar is
-     * no top of tab.
-     */
-    protected void registCommitSectionListener() {
-        for (CommitSection sec : CommitBarListenerRegistry.getInstance().getCommitSecs()) {
-            if (!sec.getCommitBar().getCommitBarListeners().contains(CommitBarListenerSection.this)) {
-                sec.getCommitBar().addCommitListener(CommitBarListenerSection.this);
-                break;
-            }
-        }
     }
 
     @Override
     public void dispose() {
-        super.dispose();
         CommitBarListenerRegistry.getInstance().unregistListener(this);
-
         CommitBarListenerRegistry.getInstance().unregistCommitSection(getParentTabID());
+        super.dispose();
     }
 
-    protected CommitHandler<?> createCommotHandler() {
+    protected CommitHandler<?> createCommitHandler() {
     	ISubmittable submit = getSubmittedObj();
         if (submit != null) {
             return submit.createCommitHandler();
