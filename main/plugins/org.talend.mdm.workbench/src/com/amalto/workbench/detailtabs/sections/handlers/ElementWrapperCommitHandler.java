@@ -24,6 +24,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDFactory;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
+import org.eclipse.xsd.XSDParticle;
 import org.eclipse.xsd.XSDXPathDefinition;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDSchemaBuildingTools;
@@ -75,7 +76,7 @@ public class ElementWrapperCommitHandler extends CommitHandler<ElementWrapper> {
             if (decl.isElementDeclarationReference()) {
                 ref = decl.getResolvedElementDeclaration();
             }
-            XSDAnnotationsStructure struct = new XSDAnnotationsStructure(getCommitedObj().getSourceElement());
+            XSDAnnotationsStructure struct = new XSDAnnotationsStructure(getCommitedObj().getSourceXSDContent());
             // remove first
             // struct.setAutoExpand(null);
             struct.setAutoExpand(String.valueOf(getCommitedObj().isAutoExpand()));
@@ -119,26 +120,12 @@ public class ElementWrapperCommitHandler extends CommitHandler<ElementWrapper> {
             } else if (ref != null) {
 
                 XSDElementDeclaration sourceXSDContent = getCommitedObj().getSourceXSDContent();
-                sourceXSDContent.setTypeDefinition(getCommitedObj().getSchema().getSchemaForSchema()
-                        .resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"));//$NON-NLS-1$
 
                 sourceXSDContent.setResolvedElementDeclaration(sourceXSDContent);
-                // XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
-                // XSDElementDeclaration newD = (XSDElementDeclaration) factory.createXSDElementDeclaration();
-                // newD.setName(getCommitedObj().getNewName());
-                // newD.updateElement();
-                // XSDSimpleTypeDefinition stringType = getCommitedObj().getSchema().getSchemaForSchema()
-                // .resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string");
-                //
-                // newD.setTypeDefinition(stringType);
-                // if (getCommitedObj().getSourceElement().getContainer() instanceof XSDModelGroup) {
-                // XSDModelGroup group = ((XSDModelGroup) getCommitedObj().getSourceElement().getContainer());
-                // ((XSDModelGroup) getCommitedObj().getSourceElement().getContainer()).getContents().remove(
-                // getCommitedObj().getSourceElement());
-                // getCommitedObj().setSourceElement(factory.createXSDParticle());
-                // getCommitedObj().getSourceElement().setContent(newD);
-                // group.getContents().add(getCommitedObj().getSourceElement());
-                // }
+                XSDParticle particle = getCommitedObj().getSourceElement();
+                particle.setTerm(sourceXSDContent);
+                sourceXSDContent.setTypeDefinition(getCommitedObj().getSchema().getSchemaForSchema()
+                        .resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"));//$NON-NLS-1$
             }
 
             int newMaxOcur = getCommitedObj().getNewMaxOcur();
