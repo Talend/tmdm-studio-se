@@ -49,6 +49,12 @@ public class ElementFKSection extends XSDComponentSection {
     }
 
     @Override
+    public void aboutToBeHidden() {
+        fkIntegrityConfig.removeRefreshAdapter();
+        super.aboutToBeHidden();
+    }
+
+    @Override
     protected boolean isReadOnly() {
         return super.isReadOnly() || isComplexTypeElement(curXSDComponent);
     }

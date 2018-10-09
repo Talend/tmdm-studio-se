@@ -109,10 +109,9 @@ public class FKIntegrityComposite extends Composite {
 
 	@Override
 	public void dispose() {
+        // Remove listener on disposal (no more need to keep view in sync with model)
+        xsdComponent.eAdapters().remove(refreshAdapter);
 		super.dispose();
-		// Remove listener on disposal (no more need to keep view in sync with
-		// model)
-		xsdComponent.eAdapters().remove(refreshAdapter);
 	}
 
 	private void refresh() {
@@ -216,21 +215,25 @@ public class FKIntegrityComposite extends Composite {
 	private class ViewRefreshAdapter implements Adapter {
 		private Notifier notifier;
 
-		public void setTarget(Notifier notifier) {
+		@Override
+        public void setTarget(Notifier notifier) {
 			this.notifier = notifier;
 		}
 
-		public void notifyChanged(Notification event) {
+		@Override
+        public void notifyChanged(Notification event) {
 			if (!event.isTouch()) {
 				refresh();
 			}
 		}
 
-		public boolean isAdapterForType(Object obj) {
+		@Override
+        public boolean isAdapterForType(Object obj) {
 			return obj instanceof XSDElementDeclaration;
 		}
 
-		public Notifier getTarget() {
+		@Override
+        public Notifier getTarget() {
 			return notifier;
 		}
 	}
@@ -247,9 +250,7 @@ public class FKIntegrityComposite extends Composite {
 
 		// Take into account only component change
 		if (xsdComponent != this.xsdComponent) {
-			if (this.xsdComponent != null) {
-				this.xsdComponent.eAdapters().remove(refreshAdapter);
-			}
+			removeRefreshAdapter();
 			this.xsdComponent = (XSDElementDeclaration) ((XSDParticle) xsdComponent)
 					.getContent();
 			this.xsdComponent.eAdapters().add(refreshAdapter);
@@ -258,4 +259,10 @@ public class FKIntegrityComposite extends Composite {
 		// Update UI with the information in the XSDComponent
 		refresh();
 	}
+
+    public void removeRefreshAdapter() {
+        if (this.xsdComponent != null && refreshAdapter != null) {
+        	this.xsdComponent.eAdapters().remove(refreshAdapter);
+        }
+    }
 }
