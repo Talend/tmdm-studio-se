@@ -24,24 +24,24 @@ import org.talend.mdm.repository.model.mdmproperties.impl.WSViewItemImpl;
  * created by liusongbo on Apr 18, 2016
  *
  */
-public class OperatorUpdatorProvider {
+public class UpdatorProvider {
 
     private Map<Class, IOperatorUpdator> updators;
 
-    private static OperatorUpdatorProvider instance = new OperatorUpdatorProvider();
+    private static UpdatorProvider instance = new UpdatorProvider();
 
-    public static OperatorUpdatorProvider instance() {
+    public static UpdatorProvider instance() {
         return instance;
     }
 
     public void updateOperator(Item item) {
-        IOperatorUpdator updator = getUpdator(item.getClass());
+        IOperatorUpdator updator = getOperatorUpdator(item.getClass());
         if (updator != null) {
             updator.updateConditionOperator(item);
         }
     }
 
-    private IOperatorUpdator getUpdator(Class clazz) {
+    private IOperatorUpdator getOperatorUpdator(Class clazz) {
         if (updators == null) {
             updators = new HashMap<Class, IOperatorUpdator>();
         }
@@ -70,6 +70,10 @@ public class OperatorUpdatorProvider {
         }
 
         updators.put(clazz, updator);
+    }
+
+    public void updateDataModelSchema(Item item) {
+        new DatamodelSchemaUpdator().updateSchema(item);
     }
 
 }
