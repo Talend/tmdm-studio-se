@@ -178,27 +178,14 @@ public class XSDEditParticleAction extends UndoAction implements SelectionListen
                 }
                 decl.updateElement();
             } else if (ref != null) {
-                // fliu
-                // no more element declarations --> we create a new Declaration with String simpleType definition
-                // instead
-                // FIXME: dereferecning and element is buggy
-
-                XSDFactory factory = XSDSchemaBuildingTools.getXSDFactory();
-                XSDElementDeclaration newD = factory.createXSDElementDeclaration();
-                newD.setName(this.elementName);
-                newD.updateElement();
                 XSDSimpleTypeDefinition stringType = ((SchemaTreeContentProvider) page.getTreeViewer().getContentProvider())
                         .getXsdSchema().getSchemaForSchema()
                         .resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"); //$NON-NLS-1$
-
-                newD.setTypeDefinition(stringType);
-                if (selParticle.getContainer() instanceof XSDModelGroup) {
-                    XSDModelGroup group = ((XSDModelGroup) selParticle.getContainer());
-                    ((XSDModelGroup) selParticle.getContainer()).getContents().remove(selParticle);
-                    selParticle = factory.createXSDParticle();
-                    selParticle.setContent(newD);
-                    group.getContents().add(selParticle);
-                }
+                decl.setResolvedElementDeclaration(decl);
+                selParticle.setTerm(decl);
+                decl.setTypeDefinition(stringType);
+                decl.updateElement();
+                selParticle.updateElement();
             }
 
             if (Util.changeElementTypeToSequence(decl, maxOccurs) == Status.CANCEL_STATUS) {
