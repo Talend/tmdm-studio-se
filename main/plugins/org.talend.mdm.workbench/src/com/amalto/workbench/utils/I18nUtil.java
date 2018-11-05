@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.runtime.Platform;
 
+@SuppressWarnings("nls")
 public class I18nUtil {
 
     private static final String DEFAULT_NL = "en"; //$NON-NLS-1$
@@ -30,6 +31,7 @@ public class I18nUtil {
     private static final String OSGI_NL = "osgi.nl"; //$NON-NLS-1$
 
     private static final Log LOG = LogFactory.getLog(I18nUtil.class);
+
 
     private static String curNL = null;
 
@@ -51,12 +53,12 @@ public class I18nUtil {
 
             Properties p = new Properties();
             // load the file configuration/config.ini
-            File iniFile = new File(url.getFile(), "config.ini"); //$NON-NLS-1$
+            File iniFile = new File(url.getFile(), "config.ini");
             fin = new FileInputStream(iniFile);
             p.load(fin);
             return p.getProperty(OSGI_NL);
         } catch (IOException ex) {
-            LOG.error("Fail in reading config.ini file", ex); //$NON-NLS-1$
+            LOG.error("Fail in reading config.ini file", ex);
             return null;
         } finally {
             IOUtils.closeQuietly(fin);
