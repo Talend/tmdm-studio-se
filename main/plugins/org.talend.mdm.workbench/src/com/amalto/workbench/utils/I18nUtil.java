@@ -26,9 +26,9 @@ import org.eclipse.core.runtime.Platform;
 @SuppressWarnings("nls")
 public class I18nUtil {
 
-    private static final String DEFAULT_NL = "en"; //$NON-NLS-1$
+    private static final String DEFAULT_NL = "en";
 
-    private static final String OSGI_NL = "osgi.nl"; //$NON-NLS-1$
+    private static final String OSGI_NL = "osgi.nl";
 
     private static final Log LOG = LogFactory.getLog(I18nUtil.class);
 
