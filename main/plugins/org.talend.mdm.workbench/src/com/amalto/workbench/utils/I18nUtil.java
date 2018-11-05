@@ -32,7 +32,6 @@ public class I18nUtil {
 
     private static final Log LOG = LogFactory.getLog(I18nUtil.class);
 
-
     private static String curNL = null;
 
     public static final String getCurrentNL() {
