@@ -29,7 +29,7 @@ public class I18nUtil {
 
     private static final String OSGI_NL = "osgi.nl"; //$NON-NLS-1$
 
-    private static final Log LOG = LogFactory.getLog(HttpClientUtil.class);
+    private static final Log LOG = LogFactory.getLog(I18nUtil.class);
 
     private static String curNL = null;
 
@@ -56,7 +56,7 @@ public class I18nUtil {
             p.load(fin);
             return p.getProperty(OSGI_NL);
         } catch (IOException ex) {
-            LOG.error(ex.getMessage(), ex);
+            LOG.error("Fail in reading config.ini file", ex); //$NON-NLS-1$
             return null;
         } finally {
             IOUtils.closeQuietly(fin);
