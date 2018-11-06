@@ -454,10 +454,10 @@ public class HttpClientUtil {
     public static String invokeModelService(String protocol, String host, String port, String contextPath, String username,
             String password, String modelName, String xsd, boolean isUpdate, Boolean force) throws XtentisException {
         try {
-            String url = protocol + host + ":" + port + contextPath + "/services/rest/system/models/" + modelName + "?lang=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                    + I18nUtil.getCurrentNL();
-
-            if (force != null) {
+            String url = protocol + host + ":" + port + contextPath + "/services/rest/system/models/" + modelName; //$NON-NLS-1$//$NON-NLS-2$
+            if (!isUpdate) {
+                url += "?lang=" + I18nUtil.getCurrentNL(); //$NON-NLS-1$
+            } else if (force != null) {
                 url += "?force=" + force.toString(); //$NON-NLS-1$
             }
             HttpUriRequest request = null;
