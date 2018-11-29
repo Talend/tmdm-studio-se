@@ -266,10 +266,9 @@
                     BundleID=""
                     />
                  <IMPORT
-                    NAME="stax2-api-3.1.4"
-                    MODULE="stax2-api-3.1.4.jar"
-                    MVN="mvn:org.talend.libraries/stax2-api-3.1.4/6.0.0"
-                    UrlPath="platform:/plugin/org.talend.libraries.apache.cxf/lib/stax2-api-3.1.4.jar"
+                    NAME="stax2-api-4.1"
+                    MODULE="stax2-api-4.1.jar"
+                    MVN="mvn:org.codehaus.woodstox/stax2-api/4.1"
                     REQUIRED="true"
                     BundleID=""
                     />
