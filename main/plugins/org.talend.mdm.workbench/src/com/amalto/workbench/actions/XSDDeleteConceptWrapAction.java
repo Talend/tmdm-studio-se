@@ -46,15 +46,15 @@ import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.providers.datamodel.SchemaTreeContentProvider;
+import com.amalto.workbench.utils.I18nUtil;
 import com.amalto.workbench.utils.Util;
 
+@SuppressWarnings("nls")
 public class XSDDeleteConceptWrapAction extends UndoAction {
 
     private static Log log = LogFactory.getLog(XSDDeleteConceptWrapAction.class);
 
     private TreeViewer viewer = null;
-
-    private XSDDeleteConceptAction deleteConceptAction = null;
 
     private List<XSDConcreteComponent> delObjs = new ArrayList<XSDConcreteComponent>();
 
@@ -85,26 +85,15 @@ public class XSDDeleteConceptWrapAction extends UndoAction {
 
         List<IStatus> results = new ArrayList<IStatus>();
         try {
-            IStructuredSelection selection = (IStructuredSelection) page.getTreeViewer().getSelection();
             if (delObjs.isEmpty()) {
                 return Status.CANCEL_STATUS;
             } else {
-                boolean sameType = checkInSameClassType(delObjs.toArray(), delObjs.get(0).getClass());
-                String deleteLabel = Messages.DelLabel1;
-                String elemDesc = ((Action) clsAction.get(delObjs.get(0).getClass())).getText();
-                int backPos = elemDesc.indexOf(" "); //$NON-NLS-1$
+                String deleteLabel = "";
 
                 if (delObjs.size() > 1) {
-                    deleteLabel += elemDesc.substring(0, backPos) + Messages.DelLabel2 + delObjs.size() + Messages.DelLabel2A
-                            + (!sameType ? Messages.DelLabel2B : elemDesc.substring(backPos + 1));
-                    if (deleteLabel.endsWith("y")) {//$NON-NLS-1$
-                        deleteLabel = deleteLabel.substring(0, deleteLabel.length() - 1) + Messages.DelLabel3;
-                    } else {
-                        deleteLabel = deleteLabel + Messages.XSDDeleteXX_DelLabel4;
-                    }
+                    deleteLabel = Messages.DelMultiObjs;
                 } else {
-                    deleteLabel += elemDesc.substring(0, backPos) + Messages.XSDDeleteXX_DelLabel5
-                            + (!sameType ? Messages.XSDDeleteXX_DelLabel5A : elemDesc.substring(backPos + 1));
+                    deleteLabel = Messages.DelSelectedObj;
                 }
 
                 if (!MessageDialog.openConfirm(page.getSite().getShell(), Messages.XSDDeleteXX_DialogTitle, deleteLabel)) {
@@ -112,8 +101,7 @@ public class XSDDeleteConceptWrapAction extends UndoAction {
                 }
             }
 
-            for (Iterator iterator = delObjs.iterator(); iterator.hasNext();) {
-                Object toDel = iterator.next();
+            for (Object toDel : delObjs) {
                 UndoAction delExecute = null;
                 boolean isElem = true;
                 if (toDel instanceof XSDElementDeclaration) {
@@ -274,19 +262,17 @@ public class XSDDeleteConceptWrapAction extends UndoAction {
         XSDConcreteComponent comp = delObjs.get(0);
         if (checkInSameClassType(delObjs.toArray(), comp.getClass())) {
             String actionTxt = clsAction.get(comp.getClass()).getText();
-            if (delObjs.size() > 1) {
-                if (actionTxt.endsWith("y")) {//$NON-NLS-1$
-                    actionTxt = actionTxt.substring(0, actionTxt.length() - 1) + "ies";//$NON-NLS-1$
-                }
-                else {
-                    actionTxt = actionTxt + "s";//$NON-NLS-1$
+            if (I18nUtil.isEnNL() && delObjs.size() > 1) {
+                if (actionTxt.endsWith("y")) {
+                    actionTxt = actionTxt.substring(0, actionTxt.length() - 1) + "ies";
+                } else {
+                    actionTxt = actionTxt + "s";
                 }
             }
             setText(actionTxt);
         } else {
             setText(Messages.XSDDeleteXX_DeleteObjects);
         }
-        setToolTipText(Messages.XSDDeleteXX_DeleteEntities);
     }
 
     private void clearDelData() {

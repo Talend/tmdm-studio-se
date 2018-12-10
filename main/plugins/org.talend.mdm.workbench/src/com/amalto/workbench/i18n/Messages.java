@@ -227,6 +227,8 @@ public class Messages extends NLS {
 
     public static String XSDDeleteConceptAction_Text;
 
+    public static String DelSelectedObj;
+
     public static String XSDDeleteElementAction_ActionTip;
 
     public static String XSDDeleteElementAction_ErrorMsg;
@@ -264,8 +266,6 @@ public class Messages extends NLS {
     public static String XSDDeleteXPathAction_SelectorCannotDel;
 
     public static String XSDDeleteXX_ActionTip;
-
-    public static String XSDDeleteXX_DeleteEntities;
 
     public static String XSDDeleteXX_DeleteObjects;
 
@@ -2645,15 +2645,7 @@ public class Messages extends NLS {
 
     public static String DeleteAllItems;
 
-    public static String DelLabel1;
-
-    public static String DelLabel2;
-
-    public static String DelLabel2A;
-
-    public static String DelLabel2B;
-
-    public static String DelLabel3;
+    public static String DelMultiObjs;
 
     public static String DOMViewDialog_BeforeBtnText;
 

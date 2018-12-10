@@ -28,6 +28,8 @@ public class I18nUtil {
 
     private static final String DEFAULT_NL = "en";
 
+    private static final String EN_PREFIX = "en_";
+
     private static final String OSGI_NL = "osgi.nl";
 
     private static final Log LOG = LogFactory.getLog(I18nUtil.class);
@@ -42,6 +44,18 @@ public class I18nUtil {
             }
         }
         return curNL;
+    }
+
+    public static final boolean isEnNL() {
+        String nl = getCurrentNL();
+        if (nl != null) {
+            nl = nl.toLowerCase();
+            return nl.equals(DEFAULT_NL) || nl.startsWith(EN_PREFIX);
+        } else {
+            // shouldn't reach here, but if nl is null, then it is default EN language
+            return true;
+        }
+
     }
 
     private static String readCurrentNL() {
