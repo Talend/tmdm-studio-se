@@ -19,6 +19,8 @@ import org.talend.mdm.repository.model.mdmserverobject.WSWhereConditionE;
 import org.talend.mdm.repository.ui.widgets.UserVarValueValidator;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 
+import com.amalto.workbench.webservices.WSWhereOperator;
+
 
 public class ViewValidator extends AbstractNestedValidator implements IValidatorJob {
 
@@ -38,11 +40,18 @@ public class ViewValidator extends AbstractNestedValidator implements IValidator
             EList<WSWhereConditionE> whereConditions = view.getWhereConditions();
             if(whereConditions != null && whereConditions.size() >0) {
                 for (WSWhereConditionE conditionE : whereConditions) {
+                    String operator = conditionE.getOperator().getValue();
                     String userVarValue = conditionE.getRightValueOrPath();
-                    boolean isValid = UserVarValueValidator.validate(userVarValue);
-                    if(!isValid) {
-                        String validateMsg = Messages.bind(Messages.ViewValidator_error, userVarValue,viewName);
+                    if (WSWhereOperator.EMPTY_NULL.name().equals(operator) && userVarValue.length() > 0) {
+                        String validateMsg = Messages.bind(Messages.ViewValidator_EmptyNullOperatorValue_error, viewName,
+                                conditionE.getLeftPath());
                         viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
+                    } else {
+                        boolean isValid = UserVarValueValidator.validate(userVarValue);
+                        if (!isValid) {
+                            String validateMsg = Messages.bind(Messages.ViewValidator_error, userVarValue, viewName);
+                            viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
+                        }
                     }
                 }
             }
