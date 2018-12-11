@@ -55,7 +55,6 @@ public class I18nUtil {
             // shouldn't reach here, but if nl is null, then it is default EN language
             return true;
         }
-
     }
 
     private static String readCurrentNL() {
