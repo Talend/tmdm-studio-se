@@ -13,7 +13,7 @@ public class UserVarValueValidator {
      * True: Is valid
      */
     public static boolean validate(String userVarValue) {
-        List<String> validUserVars = new ArrayList<String>();
+        List<String> validUserVars = new ArrayList<>();
         validUserVars.add(_PREFIX_USER_VAR + UserField.Id.field + _SURFIX_USER_VAR);
         validUserVars.add(_PREFIX_USER_VAR + UserField.First_Name.field + _SURFIX_USER_VAR);
         validUserVars.add(_PREFIX_USER_VAR + UserField.Last_Name.field + _SURFIX_USER_VAR);
