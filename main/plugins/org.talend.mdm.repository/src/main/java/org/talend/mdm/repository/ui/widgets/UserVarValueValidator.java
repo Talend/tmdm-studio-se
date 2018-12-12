@@ -20,17 +20,16 @@ public class UserVarValueValidator {
         validUserVars.add(_PREFIX_USER_VAR + UserField.User_Name.field + _SURFIX_USER_VAR);
         validUserVars.add(_PREFIX_USER_VAR + UserField.Language.field + _SURFIX_USER_VAR);
 
-        boolean result = true;
-        if (userVarValue.startsWith(_PREFIX_USER_VAR) && userVarValue.endsWith(_SURFIX_USER_VAR)) {
-            if (!validUserVars.contains(userVarValue)) {
-                String propertyFieldHead = _PREFIX_USER_VAR + UserField.Properties.field + "[\""; //$NON-NLS-1$
-                String propertyFieldTail = "\"]" + _SURFIX_USER_VAR; //$NON-NLS-1$
-                if (!(userVarValue.startsWith(propertyFieldHead) && userVarValue.endsWith(propertyFieldTail))) {
-                    result = false;
-                }
-            }
+        String propertyFieldHead = _PREFIX_USER_VAR + UserField.Properties.field + "[\""; //$NON-NLS-1$
+        String propertyFieldTail = "\"]" + _SURFIX_USER_VAR; //$NON-NLS-1$
+
+        boolean isUserVarPattern = userVarValue.startsWith(_PREFIX_USER_VAR) && userVarValue.endsWith(_SURFIX_USER_VAR);
+        boolean propPattern = userVarValue.startsWith(propertyFieldHead) && userVarValue.endsWith(propertyFieldTail)
+                && userVarValue.length() > propertyFieldHead.length() + propertyFieldTail.length();
+        if (isUserVarPattern && !validUserVars.contains(userVarValue) && !propPattern) {
+            return false;
         }
 
-        return result;
+        return true;
     }
 }

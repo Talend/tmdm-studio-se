@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.wst.validation.internal.provisional.core.IValidatorJob;
 import org.eclipse.wst.xml.core.internal.validation.core.AbstractNestedValidator;
@@ -42,16 +43,16 @@ public class ViewValidator extends AbstractNestedValidator implements IValidator
                 for (WSWhereConditionE conditionE : whereConditions) {
                     String operator = conditionE.getOperator().getValue();
                     String userVarValue = conditionE.getRightValueOrPath();
-                    if (WSWhereOperator.EMPTY_NULL.name().equals(operator) && userVarValue.length() > 0) {
-                        String validateMsg = Messages.bind(Messages.ViewValidator_EmptyNullOperatorValue_error, viewName,
-                                conditionE.getLeftPath());
-                        viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
-                    } else {
-                        boolean isValid = UserVarValueValidator.validate(userVarValue);
-                        if (!isValid) {
-                            String validateMsg = Messages.bind(Messages.ViewValidator_error, userVarValue, viewName);
+                    if (WSWhereOperator.EMPTY_NULL.name().equals(operator)) {
+                        if (userVarValue.length() > 0) {
+                            String validateMsg = Messages.bind(Messages.ViewValidator_EmptyNullOperatorValue_error, viewName,
+                                    conditionE.getLeftPath());
                             viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
                         }
+                    } else if (StringUtils.isBlank(userVarValue) || !UserVarValueValidator.validate(userVarValue)) {
+                        String validateMsg = Messages.bind(Messages.ViewValidator_error, viewName, conditionE.getLeftPath(),
+                                userVarValue);
+                        viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
                     }
                 }
             }
