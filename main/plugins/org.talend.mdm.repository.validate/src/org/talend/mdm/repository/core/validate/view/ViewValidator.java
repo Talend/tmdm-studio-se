@@ -20,6 +20,7 @@ import org.talend.mdm.repository.model.mdmserverobject.WSWhereConditionE;
 import org.talend.mdm.repository.ui.widgets.UserVarValueValidator;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 
+import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.webservices.WSWhereOperator;
 
 
@@ -46,12 +47,12 @@ public class ViewValidator extends AbstractNestedValidator implements IValidator
                     if (WSWhereOperator.EMPTY_NULL.name().equals(operator)) {
                         if (userVarValue.length() > 0) {
                             String validateMsg = Messages.bind(Messages.ViewValidator_EmptyNullOperatorValue_error, viewName,
-                                    conditionE.getLeftPath());
+                                    conditionE.getLeftPath(), Util.toReadable(WSWhereOperator.fromValue(operator)));
                             viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
                         }
                     } else if (StringUtils.isBlank(userVarValue) || !UserVarValueValidator.validate(userVarValue)) {
                         String validateMsg = Messages.bind(Messages.ViewValidator_error, viewName, conditionE.getLeftPath(),
-                                userVarValue);
+                                Util.toReadable(WSWhereOperator.fromValue(operator)), userVarValue);
                         viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
                     }
                 }
