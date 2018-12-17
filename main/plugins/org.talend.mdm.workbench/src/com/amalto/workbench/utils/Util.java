@@ -2521,32 +2521,7 @@ public class Util {
     public static String[] convertWhereCondition(WSWhereCondition wc) {
         List<String> list = new ArrayList<String>();
         list.add(wc.getLeftPath());
-        String operator = "";//$NON-NLS-1$
-        if (wc.getOperator().equals(WSWhereOperator.CONTAINS)) {
-            operator = "Contains";//$NON-NLS-1$
-        } else if (wc.getOperator().equals(WSWhereOperator.CONTAINS_SENTENCE)) {
-            operator = "contains the sentence";//$NON-NLS-1$
-        } else if (wc.getOperator().equals(WSWhereOperator.EQUALS)) {
-            operator = "=";//$NON-NLS-1$
-        } else if (wc.getOperator().equals(WSWhereOperator.GREATER_THAN)) {
-            operator = ">";//$NON-NLS-1$
-        } else if (wc.getOperator().equals(WSWhereOperator.GREATER_THAN_OR_EQUAL)) {
-            operator = ">=";//$NON-NLS-1$
-        } else if (wc.getOperator().equals(WSWhereOperator.JOIN)) {
-            operator = "Join With";//$NON-NLS-1$
-        } else if (wc.getOperator().equals(WSWhereOperator.LOWER_THAN)) {
-            operator = "<";//$NON-NLS-1$
-        } else if (wc.getOperator().equals(WSWhereOperator.LOWER_THAN_OR_EQUAL)) {
-            operator = "<=";//$NON-NLS-1$
-        } else if (wc.getOperator().equals(WSWhereOperator.NOT_EQUALS)) {
-            operator = "!=";//$NON-NLS-1$
-        } else if (wc.getOperator().equals(WSWhereOperator.STARTSWITH)) {
-            operator = "Starts With";//$NON-NLS-1$
-        } else if (wc.getOperator().equals(WSWhereOperator.EMPTY_NULL)) {
-            operator = "Is Empty Or Null";//$NON-NLS-1$
-        } else if (wc.getOperator().equals(WSWhereOperator.FULLTEXTSEARCH)) {
-            operator = "whole content contains";//$NON-NLS-1$
-        }
+        String operator = toReadable(wc.getOperator());
         list.add(operator);
         list.add(wc.getRightValueOrPath());
 
@@ -2563,6 +2538,36 @@ public class Util {
 
         list.add(predicate);
         return list.toArray(new String[list.size()]);
+    }
+
+    public static String toReadable(WSWhereOperator wsOperator) {
+        String operator = "";//$NON-NLS-1$
+        if (wsOperator.equals(WSWhereOperator.CONTAINS)) {
+            operator = "Contains";//$NON-NLS-1$
+        } else if (wsOperator.equals(WSWhereOperator.CONTAINS_SENTENCE)) {
+            operator = "contains the sentence";//$NON-NLS-1$
+        } else if (wsOperator.equals(WSWhereOperator.EQUALS)) {
+            operator = "=";//$NON-NLS-1$
+        } else if (wsOperator.equals(WSWhereOperator.GREATER_THAN)) {
+            operator = ">";//$NON-NLS-1$
+        } else if (wsOperator.equals(WSWhereOperator.GREATER_THAN_OR_EQUAL)) {
+            operator = ">=";//$NON-NLS-1$
+        } else if (wsOperator.equals(WSWhereOperator.JOIN)) {
+            operator = "Join With";//$NON-NLS-1$
+        } else if (wsOperator.equals(WSWhereOperator.LOWER_THAN)) {
+            operator = "<";//$NON-NLS-1$
+        } else if (wsOperator.equals(WSWhereOperator.LOWER_THAN_OR_EQUAL)) {
+            operator = "<=";//$NON-NLS-1$
+        } else if (wsOperator.equals(WSWhereOperator.NOT_EQUALS)) {
+            operator = "!=";//$NON-NLS-1$
+        } else if (wsOperator.equals(WSWhereOperator.STARTSWITH)) {
+            operator = "Starts With";//$NON-NLS-1$
+        } else if (wsOperator.equals(WSWhereOperator.EMPTY_NULL)) {
+            operator = "Is Empty Or Null";//$NON-NLS-1$
+        } else if (wsOperator.equals(WSWhereOperator.FULLTEXTSEARCH)) {
+            operator = "whole content contains";//$NON-NLS-1$
+        }
+        return operator;
     }
 
     public static String[] convertRouteCondition(WSRoutingRuleExpression wc) {
@@ -3260,6 +3265,7 @@ public class Util {
                 final String fMessage = message;
                 Display.getDefault().syncExec(new Runnable() {
 
+                    @Override
                     public void run() {
                         MessageDialog.openWarning(shell, fTitle, fMessage);
                     }

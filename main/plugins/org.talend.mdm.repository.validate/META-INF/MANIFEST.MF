@@ -27,4 +27,5 @@ Require-Bundle: org.apache.commons.collections,
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.mdm.repository.core.marker,
  org.talend.mdm.repository.ui.markers
-Import-Package: com.amalto.workbench.webservices
+Import-Package: com.amalto.workbench.utils,
+ com.amalto.workbench.webservices
