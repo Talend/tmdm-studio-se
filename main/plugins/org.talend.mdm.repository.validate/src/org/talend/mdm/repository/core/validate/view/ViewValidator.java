@@ -44,15 +44,15 @@ public class ViewValidator extends AbstractNestedValidator implements IValidator
     @Override
     public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context) {
         ViewValidationReport viewValidationReport = new ViewValidationReport(uri);
-        
+
         String viewName = getViewName(uri);
 
         IRepositoryViewObject viewObj = RepositoryResourceUtil.findViewObjectByName(IServerObjectRepositoryType.TYPE_VIEW,
                 viewName);
         if (viewObj != null) {
-            
+
             WSViewItem item = (WSViewItem) viewObj.getProperty().getItem();
-            WSViewE view = (WSViewE)item.getMDMServerObject();
+            WSViewE view = (WSViewE) item.getMDMServerObject();
             EList<WSWhereConditionE> whereConditions = view.getWhereConditions();
             validateConditions(viewValidationReport, viewName, whereConditions);
         }
@@ -61,7 +61,7 @@ public class ViewValidator extends AbstractNestedValidator implements IValidator
 
     private void validateConditions(ViewValidationReport viewValidationReport, String viewName,
             List<WSWhereConditionE> whereConditions) {
-        if(whereConditions != null && whereConditions.size() >0) {
+        if (whereConditions != null && whereConditions.size() > 0) {
             for (WSWhereConditionE conditionE : whereConditions) {
                 String operator = conditionE.getOperator().getValue();
                 String userVarValue = conditionE.getRightValueOrPath();
@@ -101,4 +101,5 @@ public class ViewValidator extends AbstractNestedValidator implements IValidator
 
         return userVarValueValidator;
     }
+
 }
