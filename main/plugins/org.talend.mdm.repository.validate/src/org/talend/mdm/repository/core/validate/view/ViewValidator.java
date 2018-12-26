@@ -13,6 +13,7 @@
 package org.talend.mdm.repository.core.validate.view;
 
 import java.io.InputStream;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,13 +39,14 @@ import com.amalto.workbench.webservices.WSWhereOperator;
 
 public class ViewValidator extends AbstractNestedValidator implements IValidatorJob {
 
+    private UserVarValueValidator userVarValueValidator;
+
     @Override
     public ValidationReport validate(String uri, InputStream inputstream, NestedValidatorContext context) {
         ViewValidationReport viewValidationReport = new ViewValidationReport(uri);
         
-        String fileName = uri.substring(uri.lastIndexOf("/")+1); //$NON-NLS-1$
-        String viewName = getViewName(fileName);
-        viewName = viewName.replace("$", "#"); //$NON-NLS-1$ //$NON-NLS-2$
+        String viewName = getViewName(uri);
+
         IRepositoryViewObject viewObj = RepositoryResourceUtil.findViewObjectByName(IServerObjectRepositoryType.TYPE_VIEW,
                 viewName);
         if (viewObj != null) {
@@ -52,33 +54,51 @@ public class ViewValidator extends AbstractNestedValidator implements IValidator
             WSViewItem item = (WSViewItem) viewObj.getProperty().getItem();
             WSViewE view = (WSViewE)item.getMDMServerObject();
             EList<WSWhereConditionE> whereConditions = view.getWhereConditions();
-            if(whereConditions != null && whereConditions.size() >0) {
-                for (WSWhereConditionE conditionE : whereConditions) {
-                    String operator = conditionE.getOperator().getValue();
-                    String userVarValue = conditionE.getRightValueOrPath();
-                    if (WSWhereOperator.EMPTY_NULL.name().equals(operator)) {
-                        if (userVarValue.length() > 0) {
-                            String validateMsg = Messages.bind(Messages.ViewValidator_EmptyNullOperatorValue_error, viewName,
-                                    conditionE.getLeftPath(), Util.toReadable(WSWhereOperator.fromValue(operator)));
-                            viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
-                        }
-                    } else if (StringUtils.isBlank(userVarValue) || !UserVarValueValidator.validate(userVarValue)) {
-                        String validateMsg = Messages.bind(Messages.ViewValidator_error, viewName, conditionE.getLeftPath(),
-                                Util.toReadable(WSWhereOperator.fromValue(operator)), userVarValue);
-                        viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
-                    }
-                }
-            }
+            validateConditions(viewValidationReport, viewName, whereConditions);
         }
         return viewValidationReport;
     }
 
-    private String getViewName(String fileName) {
-        Pattern pattern = Pattern.compile("(\\w*?\\$?\\w*?)_(\\d*?)\\.(\\d*?)\\.item"); //$NON-NLS-1$
-        Matcher matcher = pattern.matcher(fileName);
-        if (matcher.find()) {
-            return matcher.group(1);
+    private void validateConditions(ViewValidationReport viewValidationReport, String viewName,
+            List<WSWhereConditionE> whereConditions) {
+        if(whereConditions != null && whereConditions.size() >0) {
+            for (WSWhereConditionE conditionE : whereConditions) {
+                String operator = conditionE.getOperator().getValue();
+                String userVarValue = conditionE.getRightValueOrPath();
+                if (WSWhereOperator.EMPTY_NULL.name().equals(operator)) {
+                    if (userVarValue.length() > 0) {
+                        String validateMsg = Messages.bind(Messages.ViewValidator_EmptyNullOperatorValue_error, viewName,
+                                conditionE.getLeftPath(), Util.toReadable(WSWhereOperator.fromValue(operator)));
+                        viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
+                    }
+                } else if (StringUtils.isBlank(userVarValue) || !getUserVarValueValidator().validate(userVarValue)) {
+                    String validateMsg = Messages.bind(Messages.ViewValidator_error, viewName, conditionE.getLeftPath(),
+                            Util.toReadable(WSWhereOperator.fromValue(operator)), userVarValue);
+                    viewValidationReport.addValidationMessage(new ValidationMessage(validateMsg, -1, -1));
+                }
+            }
         }
-        return fileName;
+    }
+
+    private String getViewName(String uri) {
+        String viewName = uri.substring(uri.lastIndexOf("/") + 1); //$NON-NLS-1$
+
+        Pattern pattern = Pattern.compile("(\\w*?\\$?\\w*?)_(\\d*?)\\.(\\d*?)\\.item"); //$NON-NLS-1$
+        Matcher matcher = pattern.matcher(viewName);
+        if (matcher.find()) {
+            viewName = matcher.group(1);
+        }
+
+        viewName = viewName.replace("$", "#"); //$NON-NLS-1$ //$NON-NLS-2$
+
+        return viewName;
+    }
+
+    private UserVarValueValidator getUserVarValueValidator() {
+        if (userVarValueValidator == null) {
+            userVarValueValidator = new UserVarValueValidator();
+        }
+
+        return userVarValueValidator;
     }
 }
