@@ -32,14 +32,12 @@ import org.talend.mdm.repository.ui.widgets.UserVarValueValidator;
 
 import com.amalto.workbench.webservices.WSWhereOperator;
 
-/**
- *
- */
 @SuppressWarnings("nls")
 public class ViewValidatorTest {
 
     @Test
     public void testGetViewName() throws Exception {
+        // without filter name
         String uri = "file:///D:/workspace/TEST/MDM/view/web/Browse_items_Product_0.1.item";
         String viewName = "Browse_items_Product";
 
@@ -47,7 +45,12 @@ public class ViewValidatorTest {
         Method getViewNameMethod = viewValidator.getClass().getDeclaredMethod("getViewName", String.class);
         getViewNameMethod.setAccessible(true);
         String name = (String) getViewNameMethod.invoke(viewValidator, uri);
+        assertEquals(viewName, name);
 
+        // with filter name
+        uri = "file:///D:/workspace/TEST/MDM/view/web/Browse_items_Product$Stores_0.1.item";
+        viewName = "Browse_items_Product#Stores";
+        name = (String) getViewNameMethod.invoke(viewValidator, uri);
         assertEquals(viewName, name);
     }
 
@@ -73,27 +76,25 @@ public class ViewValidatorTest {
         }
 
         List<WSWhereConditionE> whereCondions = createWhereCondions(operators, conditionValues);
-        //////
+        // empty string value
         validateConditionsMethod.invoke(viewValidator, viewValidationReport, viewName, whereCondions);
         assertEquals(viewValidationReport.getValidationMessages().length, conditionValues.size());
 
-        //////
+        // blank string value
         viewValidationReport.messages.clear();
         Collections.fill(conditionValues, " ");
         whereCondions = createWhereCondions(operators, conditionValues);
-
         validateConditionsMethod.invoke(viewValidator, viewValidationReport, viewName, whereCondions);
         assertEquals(conditionValues.size(), viewValidationReport.getValidationMessages().length);
 
-        //////
+        // normal string
         viewValidationReport.messages.clear();
         Collections.fill(conditionValues, "condionValue");
         whereCondions = createWhereCondions(operators, conditionValues);
-
         validateConditionsMethod.invoke(viewValidator, viewValidationReport, viewName, whereCondions);
         assertEquals(0, viewValidationReport.getValidationMessages().length);
 
-        //////
+        // EMPTY_NULL operator, empty string value
         viewValidationReport.messages.clear();
         operators = new ArrayList<>(1);
         operators.add(WSWhereOperator.EMPTY_NULL);
@@ -103,7 +104,7 @@ public class ViewValidatorTest {
         validateConditionsMethod.invoke(viewValidator, viewValidationReport, viewName, whereCondions);
         assertEquals(0, viewValidationReport.getValidationMessages().length);
 
-        //////
+        // EMPTY_NULL, blank string value
         viewValidationReport.messages.clear();
         conditionValues.clear();
         conditionValues.add(" ");
@@ -111,7 +112,7 @@ public class ViewValidatorTest {
         validateConditionsMethod.invoke(viewValidator, viewValidationReport, viewName, whereCondions);
         assertEquals(1, viewValidationReport.getValidationMessages().length);
 
-        //////
+        // EMPTY_NULL, normal string value
         viewValidationReport.messages.clear();
         conditionValues.clear();
         conditionValues.add("anyvalue");
@@ -119,7 +120,7 @@ public class ViewValidatorTest {
         validateConditionsMethod.invoke(viewValidator, viewValidationReport, viewName, whereCondions);
         assertEquals(1, viewValidationReport.getValidationMessages().length);
 
-        ////////
+        // user variable value for non-EMPTY_NULL operator
         viewValidationReport.messages.clear();
         operators = new ArrayList<>(Arrays.asList(WSWhereOperator.values()));
         operators.remove(WSWhereOperator.EMPTY_NULL);
@@ -147,8 +148,6 @@ public class ViewValidatorTest {
             whereCondions.add(wsWhereConditionE);
         }
 
-
         return whereCondions;
     }
-
 }
