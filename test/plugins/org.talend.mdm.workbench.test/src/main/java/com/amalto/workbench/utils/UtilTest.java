@@ -1546,4 +1546,14 @@ public class UtilTest {
             log.error(e.getMessage(), e);
         }
     }
+
+    @Test
+    public void testToReadable() {
+        for (WSWhereOperator wsOperator : WSWhereOperator.values()) {
+            if (wsOperator == WSWhereOperator.NO_OPERATOR) {
+                continue;
+            }
+            assertTrue(!Util.toReadable(wsOperator).isEmpty());
+        }
+    }
 }

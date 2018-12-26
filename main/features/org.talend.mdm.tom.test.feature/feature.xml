@@ -22,6 +22,7 @@
       <import plugin="org.talend.mdm.workbench"/>
       <import plugin="org.junit"/>
       <import plugin="org.talend.designer.routines.mdmprovider"/>
+      <import plugin="org.talend.mdm.repository.validate"/>
    </requires>
 
    <plugin
@@ -40,6 +41,14 @@
 
    <plugin
          id="org.talend.designer.routines.mdmprovider.test"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.mdm.repository.validate.test"
          download-size="0"
          install-size="0"
          version="0.0.0"
