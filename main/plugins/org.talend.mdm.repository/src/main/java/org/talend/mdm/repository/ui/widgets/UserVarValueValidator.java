@@ -34,7 +34,7 @@ public class UserVarValueValidator {
     /**
      * True: Is valid
      */
-    public static boolean validate(String userVarValue) {
+    public boolean validate(String userVarValue) {
         boolean isUserVarPattern = userVarValue.startsWith(_PREFIX_USER_VAR) && userVarValue.endsWith(_SUFFIX_USER_VAR);
         if (isUserVarPattern) {
             String propertyFieldHead = _PREFIX_USER_VAR + UserField.Properties.field + "[\""; //$NON-NLS-1$

@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: org.talend.mdm.repository.validate.test
+Bundle-SymbolicName: org.talend.mdm.repository.validate.test
+Bundle-Version: 7.2.1.qualifier
+Fragment-Host: org.talend.mdm.repository.validate;bundle-version="7.2.1"
+Require-Bundle: org.talend.testutils,
+ org.hamcrest,
+ org.eclipse.osgi.services
