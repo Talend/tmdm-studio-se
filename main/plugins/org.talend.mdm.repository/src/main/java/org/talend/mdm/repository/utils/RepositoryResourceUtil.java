@@ -747,6 +747,36 @@ public class RepositoryResourceUtil {
         return null;
     }
 
+    public static IRepositoryViewObject findViewObjectByNameVersion(ERepositoryObjectType type, String name, String version,
+            IRepositoryViewObject originalViewObject, List<String> versions) {
+        if (originalViewObject != null) {
+            IRepositoryViewObject viewObject = null;
+
+            IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
+            Project project = ProjectManager.getInstance().getCurrentProject();
+            List<IRepositoryViewObject> allVersion = null;
+            try {
+                allVersion = factory.getAllVersion(project, originalViewObject.getId(),
+                        originalViewObject.getProperty().getItem().getState().getPath(), type);
+            } catch (PersistenceException e) {
+                log.error(e.getMessage(), e);
+            }
+
+            if (allVersion != null) {
+                for (IRepositoryViewObject viewObj : allVersion) {
+                    versions.add(viewObj.getVersion());
+                    if (viewObj.getVersion().equals(version)) {
+                        viewObject = viewObj;
+                    }
+                }
+            }
+
+            return viewObject;
+        }
+
+        return null;
+    }
+
     public static IRepositoryViewObject findViewObjectById(String id) {
         IRepositoryViewObject viewObject = ContainerCacheService.get(id);
         if (viewObject != null) {
