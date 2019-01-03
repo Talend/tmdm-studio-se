@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -749,7 +750,7 @@ public class RepositoryResourceUtil {
 
     public static IRepositoryViewObject findViewObjectByNameVersion(ERepositoryObjectType type, String name, String version,
             IRepositoryViewObject originalViewObject, List<String> versions) {
-        if (originalViewObject != null) {
+        if (originalViewObject != null && StringUtils.isNotBlank(version)) {
             IRepositoryViewObject viewObject = null;
 
             IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
@@ -765,7 +766,7 @@ public class RepositoryResourceUtil {
             if (allVersion != null) {
                 for (IRepositoryViewObject viewObj : allVersion) {
                     versions.add(viewObj.getVersion());
-                    if (viewObj.getVersion().equals(version)) {
+                    if (viewObj.getVersion().equals(version.trim())) {
                         viewObject = viewObj;
                     }
                 }

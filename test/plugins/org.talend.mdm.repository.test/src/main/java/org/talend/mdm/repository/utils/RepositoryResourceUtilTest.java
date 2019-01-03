@@ -72,6 +72,7 @@ import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.mdm.repository.core.IRepositoryNodeConfiguration;
 import org.talend.mdm.repository.core.IRepositoryNodeLabelProvider;
 import org.talend.mdm.repository.core.IRepositoryNodeResourceProvider;
+import org.talend.mdm.repository.core.IServerObjectRepositoryType;
 import org.talend.mdm.repository.core.impl.recyclebin.RecycleBinNodeConfiguration;
 import org.talend.mdm.repository.core.service.ContainerCacheService;
 import org.talend.mdm.repository.core.service.IInteractiveHandler;
@@ -909,4 +910,60 @@ public class RepositoryResourceUtilTest {
         assertEquals(mockType, node.getProperties(EProperties.CONTENT_TYPE));
     }
 
+    @SuppressWarnings("nls")
+    @Test
+    public void testFindViewObjectByNameVersion() throws Exception {
+        ERepositoryObjectType type = IServerObjectRepositoryType.TYPE_DATAMODEL;
+        String name = "Product";
+        String version = "0.1";
+        String id = "id";
+        String path = "path";
+        List<String> versions = new ArrayList<>();
+
+        IRepositoryViewObject originalViewObject = mock(IRepositoryViewObject.class);
+        when(originalViewObject.getId()).thenReturn(id);
+
+        ItemState mockState = mock(ItemState.class);
+        when(mockState.getPath()).thenReturn(path);
+        Item mockItem = mock(Item.class);
+        when(mockItem.getState()).thenReturn(mockState);
+        Property mockProperty = mock(Property.class);
+        when(mockProperty.getItem()).thenReturn(mockItem);
+        when(originalViewObject.getProperty()).thenReturn(mockProperty);
+        // when(originalViewObject.getProperty().getItem().getState().getPath()).thenReturn(path);
+
+        PowerMockito.mockStatic(ProjectManager.class);
+        ProjectManager mockProjectManager = mock(ProjectManager.class);
+        when(ProjectManager.getInstance()).thenReturn(mockProjectManager);
+        Project mockProject = mock(Project.class);
+        when(ProjectManager.getInstance().getCurrentProject()).thenReturn(mockProject);
+
+        List<IRepositoryViewObject> allVersions = new ArrayList<>();
+        IRepositoryViewObject viewObject01 = mock(IRepositoryViewObject.class);
+        when(viewObject01.getVersion()).thenReturn("0.1");
+        IRepositoryViewObject viewObject02 = mock(IRepositoryViewObject.class);
+        when(viewObject02.getVersion()).thenReturn("0.2");
+        allVersions.add(viewObject01);
+        allVersions.add(viewObject02);
+
+        IProxyRepositoryFactory repositoryFactory = mock(IProxyRepositoryFactory.class);
+        when(CoreRuntimePlugin.getInstance().getProxyRepositoryFactory()).thenReturn(repositoryFactory);
+        when(repositoryFactory.getAllVersion(mockProject, id, path, type)).thenReturn(allVersions);
+
+        IRepositoryViewObject findedViewObject = RepositoryResourceUtil.findViewObjectByNameVersion(type, name, "0.1",
+                originalViewObject, versions);
+        assertNotNull(findedViewObject);
+        assertSame(viewObject01, findedViewObject);
+
+        findedViewObject = RepositoryResourceUtil.findViewObjectByNameVersion(type, name, "0.2", originalViewObject, versions);
+        assertNotNull(findedViewObject);
+        assertSame(viewObject02, findedViewObject);
+
+        findedViewObject = RepositoryResourceUtil.findViewObjectByNameVersion(type, name, null, originalViewObject, versions);
+        assertNull(findedViewObject);
+
+        findedViewObject = RepositoryResourceUtil.findViewObjectByNameVersion(type, name, " ", originalViewObject, versions);
+        assertNull(findedViewObject);
+
+    }
 }
