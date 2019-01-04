@@ -16,6 +16,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +25,6 @@ import java.util.List;
 
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.mockito.internal.util.reflection.Whitebox;
 import org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectFactory;
 import org.talend.mdm.repository.model.mdmserverobject.WSWhereConditionE;
 import org.talend.mdm.repository.model.mdmserverobject.WSWhereOperatorE;
@@ -128,7 +128,9 @@ public class ViewValidatorTest {
         conditionValues.add("${user_context.");
         whereCondions = createWhereCondions(operators, conditionValues);
         UserVarValueValidator mock = Mockito.mock(UserVarValueValidator.class);
-        Whitebox.setInternalState(viewValidator, "userVarValueValidator", mock);
+        Field declaredField = viewValidator.getClass().getDeclaredField("userVarValueValidator");
+        declaredField.setAccessible(true);
+        declaredField.set(viewValidator, mock);
         validateConditionsMethod.invoke(viewValidator, viewValidationReport, viewName, whereCondions);
         Mockito.verify(mock, times(operators.size())).validate(anyString());
     }
