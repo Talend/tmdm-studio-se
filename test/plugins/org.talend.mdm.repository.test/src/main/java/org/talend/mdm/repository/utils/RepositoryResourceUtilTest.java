@@ -910,12 +910,9 @@ public class RepositoryResourceUtilTest {
         assertEquals(mockType, node.getProperties(EProperties.CONTENT_TYPE));
     }
 
-    @SuppressWarnings("nls")
     @Test
     public void testFindViewObjectByNameVersion() throws Exception {
         ERepositoryObjectType type = IServerObjectRepositoryType.TYPE_DATAMODEL;
-        String name = "Product";
-        String version = "0.1";
         String id = "id";
         String path = "path";
         List<String> versions = new ArrayList<>();
@@ -930,7 +927,6 @@ public class RepositoryResourceUtilTest {
         Property mockProperty = mock(Property.class);
         when(mockProperty.getItem()).thenReturn(mockItem);
         when(originalViewObject.getProperty()).thenReturn(mockProperty);
-        // when(originalViewObject.getProperty().getItem().getState().getPath()).thenReturn(path);
 
         PowerMockito.mockStatic(ProjectManager.class);
         ProjectManager mockProjectManager = mock(ProjectManager.class);
@@ -950,19 +946,19 @@ public class RepositoryResourceUtilTest {
         when(CoreRuntimePlugin.getInstance().getProxyRepositoryFactory()).thenReturn(repositoryFactory);
         when(repositoryFactory.getAllVersion(mockProject, id, path, type)).thenReturn(allVersions);
 
-        IRepositoryViewObject findedViewObject = RepositoryResourceUtil.findViewObjectByNameVersion(type, name, "0.1",
+        IRepositoryViewObject findedViewObject = RepositoryResourceUtil.findViewObjectByVersion(type, "0.1",
                 originalViewObject, versions);
         assertNotNull(findedViewObject);
         assertSame(viewObject01, findedViewObject);
 
-        findedViewObject = RepositoryResourceUtil.findViewObjectByNameVersion(type, name, "0.2", originalViewObject, versions);
+        findedViewObject = RepositoryResourceUtil.findViewObjectByVersion(type, "0.2", originalViewObject, versions);
         assertNotNull(findedViewObject);
         assertSame(viewObject02, findedViewObject);
 
-        findedViewObject = RepositoryResourceUtil.findViewObjectByNameVersion(type, name, null, originalViewObject, versions);
+        findedViewObject = RepositoryResourceUtil.findViewObjectByVersion(type, null, originalViewObject, versions);
         assertNull(findedViewObject);
 
-        findedViewObject = RepositoryResourceUtil.findViewObjectByNameVersion(type, name, " ", originalViewObject, versions);
+        findedViewObject = RepositoryResourceUtil.findViewObjectByVersion(type, " ", originalViewObject, versions);
         assertNull(findedViewObject);
 
     }

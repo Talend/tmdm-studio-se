@@ -748,7 +748,7 @@ public class RepositoryResourceUtil {
         return null;
     }
 
-    public static IRepositoryViewObject findViewObjectByNameVersion(ERepositoryObjectType type, String name, String version,
+    public static IRepositoryViewObject findViewObjectByVersion(ERepositoryObjectType type, String version,
             IRepositoryViewObject originalViewObject, List<String> versions) {
         if (originalViewObject != null && StringUtils.isNotBlank(version)) {
             IRepositoryViewObject viewObject = null;
@@ -759,20 +759,20 @@ public class RepositoryResourceUtil {
             try {
                 allVersion = factory.getAllVersion(project, originalViewObject.getId(),
                         originalViewObject.getProperty().getItem().getState().getPath(), type);
+
+                if (allVersion != null) {
+                    for (IRepositoryViewObject viewObj : allVersion) {
+                        versions.add(viewObj.getVersion());
+                        if (viewObj.getVersion().equals(version.trim())) {
+                            viewObject = viewObj;
+                        }
+                    }
+                }
+
+                return viewObject;
             } catch (PersistenceException e) {
                 log.error(e.getMessage(), e);
             }
-
-            if (allVersion != null) {
-                for (IRepositoryViewObject viewObj : allVersion) {
-                    versions.add(viewObj.getVersion());
-                    if (viewObj.getVersion().equals(version.trim())) {
-                        viewObject = viewObj;
-                    }
-                }
-            }
-
-            return viewObject;
         }
 
         return null;
