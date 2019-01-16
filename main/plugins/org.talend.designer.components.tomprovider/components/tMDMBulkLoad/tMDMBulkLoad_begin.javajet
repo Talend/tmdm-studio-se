@@ -28,6 +28,9 @@ boolean insertOnly = ("true").equals(ElementParameterParser.getValue(node,"__INS
 boolean useTransaction = ("true").equals(ElementParameterParser.getValue(node,"__USE_TRANSACTION__"));
 String connection = ElementParameterParser.getValue(node,"__TRANSACTION_PROVIDER__");
 String trans = "mdmTrans_" + connection;
+
+boolean updateReport = ("true").equals(ElementParameterParser.getValue(node,"__WITHREPORT__"));
+String source = ElementParameterParser.getValue(node,"__SOURCE__");
 %>
 
 <% String passwordFieldName = "__PASSWORD__"; %>
@@ -83,6 +86,6 @@ org.talend.mdm.bulkload.client.BulkloadClient bulkloadClient_<%=cid %> = new org
 <%}%>
 
 bulkloadClient_<%=cid %>.startThreadCount();
-bulkloadClient_<%=cid %>.setOptions(new org.talend.mdm.bulkload.client.BulkloadOptions(<%=isGenerateId %>, <%=validate %>, <%=arraySize %>, <%=insertOnly %>));
+bulkloadClient_<%=cid %>.setOptions(new org.talend.mdm.bulkload.client.BulkloadOptions(<%=isGenerateId %>, <%=validate %>, <%=arraySize %>, <%=insertOnly %>, <%=updateReport %>, <%=source %>));
 int count_<%=cid %> = 0;
 org.talend.mdm.bulkload.client.InputStreamMerger inputStreamMerger_<%=cid %> = null;
