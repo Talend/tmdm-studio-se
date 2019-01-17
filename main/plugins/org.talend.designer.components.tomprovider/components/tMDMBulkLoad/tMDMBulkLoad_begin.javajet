@@ -36,7 +36,7 @@ String source = ElementParameterParser.getValue(node,"__SOURCE__");
 <% String passwordFieldName = "__PASSWORD__"; %>
 <%@ include file="@{org.talend.designer.components.localprovider}/components/templates/password.javajet"%>
 <% logUtil.info("\"Initializing bulkload client with URL: \"", mdmUrl);%>
-org.talend.mdm.bulkload.client.BulkloadClient bulkloadClient_<%=cid %> = new org.talend.mdm.bulkload.client.BulkloadClient(<%=mdmUrl %>, <%=username %>, decryptedPassword_<%=cid %>, null, <%=dataCluster %> + "<%=isStaging?"#STAGING":""%>", <%=dataEntity %>, <%=dataModule %>);
+org.talend.mdm.bulkload.client.BulkloadClient bulkloadClient_<%=cid %> = new org.talend.mdm.bulkload.client.BulkloadClient(<%=mdmUrl %>, <%=username %>, decryptedPassword_<%=cid %>, <%=dataCluster %> + "<%=isStaging?"#STAGING":""%>", <%=dataEntity %>, <%=dataModule %>);
 
 <%if(useTransaction) {%>
     if(globalMap.get("useTransaction_<%=connection %>") != null && (Boolean)globalMap.get("useTransaction_<%=connection %>")) {
