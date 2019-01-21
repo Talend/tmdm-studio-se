@@ -289,7 +289,7 @@ public class ImportDataContentProcess extends AbstractDataContentProcess {
                 String cluster = keys[0];
                 String concept = keys[1];
                 String datamodel = keys[2];
-                BulkloadClient bulkloadClient = new BulkloadClient(url, userName, password, null, cluster, concept, datamodel);
+                BulkloadClient bulkloadClient = new BulkloadClient(url, userName, password, cluster, concept, datamodel);
                 bulkloadClient.setOptions(new BulkloadOptions(false, false, 500));
                 IWebServiceHook webServiceHook = Util.getWebServiceHook();
                 if (webServiceHook != null) {
