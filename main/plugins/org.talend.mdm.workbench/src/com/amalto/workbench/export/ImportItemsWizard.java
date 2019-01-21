@@ -571,7 +571,7 @@ public class ImportItemsWizard extends Wizard {
                 String cluster = keys[0];
                 String concept = keys[1];
                 String datamodel = keys[2];
-                BulkloadClient bulkloadClient = new BulkloadClient(url, item.getUsername(), item.getPassword(), null, cluster,
+                BulkloadClient bulkloadClient = new BulkloadClient(url, item.getUsername(), item.getPassword(), cluster,
                         concept, datamodel);
                 bulkloadClient.setOptions(new BulkloadOptions(false, false, 500));
 
