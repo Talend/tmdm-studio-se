@@ -101,7 +101,8 @@ public abstract class AFormPage extends FormPage {
     protected void commitChanges() {
         this.comitting = true;
         if (!this.refreshing) {
-            TreeObject xobject = (TreeObject) this.getEditor().getEditorInput().getAdapter(XObjectEditor.class);
+            Object obj = this.getEditor().getEditorInput().getAdapter(XObjectEditor.class);
+            TreeObject xobject = (TreeObject) obj;
             commit();
             if (xobject.getParent() != null) { // e.g. not standalone but part
                 // of model
@@ -115,7 +116,8 @@ public abstract class AFormPage extends FormPage {
      * @return the model manipulated by this Page
      */
     public TreeObject getXObject() {
-        return (TreeObject) this.getEditor().getEditorInput().getAdapter(XObjectEditor.class);
+        Object obj = this.getEditor().getEditorInput().getAdapter(XObjectEditor.class);
+        return (TreeObject) obj;
     }
 
     /**

@@ -534,8 +534,6 @@ public class HttpClientUtil {
             String errMessage = Messages.Util_21 + "%s" + Messages.Util_22 + "%s"; //$NON-NLS-1$//$NON-NLS-2$
             String content = getTextContent(client, request, null, errMessage);
             return content;
-        } catch (UnsupportedEncodingException e) {
-            log.error(e.getMessage(), e);
         } catch (SecurityException e) {
             log.error(e.getMessage(), e);
         }
