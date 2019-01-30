@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -220,6 +221,7 @@ import com.amalto.workbench.providers.datamodel.TypesTreeContentProvider;
 import com.amalto.workbench.utils.CompositeViewersSelectionProvider;
 import com.amalto.workbench.utils.DataModelFilter;
 import com.amalto.workbench.utils.FontUtils;
+import com.amalto.workbench.utils.IXMLConstants;
 import com.amalto.workbench.utils.ResourcesUtil;
 import com.amalto.workbench.utils.SchemaElementNameFilterDes;
 import com.amalto.workbench.utils.Util;
@@ -1822,6 +1824,8 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         documentBuilderFactory.setValidating(false);
+        documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
         InputSource source = new InputSource(new StringReader(schema));
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         try {
@@ -2097,6 +2101,8 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         documentBuilderFactory.setValidating(false);
+        documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
 
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.parse(source);

@@ -11,6 +11,7 @@ import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -28,6 +29,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.amalto.workbench.utils.IXMLConstants;
 import com.amalto.workbench.utils.PasswordUtil;
 
 /**
@@ -529,6 +531,8 @@ public class MDMServerDefImpl extends AbstractMetadataObjectImpl implements MDMS
             File file = new File(new URL(newUrl).toURI());
             FileInputStream input = new FileInputStream(file);
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document doc = documentBuilder.parse(new InputSource(input));
             NodeList elements = doc.getElementsByTagName("soap:address"); //$NON-NLS-1$

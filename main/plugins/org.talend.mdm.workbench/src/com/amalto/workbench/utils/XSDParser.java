@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -242,10 +243,13 @@ public class XSDParser {
      * @param fileName the name of an XML file.
      */
     public void readMarkup(String markup) {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        documentBuilderFactory.setValidating(false);
         try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
+            documentBuilderFactory.setValidating(false);
+            documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
+
             InputSource source = new InputSource(new StringReader(markup));
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(source);
@@ -577,6 +581,8 @@ public class XSDParser {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         documentBuilderFactory.setValidating(false);
+        documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
         InputSource source = new InputSource(new StringReader(xsd));
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.parse(source);
@@ -613,7 +619,9 @@ public class XSDParser {
                     String language = appinfo.getAttribute("source"); //$NON-NLS-1$
                     if ("EN".equals(language.toUpperCase())) { //$NON-NLS-1$
                         if (appinfo.getFirstChild() != null)
+                         {
                             System.out.println("     " + appinfo.getFirstChild().getNodeValue()); //$NON-NLS-1$
+                        }
                     }
                 }
             }

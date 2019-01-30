@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -251,10 +252,13 @@ public class XSDGenerateHTML implements IPlatformRunnable {
      * @param fileName the name of an XML file.
      */
     public void readMarkup(String fileName) {
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        documentBuilderFactory.setNamespaceAware(true);
-        documentBuilderFactory.setValidating(false);
         try {
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
+            documentBuilderFactory.setValidating(false);
+            documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
+
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             Document document = documentBuilder.parse(fileName);
             for (Node child = document.getDocumentElement().getFirstChild(); child != null; child = child.getNextSibling()) {
@@ -529,6 +533,7 @@ public class XSDGenerateHTML implements IPlatformRunnable {
      * @param object an array of Strings.
      * @return <code>0</code> indicating success, or <code>1</code> indicating failure.
      */
+    @Override
     public Object run(Object object) {
         try {
             String[] arguments = (String[]) object;
@@ -610,8 +615,8 @@ public class XSDGenerateHTML implements IPlatformRunnable {
             for (int j = 0; j <= 1; ++j) {
                 XSDElementDeclaration parentElement = (i == 0 ? complexContent : simpleContent);
                 XSDComplexTypeDefinition xsdComplexTypeDefinition = (XSDComplexTypeDefinition) parentElement.getTypeDefinition();
-                XSDElementDeclaration specialElementDeclaration = (XSDElementDeclaration) ((XSDParticle) ((XSDModelGroup) ((XSDParticle) ((XSDModelGroup) ((XSDParticle) (xsdComplexTypeDefinition
-                        .getContentType())).getTerm()).getParticles().get(1)).getTerm()).getParticles().get(j)).getTerm();
+                XSDElementDeclaration specialElementDeclaration = (XSDElementDeclaration) ((XSDModelGroup) ((XSDModelGroup) ((XSDParticle) (xsdComplexTypeDefinition
+                        .getContentType())).getTerm()).getParticles().get(1).getTerm()).getParticles().get(j).getTerm();
                 all.add(specialElementDeclaration);
                 specialAnchorMap.put(specialElementDeclaration, parentElement);
             }

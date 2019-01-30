@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -50,6 +51,7 @@ import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.models.KeyValue;
 import com.amalto.workbench.models.TreeParent;
 import com.amalto.workbench.models.XPathFunc;
+import com.amalto.workbench.utils.IXMLConstants;
 import com.amalto.workbench.utils.WidgetUtils;
 
 public class SchematronExpressBuilder {
@@ -136,6 +138,8 @@ public class SchematronExpressBuilder {
         InputStream in = null;
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            factory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
             DocumentBuilder builder = factory.newDocumentBuilder();
             org.w3c.dom.Document document;
             if (isSchematron) {
@@ -169,6 +173,7 @@ public class SchematronExpressBuilder {
                 }
                 Collections.sort(keylist, new Comparator<KeyValue>() {
 
+                    @Override
                     public int compare(KeyValue o1, KeyValue o2) {
                         if (o1 != null && o2 != null) {
                             return o1.key.compareTo(o2.key);
@@ -358,10 +363,12 @@ public class SchematronExpressBuilder {
         }
         categoryList.addSelectionListener(new SelectionListener() {
 
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
 
             }
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 funcList.removeAll();
                 String c = categoryList.getSelection()[0];
@@ -392,11 +399,13 @@ public class SchematronExpressBuilder {
         funcList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
         funcList.addSelectionListener(new SelectionListener() {
 
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
                 getTextWidget().setText(getText() + funcList.getItem(funcList.getSelectionIndex()));
 
             }
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 String c = funcList.getSelection()[0];
                 for (KeyValue kv : curfc.getFuncs()) {

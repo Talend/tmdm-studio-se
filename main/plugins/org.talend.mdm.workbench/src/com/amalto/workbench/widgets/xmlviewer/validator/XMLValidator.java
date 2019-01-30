@@ -17,9 +17,13 @@ package com.amalto.workbench.widgets.xmlviewer.validator;
  ****************************************************************************/
 import java.io.StringReader;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.ITypedRegion;
@@ -32,10 +36,13 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import com.amalto.workbench.utils.IXMLConstants;
 import com.amalto.workbench.widgets.xmlviewer.model.XMLNode;
 import com.amalto.workbench.widgets.xmlviewer.utils.XMLTreeModelUtilities;
 
 public class XMLValidator {
+
+    private static Log log = LogFactory.getLog(XMLValidator.class);
 
     CheckThread checkthread = new CheckThread();
 
@@ -53,6 +60,12 @@ public class XMLValidator {
             factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
             factory.setValidating(true);
+            try {
+                factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+                factory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
+            } catch (ParserConfigurationException e) {
+                log.error(e.getMessage(), e);
+            }
 
             this.errorHandler = new ErrorHandler() {
 
@@ -65,8 +78,9 @@ public class XMLValidator {
                             ITypedRegion typedRegion = document.getPartition(charEnd.intValue() - 2);
                             int partitionStartChar = typedRegion.getOffset();
                             return partitionStartChar;
-                        } else
+                        } else {
                             return lineStartChar;
+                        }
                     } catch (BadLocationException e) {
                         return 0;
                     }
@@ -111,14 +125,17 @@ public class XMLValidator {
 
                 }
 
+                @Override
                 public void warning(SAXParseException exception) throws SAXException {
                     exception.printStackTrace();
                 }
 
+                @Override
                 public void fatalError(SAXParseException exception) throws SAXException {
                     updateAnnotation(exception);
                 }
 
+                @Override
                 public void error(SAXParseException exception) throws SAXException {
                     updateAnnotation(exception);
                 }
@@ -134,9 +151,11 @@ public class XMLValidator {
          * 
          * @see java.lang.Runnable#run()
          */
+        @Override
         public void run() {
-            if (xml == null || xml.trim().length() == 0)
+            if (xml == null || xml.trim().length() == 0) {
                 return;
+            }
             try {
                 // clear
                 clearLastAnnotaion();

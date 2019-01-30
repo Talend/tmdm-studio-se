@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -70,6 +71,7 @@ import com.amalto.workbench.providers.TypesLabelProvider;
 import com.amalto.workbench.providers.XSDTreeLabelProvider;
 import com.amalto.workbench.providers.datamodel.SchemaTreeContentProvider;
 import com.amalto.workbench.providers.datamodel.TypesTreeContentProvider;
+import com.amalto.workbench.utils.IXMLConstants;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XtentisException;
 import com.amalto.workbench.webservices.TMDMService;
@@ -202,10 +204,12 @@ public class SelectImportedModulesDialog extends Dialog {
                 | SWT.CHECK | SWT.BORDER);
         viewer.setCheckStateProvider(new ICheckStateProvider() {
 
+            @Override
             public boolean isChecked(Object element) {
                 return true;
             }
 
+            @Override
             public boolean isGrayed(Object element) {
                 return false;
             }
@@ -274,9 +278,11 @@ public class SelectImportedModulesDialog extends Dialog {
         addXSDFromLocal.setToolTipText(Messages.AddXsdSchemaFromlocal);
         addXSDFromLocal.addSelectionListener(new SelectionListener() {
 
+            @Override
             public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
             };
 
+            @Override
             public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
                 FileDialog fd = new FileDialog(shell.getShell(), SWT.SAVE);
                 fd.setFilterExtensions(new String[] { "*.xsd" });//$NON-NLS-1$
@@ -299,9 +305,11 @@ public class SelectImportedModulesDialog extends Dialog {
         impXSDFromExchange.setToolTipText(Messages.ImportSchemaFromServer);
         impXSDFromExchange.addSelectionListener(new SelectionListener() {
 
+            @Override
             public void widgetDefaultSelected(SelectionEvent e) {
             }
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 StringBuffer repository = new StringBuffer();
                 ImportExchangeOptionsDialog dlg = new ImportExchangeOptionsDialog(shell.getShell(), null, false, repository);
@@ -311,6 +319,7 @@ public class SelectImportedModulesDialog extends Dialog {
                     File dir = new File(repository.toString());
                     File[] fs = dir.listFiles(new FileFilter() {
 
+                        @Override
                         public boolean accept(File pathname) {
                             return pathname.getName().endsWith(".xsd");
                         }
@@ -334,13 +343,16 @@ public class SelectImportedModulesDialog extends Dialog {
         addXSDFromInputDlg.setToolTipText(Messages.AddFromOtherSite);
         addXSDFromInputDlg.addSelectionListener(new SelectionListener() {
 
+            @Override
             public void widgetDefaultSelected(org.eclipse.swt.events.SelectionEvent e) {
             };
 
+            @Override
             public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
                 InputDialog id = new InputDialog(shell.getShell(), Messages.AddXsdFromOther, Messages.EnterTextUrl,
                         "", new IInputValidator() { //$NON-NLS-1$
 
+                            @Override
                             public String isValid(String newText) {
                                 if ((newText == null) || "".equals(newText)) {
                                     return Messages.NameNotEmpty;
@@ -410,6 +422,8 @@ public class SelectImportedModulesDialog extends Dialog {
             documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setNamespaceAware(true);
             documentBuilderFactory.setValidating(false);
+            documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
         }
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         Document document = documentBuilder.parse(stream);

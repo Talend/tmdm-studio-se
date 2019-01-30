@@ -51,10 +51,10 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.BindingProvider;
@@ -681,6 +681,8 @@ public class Util {
         try {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             factory.setNamespaceAware(true);
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            factory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
             DocumentBuilder builder = factory.newDocumentBuilder();
             DOMImplementation impl = builder.getDOMImplementation();
             Document namespaceHolder = impl.createDocument(namespace, (prefix == null ? "" : prefix + ":") + elementName, null);//$NON-NLS-1$//$NON-NLS-2$
@@ -707,12 +709,12 @@ public class Util {
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setNamespaceAware(true);
+            documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
             documentBuilderFactory.setValidating((schema != null));
-            documentBuilderFactory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", //$NON-NLS-1$
-                    "http://www.w3.org/2001/XMLSchema");//$NON-NLS-1$
+            documentBuilderFactory.setAttribute(IXMLConstants.SUN_SCHEMA_LANGUAGE, "http://www.w3.org/2001/XMLSchema");//$NON-NLS-1$
             if (schema != null) {
-                documentBuilderFactory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", new InputSource(//$NON-NLS-1$
-                        new StringReader(schema)));
+                documentBuilderFactory.setAttribute(IXMLConstants.SUN_SCHEMA_SOURCE, new InputSource(new StringReader(schema)));
             }
 
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -2273,6 +2275,8 @@ public class Util {
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setNamespaceAware(true);
             documentBuilderFactory.setValidating(false);
+            documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
             DocumentBuilder documentBuilder;
             XSDSchema schema = null;
             InputSource source = null;
@@ -2328,6 +2332,7 @@ public class Util {
 
                 class SchemaLocator extends AdapterImpl implements XSDSchemaLocator {
 
+                    @Override
                     public XSDSchema locateSchema(XSDSchema xsdSchema, String namespaceURI, String rawSchemaLocationURI,
                             String resolvedSchemaLocation) {
                         XSDSchema schema;
@@ -2897,6 +2902,8 @@ public class Util {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
         documentBuilderFactory.setValidating(false);
+        documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
         StringReader reader = new StringReader(schema);
         InputSource source = new InputSource(new StringReader(schema));
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();

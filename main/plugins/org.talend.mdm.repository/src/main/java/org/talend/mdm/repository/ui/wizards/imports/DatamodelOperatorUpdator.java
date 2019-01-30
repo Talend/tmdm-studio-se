@@ -15,6 +15,7 @@ package org.talend.mdm.repository.ui.wizards.imports;
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -31,6 +32,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.amalto.workbench.utils.IXMLConstants;
 import com.amalto.workbench.utils.Util;
 
 
@@ -42,6 +44,7 @@ public class DatamodelOperatorUpdator implements IOperatorUpdator {
 
     private static Logger log = Logger.getLogger(DatamodelOperatorUpdator.class);
 
+    @Override
     public boolean updateConditionOperator(Item item) {
         boolean modified = false;
         if(item != null && item instanceof WSDataModelItem) {
@@ -116,6 +119,8 @@ public class DatamodelOperatorUpdator implements IOperatorUpdator {
 
     private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+        documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
         documentBuilderFactory.setNamespaceAware(true);
         documentBuilderFactory.setValidating(false);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
