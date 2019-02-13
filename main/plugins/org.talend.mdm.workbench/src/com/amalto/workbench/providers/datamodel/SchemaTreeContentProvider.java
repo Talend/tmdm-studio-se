@@ -192,26 +192,26 @@ public class SchemaTreeContentProvider implements ITreeContentProvider, ISchemaC
         return schema;
     }
 
-    public XSDSchema createSchema(String location){
-		InputStream stream = null;
-    	try {
-			stream = new FileInputStream(location);
-			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-			documentBuilderFactory.setNamespaceAware(true);
-			documentBuilderFactory.setValidating(false);
+    public XSDSchema createSchema(String location) {
+        InputStream stream = null;
+        try {
+            stream = new FileInputStream(location);
+            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            documentBuilderFactory.setNamespaceAware(true);
+            documentBuilderFactory.setValidating(false);
             documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
             documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
-			DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-			Document document = documentBuilder.parse(stream);
-			return XSDSchemaImpl.createSchema(document.getDocumentElement());
-		} catch (Exception e) {
-			log.error(e.getMessage());
-			return null;
-		}finally{
-			IOUtils.closeQuietly(stream);
-		}
-
+            DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            Document document = documentBuilder.parse(stream);
+            return XSDSchemaImpl.createSchema(document.getDocumentElement());
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        } finally {
+            IOUtils.closeQuietly(stream);
+        }
     }
+
     protected void addElementDeclarationFromSchema(XSDSchema schema,Collection<XSDElementDeclaration> declarations){
     	EList<XSDElementDeclaration> elementDeclarations = schema.getElementDeclarations();
     	for(XSDElementDeclaration declaration:elementDeclarations) {

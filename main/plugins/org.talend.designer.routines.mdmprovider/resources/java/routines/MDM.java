@@ -62,14 +62,14 @@ import org.xml.sax.InputSource;
  */
 public class MDM {
 
-	public static final String WS_CLIENT_CONNECTION_TIMEOUT_KEY = "javax.xml.ws.client.connectionTimeout";
-	
-	public static final String WS_CLIENT_RECEIVE_TIMEOUT_KEY = "javax.xml.ws.client.receiveTimeout";
-	
-	public static final String WS_CLIENT_CONNECTION_TIME_VALUE = "ws_client_connection_timeout";
-	
-	public static final String WS_CLIENT_RECEIVE_TIME_VALUE = "ws_client_receive_timeout";
-	
+    public static final String WS_CLIENT_CONNECTION_TIMEOUT_KEY = "javax.xml.ws.client.connectionTimeout"; //$NON-NLS-1$
+
+    public static final String WS_CLIENT_RECEIVE_TIMEOUT_KEY = "javax.xml.ws.client.receiveTimeout"; //$NON-NLS-1$
+
+    public static final String WS_CLIENT_CONNECTION_TIME_VALUE = "ws_client_connection_timeout"; //$NON-NLS-1$
+
+    public static final String WS_CLIENT_RECEIVE_TIME_VALUE = "ws_client_receive_timeout"; //$NON-NLS-1$
+
     public static final String DISALLOW_DOCTYPE_DECL = "http://apache.org/xml/features/disallow-doctype-decl"; //$NON-NLS-1$
 
     /**
