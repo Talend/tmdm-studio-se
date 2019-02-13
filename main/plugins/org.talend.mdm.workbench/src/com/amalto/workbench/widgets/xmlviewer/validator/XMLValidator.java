@@ -42,7 +42,7 @@ import com.amalto.workbench.widgets.xmlviewer.utils.XMLTreeModelUtilities;
 
 public class XMLValidator {
 
-    private static Log log = LogFactory.getLog(XMLValidator.class);
+    private static final Log LOG = LogFactory.getLog(XMLValidator.class);
 
     CheckThread checkthread = new CheckThread();
 
@@ -64,7 +64,7 @@ public class XMLValidator {
                 factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
                 factory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
             } catch (ParserConfigurationException e) {
-                log.error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
             }
 
             this.errorHandler = new ErrorHandler() {
