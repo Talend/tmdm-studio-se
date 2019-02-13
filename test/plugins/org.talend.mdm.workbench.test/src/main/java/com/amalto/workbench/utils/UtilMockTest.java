@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -492,8 +491,6 @@ public class UtilMockTest {
 
     private Document getEmptyDocument() throws ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        factory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         Document doc = builder.newDocument();
         return doc;
