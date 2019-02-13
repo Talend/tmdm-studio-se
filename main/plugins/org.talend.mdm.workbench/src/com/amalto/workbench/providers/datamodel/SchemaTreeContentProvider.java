@@ -58,7 +58,7 @@ import com.amalto.workbench.utils.Util;
 
 public class SchemaTreeContentProvider implements ITreeContentProvider, ISchemaContentProvider {
 
-    private static Log log = LogFactory.getLog(XSDGetXPathAction.class);
+    private static final Log LOG = LogFactory.getLog(XSDGetXPathAction.class);
 
     protected XSDSchema xsdSchema;
 
@@ -163,8 +163,7 @@ public class SchemaTreeContentProvider implements ITreeContentProvider, ISchemaC
         try {
             xsdSchema = Util.createXsdSchema(xsd, treeObj);
         } catch (Exception e) {
-
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -205,7 +204,7 @@ public class SchemaTreeContentProvider implements ITreeContentProvider, ISchemaC
             Document document = documentBuilder.parse(stream);
             return XSDSchemaImpl.createSchema(document.getDocumentElement());
         } catch (Exception e) {
-            log.error(e.getMessage());
+            LOG.error(e.getMessage(), e);
             return null;
         } finally {
             IOUtils.closeQuietly(stream);
