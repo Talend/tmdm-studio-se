@@ -6,5 +6,6 @@ Bundle-Version: 7.2.1.qualifier
 Bundle-Activator: org.talend.designer.routines.mdmprovider.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.talend.core
+ org.talend.core,
+ org.talend.core.runtime
 Bundle-ActivationPolicy: lazy
