@@ -34,7 +34,7 @@ public class UIUtil {
     public static boolean isWorkInUI() {
 
         try {
-            return PlatformUI.getWorkbench() != null;
+            return PlatformUI.isWorkbenchRunning();
         } catch (Exception e) {
             return false;
         }

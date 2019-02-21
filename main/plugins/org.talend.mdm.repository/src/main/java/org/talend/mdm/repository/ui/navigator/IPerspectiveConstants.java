@@ -20,7 +20,5 @@ public interface IPerspectiveConstants {
 
     public static final String PERSPECTIVE_ID_WORKFLOW = "org.bonitasoft.studio.perspective.process"; //$NON-NLS-1$
 
-    public static final String PERSPECTIVE_ID_FORM = "org.bonitasoft.studio.common.perspective.form"; //$NON-NLS-1$
-
     public static final String PERSPECTIVE_ID_DI = "org.talend.rcp.perspective"; //$NON-NLS-1$
 }
