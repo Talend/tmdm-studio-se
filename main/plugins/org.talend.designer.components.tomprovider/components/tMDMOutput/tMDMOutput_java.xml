@@ -434,9 +434,9 @@
                     BundleID=""
                     />
                  <IMPORT
-                    NAME="xmlschema-core-2.2.3"
-                    MODULE="xmlschema-core-2.2.3.jar"
-                    MVN="mvn:org.apache.ws.xmlschema/xmlschema-core/2.2.3"
+                    NAME="xmlschema-core-2.2.4"
+                    MODULE="xmlschema-core-2.2.4.jar"
+                    MVN="mvn:org.apache.ws.xmlschema/xmlschema-core/2.2.4"
                     REQUIRED="true"
                     BundleID=""
                     />
