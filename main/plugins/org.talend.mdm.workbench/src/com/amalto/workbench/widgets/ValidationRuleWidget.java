@@ -20,6 +20,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
@@ -81,7 +82,7 @@ public class ValidationRuleWidget {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                Shell shell = new Shell(composite.getDisplay(), SWT.BORDER);
+                Shell shell = Display.getDefault().getActiveShell();
               
                 createValidationRuleExcpressDialog(shell);
 

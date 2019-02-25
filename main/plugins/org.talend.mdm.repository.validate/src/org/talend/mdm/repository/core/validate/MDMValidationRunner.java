@@ -33,7 +33,6 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -249,7 +248,8 @@ public class MDMValidationRunner extends WorkspaceJob {
                 @Override
                 public void run() {
 
-                    ValidationResultDialog d = new ValidationResultDialog(new Shell(), result, validationPref, viewObjMap);
+                    ValidationResultDialog d = new ValidationResultDialog(Display.getDefault().getActiveShell(), result,
+                            validationPref, viewObjMap);
                     int code = d.open();
                     validateResult.setSelectedButton(code);
                     setValidateResult(validateResult);

@@ -19,7 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -49,7 +49,7 @@ public abstract class MDMServerConsoleFactory implements IConsoleFactory {
             MDMServerDef serverDef = allServerDefs.get(0);
             showMDMServerConsole(serverDef);
         } else {
-            SelectServerDefDialog d = new SelectServerDefDialog(new Shell());
+            SelectServerDefDialog d = new SelectServerDefDialog(Display.getDefault().getActiveShell());
             d.create();
             d.setSelectServer(allServerDefs.get(0));
             if (d.open() == IDialogConstants.OK_ID) {
