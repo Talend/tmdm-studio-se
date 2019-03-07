@@ -51,7 +51,7 @@ public abstract class AbstractDataModelUpdator {
                             content.setInnerContent(byteContent);
                             modelItem.getWsDataModel().setXsdSchema(new String(byteContent, "utf-8")); //$NON-NLS-1$
                         } catch (UnsupportedEncodingException e) {
-                            LOG.error("Encodes/Decodes string by 'utf-8' encoding failed", e); //$NON-NLS-1$
+                            LOG.error("Failed to Encodes/Decodes string by 'utf-8' encoding.", e); //$NON-NLS-1$
                         }
 
                         modified = true;
@@ -82,13 +82,13 @@ public abstract class AbstractDataModelUpdator {
             inputStream = new ByteArrayInputStream(byteContent);
             document = documentBuilder.parse(inputStream);
         } catch (Exception e) {
-            LOG.error("Parse input stream error", e); //$NON-NLS-1$
+            LOG.error("Failed to parse input stream.", e); //$NON-NLS-1$
         } finally {
             if (inputStream != null) {
                 try {
                     inputStream.close();
                 } catch (Exception e) {
-                    LOG.error("Close input stream error", e); //$NON-NLS-1$
+                    LOG.error("Failed to close input stream.", e); //$NON-NLS-1$
                 }
             }
         }

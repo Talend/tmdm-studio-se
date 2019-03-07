@@ -70,7 +70,7 @@ public class DataModelOperatorUpdator extends AbstractDataModelUpdator implement
                 }
 
             } catch (Exception e) {
-                LOG.error("Update data model condition operator failed", e); //$NON-NLS-1$
+                LOG.error("Failed to update data model condition operator.", e); //$NON-NLS-1$
             }
         }
 
