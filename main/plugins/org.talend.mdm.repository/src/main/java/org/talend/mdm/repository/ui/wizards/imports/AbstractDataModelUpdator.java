@@ -51,7 +51,7 @@ public abstract class AbstractDataModelUpdator {
                             content.setInnerContent(byteContent);
                             modelItem.getWsDataModel().setXsdSchema(new String(byteContent, "utf-8")); //$NON-NLS-1$
                         } catch (UnsupportedEncodingException e) {
-                            LOG.error("Failed to Encodes/Decodes string by 'utf-8' encoding.", e); //$NON-NLS-1$
+                            LOG.error("Failed to encode/decode string by 'utf-8' encoding.", e); //$NON-NLS-1$
                         }
 
                         modified = true;
