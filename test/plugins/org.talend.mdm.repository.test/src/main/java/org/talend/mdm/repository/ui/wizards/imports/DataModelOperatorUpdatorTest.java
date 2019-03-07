@@ -1,3 +1,15 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
 package org.talend.mdm.repository.ui.wizards.imports;
 
 import static org.junit.Assert.*;
@@ -30,7 +42,7 @@ import com.amalto.workbench.exadapter.ExAdapterManager;
 @PowerMockIgnore({ "org.eclipse.core.runtime.*" })
 public class DataModelOperatorUpdatorTest {
 
-    private static Logger log = Logger.getLogger(DataModelOperatorUpdatorTest.class);
+    private static final Logger LOG = Logger.getLogger(DataModelOperatorUpdatorTest.class);
 
     @Test
     public void testUpdateConditionOperator() {
@@ -64,7 +76,7 @@ public class DataModelOperatorUpdatorTest {
             assertFalse(xsdSchema.contains("Contains Text Of")); //$NON-NLS-1$
             assertTrue(xsdSchema.contains("Contains")); //$NON-NLS-1$
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 

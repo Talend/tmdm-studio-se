@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,13 +21,9 @@ import org.w3c.dom.NodeList;
 import com.amalto.workbench.utils.Util;
 
 
-/**
- * created by liusongbo on Apr 14, 2016
- *
- */
 public class DataModelOperatorUpdator extends AbstractDataModelUpdator implements IOperatorUpdator {
 
-    private static Logger log = Logger.getLogger(DataModelOperatorUpdator.class);
+    private static final Logger LOG = Logger.getLogger(DataModelOperatorUpdator.class);
 
     @Override
     public boolean updateConditionOperator(Item item) {
@@ -35,7 +31,7 @@ public class DataModelOperatorUpdator extends AbstractDataModelUpdator implement
     }
 
     @Override
-    protected String doUpdation(byte[] byteContent) {
+    protected String doUpdate(byte[] byteContent) {
         return updateOperator(byteContent);
     }
 
@@ -74,7 +70,7 @@ public class DataModelOperatorUpdator extends AbstractDataModelUpdator implement
                 }
 
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                LOG.error("Update data model condition operator failed", e); //$NON-NLS-1$
             }
         }
 

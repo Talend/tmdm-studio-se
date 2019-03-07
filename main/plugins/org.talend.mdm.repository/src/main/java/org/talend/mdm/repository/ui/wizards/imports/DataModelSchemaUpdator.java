@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -21,13 +21,9 @@ import org.w3c.dom.NodeList;
 
 import com.amalto.workbench.utils.Util;
 
-/**
- * @author sbliu
- *
- */
 public class DataModelSchemaUpdator extends AbstractDataModelUpdator {
 
-    private static Logger LOG = Logger.getLogger(DataModelSchemaUpdator.class);
+    private static final Logger LOG = Logger.getLogger(DataModelSchemaUpdator.class);
 
     private static final String TAG_XSD_ELEMENT = "xsd:element"; //$NON-NLS-1$
 
@@ -51,7 +47,7 @@ public class DataModelSchemaUpdator extends AbstractDataModelUpdator {
     }
 
     @Override
-    protected String doUpdation(byte[] byteContent) {
+    protected String doUpdate(byte[] byteContent) {
         return updateSchema(byteContent);
     }
 
@@ -69,7 +65,7 @@ public class DataModelSchemaUpdator extends AbstractDataModelUpdator {
                 }
 
             } catch (Exception e) {
-                LOG.error(e.getMessage(), e);
+                LOG.error("Update data model schema failed", e); //$NON-NLS-1$
             }
         }
 

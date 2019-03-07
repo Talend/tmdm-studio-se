@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,12 +20,9 @@ import org.talend.core.model.properties.Item;
 import org.talend.mdm.repository.ui.wizards.imports.UpdatorProvider;
 
 
-/**
- * created by liusongbo on Apr 18, 2016
- *
- */
 public class UpdateOperatorMigrationTask extends AbstractItemMigrationTask {
 
+    @Override
     public Date getOrder() {
         GregorianCalendar gc = new GregorianCalendar(2016, 4, 15, 0, 0, 0);
         return gc.getTime();

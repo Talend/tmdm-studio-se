@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2018 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -13,7 +13,7 @@
 package org.talend.mdm.repository.ui.wizards.imports;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import javax.xml.XMLConstants;
@@ -29,18 +29,12 @@ import org.talend.core.model.properties.ReferenceFileItem;
 import org.talend.mdm.repository.model.mdmproperties.WSDataModelItem;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 import com.amalto.workbench.utils.IXMLConstants;
 
-/**
- * @author sbliu
- *
- */
 public abstract class AbstractDataModelUpdator {
 
-    private static Logger log = Logger.getLogger(AbstractDataModelUpdator.class);
+    private static final Logger LOG = Logger.getLogger(AbstractDataModelUpdator.class);
 
     public boolean updateDatamodel(Item item) {
         boolean modified = false;
@@ -50,14 +44,14 @@ public abstract class AbstractDataModelUpdator {
             for (ReferenceFileItem fileItem : resources) {
                 if (fileItem.getExtension().equals("xsd")) { //$NON-NLS-1$
                     ByteArray content = fileItem.getContent();
-                    String xsdSchema = doUpdation(content.getInnerContent());
+                    String xsdSchema = doUpdate(content.getInnerContent());
                     if (xsdSchema != null) {
                         try {
                             byte[] byteContent = xsdSchema.getBytes("utf-8"); //$NON-NLS-1$
                             content.setInnerContent(byteContent);
                             modelItem.getWsDataModel().setXsdSchema(new String(byteContent, "utf-8")); //$NON-NLS-1$
                         } catch (UnsupportedEncodingException e) {
-                            log.error(e.getMessage(), e);
+                            LOG.error(e.getMessage(), e);
                         }
 
                         modified = true;
@@ -75,23 +69,40 @@ public abstract class AbstractDataModelUpdator {
         return modified;
     }
 
-    protected boolean accept(Item item) {
-        return true;
+    protected abstract boolean accept(Item item);
+
+    protected abstract String doUpdate(byte[] byteContent);
+
+    protected Document getSchemaDocument(byte[] byteContent) throws ParserConfigurationException {
+        DocumentBuilder documentBuilder = getDocumentBuilder();
+
+        Document document = null;
+        InputStream inputStream = null;
+        try {
+            inputStream = new ByteArrayInputStream(byteContent);
+            document = documentBuilder.parse(inputStream);
+        } catch (Exception e) {
+            LOG.error("Parse input stream error", e); //$NON-NLS-1$
+        } finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                } catch (Exception e) {
+                    LOG.error("Close stream error", e); //$NON-NLS-1$
+                }
+            }
+        }
+        return document;
     }
 
-    protected abstract String doUpdation(byte[] byteContent);
-
-    protected Document getSchemaDocument(byte[] byteContent) throws ParserConfigurationException, SAXException, IOException {
+    protected DocumentBuilder getDocumentBuilder() throws ParserConfigurationException {
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         documentBuilderFactory.setFeature(IXMLConstants.DISALLOW_DOCTYPE_DECL, true);
         documentBuilderFactory.setNamespaceAware(true);
         documentBuilderFactory.setValidating(false);
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
-
-        InputSource source = new InputSource(new ByteArrayInputStream(byteContent));
-        Document document = documentBuilder.parse(source);
-        return document;
+        return documentBuilder;
     }
 
 }
