@@ -2,7 +2,6 @@
 	<xsd:element abstract="false" name="Update" nillable="false" type="Update">
 		<xsd:unique name="Update">
 			<xsd:selector xpath="."/>
-			<xsd:field xpath="Source"/>
 			<xsd:field xpath="TimeInMillis"/>
 		</xsd:unique>
 	</xsd:element>
@@ -11,6 +10,7 @@
 			<xsd:element maxOccurs="1" minOccurs="0" name="UserName" nillable="true" type="xsd:string"/>
 			<xsd:element maxOccurs="1" minOccurs="1" name="Source" nillable="false" type="xsd:string"/>
 			<xsd:element maxOccurs="1" minOccurs="1" name="TimeInMillis" nillable="false" type="xsd:string"/>
+			<xsd:element maxOccurs="1" minOccurs="1" name="UUID" nillable="false" type="xsd:string"/>
 			<xsd:element maxOccurs="1" minOccurs="1" name="OperationType" nillable="false">
 				<xsd:simpleType>
 					<xsd:restriction base="xsd:string">

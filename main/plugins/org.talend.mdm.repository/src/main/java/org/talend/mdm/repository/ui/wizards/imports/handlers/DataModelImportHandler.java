@@ -17,7 +17,7 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.mdm.repository.model.mdmproperties.WSDataModelItem;
-import org.talend.mdm.repository.ui.wizards.imports.OperatorUpdatorProvider;
+import org.talend.mdm.repository.ui.wizards.imports.UpdatorProvider;
 import org.talend.repository.items.importexport.handlers.model.ImportItem;
 import org.talend.repository.items.importexport.manager.ResourcesManager;
 
@@ -46,7 +46,8 @@ public class DataModelImportHandler extends CommonMdmImportHandler {
 
     @Override
     protected void update(IRepositoryViewObject object, ImportItem selectedImportItem) throws PersistenceException {
-        OperatorUpdatorProvider.instance().updateOperator(object.getProperty().getItem());
+        UpdatorProvider.instance().updateOperator(object.getProperty().getItem());
+        UpdatorProvider.instance().updateDataModelSchema(object.getProperty().getItem());
 
         super.update(object, selectedImportItem);
     }

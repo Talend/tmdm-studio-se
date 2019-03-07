@@ -28,9 +28,9 @@ import com.amalto.workbench.exadapter.ExAdapterManager;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ RepositoryResourceUtil.class, ExAdapterManager.class })
 @PowerMockIgnore({ "org.eclipse.core.runtime.*" })
-public class DatamodelOperatorUpdatorTest {
+public class DataModelOperatorUpdatorTest {
 
-    private static Logger log = Logger.getLogger(DatamodelOperatorUpdatorTest.class);
+    private static Logger log = Logger.getLogger(DataModelOperatorUpdatorTest.class);
 
     @Test
     public void testUpdateConditionOperator() {
@@ -56,7 +56,7 @@ public class DatamodelOperatorUpdatorTest {
 
             PowerMockito.mockStatic(RepositoryResourceUtil.class);
 
-            boolean updated = new DatamodelOperatorUpdator().updateConditionOperator(wsdataModelItem);
+            boolean updated = new DataModelOperatorUpdator().updateConditionOperator(wsdataModelItem);
             String xsdSchema = wsdataModelItem.getWsDataModel().getXsdSchema();
             assertTrue(updated);
             assertNotNull(xsdSchema);
