@@ -65,7 +65,7 @@ public class DataModelSchemaUpdator extends AbstractDataModelUpdator {
                 }
 
             } catch (Exception e) {
-                LOG.error("Update data model schema failed", e); //$NON-NLS-1$
+                LOG.error("Failed to update data model schema.", e); //$NON-NLS-1$
             }
         }
 
