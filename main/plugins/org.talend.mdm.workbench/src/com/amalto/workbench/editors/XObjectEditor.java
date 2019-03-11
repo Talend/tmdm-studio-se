@@ -394,9 +394,11 @@ public class XObjectEditor extends FormEditor implements IXObjectModelListener, 
             coolBar = new CoolBar(parent, SWT.FLAT);
             coolBarMgr = new CoolBarManager(coolBar);
 
-            GridData gid = new GridData();
-            gid.horizontalAlignment = GridData.FILL;
-            coolBar.setLayoutData(gid);
+            FormData fdata = new FormData();
+            fdata.top = new FormAttachment(0, 0);
+            fdata.left = new FormAttachment(0, 0);
+            fdata.right = new FormAttachment(100, 0);
+            coolBar.setLayoutData(fdata);
 
             // initialize default actions
             defaultToolBarMgr = new ToolBarManager(SWT.FLAT);
