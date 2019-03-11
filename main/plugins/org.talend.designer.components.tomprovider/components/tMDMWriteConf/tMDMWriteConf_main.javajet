@@ -180,8 +180,10 @@ if (metadatas != null && metadatas.size()>0) {
             if (outConnName !=null && !isMassInsert && keysReturn.size() > 0) {
                 for (int i = 0; i < keysReturn.size(); i++){
                     Map<String,String> map = keysReturn.get(i);
-                      %>
+                    %>
+                    if (wspk_<%=cid%>.getIds().size() > <%=i %>) {
                       <%=outConnName %>.<%=map.get("OUTPUT_COLUMN")%>= wspk_<%=cid%>.getIds().get(<%=i %>);
+                    }
                 <%
                 }
                }
@@ -251,7 +253,9 @@ if (metadatas != null && metadatas.size()>0) {
                   for (int i = 0; i < keysReturn.size(); i++){
                     Map<String,String> map = keysReturn.get(i);
                     %>
-                    <%=outConnName %>.<%=map.get("OUTPUT_COLUMN")%>= wspk_<%=cid%>.getIds().get(<%=i %>);
+                    if (wspk_<%=cid%>.getIds().size() > <%=i %>) {
+                      <%=outConnName %>.<%=map.get("OUTPUT_COLUMN")%>= wspk_<%=cid%>.getIds().get(<%=i %>);
+                    }
                   <%
                   }
                 }
@@ -310,7 +314,9 @@ if (metadatas != null && metadatas.size()>0) {
                     for (int i = 0; i < keysReturn.size(); i++){
                       Map<String,String> map = keysReturn.get(i);
                       %>
-                      <%=outConnName %>.<%=map.get("OUTPUT_COLUMN")%>= wspk_<%=cid%>.getIds().get(<%=i %>);
+                      if (wspk_<%=cid%>.getIds().size() > <%=i %>) {
+                        <%=outConnName %>.<%=map.get("OUTPUT_COLUMN")%>= wspk_<%=cid%>.getIds().get(<%=i %>);
+                      }
                     <%
                     }
                   }
