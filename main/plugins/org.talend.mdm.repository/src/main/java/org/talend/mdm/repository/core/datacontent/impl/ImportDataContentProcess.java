@@ -330,11 +330,11 @@ public class ImportDataContentProcess extends AbstractDataContentProcess {
 
         private void checkFailureReport(InputStreamMerger manager) throws Exception {
             Throwable lastReportedFailure = manager.getLastReportedFailure();
-            if(lastReportedFailure != null) {
-                if(!(lastReportedFailure instanceof Exception)) {
+            if (lastReportedFailure != null) {
+                if (!(lastReportedFailure instanceof Exception)) {
                     throw new RuntimeException(lastReportedFailure);
                 } else {
-                    throw (Exception)lastReportedFailure;
+                    throw (Exception) lastReportedFailure;
                 }
             }
         }
