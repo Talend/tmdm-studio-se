@@ -66,7 +66,7 @@ import com.amalto.workbench.webservices.WSItem;
  */
 public class ImportDataContentProcess extends AbstractDataContentProcess {
 
-    private static Logger log = Logger.getLogger(ImportDataContentProcess.class);
+    private static final Logger LOG = Logger.getLogger(ImportDataContentProcess.class);
 
     private MultiStatus processResult;
 
@@ -240,7 +240,7 @@ public class ImportDataContentProcess extends AbstractDataContentProcess {
                 unmarshaller.setWhitespacePreserve(true);
                 unmarshaller.setMapping(mapping);
             } catch (Exception e) {
-                log.error(e.getLocalizedMessage(), e);
+                LOG.error("Prepare unmarshaller error", e);
 
                 IStatus errStatus = new Status(IStatus.ERROR, RepositoryPlugin.PLUGIN_ID,
                         Messages.ImportDataClusterAction_errorTitle, e);
@@ -266,9 +266,9 @@ public class ImportDataContentProcess extends AbstractDataContentProcess {
                     String content = wsItem.getContent();
                     list.add(content);
                 } catch (Exception e) {
-                    log.error(e.getLocalizedMessage(), e);
                     String msg = Messages.bind(Messages.ImportDataClusterAction_importErrorMsg, concept, dName,
                             e.getLocalizedMessage());
+                    LOG.error(msg, e);
                     IStatus errStatus = new Status(IStatus.ERROR, RepositoryPlugin.PLUGIN_ID, msg, e);
                     getResult().add(errStatus);
                     return;
@@ -313,10 +313,12 @@ public class ImportDataContentProcess extends AbstractDataContentProcess {
                         }
                         manager.notify();
                     }
+                    
+                    checkFailureReport(manager);
                 } catch (Exception e) {
-                    log.error(e.getLocalizedMessage(), e);
                     String msg = Messages.bind(Messages.ImportDataClusterAction_importErrorMsg, concept, dName,
                             e.getLocalizedMessage());
+                    LOG.error(msg, e);
                     IStatus errStatus = new Status(IStatus.ERROR, RepositoryPlugin.PLUGIN_ID, msg, e);
                     getResult().add(errStatus);
                 }
@@ -326,9 +328,19 @@ public class ImportDataContentProcess extends AbstractDataContentProcess {
             return;
         }
 
+        private void checkFailureReport(InputStreamMerger manager) throws Exception {
+            Throwable lastReportedFailure = manager.getLastReportedFailure();
+            if(lastReportedFailure != null) {
+                if(!(lastReportedFailure instanceof Exception)) {
+                    throw new RuntimeException(lastReportedFailure);
+                } else {
+                    throw (Exception)lastReportedFailure;
+                }
+            }
+        }
+
         public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             importClusterContents(monitor);
-
         }
     }
 
