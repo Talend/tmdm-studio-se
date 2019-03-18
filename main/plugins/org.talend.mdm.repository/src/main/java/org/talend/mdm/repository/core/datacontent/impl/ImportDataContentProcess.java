@@ -240,7 +240,7 @@ public class ImportDataContentProcess extends AbstractDataContentProcess {
                 unmarshaller.setWhitespacePreserve(true);
                 unmarshaller.setMapping(mapping);
             } catch (Exception e) {
-                LOG.error("Prepare unmarshaller error", e);
+                LOG.error("Failed to prepare unmarshaller.", e);
 
                 IStatus errStatus = new Status(IStatus.ERROR, RepositoryPlugin.PLUGIN_ID,
                         Messages.ImportDataClusterAction_errorTitle, e);
