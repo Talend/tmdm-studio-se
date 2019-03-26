@@ -82,6 +82,8 @@ public class HttpClientUtil {
 
     private static final String STRING_CONTENT_TYPE = "text/plain"; //$NON-NLS-1$
 
+    private static final String APPLICATION_XML_CONTENT_TYPE = "application/xml;charset=UTF-8"; //$NON-NLS-1$
+
     private static final int CONNECT_TIMEOUT = 6000000;
 
     private static final int SOCKET_TIMEOUT = 6000000;
@@ -462,6 +464,7 @@ public class HttpClientUtil {
             }
             HttpUriRequest request = null;
             request = createModelRequest(url, username, isUpdate, xsd);
+            request.setHeader(HTTP.CONTENT_TYPE, APPLICATION_XML_CONTENT_TYPE);
             DefaultHttpClient httpClient = wrapAuthClient(url, username, password);
             String errMessage = Messages.Util_21 + "%s" + Messages.Util_22 + "%s"; //$NON-NLS-1$//$NON-NLS-2$
             String content = getTextContent(httpClient, request, null, errMessage);
@@ -521,10 +524,9 @@ public class HttpClientUtil {
         String url = protocol + host
                 + ":" + port + contextPath + "/services/rest/tasks/matching/explain/?model=" + modelName + "&type=" //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
                 + entityName;
-        String contentType = "application/xml;charset=UTF-8"; //$NON-NLS-1$
         try {
             HttpPost request = new HttpPost(url);
-            request.setHeader(HTTP.CONTENT_TYPE, contentType);
+            request.setHeader(HTTP.CONTENT_TYPE, APPLICATION_XML_CONTENT_TYPE);
             addStudioToken(request, userName);
 
             StringEntity entity = new StringEntity(records, HTTP.UTF_8);
