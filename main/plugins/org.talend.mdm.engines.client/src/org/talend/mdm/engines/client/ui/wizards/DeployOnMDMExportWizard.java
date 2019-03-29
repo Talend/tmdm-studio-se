@@ -14,16 +14,13 @@ package org.talend.mdm.engines.client.ui.wizards;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.dialogs.IDialogSettings;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.ui.IExportWizard;
 import org.eclipse.ui.IWorkbench;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.talend.core.model.properties.SpagoBiServer;
 import org.talend.mdm.engines.client.Activator;
 import org.talend.mdm.engines.client.i18n.Messages;
@@ -46,8 +43,7 @@ public class DeployOnMDMExportWizard extends Wizard implements IExportWizard {
      * Creates a wizard for exporting workspace resources to a zip file.
      */
     public DeployOnMDMExportWizard() {
-        AbstractUIPlugin plugin = (AbstractUIPlugin) Platform.getPlugin(PlatformUI.PLUGIN_ID);
-        IDialogSettings workbenchSettings = plugin.getDialogSettings();
+        IDialogSettings workbenchSettings = Activator.getDefault().getDialogSettings();
         IDialogSettings section = workbenchSettings.getSection("DeployOnMDMExportWizard"); //$NON-NLS-1$
         if (section == null) {
             section = workbenchSettings.addNewSection("DeployOnMDMExportWizard"); //$NON-NLS-1$
