@@ -20,6 +20,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.xml.ws.WebServiceException;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.exception.LoginException;
@@ -258,15 +260,13 @@ public class ServerDefService implements ILegendServerDefService {
         try {
             TMDMService port = Util.getMDMService(new URL(endpointaddress), username, password);
             port.ping(new WSPing("ServerExplorer")); //$NON-NLS-1$
-        } catch (javax.xml.ws.WebServiceException e) {
+        } catch (WebServiceException e) {
             XtentisException xtentisException = Util.convertWebServiceException(e);
             if (xtentisException != null) {
                 throw xtentisException;
             }
             log.error(e.getMessage(), e);
-
         }
-
     }
 
     public boolean checkServerDefConnection(String endpointaddress, String username, String password) {
