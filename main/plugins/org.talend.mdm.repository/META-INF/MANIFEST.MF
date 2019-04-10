@@ -104,5 +104,6 @@ Import-Package: com.amalto.workbench.webservices,
  com.thoughtworks.xstream,
  com.thoughtworks.xstream.io,
  com.thoughtworks.xstream.io.xml,
+ javax.xml.ws,
  org.talend.mdm.webservice
 Eclipse-BundleShape: dir
