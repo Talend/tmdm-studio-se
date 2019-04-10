@@ -30,5 +30,4 @@ Export-Package: org.talend.mdm.workbench.serverexplorer.console,
  org.talend.mdm.workbench.serverexplorer.ui.actions,
  org.talend.mdm.workbench.serverexplorer.ui.dialogs,
  org.talend.mdm.workbench.serverexplorer.ui.views
-Import-Package: com.amalto.workbench.webservices,
- javax.xml.ws
+Import-Package: com.amalto.workbench.webservices

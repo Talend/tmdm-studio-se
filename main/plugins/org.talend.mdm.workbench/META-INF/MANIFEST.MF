@@ -41,8 +41,7 @@ Require-Bundle: org.eclipse.ui,
  org.talend.libraries.ui,
  org.talend.mdm.ws;resolution:=optional,
  org.talend.mdm.ws.enterprise;resolution:=optional,
- org.talend.mdm.commmon,
- org.talend.libraries.apache.cxf
+ org.talend.mdm.commmon
 Eclipse-AutoStart: true
 Eclipse-RegisterBuddy: org.talend.testutils
 Bundle-ClassPath: .,
@@ -264,5 +263,5 @@ Export-Package: com.amalto.workbench,
  org.xml.sax,
  org.xml.sax.ext
 Eclipse-BundleShape: dir
-Import-Package: javax.xml.ws,
- javax.xml.ws.handler,org.talend.commons.ui.swt.proposal
+Import-Package: org.apache.cxf.jaxws.spi,
+ org.talend.commons.ui.swt.proposal
