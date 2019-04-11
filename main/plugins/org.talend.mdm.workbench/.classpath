@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry exported="true" kind="lib" path="META-INF/lib/jaxws-rt-2.3.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="META-INF/lib/dtdparser121.jar"/>
 	<classpathentry exported="true" kind="lib" path="META-INF/lib/bulkloadclient.jar" sourcepath="/org.talend.mdm.bulkload.client"/>
 	<classpathentry exported="true" kind="lib" path="META-INF/lib/ezmorph-1.0.jar"/>

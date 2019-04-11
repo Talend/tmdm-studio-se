@@ -175,6 +175,7 @@ import com.amalto.workbench.webservices.WSWhereCondition;
 import com.amalto.workbench.webservices.WSWhereOperator;
 import com.sun.org.apache.xpath.internal.XPathAPI;
 import com.sun.org.apache.xpath.internal.objects.XObject;
+import com.sun.xml.ws.wsdl.parser.InaccessibleWSDLException;
 
 /**
  * @author bgrieder
@@ -399,12 +400,6 @@ public class Util {
             }
 
             try {
-
-                String xmlwsProperty = System.getProperty("javax.xml.ws.spi.Provider");
-                if (xmlwsProperty == null) {
-                    System.setProperty("javax.xml.ws.spi.Provider", "org.apache.cxf.jaxws.spi.ProviderImpl");
-                }
-
                 TMDMService_Service service_service = new TMDMService_Service(url);
 
                 service = service_service.getTMDMPort();
@@ -483,14 +478,13 @@ public class Util {
     }
 
     public static Throwable analyseWebServiceException(WebServiceException wsEx) {
+        if (wsEx instanceof InaccessibleWSDLException) {
+            InaccessibleWSDLException ex = (InaccessibleWSDLException) wsEx;
+            for (Throwable throwable : ex.getErrors()) {
 
-        // if (wsEx instanceof InaccessibleWSDLException) {
-        // InaccessibleWSDLException ex = (InaccessibleWSDLException) wsEx;
-        // for (Throwable throwable : ex.getErrors()) {
-        //
-        // return throwable;
-        // }
-        // }
+                return throwable;
+            }
+        }
 
         return wsEx;
     }
@@ -3230,15 +3224,6 @@ public class Util {
 
     }
 
-    // connection refuse or ssl error
-    private static String CONNECT_FAIL = "http.client.failed";//$NON-NLS-1$
-
-    // 401
-    private static String UNAUTHORIZE = "http.client.unauthorized";//$NON-NLS-1$
-
-    // 404
-    private static String NOT_FOUND = "http.not.found";//$NON-NLS-1$
-
     public static boolean handleConnectionException(IWorkbenchPart part, Throwable t, String title) {
         return handleConnectionException(part.getSite().getShell(), t, title);
     }
@@ -3248,24 +3233,9 @@ public class Util {
             return false;
         }
         String message = null;
-        // if (t instanceof com.sun.xml.internal.ws.client.ClientTransportException) {
-        // String key = ((com.sun.xml.internal.ws.client.ClientTransportException) t).getKey();
-        // if (null == title) {
-        // title = Messages.ConnectFailedTitle;
-        // }
-        //
-        // if (CONNECT_FAIL.equals(key)) {
-        // message = Messages.ConnectFailed;
-        // } else if (UNAUTHORIZE.equals(key)) {
-        // message = Messages.ConnectUnauthorized;
-        // } else if (NOT_FOUND.equals(key)) {
-        // message = Messages.ConnectNotFound;
-        // } else {
-        // return false;
-        // }
-        //
-        // return true;
-        // } else
+        if (t instanceof WebServiceException) {
+            return false;
+        } else
         if (t instanceof ConnectException) {
             message = t.getLocalizedMessage();
         }

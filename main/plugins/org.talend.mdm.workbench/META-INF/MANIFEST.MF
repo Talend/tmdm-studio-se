@@ -47,7 +47,6 @@ Eclipse-RegisterBuddy: org.talend.testutils
 Bundle-ClassPath: .,
  META-INF/lib/activation.jar,
  META-INF/lib/commons-digester.jar,
- META-INF/lib/dom.jar,
  META-INF/lib/mail.jar,
  META-INF/lib/relaxngDatatype.jar,
  META-INF/lib/saaj-api.jar,
@@ -71,7 +70,8 @@ Bundle-ClassPath: .,
  META-INF/lib/json-20090211.jar,
  META-INF/lib/ezmorph-1.0.jar,
  META-INF/lib/bulkloadclient.jar,
- META-INF/lib/dtdparser121.jar
+ META-INF/lib/dtdparser121.jar,
+ META-INF/lib/jaxws-rt-2.3.0.jar
 Export-Package: com.amalto.workbench,
  com.amalto.workbench.actions,
  com.amalto.workbench.availablemodel,
@@ -263,5 +263,6 @@ Export-Package: com.amalto.workbench,
  org.xml.sax,
  org.xml.sax.ext
 Eclipse-BundleShape: dir
-Import-Package: org.apache.cxf.jaxws.spi,
+Import-Package: com.sun.istack.localization,
+ org.apache.cxf.jaxws.spi,
  org.talend.commons.ui.swt.proposal
