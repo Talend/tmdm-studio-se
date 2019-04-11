@@ -263,6 +263,5 @@ Export-Package: com.amalto.workbench,
  org.xml.sax,
  org.xml.sax.ext
 Eclipse-BundleShape: dir
-Import-Package: com.sun.istack.localization,
- org.apache.cxf.jaxws.spi,
+Import-Package: org.apache.cxf.jaxws.spi,
  org.talend.commons.ui.swt.proposal
