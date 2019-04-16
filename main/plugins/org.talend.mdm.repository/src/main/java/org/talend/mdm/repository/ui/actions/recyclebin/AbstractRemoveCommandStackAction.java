@@ -85,7 +85,7 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
         try {
             factory.saveProject(ProjectManager.getInstance().getCurrentProject());
         } catch (PersistenceException e) {
-            LOG.error(e.getMessage(), e);
+            LOG.error("Failed to save project after remove repository view ojbects.", e);
         }
 
         refreshRepositoryRoot(IServerObjectRepositoryType.TYPE_RECYCLE_BIN);
@@ -103,7 +103,7 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
         return item instanceof MDMServerObjectItem || item instanceof ProcessItem || item instanceof TDQMatchRuleItem;
     }
 
-    protected void removeServerObject(IRepositoryViewObject viewObj) {
+    private void removeServerObject(IRepositoryViewObject viewObj) {
         try {
             ERepositoryObjectType type = viewObj.getRepositoryObjectType();
             String label = viewObj.getLabel();
@@ -119,7 +119,7 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
             //
             postRemove(type, label, version);
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOG.error("Failed to remove repository view object " + (viewObj == null ? null : viewObj.getLabel()), e);
         }
     }
 
@@ -149,7 +149,7 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
         try {
             factory.deleteFolder(project, repObjType, new Path(path), false);
         } catch (PersistenceException e) {
-            LOG.error(e.getMessage(), e);
+            LOG.error("Failed to delete folder " + path, e);
         }
     }
 }

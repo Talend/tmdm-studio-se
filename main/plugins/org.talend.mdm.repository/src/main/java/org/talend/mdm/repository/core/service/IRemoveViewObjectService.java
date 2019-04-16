@@ -19,6 +19,5 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 
 
 public interface IRemoveViewObjectService extends IService {
-
     public void beforeRemoveServerObject(IRepositoryViewObject viewObj, List<IRepositoryViewObject> allWillDeletedViewObjs);
 }
