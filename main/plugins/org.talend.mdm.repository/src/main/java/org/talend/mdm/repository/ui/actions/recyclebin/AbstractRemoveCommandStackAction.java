@@ -32,12 +32,14 @@ import org.talend.mdm.repository.core.IRepositoryNodeResourceProvider;
 import org.talend.mdm.repository.core.IServerObjectRepositoryType;
 import org.talend.mdm.repository.core.command.CommandManager;
 import org.talend.mdm.repository.core.service.ContainerCacheService;
+import org.talend.mdm.repository.core.service.IRemoveViewObjectService;
 import org.talend.mdm.repository.extension.RepositoryNodeConfigurationManager;
 import org.talend.mdm.repository.model.mdmproperties.ContainerItem;
 import org.talend.mdm.repository.model.mdmproperties.MDMServerObjectItem;
 import org.talend.mdm.repository.models.FolderRepositoryObject;
 import org.talend.mdm.repository.ui.dialogs.recycle.WaitToDeployDialog;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
+import org.talend.mdm.repository.utils.ServiceUtil;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
 
@@ -48,7 +50,7 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
 
     IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
 
-    static Logger log = Logger.getLogger(AbstractRemoveCommandStackAction.class);
+    private static final Logger LOG = Logger.getLogger(AbstractRemoveCommandStackAction.class);
 
     /**
      * DOC hbhong AbstractRemoveCommandStackAction constructor comment.
@@ -72,6 +74,7 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
             for (IRepositoryViewObject viewObj : viewObjs) {
                 RepositoryResourceUtil.closeEditor(viewObj, false);
                 if (isServerObject(viewObj)) {
+                    beforeRemoveServerObject(viewObj, viewObjs);
                     removeServerObject(viewObj);
                 } else if (viewObj instanceof FolderRepositoryObject) {
                     removeFolderObject((FolderRepositoryObject) viewObj);
@@ -82,10 +85,17 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
         try {
             factory.saveProject(ProjectManager.getInstance().getCurrentProject());
         } catch (PersistenceException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
 
         refreshRepositoryRoot(IServerObjectRepositoryType.TYPE_RECYCLE_BIN);
+    }
+
+    protected void beforeRemoveServerObject(IRepositoryViewObject viewObj, List<IRepositoryViewObject> allWillDeletedViewObjs) {
+        IRemoveViewObjectService service = (IRemoveViewObjectService) ServiceUtil.getService(IRemoveViewObjectService.class);
+        if (service != null) {
+            service.beforeRemoveServerObject(viewObj, allWillDeletedViewObjs);
+        }
     }
 
     private boolean isServerObject(IRepositoryViewObject viewObj) {
@@ -93,7 +103,7 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
         return item instanceof MDMServerObjectItem || item instanceof ProcessItem || item instanceof TDQMatchRuleItem;
     }
 
-    private void removeServerObject(IRepositoryViewObject viewObj) {
+    protected void removeServerObject(IRepositoryViewObject viewObj) {
         try {
             ERepositoryObjectType type = viewObj.getRepositoryObjectType();
             String label = viewObj.getLabel();
@@ -109,7 +119,7 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
             //
             postRemove(type, label, version);
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -139,8 +149,7 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
         try {
             factory.deleteFolder(project, repObjType, new Path(path), false);
         } catch (PersistenceException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
-
 }
