@@ -22,9 +22,10 @@ import java.util.ResourceBundle;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.junit.Before;
-import org.junit.Rule;
+import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Item;
@@ -47,10 +48,9 @@ import com.amalto.workbench.exadapter.ExAdapterManager;
 /**
  * DOC hbhong class global comment. Detailled comment
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ AbstractSimpleAddAction.class })
 public class AbstractSimpleAddActionTest {
-
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
 
     @Before
     public void setUp() throws Exception {

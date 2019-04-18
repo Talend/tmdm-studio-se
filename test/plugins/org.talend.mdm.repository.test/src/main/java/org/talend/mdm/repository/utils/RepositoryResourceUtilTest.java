@@ -39,13 +39,13 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.ui.IEditorReference;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.i18n.internal.DefaultMessagesImpl;
@@ -91,7 +91,7 @@ import org.talend.repository.model.RepositoryNode;
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.image.ImageCache;
 
-// @RunWith(PowerMockRunner.class)
+@RunWith(PowerMockRunner.class)
 @PrepareForTest({ RepositoryResourceUtil.class, ImageDescriptor.class, JFaceResources.class, DefaultMessagesImpl.class,
     ImageCache.class, ItemState.class, ProjectManager.class, CoreRuntimePlugin.class, InteractiveService.class,
     ResourceModelUtils.class, FolderType.class, RepositoryNodeConfigurationManager.class, ResourceUtils.class,
@@ -100,9 +100,6 @@ import com.amalto.workbench.image.ImageCache;
         ProxyRepositoryFactory.class,
 })
 public class RepositoryResourceUtilTest {
-
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
 
     class StubFolderRepositoryObject extends FolderRepositoryObject {
 
@@ -375,7 +372,7 @@ public class RepositoryResourceUtilTest {
 
         IFile copyOfFile = RepositoryResourceUtil.copyOSFileTOProject(null, invalidPath, desFolder, version, overwrite,
                 progressMonitor);
-        PowerMockito.verifyStatic(Mockito.atLeastOnce());
+        PowerMockito.verifyStatic(ProjectManager.class, Mockito.atLeastOnce());
         ProjectManager.getInstance();
         ResourceUtils.getProject(Mockito.any(Project.class));
         assertNull(copyOfFile);
@@ -715,7 +712,7 @@ public class RepositoryResourceUtilTest {
                 withDeleted);
 
         assertEquals(1, viewObjectss.size());
-        PowerMockito.verifyStatic(Mockito.atLeastOnce());
+        PowerMockito.verifyStatic(RepositoryResourceUtil.class, Mockito.atLeastOnce());
         InteractiveService.findHandler(mockType);
     }
 

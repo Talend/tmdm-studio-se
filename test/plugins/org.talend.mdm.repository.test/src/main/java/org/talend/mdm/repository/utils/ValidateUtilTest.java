@@ -16,18 +16,16 @@ import static org.junit.Assert.*;
 
 import java.util.Random;
 
-import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+@RunWith(PowerMockRunner.class)
 @PrepareForTest({ ValidateUtil.class })
 public class ValidateUtilTest {
-
-    @Rule
-    public PowerMockRule rule = new PowerMockRule();
 
     String str = "aaaaabbbbbccccc"; //$NON-NLS-1$
 
@@ -159,19 +157,19 @@ public class ValidateUtilTest {
         String smartViewProcess = "Smart_view_a";
         boolean matchSmartViewRegex = ValidateUtil.matchSmartViewRegex(smartViewProcess);
         assertTrue(matchSmartViewRegex);
-        PowerMockito.verifyStatic(Mockito.atLeastOnce());
+        PowerMockito.verifyStatic(ValidateUtil.class, Mockito.atLeastOnce());
         ValidateUtil.matchViewProcessRegex(Mockito.anyString());
 
         smartViewProcess = "Smart_view_a#b";
         matchSmartViewRegex = ValidateUtil.matchSmartViewRegex(smartViewProcess);
         assertTrue(matchSmartViewRegex);
-        PowerMockito.verifyStatic(Mockito.atLeastOnce());
+        PowerMockito.verifyStatic(ValidateUtil.class, Mockito.atLeastOnce());
         ValidateUtil.matchViewProcessRegex(Mockito.anyString());
 
         smartViewProcess = "Smart_view_a#b#c";
         matchSmartViewRegex = ValidateUtil.matchSmartViewRegex(smartViewProcess);
         assertFalse(matchSmartViewRegex);
-        PowerMockito.verifyStatic(Mockito.times(2));
+        PowerMockito.verifyStatic(ValidateUtil.class, Mockito.times(2));
         ValidateUtil.matchViewProcessRegex(Mockito.anyString());
     }
 

@@ -26,21 +26,18 @@ import java.util.Map;
 import org.eclipse.swt.SWT;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 
 import com.amalto.workbench.webservices.WSMenu;
 
-// @RunWith(PowerMockRunner.class)
+@RunWith(PowerMockRunner.class)
 @PrepareForTest({ BeanClassUtil.class })
 public class BeanClassUtilTest {
-
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private BeanClassUtil bClassUtil;
 

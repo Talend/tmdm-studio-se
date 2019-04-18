@@ -31,11 +31,11 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.talend.commons.i18n.internal.DefaultMessagesImpl;
 import org.talend.core.context.RepositoryContext;
@@ -74,16 +74,13 @@ import com.amalto.workbench.image.ImageCache;
 /**
  * DOC hbhong class global comment. Detailled comment
  */
-// @RunWith(PowerMockRunner.class)
+@RunWith(PowerMockRunner.class)
 @PrepareForTest({ RemoveFromRepositoryAction.class, ImageDescriptor.class, JFaceResources.class, DefaultMessagesImpl.class,
     ImageCache.class, ItemState.class, CoreRuntimePlugin.class, ProjectManager.class,
     RepositoryNodeConfigurationManager.class, IProxyRepositoryFactory.class, ProxyRepositoryFactory.class,
     MessageDialog.class, RepositoryResourceUtil.class, ContainerCacheService.class,
         RepositoryNodeProviderRegistryReader.class, ExAdapterManager.class, MDMWorbenchPlugin.class })
 public class RemoveFromRepositoryActionTest {
-
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private ProxyRepositoryFactory repositoryFactory;
 

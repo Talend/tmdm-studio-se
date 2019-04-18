@@ -22,12 +22,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
-import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.talend.mdm.repository.model.mdmserverobject.MDMServerObject;
 import org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectFactory;
 import org.talend.mdm.repository.model.mdmserverobject.WSMenuE;
@@ -39,11 +39,9 @@ import com.amalto.workbench.webservices.WSMenu;
 import com.amalto.workbench.webservices.WSMenuEntry;
 import com.amalto.workbench.webservices.WSMenuMenuEntriesDescriptions;
 
+@RunWith(PowerMockRunner.class)
 @PrepareForTest({ Bean2EObjUtil.class, System.class, IOUtil.class, EMFClassUtil.class, Logger.class })
 public class Bean2EObjUtilTest {
-
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
 
     @Test
     public void testPrivateConstructor() throws ClassNotFoundException {
