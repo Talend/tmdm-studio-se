@@ -1,9 +1,12 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Web Service Object for CE
-Bundle-SymbolicName: org.talend.mdm.ws
+Bundle-SymbolicName: org.talend.mdm.ws;singleton:=true
 Bundle-Version: 7.2.1.qualifier
 Require-Bundle: javax.wsdl,
- javax.activation
+ javax.activation,
+ org.eclipse.core.runtime
 Eclipse-ExtensibleAPI: true
 Export-Package: com.amalto.workbench.webservices
+Bundle-Activator: com.amalto.workbench.ws.MdmwsCEPlugin
+Bundle-ActivationPolicy: lazy

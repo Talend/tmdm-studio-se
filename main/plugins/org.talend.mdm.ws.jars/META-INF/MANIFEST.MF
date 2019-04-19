@@ -5,7 +5,6 @@ Bundle-SymbolicName: org.talend.mdm.ws.jars;singleton:=true
 Bundle-Version: 7.2.1.qualifier
 Fragment-Host: org.talend.mdm.ws
 Automatic-Module-Name: org.talend.mdm.ws.jars
-Bundle-RequiredExecutionEnvironment: JavaSE-11
 Bundle-ClassPath: lib/cxf-core-3.3.1.jar,
  lib/cxf-rt-bindings-soap-3.3.1.jar,
  lib/cxf-rt-bindings-xml-3.3.1.jar,
