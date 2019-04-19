@@ -1,28 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.talend.tom.feature"
+      label="Tom workbench"
+      version="7.2.1.qualifier"
+      provider-name=".Talend SA.">
 
-<feature id="org.talend.tom.feature" label="Tom workbench" version="7.2.1.qualifier" provider-name=".Talend SA."> 
-  <description url="http://www.example.com/description">[Enter Feature Description here.]</description>  
-  <copyright url="http://www.example.com/copyright">[Enter Copyright Description here.]</copyright>  
-  <license url="http://www.example.com/license">[Enter License Description here.]</license>  
-  <requires>
-    <import feature="org.eclipse.wst.xsl.feature" version="0.0.0" match="greaterOrEqual"/>
-    <import plugin="org.apache.commons.configuration" version="0.0.0" match="greaterOrEqual"/>
-    <import plugin="org.apache.commons.jxpath" version="0.0.0" match="greaterOrEqual"/>
-    <import plugin="org.apache.httpcomponents.httpclient" version="0.0.0" match="greaterOrEqual"/>
-    <import plugin="org.apache.httpcomponents.httpcore" version="0.0.0" match="greaterOrEqual"/>
-  </requires>
-  <plugin id="org.talend.designer.components.tomprovider" download-size="0" install-size="0" version="0.0.0"/>
-  <plugin id="org.talend.designer.routines.mdmprovider" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.talend.mdm.commmon" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.talend.mdm.demo" download-size="0" install-size="0" version="0.0.0"/>
-  <plugin id="org.talend.mdm.engines.client" download-size="0" install-size="0" version="0.0.0"/>
-  <plugin id="org.talend.mdm.repository" download-size="0" install-size="0" version="0.0.0"/>
-  <plugin id="org.talend.mdm.repository.model" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.talend.mdm.repository.nl" download-size="0" install-size="0" version="0.0.0" fragment="true" unpack="false"/>
-  <plugin id="org.talend.mdm.repository.validate" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.talend.mdm.workbench" download-size="0" install-size="0" version="0.0.0"/>
-  <plugin id="org.talend.mdm.workbench.nl" download-size="0" install-size="0" version="0.0.0" fragment="true" unpack="false"/>
-  <plugin id="org.talend.mdm.workbench.serverexplorer" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
-  <plugin id="org.talend.mdm.workbench.serverexplorer.nl" download-size="0" install-size="0" version="0.0.0" fragment="true" unpack="false"/>
-  <plugin id="org.talend.mdm.ws" download-size="0" install-size="0" version="0.0.0" unpack="false"/>
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import feature="org.eclipse.wst.xsl.feature" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.configuration" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.commons.jxpath" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.httpcomponents.httpclient" version="0.0.0" match="greaterOrEqual"/>
+      <import plugin="org.apache.httpcomponents.httpcore" version="0.0.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="org.talend.designer.components.tomprovider"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.talend.designer.routines.mdmprovider"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.mdm.commmon"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.mdm.demo"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.talend.mdm.engines.client"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.talend.mdm.repository"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.talend.mdm.repository.model"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.mdm.repository.nl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.mdm.repository.validate"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.mdm.workbench"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.talend.mdm.workbench.nl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.mdm.workbench.serverexplorer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.mdm.workbench.serverexplorer.nl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.mdm.ws"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.mdm.ws.jars"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
 </feature>

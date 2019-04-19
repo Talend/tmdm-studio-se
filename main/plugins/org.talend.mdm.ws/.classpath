@@ -1,33 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-core-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-bindings-soap-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-bindings-xml-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-databinding-jaxb-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-features-clustering-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-frontend-jaxws-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-frontend-simple-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-security-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-security-saml-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-transports-http-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-ws-addr-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-ws-policy-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-ws-security-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/cxf-rt-wsdl-3.3.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/javax.annotation-api-1.3.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/javax.jws_2.0.0.v201005080400.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/javax.xml.soap-api-1.4.0.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/javax.xml.ws_2.1.0.v200902101523.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/jaxb-api-2.2.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/jaxb-core-2.2.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/jaxb-impl-2.2.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/neethi-3.1.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/stax2-api_3.1.4.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/woodstox-core-5.0.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/wsdl4j-1.6.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/xmlschema-core-2.2.4.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

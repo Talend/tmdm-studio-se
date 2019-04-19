@@ -40,7 +40,7 @@ Require-Bundle: org.eclipse.ui,
  org.talend.librariesmanager.ui,
  org.talend.libraries.ui,
  org.talend.mdm.ws;resolution:=optional,
- org.talend.mdm.ws.enterprise;resolution:=optional,
+ org.talend.mdm.ws.enterprise;resolution:=optional;visibility:=reexport,
  org.talend.mdm.commmon
 Eclipse-AutoStart: true
 Eclipse-RegisterBuddy: org.talend.testutils
