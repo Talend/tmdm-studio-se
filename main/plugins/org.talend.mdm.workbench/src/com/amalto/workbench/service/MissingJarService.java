@@ -92,7 +92,7 @@ public class MissingJarService {
             }
         }
 
-        if (showUI && !needRestart) {
+        if (showUI && !needRestart && PlatformUI.isWorkbenchRunning()) {
             showMissingJarDialog();
             if (getMissingJarList() == null) {
                 needRestart = true;
@@ -109,6 +109,7 @@ public class MissingJarService {
     private void showOperationCanceldDialog() {
         Display.getDefault().syncExec(new Runnable() {
 
+            @Override
             public void run() {
                 Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
@@ -121,6 +122,7 @@ public class MissingJarService {
     private void showRestartConfirmDialog() {
         Display.getDefault().syncExec(new Runnable() {
 
+            @Override
             public void run() {
                 Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
                 boolean restart = MessageDialog.openQuestion(shell, Messages.MissingJarService_InstallJarTitle,
@@ -136,6 +138,7 @@ public class MissingJarService {
     private void showMissingJarDialog() {
         Display.getDefault().syncExec(new Runnable() {
 
+            @Override
             public void run() {
                 Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
