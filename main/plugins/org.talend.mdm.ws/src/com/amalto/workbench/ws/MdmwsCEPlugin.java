@@ -1,5 +1,8 @@
 package com.amalto.workbench.ws;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 
 public class MdmwsCEPlugin extends Plugin {
@@ -21,6 +24,14 @@ public class MdmwsCEPlugin extends Plugin {
      */
     public void start(BundleContext context) throws Exception {
         super.start(context);
+        String jdkversion = System.getProperty("java.version");
+        if (!jdkversion.startsWith("11")) {
+            Bundle bundle = Platform.getBundle("org.talend.mdm.ws.jars");
+            if (bundle != null && (bundle.getState() == Bundle.ACTIVE || bundle.getState() == Bundle.RESOLVED
+                    || bundle.getState() == Bundle.STARTING)) {
+                bundle.uninstall();
+            }
+        }
     }
 
     /**

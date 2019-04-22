@@ -25,7 +25,7 @@
               <outputDirectory>${basedir}/lib</outputDirectory>
               <resources>          
                 <resource>
-                  <directory>${basedir}/../org.talend.mdm.ws.enterprise.jars/lib</directory>
+                  <directory>${basedir}/../org.talend.mdm.ws.jars/lib</directory>
 					<includes> 
 						<include>javax.jws_2.0.0.v201005080400.jar</include> 
 						<include>javax.xml.ws_2.1.0.v200902101523.jar</include> 
