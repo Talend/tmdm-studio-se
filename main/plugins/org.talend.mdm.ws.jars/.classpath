@@ -26,11 +26,7 @@
 	<classpathentry exported="true" kind="lib" path="lib/woodstox-core-5.0.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/wsdl4j-1.6.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/xmlschema-core-2.2.4.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="output" path="bin"/>
