@@ -251,7 +251,7 @@ public class ConsistencyServiceTest {
             // check
             Mockito.verify(mockCService, times(1)).updateLocalDigestValue(mockViewObj);
             Mockito.verify(mockService, Mockito.times(1)).updateDigest(any(WSDigest.class));
-            PowerMockito.verifyStatic();
+            PowerMockito.verifyStatic(null, null);
             RepositoryResourceUtil.saveItem(mockItem);
 
         } catch (Exception e) {

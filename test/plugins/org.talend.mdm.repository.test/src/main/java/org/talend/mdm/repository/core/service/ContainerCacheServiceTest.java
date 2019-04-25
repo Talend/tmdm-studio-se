@@ -253,7 +253,7 @@ public class ContainerCacheServiceTest {
 
         IRepositoryViewObject parent = ContainerCacheService.getParent(mockViewObject);
         assertEquals(mockResultParent, parent);
-        PowerMockito.verifyStatic();
+        PowerMockito.verifyStatic(null, null);
         ContainerCacheService.get(repoType, "/pathA"); //$NON-NLS-1$
 
         PowerMockito.when(mockState.getPath()).thenReturn("/"); //$NON-NLS-1$
@@ -267,7 +267,7 @@ public class ContainerCacheServiceTest {
         PowerMockito.when(mockState.getPath()).thenReturn("path"); //$NON-NLS-1$
         parent = ContainerCacheService.getParent(mockViewObject);
         assertEquals(mockResultParent, parent);
-        PowerMockito.verifyStatic();
+        PowerMockito.verifyStatic(null, null);
         ContainerCacheService.get(repoType, "path"); //$NON-NLS-1$
 
         Item mockItem = PowerMockito.mock(Item.class);
@@ -276,7 +276,7 @@ public class ContainerCacheServiceTest {
         PowerMockito.when(mockProperty.getItem()).thenReturn(mockItem);
         parent = ContainerCacheService.getParent(mockViewObject);
         assertEquals(mockResultParent, parent);
-        PowerMockito.verifyStatic();
+        PowerMockito.verifyStatic(null, null);
         ContainerCacheService.get(repoType, path);
     }
 

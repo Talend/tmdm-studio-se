@@ -68,7 +68,7 @@ public class DeployServiceTest {
 
             mockDeployService.deployAnotherVersion(mockServerDef, repositoryViewObjs);// //
             Mockito.verify(mockDeployService).runCommands(deployCommands, mockServerDef);// //
-            PowerMockito.verifyStatic();
+            PowerMockito.verifyStatic(null, null);
             ModelImpactAnalyseService.analyzeCommandImpact(any(MDMServerDef.class), anyListOf(AbstractDeployCommand.class));
 
             // ---------
@@ -81,7 +81,7 @@ public class DeployServiceTest {
 
             mockDeployService.deployAnotherVersion(mockServerDef, repositoryViewObjs);// //
             Mockito.verify(mockDeployService, times(2)).runCommands(deployCommands, mockServerDef);// //
-            PowerMockito.verifyStatic(times(2));
+            PowerMockito.verifyStatic(null, times(2));
             ModelImpactAnalyseService.analyzeCommandImpact(any(MDMServerDef.class), anyListOf(AbstractDeployCommand.class));
 
         } catch (Exception e) {
@@ -173,7 +173,7 @@ public class DeployServiceTest {
             PowerMockito.mockStatic(ModelImpactAnalyseService.class);
             deployStatus = mockDeployService.deploy(mockServerDef, viewObjs, defaultCmdType, removeLocked);
             assertEquals(Status.OK_STATUS, deployStatus);
-            PowerMockito.verifyStatic();
+            PowerMockito.verifyStatic(null, null);
             ModelImpactAnalyseService.analyzeCommandImpact(mockServerDef, deployCommands);
 
             // // check with interrupted impact dialog
