@@ -36,14 +36,14 @@ public class PasswordUtilTest {
         encodedPassword = "ecodedPassword"; //$NON-NLS-1$
         String decryptPassword = PasswordUtil.decryptPassword(encodedPassword, algorithm);
         assertEquals(decryptPassword_expect, decryptPassword);
-        PowerMockito.verifyStatic();
+        PowerMockito.verifyStatic(null, null);
         PasswordUtil.decryptPasswordBase64(encodedPassword);
 
         //
         algorithm = "arbitrary algorithm";// on behalf of arbitrary algorithm,not null //$NON-NLS-1$
         decryptPassword = PasswordUtil.decryptPassword(encodedPassword, algorithm);
         assertEquals(decryptPassword_expect, decryptPassword);
-        PowerMockito.verifyStatic(times(2));
+        PowerMockito.verifyStatic(null, times(2));
         PasswordUtil.decryptPasswordBase64(encodedPassword);
 
         //
@@ -91,14 +91,14 @@ public class PasswordUtilTest {
         plainPassword = "plainPassword"; //$NON-NLS-1$
         String encryptedPassword = PasswordUtil.encryptPassword(plainPassword, algorithm);
         assertEquals(encryptedPassword_expect, encryptedPassword);
-        PowerMockito.verifyStatic();
+        PowerMockito.verifyStatic(null, null);
         PasswordUtil.encryptPasswordBase64(plainPassword);
 
         //
         algorithm = "arbitrary algorithm";// on behalf of arbitrary algorithm,not null //$NON-NLS-1$
         encryptedPassword = PasswordUtil.encryptPassword(plainPassword, algorithm);
         assertEquals(encryptedPassword_expect, encryptedPassword);
-        PowerMockito.verifyStatic(times(2));
+        PowerMockito.verifyStatic(null, times(2));
         PasswordUtil.encryptPasswordBase64(plainPassword);
 
         //

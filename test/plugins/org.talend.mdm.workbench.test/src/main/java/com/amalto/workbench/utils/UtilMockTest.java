@@ -430,7 +430,7 @@ public class UtilMockTest {
                 Mockito.verify(mockElementDec_c1).setTypeDefinition(newType);
                 Mockito.verify(mockElementDec_c2).setTypeDefinition(newType);
                 if (newType instanceof XSDComplexTypeDefinition) {
-                    PowerMockito.verifyStatic();
+                    PowerMockito.verifyStatic(null, null);
                     Util.updateChildrenReferenceToComplexType((XSDComplexTypeDefinition) newType);
                 }
             }
@@ -513,7 +513,7 @@ public class UtilMockTest {
             Object[] allForeignKeyAndInfos = new Object[0];
 
             Util.updateReference(new Object(), objs, allForeignKeyAndInfos, oldValue, newValue);
-            PowerMockito.verifyStatic(times(0));
+            PowerMockito.verifyStatic(null, times(0));
             Util.updateForeignKeyRelatedInfo(oldValue, newValue, allForeignKeyAndInfos);
             Whitebox.invokeMethod(Util.class, method_private, any(XSDElementDeclaration.class), eq(oldValue), eq(newValue));
 
@@ -549,7 +549,7 @@ public class UtilMockTest {
             objs[3] = particle4;
 
             Util.updateReference(xsdEleDecl, objs, allForeignKeyAndInfos, oldValue, newValue);
-            PowerMockito.verifyStatic();
+            PowerMockito.verifyStatic(null, null);
             Util.updateForeignKeyRelatedInfo(oldValue, newValue, allForeignKeyAndInfos);
             Whitebox.invokeMethod(Util.class, method_private, any(XSDElementDeclaration.class), eq(oldValue), eq(newValue));
 
