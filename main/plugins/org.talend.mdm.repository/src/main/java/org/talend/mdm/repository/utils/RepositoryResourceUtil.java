@@ -616,6 +616,18 @@ public class RepositoryResourceUtil {
         return containerObject;
     }
 
+    public static List<IRepositoryViewObject> findAllVersionViewObjects(IRepositoryViewObject viewObj) {
+        List<IRepositoryViewObject> allVersionObjs = null;
+        try {
+            IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
+            allVersionObjs = factory.getAllVersion(viewObj.getProperty().getId(), "", viewObj.getRepositoryObjectType());
+        } catch (Exception e) {
+            LOG.error("Error occurred while retrieving all version of workflow " + viewObj.getLabel(), e);
+        }
+
+        return allVersionObjs;
+    }
+
     public static List<IRepositoryViewObject> findAllViewObjects(ERepositoryObjectType type) {
         return findAllViewObjects(type, true);
     }
@@ -862,12 +874,7 @@ public class RepositoryResourceUtil {
         if (viewObjects != null) {
             IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
             for (IRepositoryViewObject viewObj : viewObjects) {
-                List<IRepositoryViewObject> allVersionObjs = null;
-                try {
-                    allVersionObjs = factory.getAllVersion(viewObj.getProperty().getId(), "", type);
-                } catch (PersistenceException e) {
-                    LOG.error("Failed when getting all version of object " + viewObj.getLabel(), e);
-                }
+                List<IRepositoryViewObject> allVersionObjs = findAllVersionViewObjects(viewObj);
 
                 if (allVersionObjs != null) {
                     for (IRepositoryViewObject vobj : allVersionObjs) {
