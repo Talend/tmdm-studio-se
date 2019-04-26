@@ -407,7 +407,7 @@ public class ImportServerObjectWizard extends Wizard {
                     item.setState(itemState);
                     String version = getVersion(treeObj);
 
-                    if (RepositoryResourceUtil.createItem(item, uniqueName, version, false, false)) {
+                    if (RepositoryResourceUtil.createItem(item, uniqueName, version, null, false, false)) {
                         importedIds.add(item.getProperty().getId());
                     }
 

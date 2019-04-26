@@ -211,14 +211,15 @@ public class RepositoryResourceUtil {
     }
 
     public static boolean createItem(Item item, String propLabel, String version) {
-        return createItem(item, propLabel, version, true);
+        return createItem(item, propLabel, version, null, true);
     }
 
-    public static boolean createItem(Item item, String propLabel, String version, boolean pushCommandStack) {
-        return createItem(item, propLabel, version, pushCommandStack, true);
+    public static boolean createItem(Item item, String propLabel, String version, String propertyId, boolean pushCommandStack) {
+        return createItem(item, propLabel, version, propertyId, pushCommandStack, true);
     }
 
-    public static boolean createItem(Item item, String propLabel, String version, boolean pushCommandStack, boolean triggerEvent) {
+    public static boolean createItem(Item item, String propLabel, String version, String propertyId, boolean pushCommandStack,
+            boolean triggerEvent) {
         String name = propLabel;
         IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
         RepositoryContext context = factory.getRepositoryContext();
@@ -227,6 +228,9 @@ public class RepositoryResourceUtil {
         item.setProperty(prop);
         try {
             String nextId = factory.getNextId();
+            if (!StringUtils.isBlank(propertyId)) {
+                nextId = propertyId;
+            }
             Property property = item.getProperty();
             property.setId(nextId);
             property.setVersion(version);
