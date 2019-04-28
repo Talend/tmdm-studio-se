@@ -38,9 +38,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.ui.URIEditorInput;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -133,7 +131,7 @@ public class RepositoryResourceUtil {
 
     private static final String UNDERLINE = "_"; //$NON-NLS-1$
 
-    private static Logger LOG = Logger.getLogger(RepositoryResourceUtil.class);
+    private static final Logger LOG = Logger.getLogger(RepositoryResourceUtil.class);
 
     private static IRepositoryResourceUtilExAdapter exAdapter;
 
@@ -1343,14 +1341,6 @@ public class RepositoryResourceUtil {
                                 activePage.closeEditors(new IEditorReference[] { ref }, save);
                             }
                         }
-                    } else if (editorInput instanceof URIEditorInput) {
-                        URIEditorInput uriEditorInput = (URIEditorInput) editorInput;
-                        String name = uriEditorInput.getName();
-                        if (name.equals(viewObj.getLabel() + "-" + viewObj.getVersion() + ".proc")) {
-                            activePage.closeEditors(new IEditorReference[] { ref }, false);
-                        }
-                        URI uri = uriEditorInput.getURI();
-                        System.out.println(uri);
                     }
                 } catch (PartInitException e) {
                     LOG.error(e.getMessage(), e);
