@@ -41,6 +41,6 @@ public interface IRepositoryNodeResourceProvider {
 
     void handleReferenceFile(Item item);
 
-    void postDelete(String name, String version);
+    void postDelete(String name, String... versions);
 
 }

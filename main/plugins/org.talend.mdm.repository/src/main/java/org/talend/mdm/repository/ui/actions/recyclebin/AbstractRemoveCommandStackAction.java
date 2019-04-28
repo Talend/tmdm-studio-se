@@ -105,9 +105,14 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
 
     private void removeServerObject(IRepositoryViewObject viewObj) {
         try {
+            List<String> versions = new ArrayList<>();
+            List<IRepositoryViewObject> allVersionViewObjects = RepositoryResourceUtil.findAllVersionViewObjects(viewObj);
+            for (IRepositoryViewObject _viewObj : allVersionViewObjects) {
+                versions.add(_viewObj.getVersion());
+            }
+
             ERepositoryObjectType type = viewObj.getRepositoryObjectType();
             String label = viewObj.getLabel();
-            String version = viewObj.getVersion();
             //
             String id = viewObj.getId();
             List<IRepositoryViewObject> viewObjs = new ArrayList<IRepositoryViewObject>();
@@ -117,18 +122,18 @@ public abstract class AbstractRemoveCommandStackAction extends AbstractRepositor
             factory.deleteObjectPhysical(viewObj);
             CommandManager.getInstance().removeCommandStack(id);
             //
-            postRemove(type, label, version);
+            postRemove(type, label, versions.toArray(new String[0]));
         } catch (Exception e) {
             LOG.error("Failed to remove repository view object " + (viewObj == null ? null : viewObj.getLabel()), e);
         }
     }
 
-    private void postRemove(ERepositoryObjectType type, String name, String version) {
+    private void postRemove(ERepositoryObjectType type, String name, String[] versions) {
         IRepositoryNodeConfiguration configuration = RepositoryNodeConfigurationManager.getConfiguration(type);
         if (configuration != null) {
             IRepositoryNodeResourceProvider resourceProvider = configuration.getResourceProvider();
             if (resourceProvider != null) {
-                resourceProvider.postDelete(name, version);
+                resourceProvider.postDelete(name, versions);
             }
         }
     }

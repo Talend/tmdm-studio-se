@@ -622,7 +622,8 @@ public class RepositoryResourceUtil {
         List<IRepositoryViewObject> allVersionObjs = null;
         try {
             IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
-            allVersionObjs = factory.getAllVersion(viewObj.getProperty().getId(), "", viewObj.getRepositoryObjectType());
+            allVersionObjs = factory.getAllVersion(viewObj.getProperty().getId(),
+                    viewObj.getProperty().getItem().getState().getPath(), viewObj.getRepositoryObjectType());
         } catch (Exception e) {
             LOG.error("Error occurred while retrieving all version of workflow " + viewObj.getLabel(), e);
         }

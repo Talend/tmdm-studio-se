@@ -177,7 +177,7 @@ public abstract class AbstractRepositoryNodeResourceProvider implements IReposit
         return null;
     }
 
-    public void postDelete(String name, String version) {
+    public void postDelete(String name, String... versions) {
         // do nothing
     }
 
