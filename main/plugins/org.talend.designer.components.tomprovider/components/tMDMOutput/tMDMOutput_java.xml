@@ -533,20 +533,6 @@
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="jaxb-core-2.2.11"
-                    MODULE="jaxb-core-2.2.11.jar"
-                    MVN="mvn:com.sun.xml.bind/jaxb-core/2.2.11"
-                    REQUIRED="true"
-                    BundleID=""
-                    />
-                <IMPORT
-                    NAME="jaxb-impl-2.2.11"
-                    MODULE="jaxb-impl-2.2.11.jar"
-                    MVN="mvn:com.sun.xml.bind/jaxb-impl/2.2.11"
-                    REQUIRED="true"
-                    BundleID=""
-                    />
-                <IMPORT
                     NAME="neethi-3.1.1"
                     MODULE="neethi-3.1.1.jar"
                     MVN="mvn:org.apache.neethi/neethi/3.1.1"
