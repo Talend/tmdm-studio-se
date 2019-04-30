@@ -108,7 +108,13 @@
       <IMPORT NAME="WSDL4J-1_6_3" MODULE="wsdl4j-1.6.3.jar" MVN="mvn:wsdl4j/wsdl4j/1.6.3"  BundleID="org.apache.servicemix.bundles.wsdl4j" REQUIRED="true" />
       <IMPORT NAME="SOAP-discovery" MODULE="commons-discovery-0.2.jar" MVN="mvn:org.talend.libraries/commons-discovery-0.2/6.0.0"  UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-discovery-0.2.jar" REQUIRED="true" />
       <IMPORT NAME="SOAP-logging" MODULE="commons-logging-1.0.4.jar" MVN="mvn:org.talend.libraries/commons-logging-1.0.4/6.0.0"  UrlPath="platform:/base/plugins/org.apache.commons.logging_1.0.4.v201101211617.jar" REQUIRED="true" />
-      
+
+      <IMPORT NAME="SOAP-JavaMail" MODULE="mail.jar" MVN="mvn:org.talend.libraries/mail/6.0.0"  UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/mail.jar" BundleID="" REQUIRED="true" />
+      <IMPORT NAME="SOAP-JAF" MODULE="activation.jar" MVN="mvn:org.talend.libraries/activation/6.0.0"  UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/activation.jar" BundleID="" REQUIRED="true" />
+
+      <IMPORT NAME="SOAP-httpclient" MODULE="commons-httpclient.jar" MVN="mvn:org.talend.libraries/commons-httpclient/6.0.0"  UrlPath="platform:/plugin/org.talend.libraries.apache.http/lib/commons-httpclient.jar" REQUIRED="true" />
+      <IMPORT NAME="mdm_transaction.jar" MODULE="mdm_transaction.jar" MVN="mvn:org.talend.libraries/mdm_transaction/6.0.0"  REQUIRED="true" />
+      <IMPORT NAME="SOAP-codec" MODULE="commons-codec-1.6.jar" MVN="mvn:org.talend.libraries/commons-codec-1.6/6.0.0"  UrlPath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-codec-1.6.jar" REQUIRED="true" />
       <!-- Jars for cxf begin -->
                                <IMPORT
                     NAME="cxf-core-3.3.1"
