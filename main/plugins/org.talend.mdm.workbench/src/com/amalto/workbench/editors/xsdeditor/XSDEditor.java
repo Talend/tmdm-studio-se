@@ -30,6 +30,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.e4.ui.model.application.ui.basic.MPart;
+import org.eclipse.e4.ui.workbench.modeling.EPartService;
+import org.eclipse.e4.ui.workbench.modeling.EPartService.PartState;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -48,11 +51,13 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IPropertyListener;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.internal.WorkbenchPartReference;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.MultiPageSelectionProvider;
@@ -101,21 +106,21 @@ import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.views.MDMPerspective;
 import com.amalto.workbench.webservices.WSDataModel;
 
-@SuppressWarnings("restriction")
-public class XSDEditor extends MultiPageEditorPart implements IServerObjectEditorState, ITabbedPropertySheetPageContributor,
-        IPropertyListener {
+@SuppressWarnings("nls")
+public class XSDEditor extends MultiPageEditorPart
+        implements IServerObjectEditorState, ITabbedPropertySheetPageContributor, IPropertyListener {
 
     public static final String MSG_OMIT[] = {
-            "XSD: The value '1' of attribute 'maxOccurs' must be one of  as constrained by 'http://www.w3.org/2001/XMLSchema#maxOccurs_._type'", //$NON-NLS-1$
-            "XSD: The attribute may not have duplicate name and target namespace", //$NON-NLS-1$
-            "XSD: The type may not have duplicate name and target namespace", //$NON-NLS-1$
-            "XSD: The attribute group may not have duplicate name and target namespace", //$NON-NLS-1$
-            "The complex type may not have duplicate name", //$NON-NLS-1$
-            "XSD: An element reference may only have an id, minOccurs, or maxOccurs" }; //$NON-NLS-1$
+            "XSD: The value '1' of attribute 'maxOccurs' must be one of  as constrained by 'http://www.w3.org/2001/XMLSchema#maxOccurs_._type'",
+            "XSD: The attribute may not have duplicate name and target namespace",
+            "XSD: The type may not have duplicate name and target namespace",
+            "XSD: The attribute group may not have duplicate name and target namespace",
+            "The complex type may not have duplicate name",
+            "XSD: An element reference may only have an id, minOccurs, or maxOccurs" };
 
     private static Log log = LogFactory.getLog(XSDEditor.class);
 
-    public static final String CONTRUIBUTIONID_DATAMODELPAGE = "org.talend.mdm.workbench.propertyContributor.datamodel";//$NON-NLS-1$
+    public static final String CONTRUIBUTIONID_DATAMODELPAGE = "org.talend.mdm.workbench.propertyContributor.datamodel";
 
     protected static int MODEL_PAGE_INDEX = -1;
 
@@ -139,7 +144,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
         try {// temporarily store the file data for restore
             IFile file = getXSDFile(xobject);
             reader = new InputStreamReader(file.getContents());
-            fileContents = IOUtils.toByteArray(reader, "utf-8"); //$NON-NLS-1$
+            fileContents = IOUtils.toByteArray(reader, "utf-8");
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         } finally {
@@ -173,7 +178,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
                 if (mainPage != null) {
                     mainPage.save(xsd);
                 }
-                fileContents = xsd.getBytes("utf-8"); //$NON-NLS-1$
+                fileContents = xsd.getBytes("utf-8");
             }
             getDataModelEditorPage().setDirty(false);
 
@@ -252,8 +257,8 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
                     WSDataModel wsDataModel = (WSDataModel) xobject.getWsObject();
                     wsDataModel.setXsdSchema(xsd);
                     IFile file = getXSDFile(xobject);
-                    file.setCharset("utf-8", null);//$NON-NLS-1$
-                    file.setContents(new ByteArrayInputStream(xsd.getBytes("utf-8")), IFile.FORCE, null);//$NON-NLS-1$
+                    file.setCharset("utf-8", null);
+                    file.setContents(new ByteArrayInputStream(xsd.getBytes("utf-8")), IFile.FORCE, null);
                 }
             }
         } catch (SAXParseException ex) {
@@ -268,7 +273,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
     }
 
     private void updateContentOutlinePage() {
-        IContentOutlinePage outlinePage = (IContentOutlinePage) getActiveEditor().getAdapter(IContentOutlinePage.class);
+        IContentOutlinePage outlinePage = getActiveEditor().getAdapter(IContentOutlinePage.class);
         contentOutline.setActiveOutlinePage(outlinePage);
     }
 
@@ -469,6 +474,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
             return false;
         }
 
+        @Override
         public void selectionChanged(SelectionChangedEvent event) {
             // do not fire selection in source editor if the current active page
             // is the InternalXSDMultiPageEditor
@@ -592,7 +598,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
         try {
             XSDSchema xsdSchema = Util.createXsdSchema(xsd, xobject);
             String error = validateDiagnoses(xsdSchema);
-            if (!"".equals(error)) { //$NON-NLS-1$
+            if (!"".equals(error)) {
                 ex = new IllegalAccessException(error);
             }
 
@@ -610,6 +616,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
                     CommonUtil.getErrMsgFromException(ex));
             Display.getDefault().asyncExec(new Runnable() {
 
+                @Override
                 public void run() {
                     setActivePage(SOURCE_PAGE_INDEX);
                 }
@@ -640,7 +647,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
         xsdSchema.getAllDiagnostics().clear();
         xsdSchema.validate();
         EList<XSDDiagnostic> diagnoses = xsdSchema.getAllDiagnostics();
-        String error = "";//$NON-NLS-1$
+        String error = "";
         Set<String> errors = new HashSet<String>();
         for (int i = 0; i < diagnoses.size(); i++) {
             XSDDiagnostic dia = diagnoses.get(i);
@@ -654,7 +661,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
                     }
                 }
                 if (!omit && !errors.contains(dia.getMessage())) {
-                    error += dia.getMessage() + "\n";//$NON-NLS-1$
+                    error += dia.getMessage() + "\n";
                     errors.add(dia.getMessage());
                 }
             }
@@ -662,13 +669,12 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
         return error;
     }
 
+    @Override
     public String getContributorId() {
-
         int activePageIndex = getActivePage();
         if (activePageIndex == SOURCE_PAGE_INDEX) {
-            return "org.eclipse.wst.xsd.ui.internal.editor"; //$NON-NLS-1$;
+            return "org.eclipse.wst.xsd.ui.internal.editor";
         }
-
         return CONTRUIBUTIONID_DATAMODELPAGE;
 
     }
@@ -719,12 +725,18 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
         IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         IViewPart propView = page.findView(MDMPerspective.VIEWID_PROPERTYVIEW);
         if (propView != null) {
-            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().hideView(propView);
-        }
-        try {
-            page.showView(MDMPerspective.VIEWID_PROPERTYVIEW);
-        } catch (PartInitException e) {
-            e.printStackTrace();
+            EPartService partService = page.getWorkbenchWindow().getService(EPartService.class);
+
+            for (IViewReference viewRef : page.getViewReferences()) {
+                if (viewRef.getPart(false) == propView) {
+                    MPart mPart = ((WorkbenchPartReference) viewRef).getModel();
+                    if (mPart != null) {
+                        partService.hidePart(mPart);
+                        partService.showPart(mPart, PartState.VISIBLE);
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -766,6 +778,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
         }
     }
 
+    @Override
     public boolean isLocalInput() {
         return false;
     }
@@ -779,7 +792,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
         try {
             if (isDirty()) {
                 IFile file = getXSDFile(xobject);
-                file.setCharset("utf-8", null);//$NON-NLS-1$
+                file.setCharset("utf-8", null);
                 file.setContents(new ByteArrayInputStream(fileContents), IFile.FORCE, null);
             }
         } catch (Exception e) {
@@ -805,6 +818,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
         return null;
     }
 
+    @Override
     public boolean isReadOnly() {
         return false;
     }
@@ -853,6 +867,7 @@ public class XSDEditor extends MultiPageEditorPart implements IServerObjectEdito
         return this.xsdSchema;
     }
 
+    @Override
     public void propertyChanged(Object source, int propId) {
         if (source == structuredTextEditor && propId == PROP_DIRTY) {
             boolean dirty = structuredTextEditor.isDirty();

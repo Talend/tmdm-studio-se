@@ -41,7 +41,9 @@ Require-Bundle: org.eclipse.ui,
  org.talend.libraries.ui,
  org.talend.mdm.ws;resolution:=optional,
  org.talend.mdm.ws.enterprise;resolution:=optional;visibility:=reexport,
- org.talend.mdm.commmon
+ org.talend.mdm.commmon,
+ org.eclipse.e4.ui.model.workbench,
+ org.eclipse.e4.ui.workbench
 Eclipse-AutoStart: true
 Eclipse-RegisterBuddy: org.talend.testutils
 Bundle-ClassPath: .,
