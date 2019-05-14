@@ -243,11 +243,10 @@ public class MDMValidationRunner extends WorkspaceJob {
         final IModelValidateResult validateResult = new MDMValidationService.ModelValidateResult(viewObjMap);
         if (needShowValidationResults(result)) {
             final Set<IResource> resources = toValidate.values().iterator().next();
-            Display.getDefault().syncExec(new Runnable() {
+            Display.getDefault().asyncExec(new Runnable() {
 
                 @Override
                 public void run() {
-
                     ValidationResultDialog d = new ValidationResultDialog(Display.getDefault().getActiveShell(), result,
                             validationPref, viewObjMap);
                     int code = d.open();
