@@ -71,4 +71,8 @@ public interface IModelValidationService extends IService {
      * @return TODO
      */
     public IModelValidateResult validate(List<IRepositoryViewObject> viewObjs, int condition, boolean forbidShowResultDialog);
+
+    public Boolean showAfterSavingResultDialog();
+
+    public void setShowAfterSavingResultDialog(Boolean show);
 }

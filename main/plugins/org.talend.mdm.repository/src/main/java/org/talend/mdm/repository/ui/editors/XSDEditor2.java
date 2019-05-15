@@ -271,7 +271,7 @@ public class XSDEditor2 extends XSDEditor implements ISvnGitHistory, IPostOpenAc
     }
 
     private void validateModel(final IRepositoryViewObject viewObject) {
-        Display.getDefault().asyncExec(new Runnable() {
+        Display.getDefault().syncExec(new Runnable() {
 
             @Override
             public void run() {
@@ -280,7 +280,6 @@ public class XSDEditor2 extends XSDEditor implements ISvnGitHistory, IPostOpenAc
                 List<IRepositoryViewObject> viewObjs = new ArrayList<IRepositoryViewObject>();
                 viewObjs.add(viewObject);
                 service.validate(viewObjs, IModelValidationService.VALIDATE_AFTER_SAVE, false);
-
             }
         });
 

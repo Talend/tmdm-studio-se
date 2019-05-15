@@ -17,8 +17,10 @@ import java.util.List;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.mdm.repository.core.command.ICommand;
+import org.talend.mdm.repository.core.service.IModelValidationService;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.ui.dialogs.lock.LockedDirtyObjectDialog;
@@ -63,6 +65,11 @@ public class DeployToAction extends AbstractDeployAction {
             return;
         }
 
+        IModelValidationService service = (IModelValidationService) GlobalServiceRegister.getDefault()
+                .getService(IModelValidationService.class);
+
+        service.setShowAfterSavingResultDialog(false);
+
         SelectServerDefDialog dialog = getSelectServerDefDialog(viewObjs);
 
         if (dialog.open() == IDialogConstants.OK_ID) {
@@ -82,6 +89,7 @@ public class DeployToAction extends AbstractDeployAction {
                 doPostDeploy(status);
             }
         }
+        service.setShowAfterSavingResultDialog(null);
 
     }
 
