@@ -19,16 +19,17 @@ import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.utils.PasswordEncryptUtil;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.daikon.security.CryptoHelper;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.model.mdmproperties.MDMServerDefItem;
 import org.talend.mdm.workbench.serverexplorer.core.ServerDefService;
 import org.talend.repository.model.migration.UnifyPasswordEncryption4ItemMigrationTask;
-import org.talend.utils.security.CryptoHelper;
+
 
 import com.amalto.workbench.utils.PasswordUtil;
 
 /**
- * created by HHB on 2014年11月27日 Detailled comment
+ * created by HHB on 2014骞�11鏈�27鏃� Detailled comment
  *
  */
 public class UnifyPasswordEncryption4MDMServerDefMigrationTask extends UnifyPasswordEncryption4ItemMigrationTask {
