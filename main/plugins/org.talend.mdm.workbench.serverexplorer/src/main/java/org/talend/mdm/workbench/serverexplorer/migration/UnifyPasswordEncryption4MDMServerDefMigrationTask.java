@@ -29,7 +29,7 @@ import org.talend.repository.model.migration.UnifyPasswordEncryption4ItemMigrati
 import com.amalto.workbench.utils.PasswordUtil;
 
 /**
- * created by HHB on 2014骞�11鏈�27鏃� Detailled comment
+ * created by HHB on 2014年11月27日 Detailled comment
  *
  */
 public class UnifyPasswordEncryption4MDMServerDefMigrationTask extends UnifyPasswordEncryption4ItemMigrationTask {
