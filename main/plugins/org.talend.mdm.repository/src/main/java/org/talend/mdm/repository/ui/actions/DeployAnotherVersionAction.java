@@ -51,8 +51,8 @@ public class DeployAnotherVersionAction extends AbstractDeployAction {
 
         String originVersion = viewObjs.get(0).getProperty().getVersion();
         // open the version dialog
-        SelectVersionDialog versionDialog = new SelectVersionDialog(getShell(),
-                Messages.DeployAnotherVersionAction_selectAnother, viewObjs.get(0));
+        SelectVersionDialog versionDialog = new SelectVersionDialog(getShell(), Messages.DeployAnotherVersionAction_selectAnother,
+                viewObjs.get(0));
         versionDialog.create();
         if (versionDialog.open() == IDialogConstants.OK_ID) {
             if (versionDialog.getSelection() != null) {
@@ -64,25 +64,31 @@ public class DeployAnotherVersionAction extends AbstractDeployAction {
 
             SelectServerDefDialog dialog = new SelectServerDefDialog(getShell());
             if (dialog.open() == IDialogConstants.OK_ID) {
-                // save editors
-                LockedDirtyObjectDialog lockDirtyDialog = new LockedDirtyObjectDialog(getShell(),
-                        Messages.AbstractDeployAction_promptToSaveEditors, viewObjs);
-                if (lockDirtyDialog.needShowDialog() && lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
-                    return;
-                }
-                lockDirtyDialog.saveDirtyObjects();
-                // deploy
-                MDMServerDef serverDef = dialog.getSelectedServerDef();
-                if (doCheckServerConnection(serverDef)) {
-                    IStatus status = DeployService.getInstance().deployAnotherVersion(serverDef, viewObjs);
-                    if (status.isMultiStatus()) {
-                        showDeployStatus(status);
+                DeployService deployService = DeployService.getInstance();
+                try {
+                    deployService.aboutToDeploy();
+                    // save editors
+                    LockedDirtyObjectDialog lockDirtyDialog = new LockedDirtyObjectDialog(getShell(),
+                            Messages.AbstractDeployAction_promptToSaveEditors, viewObjs);
+                    if (lockDirtyDialog.needShowDialog() && lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
+                        return;
                     }
+                    lockDirtyDialog.saveDirtyObjects();
+                    // deploy
+                    MDMServerDef serverDef = dialog.getSelectedServerDef();
+                    if (doCheckServerConnection(serverDef)) {
+                        IStatus status = deployService.deployAnotherVersion(serverDef, viewObjs);
+                        if (status.isMultiStatus()) {
+                            showDeployStatus(status);
+                        }
 
-                    if (isLatestVersion(viewObjs.get(0), originVersion)) {
-                        updateChangedStatus(status);
-                        updateLastServer(status, new NullProgressMonitor());
+                        if (isLatestVersion(viewObjs.get(0), originVersion)) {
+                            updateChangedStatus(status);
+                            updateLastServer(status, new NullProgressMonitor());
+                        }
                     }
+                } finally {
+                    deployService.postDeploying();
                 }
             }
         }

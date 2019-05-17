@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.mdm.repository.core.command.ICommand;
+import org.talend.mdm.repository.core.service.DeployService;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.ui.dialogs.lock.LockedDirtyObjectDialog;
@@ -67,22 +68,27 @@ public class DeployToAction extends AbstractDeployAction {
 
         if (dialog.open() == IDialogConstants.OK_ID) {
             // save editors
-            if (!doBeforeDeploy(viewObjs)) {
-                return;
-            }
-            // deploy
-            MDMServerDef serverDef = dialog.getSelectedServerDef();
-
-            IStatus status = deploy(serverDef, viewObjs, ICommand.CMD_MODIFY);
-            if (status.getSeverity() != IStatus.CANCEL) {
-                updateChangedStatus(status);
-                if (status.isMultiStatus()) {
-                    showDeployStatus(status);
+            DeployService deployService = DeployService.getInstance();
+            try {
+                deployService.aboutToDeploy();
+                if (!doBeforeDeploy(viewObjs)) {
+                    return;
                 }
-                doPostDeploy(status);
+                // deploy
+                MDMServerDef serverDef = dialog.getSelectedServerDef();
+
+                IStatus status = deploy(serverDef, viewObjs, ICommand.CMD_MODIFY);
+                if (status.getSeverity() != IStatus.CANCEL) {
+                    updateChangedStatus(status);
+                    if (status.isMultiStatus()) {
+                        showDeployStatus(status);
+                    }
+                    doPostDeploy(status);
+                }
+            } finally {
+                deployService.postDeploying();
             }
         }
-
     }
 
     protected List<IRepositoryViewObject> doCheckDependency(List<IRepositoryViewObject> viewObjs) {
