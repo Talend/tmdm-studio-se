@@ -222,11 +222,6 @@ public class MDMValidationService implements IModelValidationService {
     }
 
     @Override
-    public Boolean showAfterSavingResultDialog() {
-        return showAfterSavingResultDialog;
-    }
-
-    @Override
     public void setShowAfterSavingResultDialog(Boolean show) {
         this.showAfterSavingResultDialog = show;
     }
