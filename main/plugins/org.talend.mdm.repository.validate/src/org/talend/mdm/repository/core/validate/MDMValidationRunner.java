@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ICoreRunnable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -55,7 +56,7 @@ import org.talend.repository.ProjectManager;
  * created by HHB on 2013-1-23 Detailled comment
  * 
  */
-public class MDMValidationRunner {
+public class MDMValidationRunner implements ICoreRunnable {
 
     private static final Logger LOG = Logger.getLogger(MDMValidationRunner.class);
 
@@ -124,7 +125,7 @@ public class MDMValidationRunner {
         MDMValidationRunner runner = new MDMValidationRunner(viewObjs, validationPref, forbidShowResultDialog,
                 showAfterSavingResultDialog);
         try {
-            runner.run(new NullProgressMonitor());
+            ResourcesPlugin.getWorkspace().run(runner, new NullProgressMonitor());
         } catch (CoreException e) {
             LOG.error("Failed to validate objects.", e);
         }
