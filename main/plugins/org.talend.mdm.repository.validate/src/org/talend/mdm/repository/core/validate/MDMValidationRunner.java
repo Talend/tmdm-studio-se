@@ -46,6 +46,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.mdm.repository.core.IServerObjectRepositoryType;
+import org.talend.mdm.repository.core.service.DeployService;
 import org.talend.mdm.repository.core.service.IModelValidationService;
 import org.talend.mdm.repository.core.service.IModelValidationService.IModelValidateResult;
 import org.talend.mdm.repository.core.validate.i18n.Messages;
@@ -109,6 +110,7 @@ public class MDMValidationRunner extends WorkspaceJob {
 
     /**
      * DOC HHB ValidationRunner constructor comment.
+     * 
      * @param allowShowResultDialog
      * 
      * @param name
@@ -174,12 +176,6 @@ public class MDMValidationRunner extends WorkspaceJob {
                     if (file != null) {
                         files.add(file);
                     }
-                    //
-                    //                    file = RepositoryResourceUtil.findReferenceFile(type, item, "mapinfo"); //$NON-NLS-1$
-                    // if (file != null) {
-                    // files.add(file);
-                    // }
-
                 }
                 if (type == IServerObjectRepositoryType.TYPE_VIEW) {
                     Item item = viewObj.getProperty().getItem();
@@ -195,7 +191,6 @@ public class MDMValidationRunner extends WorkspaceJob {
                     if (file != null) {
                         files.add(file);
                     }
-                    
                 }
                 viewObjMap.put(viewObj, file);
             }
@@ -215,61 +210,74 @@ public class MDMValidationRunner extends WorkspaceJob {
     @SuppressWarnings({ "restriction", "hiding" })
     @Override
     public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-        if (UIUtil.isWorkInUI() && lockDirtyDialog.needShowDialog()) {
-            Display.getDefault().syncExec(new Runnable() {
+        Display newDisplay = new Display();
+        try {
+            if (UIUtil.isWorkInUI() && lockDirtyDialog.needShowDialog()) {
+                newDisplay.syncExec(new Runnable() {
 
-                @Override
-                public void run() {
-                    if (lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
-                        setReturnCode(IDialogConstants.CANCEL_ID);
-                    } else {
-                        lockDirtyDialog.saveDirtyObjects();
+                    @Override
+                    public void run() {
+                        if (lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
+                            setReturnCode(IDialogConstants.CANCEL_ID);
+                        } else {
+                            lockDirtyDialog.saveDirtyObjects();
+                        }
+
                     }
-
+                });
+                if (getReturnCode() == IDialogConstants.CANCEL_ID) {
+                    setValidateResult(new MDMValidationService.ModelValidateResult());
+                    return Status.CANCEL_STATUS;
                 }
-            });
-            if (getReturnCode() == IDialogConstants.CANCEL_ID) {
+            }
+
+            final ValOperation vo = ValidationRunner.validate(toValidate, ValType.Manual, monitor, false);
+            if (vo.isCanceled()) {
                 setValidateResult(new MDMValidationService.ModelValidateResult());
                 return Status.CANCEL_STATUS;
             }
-        }
+            final ValidationResultSummary result = vo.getResult();
+            final IModelValidateResult validateResult = new MDMValidationService.ModelValidateResult(viewObjMap);
+            if (needShowValidationResults(result)) {
+                final Set<IResource> resources = toValidate.values().iterator().next();
+                newDisplay.syncExec(new Runnable() {
 
-        final ValOperation vo = ValidationRunner.validate(toValidate, ValType.Manual, monitor, false);
-        if (vo.isCanceled()) {
-            setValidateResult(new MDMValidationService.ModelValidateResult());
-            return Status.CANCEL_STATUS;
-        }
-        final ValidationResultSummary result = vo.getResult();
-        final IModelValidateResult validateResult = new MDMValidationService.ModelValidateResult(viewObjMap);
-        if (needShowValidationResults(result)) {
-            final Set<IResource> resources = toValidate.values().iterator().next();
-            Display.getDefault().syncExec(new Runnable() {
+                    @Override
+                    public void run() {
 
-                @Override
-                public void run() {
-
-                    ValidationResultDialog d = new ValidationResultDialog(Display.getDefault().getActiveShell(), result,
-                            validationPref, viewObjMap);
-                    int code = d.open();
-                    validateResult.setSelectedButton(code);
-                    setValidateResult(validateResult);
-                }
-            });
-        } else {
-            setValidateResult(validateResult);
-            if (validateResult.hasErrOrWarning()) {
-                int code = ValidationPreferenceService.getInstance().getDeployActionWhenValidateFail();
-                validateResult.setSelectedButton(code);
+                        ValidationResultDialog d = new ValidationResultDialog(newDisplay.getActiveShell(), result, validationPref,
+                                viewObjMap);
+                        int code = d.open();
+                        validateResult.setSelectedButton(code);
+                        setValidateResult(validateResult);
+                    }
+                });
             } else {
-                validateResult.setSelectedButton(IModelValidationService.BUTTON_OK);
+                setValidateResult(validateResult);
+                if (validateResult.hasErrOrWarning()) {
+                    int code = ValidationPreferenceService.getInstance().getDeployActionWhenValidateFail();
+                    validateResult.setSelectedButton(code);
+                } else {
+                    validateResult.setSelectedButton(IModelValidationService.BUTTON_OK);
+                }
+            }
+            activeProblemView(result);
+        } finally {
+            if (newDisplay != null && !newDisplay.isDisposed()) {
+                newDisplay.dispose();
             }
         }
-        activeProblemView(result);
         return Status.OK_STATUS;
     }
 
     private boolean needShowValidationResults(final ValidationResultSummary result) {
-        return !forbidShowResultDialog && UIUtil.isWorkInUI() && validationPref.shouldShowResults(result);
+       if( !forbidShowResultDialog && UIUtil.isWorkInUI() && validationPref.shouldShowResults(result)){
+           if(validationPref.getValidationCondition() == IModelValidationService.VALIDATE_AFTER_SAVE) {
+                return !DeployService.getInstance().isAboutToDeploy();
+           }
+           return true;
+       }
+       return false;
     }
 
     private void activeProblemView(ValidationResultSummary result) {
