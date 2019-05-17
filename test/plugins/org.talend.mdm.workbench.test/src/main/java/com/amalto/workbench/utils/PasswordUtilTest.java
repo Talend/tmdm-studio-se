@@ -9,7 +9,8 @@ import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.talend.utils.security.CryptoHelper;
+import org.talend.daikon.security.CryptoHelper;
+
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ PasswordUtil.class, CryptoHelper.class })
