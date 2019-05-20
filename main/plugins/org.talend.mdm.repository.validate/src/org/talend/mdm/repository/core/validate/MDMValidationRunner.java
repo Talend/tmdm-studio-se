@@ -220,7 +220,14 @@ public class MDMValidationRunner extends WorkspaceJob {
                         if (lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
                             setReturnCode(IDialogConstants.CANCEL_ID);
                         } else {
-                            lockDirtyDialog.saveDirtyObjects();
+                            DeployService.getInstance().aboutToDeploy();
+                            Display.getDefault().syncExec(new Runnable() {
+                                @Override
+                                public void run() {
+                                    lockDirtyDialog.saveDirtyObjects();
+                                }
+                            });
+                            DeployService.getInstance().postDeploying();
                         }
 
                     }
