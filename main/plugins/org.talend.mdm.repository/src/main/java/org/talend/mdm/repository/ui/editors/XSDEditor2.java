@@ -271,7 +271,7 @@ public class XSDEditor2 extends XSDEditor implements ISvnGitHistory, IPostOpenAc
     }
 
     private void validateModel(final IRepositoryViewObject viewObject) {
-        Display.getDefault().syncExec(new Runnable() {
+        Display.getDefault().asyncExec(new Runnable() {
 
             @Override
             public void run() {

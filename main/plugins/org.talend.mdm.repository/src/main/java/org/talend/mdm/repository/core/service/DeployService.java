@@ -139,18 +139,6 @@ public class DeployService {
         return instance;
     }
 
-    public void aboutToDeploy() {
-        this.deployPhase = PHASE_ABOUT_TO;
-    }
-
-    public boolean isAboutToDeploy() {
-        return this.deployPhase == PHASE_ABOUT_TO;
-    }
-
-    public void postDeploying() {
-        this.deployPhase = PHASE_END;
-    }
-
     class DeployProcess implements IRunnableWithProgress {
 
         private List<ICommand> commands;

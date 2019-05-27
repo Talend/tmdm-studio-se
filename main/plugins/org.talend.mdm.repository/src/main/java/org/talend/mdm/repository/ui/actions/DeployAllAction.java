@@ -93,84 +93,79 @@ public class DeployAllAction extends AbstractDeployAction {
             List<AbstractDeployCommand> selectededCommands = dialog.getSelectedCommands();
             if (selectededCommands.size() >= 0) {
                 DeployService deployService = DeployService.getInstance();
-                try {
-                    deployService.aboutToDeploy();
-                    deployViewObject = deployService.getDeployViewObject(selectededCommands);
+                deployViewObject = deployService.getDeployViewObject(selectededCommands);
 
-                    // validate object
-                    IModelValidateResult validateResult = deployService.validateModel(deployViewObject);
-                    int selectedButton = validateResult.getSelectedButton();
-                    if (selectedButton == IModelValidationService.BUTTON_CANCEL) {
+                // validate object
+                IModelValidateResult validateResult = deployService.validateModel(deployViewObject);
+                int selectedButton = validateResult.getSelectedButton();
+                if (selectedButton == IModelValidationService.BUTTON_CANCEL) {
+                    return;
+                }
+                List<IRepositoryViewObject> validObjects = validateResult.getValidObjects(selectedButton);
+                List<IRepositoryViewObject> invalidObjects = validateResult.getInvalidObjects(selectedButton);
+                //
+                MDMServerDef serverDef = dialog.getServerDef();
+                try {
+                    // consistency check
+                    ConsistencyCheckResult consistencyCheckResult = deployService.checkConsistency(serverDef, validObjects,
+                            selectededCommands);
+                    if (consistencyCheckResult.isCanceled()) {
+                        return;
+                    } else {
+                        validObjects = consistencyCheckResult.getToDeployObjects();
+                    }
+                    deployService.removeInvalidCommands(invalidObjects, selectededCommands);
+                    deployService.removeInvalidCommands(consistencyCheckResult.getToSkipObjects(), selectededCommands);
+                    // save editors
+                    LockedDirtyObjectDialog lockDirtyDialog = new LockedDirtyObjectDialog(getShell(),
+                            Messages.AbstractDeployAction_promptToSaveEditors, validObjects);
+                    if (lockDirtyDialog.needShowDialog() && lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
                         return;
                     }
-                    List<IRepositoryViewObject> validObjects = validateResult.getValidObjects(selectedButton);
-                    List<IRepositoryViewObject> invalidObjects = validateResult.getInvalidObjects(selectedButton);
-                    //
-                    MDMServerDef serverDef = dialog.getServerDef();
+                    lockDirtyDialog.saveDirtyObjects();
+                    // insert impact dialog
+                    List<AbstractDeployCommand> canceledCommandAfterImpactAnalysis = new LinkedList<AbstractDeployCommand>(
+                            selectededCommands);
                     try {
-                        // consistency check
-                        ConsistencyCheckResult consistencyCheckResult = deployService.checkConsistency(serverDef, validObjects,
-                                selectededCommands);
-                        if (consistencyCheckResult.isCanceled()) {
-                            return;
-                        } else {
-                            validObjects = consistencyCheckResult.getToDeployObjects();
+                        Map<IRepositoryViewObject, ImpactOperation> analyzeModelImpact = ModelImpactAnalyseService
+                                .analyzeCommandImpact(serverDef, selectededCommands);
+                        Map<IRepositoryViewObject, ICommandParameter> paramMap = null;
+                        if (analyzeModelImpact != null) {
+                            ModelImpactAnalyseService.shrinkDeployCommands(analyzeModelImpact, selectededCommands);
+                            paramMap = ModelImpactAnalyseService.convertToParameters(analyzeModelImpact);
+                            CommandManager.getInstance().attachParameterToCommand(selectededCommands, paramMap);
                         }
-                        deployService.removeInvalidCommands(invalidObjects, selectededCommands);
-                        deployService.removeInvalidCommands(consistencyCheckResult.getToSkipObjects(), selectededCommands);
-                        // save editors
-                        LockedDirtyObjectDialog lockDirtyDialog = new LockedDirtyObjectDialog(getShell(),
-                                Messages.AbstractDeployAction_promptToSaveEditors, validObjects);
-                        if (lockDirtyDialog.needShowDialog() && lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
-                            return;
-                        }
-                        lockDirtyDialog.saveDirtyObjects();
-                        // insert impact dialog
-                        List<AbstractDeployCommand> canceledCommandAfterImpactAnalysis = new LinkedList<AbstractDeployCommand>(
-                                selectededCommands);
-                        try {
-                            Map<IRepositoryViewObject, ImpactOperation> analyzeModelImpact = ModelImpactAnalyseService
-                                    .analyzeCommandImpact(serverDef, selectededCommands);
-                            Map<IRepositoryViewObject, ICommandParameter> paramMap = null;
-                            if (analyzeModelImpact != null) {
-                                ModelImpactAnalyseService.shrinkDeployCommands(analyzeModelImpact, selectededCommands);
-                                paramMap = ModelImpactAnalyseService.convertToParameters(analyzeModelImpact);
-                                CommandManager.getInstance().attachParameterToCommand(selectededCommands, paramMap);
-                            }
-                            canceledCommandAfterImpactAnalysis.removeAll(selectededCommands);
-                        } catch (InterruptedException ex) {
-                            return;
-                        }
-                        IStatus status = deployService.runCommands(selectededCommands, serverDef);
-                        // update consistency value
-                        try {
-                            deployService.updateServerConsistencyStatus(serverDef, status);
-                        } catch (XtentisException e) {
-                            log.error(e.getMessage(), e);
-                        } catch (WebServiceException e) {
-                            log.error(e.getMessage(), e);
-                        }
-                        // add canceled object to status
-                        deployService.generateValidationFailedDeployStatus(status, invalidObjects);
-                        deployService.generateConsistencyCancelDeployStatus(status,
-                                consistencyCheckResult.getToSkipObjects().toArray(new IRepositoryViewObject[0]));
-                        for (AbstractDeployCommand cmd : canceledCommandAfterImpactAnalysis) {
-                            deployService.generateConsistencyCancelDeployStatus(status, cmd.getViewObject());
-                        }
-                        //
-                        updateChangedStatus(status);
-                        if (status.isMultiStatus()) {
-                            showDeployStatus(status);
-                        }
-                        updateLastServer(status, new NullProgressMonitor());
-                    } catch (Exception e) {
-                        String url = serverDef.getProtocol() + serverDef.getHost() + ":" + serverDef.getPort() //$NON-NLS-1$
-                                + serverDef.getPath();
-                        String title = Messages.bind(Messages.Server_cannot_connected, url);
-                        MessageDialog.openError(getShell(), title, Messages.AbstractDataClusterAction_ConnectFailed);
+                        canceledCommandAfterImpactAnalysis.removeAll(selectededCommands);
+                    } catch (InterruptedException ex) {
+                        return;
                     }
-                } finally {
-                    deployService.postDeploying();
+                    IStatus status = deployService.runCommands(selectededCommands, serverDef);
+                    // update consistency value
+                    try {
+                        deployService.updateServerConsistencyStatus(serverDef, status);
+                    } catch (XtentisException e) {
+                        log.error(e.getMessage(), e);
+                    } catch (WebServiceException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                    // add canceled object to status
+                    deployService.generateValidationFailedDeployStatus(status, invalidObjects);
+                    deployService.generateConsistencyCancelDeployStatus(status,
+                            consistencyCheckResult.getToSkipObjects().toArray(new IRepositoryViewObject[0]));
+                    for (AbstractDeployCommand cmd : canceledCommandAfterImpactAnalysis) {
+                        deployService.generateConsistencyCancelDeployStatus(status, cmd.getViewObject());
+                    }
+                    //
+                    updateChangedStatus(status);
+                    if (status.isMultiStatus()) {
+                        showDeployStatus(status);
+                    }
+                    updateLastServer(status, new NullProgressMonitor());
+                } catch (Exception e) {
+                    String url = serverDef.getProtocol() + serverDef.getHost() + ":" + serverDef.getPort() //$NON-NLS-1$
+                            + serverDef.getPath();
+                    String title = Messages.bind(Messages.Server_cannot_connected, url);
+                    MessageDialog.openError(getShell(), title, Messages.AbstractDataClusterAction_ConnectFailed);
                 }
             }
         }

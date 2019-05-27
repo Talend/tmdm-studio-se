@@ -63,56 +63,52 @@ public class DeployToLastServerAction extends AbstractDeployAction {
             viewObjs = getSelectedRepositoryViewObject(viewObjs);
             filterMatchRuleObjs(viewObjs);
         }
-        try {
-            DeployService.getInstance().aboutToDeploy();
-            LockedDirtyObjectDialog lockDirtyDialog = new LockedDirtyObjectDialog(getShell(),
-                    Messages.AbstractDeployAction_promptToSaveEditors, viewObjs);
-            if (lockDirtyDialog.needShowDialog() && lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
-                return;
-            }
-            lockDirtyDialog.saveDirtyObjects();
-            //
-            MDMServerDef currentServerDef = getLastServer(viewObjs);
-            // handle last server is null case
-            boolean isLostedServer = false;
-            if (currentServerDef == null) {
-                isLostedServer = true;
-                boolean isDeployToAnother = MessageDialog.openQuestion(getShell(), null,
-                        Messages.DeployToLastServerAction_askReselectServerMsg);
-                if (isDeployToAnother) {
-                    SelectServerDefDialog dialog = new SelectServerDefDialog(getShell());
-                    if (dialog.open() == IDialogConstants.OK_ID) {
-                        currentServerDef = dialog.getSelectedServerDef();
-                    } else {
-                        return;
-                    }
+
+        LockedDirtyObjectDialog lockDirtyDialog = new LockedDirtyObjectDialog(getShell(),
+                Messages.AbstractDeployAction_promptToSaveEditors, viewObjs);
+        if (lockDirtyDialog.needShowDialog() && lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
+            return;
+        }
+        lockDirtyDialog.saveDirtyObjects();
+        //
+        MDMServerDef currentServerDef = getLastServer(viewObjs);
+        // handle last server is null case
+        boolean isLostedServer = false;
+        if (currentServerDef == null) {
+            isLostedServer = true;
+            boolean isDeployToAnother = MessageDialog.openQuestion(getShell(), null,
+                    Messages.DeployToLastServerAction_askReselectServerMsg);
+            if (isDeployToAnother) {
+                SelectServerDefDialog dialog = new SelectServerDefDialog(getShell());
+                if (dialog.open() == IDialogConstants.OK_ID) {
+                    currentServerDef = dialog.getSelectedServerDef();
                 } else {
                     return;
                 }
-            }
-            // check last server
-            if (!currentServerDef.isEnabled()) {
-                MessageDialog.openWarning(Display.getDefault().getActiveShell(), null,
-                        Messages.DeployService_CanNotDeployToDisabledServer);
+            } else {
                 return;
             }
-            // deploy
-            IStatus status = deploy(currentServerDef, viewObjs, ICommand.CMD_MODIFY);
-            if (status.getSeverity() != IStatus.CANCEL) {
-                if (status.isMultiStatus()) {
-                    showDeployStatus(status);
-                }
-                if (isLostedServer) {
-                    updateLastServer(status, new NullProgressMonitor());
-                }
-
-                DeployService.getInstance().updateChangedStatus(status, false);
-                for (IRepositoryViewObject viewObject : viewObjs) {
-                    commonViewer.refresh(viewObject);
-                }
+        }
+        // check last server
+        if (!currentServerDef.isEnabled()) {
+            MessageDialog.openWarning(Display.getDefault().getActiveShell(), null,
+                    Messages.DeployService_CanNotDeployToDisabledServer);
+            return;
+        }
+        // deploy
+        IStatus status = deploy(currentServerDef, viewObjs, ICommand.CMD_MODIFY);
+        if (status.getSeverity() != IStatus.CANCEL) {
+            if (status.isMultiStatus()) {
+                showDeployStatus(status);
             }
-        } finally {
-            DeployService.getInstance().postDeploying();
+            if (isLostedServer) {
+                updateLastServer(status, new NullProgressMonitor());
+            }
+
+            DeployService.getInstance().updateChangedStatus(status, false);
+            for (IRepositoryViewObject viewObject : viewObjs) {
+                commonViewer.refresh(viewObject);
+            }
         }
     }
 

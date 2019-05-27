@@ -47,27 +47,21 @@ public class RemoveFromServerAction extends AbstractDeployAction {
             if (lockDirtyDialog.needShowDialog() && lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
                 return;
             }
-            DeployService deployService = DeployService.getInstance();
-            try {
-                deployService.aboutToDeploy();
-                lockDirtyDialog.saveDirtyObjects();
-                // remove
-                MDMServerDef serverDef = dialog.getSelectedServerDef();
-                List<AbstractDeployCommand> commands = new LinkedList<AbstractDeployCommand>();
-                CommandManager commandManager = CommandManager.getInstance();
-                for (Object obj : getSelectedObject()) {
-                    IRepositoryViewObject viewObj = (IRepositoryViewObject) obj;
-                    ICommand deleteCommand = commandManager.getNewCommand(ICommand.CMD_DELETE);
-                    deleteCommand.init(viewObj);
-                    commands.add((AbstractDeployCommand) deleteCommand);
-                }
-                //
-                IStatus status = DeployService.getInstance().runCommands(commands, serverDef);
-                if (status.isMultiStatus()) {
-                    showDeployStatus(status);
-                }
-            } finally {
-                deployService.postDeploying();
+            lockDirtyDialog.saveDirtyObjects();
+            // remove
+            MDMServerDef serverDef = dialog.getSelectedServerDef();
+            List<AbstractDeployCommand> commands = new LinkedList<AbstractDeployCommand>();
+            CommandManager commandManager = CommandManager.getInstance();
+            for (Object obj : getSelectedObject()) {
+                IRepositoryViewObject viewObj = (IRepositoryViewObject) obj;
+                ICommand deleteCommand = commandManager.getNewCommand(ICommand.CMD_DELETE);
+                deleteCommand.init(viewObj);
+                commands.add((AbstractDeployCommand) deleteCommand);
+            }
+            //
+            IStatus status = DeployService.getInstance().runCommands(commands, serverDef);
+            if (status.isMultiStatus()) {
+                showDeployStatus(status);
             }
         }
     }

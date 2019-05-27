@@ -46,7 +46,6 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.mdm.repository.core.IServerObjectRepositoryType;
-import org.talend.mdm.repository.core.service.DeployService;
 import org.talend.mdm.repository.core.service.IModelValidationService;
 import org.talend.mdm.repository.core.service.IModelValidationService.IModelValidateResult;
 import org.talend.mdm.repository.core.validate.i18n.Messages;
@@ -220,16 +219,13 @@ public class MDMValidationRunner extends WorkspaceJob {
                         if (lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
                             setReturnCode(IDialogConstants.CANCEL_ID);
                         } else {
-                            DeployService.getInstance().aboutToDeploy();
                             Display.getDefault().syncExec(new Runnable() {
                                 @Override
                                 public void run() {
                                     lockDirtyDialog.saveDirtyObjects();
                                 }
                             });
-                            DeployService.getInstance().postDeploying();
                         }
-
                     }
                 });
                 if (getReturnCode() == IDialogConstants.CANCEL_ID) {
@@ -278,13 +274,7 @@ public class MDMValidationRunner extends WorkspaceJob {
     }
 
     private boolean needShowValidationResults(final ValidationResultSummary result) {
-       if( !forbidShowResultDialog && UIUtil.isWorkInUI() && validationPref.shouldShowResults(result)){
-           if(validationPref.getValidationCondition() == IModelValidationService.VALIDATE_AFTER_SAVE) {
-                return !DeployService.getInstance().isAboutToDeploy();
-           }
-           return true;
-       }
-       return false;
+        return !forbidShowResultDialog && UIUtil.isWorkInUI() && validationPref.shouldShowResults(result);
     }
 
     private void activeProblemView(ValidationResultSummary result) {

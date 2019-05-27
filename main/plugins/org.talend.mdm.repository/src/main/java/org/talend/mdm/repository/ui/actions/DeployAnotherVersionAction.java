@@ -65,30 +65,25 @@ public class DeployAnotherVersionAction extends AbstractDeployAction {
             SelectServerDefDialog dialog = new SelectServerDefDialog(getShell());
             if (dialog.open() == IDialogConstants.OK_ID) {
                 DeployService deployService = DeployService.getInstance();
-                try {
-                    deployService.aboutToDeploy();
-                    // save editors
-                    LockedDirtyObjectDialog lockDirtyDialog = new LockedDirtyObjectDialog(getShell(),
-                            Messages.AbstractDeployAction_promptToSaveEditors, viewObjs);
-                    if (lockDirtyDialog.needShowDialog() && lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
-                        return;
+                // save editors
+                LockedDirtyObjectDialog lockDirtyDialog = new LockedDirtyObjectDialog(getShell(),
+                        Messages.AbstractDeployAction_promptToSaveEditors, viewObjs);
+                if (lockDirtyDialog.needShowDialog() && lockDirtyDialog.open() == IDialogConstants.CANCEL_ID) {
+                    return;
+                }
+                lockDirtyDialog.saveDirtyObjects();
+                // deploy
+                MDMServerDef serverDef = dialog.getSelectedServerDef();
+                if (doCheckServerConnection(serverDef)) {
+                    IStatus status = deployService.deployAnotherVersion(serverDef, viewObjs);
+                    if (status.isMultiStatus()) {
+                        showDeployStatus(status);
                     }
-                    lockDirtyDialog.saveDirtyObjects();
-                    // deploy
-                    MDMServerDef serverDef = dialog.getSelectedServerDef();
-                    if (doCheckServerConnection(serverDef)) {
-                        IStatus status = deployService.deployAnotherVersion(serverDef, viewObjs);
-                        if (status.isMultiStatus()) {
-                            showDeployStatus(status);
-                        }
 
-                        if (isLatestVersion(viewObjs.get(0), originVersion)) {
-                            updateChangedStatus(status);
-                            updateLastServer(status, new NullProgressMonitor());
-                        }
+                    if (isLatestVersion(viewObjs.get(0), originVersion)) {
+                        updateChangedStatus(status);
+                        updateLastServer(status, new NullProgressMonitor());
                     }
-                } finally {
-                    deployService.postDeploying();
                 }
             }
         }
