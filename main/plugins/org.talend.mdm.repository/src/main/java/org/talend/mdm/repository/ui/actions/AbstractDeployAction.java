@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.runtime.CoreRuntimePlugin;
@@ -27,6 +28,7 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.mdm.repository.core.AbstractRepositoryAction;
 import org.talend.mdm.repository.core.service.DeployService;
 import org.talend.mdm.repository.core.service.IMatchRuleMapInfoService;
+import org.talend.mdm.repository.core.service.IModelValidationService;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.plugin.RepositoryPlugin;
 import org.talend.mdm.repository.ui.dialogs.deploy.DeployStatusDialog;
@@ -48,6 +50,21 @@ public abstract class AbstractDeployAction extends AbstractRepositoryAction {
         super(text);
         setImageDescriptor(DEPLOY_IMG);
     }
+
+    @Override
+    protected void doRun() {
+        IModelValidationService service = (IModelValidationService) GlobalServiceRegister.getDefault()
+                .getService(IModelValidationService.class);
+
+        service.setShowAfterSavingResultDialog(false);
+        try {
+            _doRun();
+        } finally {
+            service.setShowAfterSavingResultDialog(null);
+        }
+    }
+
+    protected abstract void _doRun();
 
     protected IStatus deploy(MDMServerDef serverDef, List<IRepositoryViewObject> viewObjs, int defaultCmdType) {
         if (doCheckServerConnection(serverDef)) {

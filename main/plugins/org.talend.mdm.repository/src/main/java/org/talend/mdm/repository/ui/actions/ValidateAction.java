@@ -27,6 +27,8 @@ import org.talend.mdm.repository.i18n.Messages;
  */
 public class ValidateAction extends AbstractRepositoryAction {
 
+    private IModelValidationService service;
+
     /**
      * DOC HHB ValidateDataModelAction constructor comment.
      * 
@@ -46,22 +48,35 @@ public class ValidateAction extends AbstractRepositoryAction {
         return GROUP_COMMON;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.mdm.repository.core.AbstractRepositoryAction#doRun()
-     */
     @Override
     protected void doRun() {
+        IModelValidationService service = getValidationService();
+
+        if (service != null) {
+            service.setShowAfterSavingResultDialog(false);
+            try {
+                _doRun();
+            } finally {
+                service.setShowAfterSavingResultDialog(null);
+            }
+        }
+    }
+
+    private IModelValidationService getValidationService() {
+        IModelValidationService service = (IModelValidationService) GlobalServiceRegister.getDefault()
+                .getService(IModelValidationService.class);
+        return service;
+    }
+
+    protected void _doRun() {
         List<IRepositoryViewObject> viewObjs = new LinkedList<IRepositoryViewObject>();
         for (Object obj : getSelectedObject()) {
             if (obj instanceof IRepositoryViewObject) {
                 viewObjs.add((IRepositoryViewObject) obj);
             }
         }
-        IModelValidationService service = (IModelValidationService) GlobalServiceRegister.getDefault().getService(IModelValidationService.class);
 
-        service.validate(viewObjs, IModelValidationService.VALIDATE_IMMEDIATE, false);
+        getValidationService().validate(viewObjs, IModelValidationService.VALIDATE_IMMEDIATE, false);
 
     }
 }

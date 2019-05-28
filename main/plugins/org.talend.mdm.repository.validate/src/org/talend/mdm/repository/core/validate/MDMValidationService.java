@@ -45,6 +45,8 @@ public class MDMValidationService implements IModelValidationService {
 
     private IValidationPreference beforeDeployingPref = new BeforeDeployingValidationPreference();
 
+    private Boolean showAfterSavingResultDialog = null;
+
     public static class ModelValidateResult implements IModelValidateResult {
 
         private static final int OK = -1;
@@ -205,11 +207,12 @@ public class MDMValidationService implements IModelValidationService {
         if (viewObjs != null && viewObjs.size() > 0) {
             switch (condition) {
             case VALIDATE_IMMEDIATE:
-                return MDMValidationRunner.validate(viewObjs, immediatePref, forbidShowResultDialog);
+                return MDMValidationRunner.validate(viewObjs, immediatePref, forbidShowResultDialog, true);
             case VALIDATE_AFTER_SAVE:
-                return MDMValidationRunner.validate(viewObjs, afterSavingPref, forbidShowResultDialog);
+                return MDMValidationRunner.validate(viewObjs, afterSavingPref, forbidShowResultDialog,
+                        showAfterSavingResultDialog);
             case VALIDATE_BEFORE_DEPLOY:
-                return MDMValidationRunner.validate(viewObjs, beforeDeployingPref, forbidShowResultDialog);
+                return MDMValidationRunner.validate(viewObjs, beforeDeployingPref, forbidShowResultDialog, true);
             default:
                 break;
             }
@@ -217,4 +220,8 @@ public class MDMValidationService implements IModelValidationService {
         return null;
     }
 
+    @Override
+    public void setShowAfterSavingResultDialog(Boolean show) {
+        this.showAfterSavingResultDialog = show;
+    }
 }

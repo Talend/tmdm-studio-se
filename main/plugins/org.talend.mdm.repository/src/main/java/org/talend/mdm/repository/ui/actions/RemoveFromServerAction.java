@@ -38,7 +38,7 @@ public class RemoveFromServerAction extends AbstractDeployAction {
     }
 
     @Override
-    protected void doRun() {
+    protected void _doRun() {
         SelectServerDefDialog dialog = new SelectServerDefDialog(getShell());
         if (dialog.open() == IDialogConstants.OK_ID) {
             // save editors

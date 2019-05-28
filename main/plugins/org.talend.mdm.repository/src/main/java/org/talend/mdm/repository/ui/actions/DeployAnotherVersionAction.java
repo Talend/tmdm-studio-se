@@ -39,7 +39,7 @@ public class DeployAnotherVersionAction extends AbstractDeployAction {
     }
 
     @Override
-    protected void doRun() {
+    protected void _doRun() {
         boolean checkMissingJar = MissingJarService.getInstance().checkMissingJar(true);
         if (!checkMissingJar) {
             return;
