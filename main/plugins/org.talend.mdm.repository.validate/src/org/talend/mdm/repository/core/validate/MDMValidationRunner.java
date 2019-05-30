@@ -58,7 +58,7 @@ import org.talend.repository.ProjectManager;
  */
 public class MDMValidationRunner implements ICoreRunnable {
 
-    private static Logger LOG = Logger.getLogger(MDMValidationRunner.class);
+    private static final Logger LOG = Logger.getLogger(MDMValidationRunner.class);
 
     private final IValidationPreference validationPref;
 
