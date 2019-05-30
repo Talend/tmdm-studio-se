@@ -112,7 +112,6 @@ public class MDMValidationRunner implements ICoreRunnable {
      */
     public MDMValidationRunner(List<IRepositoryViewObject> viewObjs, IValidationPreference validationPref,
             Boolean forbidShowResultDialog, Boolean showAfterSavingResultDialog) {
-        // super("MDM Validation"); //$NON-NLS-1$
         this.validationPref = validationPref;
         this.forbidShowResultDialog = forbidShowResultDialog;
         this.showAfterSavingResultDialog = showAfterSavingResultDialog;

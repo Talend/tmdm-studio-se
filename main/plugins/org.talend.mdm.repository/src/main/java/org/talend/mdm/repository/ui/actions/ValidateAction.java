@@ -27,8 +27,6 @@ import org.talend.mdm.repository.i18n.Messages;
  */
 public class ValidateAction extends AbstractRepositoryAction {
 
-    private IModelValidationService service;
-
     /**
      * DOC HHB ValidateDataModelAction constructor comment.
      * 
@@ -77,6 +75,5 @@ public class ValidateAction extends AbstractRepositoryAction {
         }
 
         getValidationService().validate(viewObjs, IModelValidationService.VALIDATE_IMMEDIATE, false);
-
     }
 }
