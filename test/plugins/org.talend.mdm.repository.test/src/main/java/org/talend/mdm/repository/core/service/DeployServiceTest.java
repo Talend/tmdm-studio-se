@@ -1,8 +1,13 @@
 package org.talend.mdm.repository.core.service;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyListOf;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +41,7 @@ import com.amalto.workbench.exadapter.ExAdapterManager;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ ModelImpactAnalyseService.class, CommandManager.class, ExAdapterManager.class, RepositoryResourceUtil.class,
-        ConsistencyService.class, UIUtil.class, ModelImpactAnalyseService.class })
+        ConsistencyService.class, UIUtil.class })
 @PowerMockIgnore({ "org.talend.core.runtime.CoreRuntimePlugin", "org.eclipse.core.runtime.*", "org.eclipse.osgi.util.*" })
 public class DeployServiceTest {
 

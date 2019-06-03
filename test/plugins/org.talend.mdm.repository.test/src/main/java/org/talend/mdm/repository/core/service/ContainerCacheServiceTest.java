@@ -1,8 +1,12 @@
 package org.talend.mdm.repository.core.service;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.spy;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -253,7 +257,7 @@ public class ContainerCacheServiceTest {
 
         IRepositoryViewObject parent = ContainerCacheService.getParent(mockViewObject);
         assertEquals(mockResultParent, parent);
-        PowerMockito.verifyStatic(null, null);
+        PowerMockito.verifyStatic(ContainerCacheService.class, Mockito.atLeastOnce());
         ContainerCacheService.get(repoType, "/pathA"); //$NON-NLS-1$
 
         PowerMockito.when(mockState.getPath()).thenReturn("/"); //$NON-NLS-1$
@@ -267,7 +271,7 @@ public class ContainerCacheServiceTest {
         PowerMockito.when(mockState.getPath()).thenReturn("path"); //$NON-NLS-1$
         parent = ContainerCacheService.getParent(mockViewObject);
         assertEquals(mockResultParent, parent);
-        PowerMockito.verifyStatic(null, null);
+        PowerMockito.verifyStatic(ContainerCacheService.class, Mockito.atLeastOnce());
         ContainerCacheService.get(repoType, "path"); //$NON-NLS-1$
 
         Item mockItem = PowerMockito.mock(Item.class);
@@ -276,7 +280,7 @@ public class ContainerCacheServiceTest {
         PowerMockito.when(mockProperty.getItem()).thenReturn(mockItem);
         parent = ContainerCacheService.getParent(mockViewObject);
         assertEquals(mockResultParent, parent);
-        PowerMockito.verifyStatic(null, null);
+        PowerMockito.verifyStatic(ContainerCacheService.class, Mockito.atLeastOnce());
         ContainerCacheService.get(repoType, path);
     }
 

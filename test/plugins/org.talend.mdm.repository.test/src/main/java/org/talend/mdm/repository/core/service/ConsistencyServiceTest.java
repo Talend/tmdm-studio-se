@@ -1,9 +1,17 @@
 package org.talend.mdm.repository.core.service;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyMap;
+import static org.mockito.ArgumentMatchers.anySetOf;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.times;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -337,7 +345,7 @@ public class ConsistencyServiceTest {
             mockCService.updateLocalDigestValue(mockViewObj);
 
             Mockito.verify(mockCService, Mockito.atLeastOnce()).calculateDigestValue(mockItem, mockType);
-            PowerMockito.verifyPrivate(mockCService, atLeastOnce()).invoke("updateLocalDigestValue", mockItem, eq(digestValue)); //$NON-NLS-1$
+            PowerMockito.verifyPrivate(mockCService, atLeastOnce()).invoke("updateLocalDigestValue", mockItem, digestValue); //$NON-NLS-1$
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -361,7 +369,7 @@ public class ConsistencyServiceTest {
             mockCService.updateCurrentDigestValue(mockViewObj);
 
             Mockito.verify(mockCService, Mockito.atLeastOnce()).calculateDigestValue(mockItem, mockType);
-            PowerMockito.verifyPrivate(mockCService, atLeastOnce()).invoke("updateCurrentDigestValue", mockItem, eq(digestValue)); //$NON-NLS-1$
+            PowerMockito.verifyPrivate(mockCService, atLeastOnce()).invoke("updateCurrentDigestValue", mockItem, digestValue); //$NON-NLS-1$
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

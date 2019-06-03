@@ -12,10 +12,13 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.actions;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +30,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.junit.Before;
@@ -76,7 +78,8 @@ import com.amalto.workbench.image.ImageCache;
     ImageCache.class, ItemState.class, CoreRuntimePlugin.class, ProjectManager.class,
     RepositoryNodeConfigurationManager.class, IProxyRepositoryFactory.class, ProxyRepositoryFactory.class,
     MessageDialog.class, RepositoryResourceUtil.class, ContainerCacheService.class,
-    RepositoryNodeProviderRegistryReader.class, RepositoryResourceUtil.class, ExAdapterManager.class, MDMWorbenchPlugin.class })
+        RepositoryNodeProviderRegistryReader.class, RepositoryResourceUtil.class, ExAdapterManager.class, MDMWorbenchPlugin.class,
+        CommonViewer.class, Shell.class })
 public class RenameObjectActionTest {
 
     private IProxyRepositoryFactory repositoryFactory;
@@ -142,12 +145,12 @@ public class RenameObjectActionTest {
 
         PowerMockito.mockStatic(RepositoryNodeConfigurationManager.class);
         IRepositoryNodeConfiguration rncMock = mock(IRepositoryNodeConfiguration.class);
-        when(RepositoryNodeConfigurationManager.getConfiguration((Item) anyObject())).thenReturn(rncMock);
+        when(RepositoryNodeConfigurationManager.getConfiguration(any(Item.class))).thenReturn(rncMock);
 
         resourceProviderM = mock(IRepositoryNodeResourceProvider.class);
         when(rncMock.getResourceProvider()).thenReturn(resourceProviderM);
 
-        when(repositoryFactory.isEditableAndLockIfPossible((Item) anyObject())).thenReturn(true);
+        when(repositoryFactory.isEditableAndLockIfPossible(any(Item.class))).thenReturn(true);
 
     }
 
@@ -192,18 +195,13 @@ public class RenameObjectActionTest {
         //
         PowerMockito.mockStatic(ContainerCacheService.class);
         when(ContainerCacheService.get(eq(typeM), eq(""))).thenReturn(parentRVO); //$NON-NLS-1$
-        Shell shellM = mock(Shell.class);
-        Control controlM = mock(Control.class);
-        when(commonViewerM.getControl()).thenReturn(controlM);
-        when(controlM.getShell()).thenReturn(shellM);
-
         List<Object> selectedObjects = new ArrayList<Object>();
         selectedObjects.add(objectRVO);
         //
         when(renameActionM.getSelectedObject()).thenReturn(selectedObjects);
 
         InputDialog inputDialogM = mock(InputDialog.class);
-        PowerMockito.whenNew(InputDialog.class).withArguments(eq(shellM), anyString(), anyString(), anyString(), anyObject())
+        PowerMockito.whenNew(InputDialog.class).withArguments(any(Shell.class), anyString(), anyString(), anyString(), any())
         .thenReturn(inputDialogM);
         when(inputDialogM.open()).thenReturn(IDialogConstants.OK_ID);
         when(inputDialogM.getValue()).thenReturn("NewName"); //$NON-NLS-1$
