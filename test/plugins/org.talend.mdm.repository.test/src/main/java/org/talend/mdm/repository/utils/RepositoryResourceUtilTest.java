@@ -723,7 +723,7 @@ public class RepositoryResourceUtilTest {
                 withDeleted);
 
         assertEquals(1, viewObjectss.size());
-        PowerMockito.verifyStatic(RepositoryResourceUtil.class, Mockito.atLeastOnce());
+        PowerMockito.verifyStatic(InteractiveService.class, Mockito.atLeastOnce());
         InteractiveService.findHandler(mockType);
     }
 

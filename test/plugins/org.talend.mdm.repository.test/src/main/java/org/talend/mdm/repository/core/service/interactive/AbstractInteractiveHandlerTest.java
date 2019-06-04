@@ -1,7 +1,7 @@
 package org.talend.mdm.repository.core.service.interactive;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -32,6 +32,7 @@ public class AbstractInteractiveHandlerTest {
         PowerMockito.when(mockViewObj.getProperty()).thenReturn(mockProperty);
         AbstractDeployCommand mockDeployCommand = PowerMockito.mock(AbstractDeployCommand.class);
         PowerMockito.when(mockDeployCommand.getViewObject()).thenReturn(mockViewObj);
+        PowerMockito.when(mockDeployCommand.getServerDef()).thenReturn(PowerMockito.mock(MDMServerDef.class));
 
         AbstractInteractiveHandler mockInteractiveHandler = PowerMockito.mock(AbstractInteractiveHandler.class);
         try {
