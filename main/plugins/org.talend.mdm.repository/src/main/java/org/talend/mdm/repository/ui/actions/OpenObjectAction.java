@@ -73,7 +73,7 @@ import com.amalto.workbench.webservices.WSDataClusterPK;
  */
 public class OpenObjectAction extends AbstractRepositoryAction implements IIntroAction {
 
-    private static Logger log = Logger.getLogger(OpenObjectAction.class);
+    private static final Logger LOG = Logger.getLogger(OpenObjectAction.class);
 
     private List<Object> selObjects;
 
@@ -130,7 +130,7 @@ public class OpenObjectAction extends AbstractRepositoryAction implements IIntro
         try {
             if (!factory.isLocalConnectionProvider()) {
                 if (GlobalServiceRegister.getDefault().isServiceRegistered(IMDMSVNProviderService.class)) {
-                    IMDMSVNProviderService service = (IMDMSVNProviderService) GlobalServiceRegister.getDefault()
+                    IMDMSVNProviderService service = GlobalServiceRegister.getDefault()
                             .getService(IMDMSVNProviderService.class);
                     if (service != null && service.isProjectInSvnMode()) {
                         String revisionNumStr = service.getCurrentSVNRevision(viewObject);
@@ -142,7 +142,7 @@ public class OpenObjectAction extends AbstractRepositoryAction implements IIntro
                 }
             }
         } catch (PersistenceException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
 
         editorInput.setVersion(version);
@@ -270,7 +270,7 @@ public class OpenObjectAction extends AbstractRepositoryAction implements IIntro
                 page.openEditor(new XObjectEditorInput(xobject, xobject.getDisplayName()),
                         "com.amalto.workbench.editors.XObjectEditor"); //$NON-NLS-1$
             } catch (PartInitException e) {
-                log.error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
             }
         }
     }
@@ -280,6 +280,7 @@ public class OpenObjectAction extends AbstractRepositoryAction implements IIntro
         item = RepositoryResourceUtil.assertItem(item);
         IRepositoryNodeConfiguration configuration = RepositoryNodeConfigurationManager.getConfiguration(item);
         if (configuration != null) {
+            try {
             IRepositoryNodeActionProvider actionProvider = configuration.getActionProvider();
             if (actionProvider != null) {
                 IRepositoryViewEditorInput editorInput = actionProvider.getOpenEditorInput(viewObject);
@@ -315,7 +316,7 @@ public class OpenObjectAction extends AbstractRepositoryAction implements IIntro
                             IDE.gotoMarker(activeEditor, marker);
                         }
                     } catch (PartInitException e) {
-                        log.error(e.getMessage(), e);
+                            LOG.error(e.getMessage(), e);
                     }
                 } else {
                     AbstractRepositoryAction openAction = actionProvider.getOpenAction(viewObject);
@@ -324,6 +325,10 @@ public class OpenObjectAction extends AbstractRepositoryAction implements IIntro
                         openAction.run();
                     }
                 }
+            }
+            } catch (UnsupportedOperationException ex) {
+                // for svn/git mode, open a deleted object would throw this exception, just log it
+                LOG.info("The Object is deleted from remote server");
             }
         }
     }
@@ -443,7 +448,7 @@ public class OpenObjectAction extends AbstractRepositoryAction implements IIntro
                 setSelObjects(selObjs);
                 run();
             } catch (PersistenceException e) {
-                log.error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
             }
         }
     }
