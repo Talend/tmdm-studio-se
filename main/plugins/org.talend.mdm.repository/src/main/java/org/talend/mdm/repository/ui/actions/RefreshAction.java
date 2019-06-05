@@ -19,7 +19,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.swt.widgets.Display;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.mdm.repository.core.AbstractRepositoryAction;
@@ -87,11 +89,18 @@ public class RefreshAction extends AbstractRepositoryAction {
 
     @Override
     protected void doRun() {
-        if (refreshAll) {
-            refreshAll();
-        } else {
-            refreshSelection();
-        }
+        Display.getDefault().asyncExec(new Runnable() {
+
+            @Override
+            public void run() {
+                if (refreshAll) {
+                    refreshAll();
+                } else {
+                    refreshSelection();
+                }
+            }
+        });
+
     }
 
     private void refreshAll() {
@@ -105,11 +114,18 @@ public class RefreshAction extends AbstractRepositoryAction {
         List<Object> selectedObject = getSelectedObject();
         if (!selectedObject.isEmpty()) {
             Object obj = selectedObject.get(0);
-            commonViewer.refresh(obj);
 
-            Item item = ((IRepositoryViewObject) obj).getProperty().getItem();
-            if (item instanceof ContainerItem) {
-                commonViewer.expandToLevel(obj, 1);
+
+            Property property = ((IRepositoryViewObject) obj).getProperty();
+            // When work in remote mode, select a deleted object the property would be null.
+            if (property != null) {
+                commonViewer.refresh(obj);
+                Item item = property.getItem();
+                if (item instanceof ContainerItem) {
+                    commonViewer.expandToLevel(obj, 1);
+                }
+            } else {
+                commonViewer.refresh();
             }
         }
     }
