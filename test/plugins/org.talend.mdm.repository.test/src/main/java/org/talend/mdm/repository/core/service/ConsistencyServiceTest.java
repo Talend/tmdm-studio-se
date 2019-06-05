@@ -342,10 +342,12 @@ public class ConsistencyServiceTest {
         try {
             Mockito.when(mockCService.calculateDigestValue(mockItem, mockType)).thenReturn(digestValue);
             when(mockCService, "updateLocalDigestValue", mockViewObj).thenCallRealMethod(); //$NON-NLS-1$
+            PowerMockito.when(mockCService, "updateLocalDigestValue", mockItem, digestValue).thenCallRealMethod();
             mockCService.updateLocalDigestValue(mockViewObj);
 
             Mockito.verify(mockCService, Mockito.atLeastOnce()).calculateDigestValue(mockItem, mockType);
-            PowerMockito.verifyPrivate(mockCService, atLeastOnce()).invoke("updateLocalDigestValue", mockItem, digestValue); //$NON-NLS-1$
+            PowerMockito.verifyPrivate(mockCService, atLeastOnce()).invoke("updateLocalDigestValue", mockItem, digestValue);
+            // $NON-NLS-1$
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
