@@ -295,8 +295,8 @@ public class UtilMockTest {
             particleElementList1.add(xsdElementDeclaration2);
             //
 
-            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), any(XSDComplexTypeDefinition.class))
-            .thenReturn(particleElementList1);
+            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), anySet())
+                    .thenReturn(particleElementList1);
             Object result = Whitebox.invokeMethod(Util.class, method_findspecial, parent, xsdElementDeclaration1, complexTypes);
             assertSame(parent, result);
 
@@ -308,8 +308,8 @@ public class UtilMockTest {
             List<XSDElementDeclaration> particleElementList2 = new ArrayList<XSDElementDeclaration>();
             particleElementList2.add(xsdEleDeclaration1);
             particleElementList2.add(xsdEleDeclaration2);
-            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), any(XSDComplexTypeDefinition.class))
-            .thenReturn(particleElementList1, particleElementList2);
+            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), anySet())
+                    .thenReturn(particleElementList1, particleElementList2);
             result = Whitebox.invokeMethod(Util.class, method_findspecial, parent, xsdEleDeclaration1, complexTypes);
             assertSame(xsdElementDeclaration1, result);
 
