@@ -30,13 +30,13 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Widget;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -198,9 +198,9 @@ public class RemoveFromRepositoryActionTest {
         PowerMockito.mockStatic(MessageDialog.class);
         MessageDialog dialog = mock(MessageDialog.class);
         PowerMockito.whenNew(MessageDialog.class).withAnyArguments().thenReturn(dialog);
-        PowerMockito.when(MessageDialog.open(MessageDialog.CONFIRM, any(Shell.class), anyString(), anyString(), SWT.NONE))
+        PowerMockito.when(MessageDialog.open(any(int.class), any(Shell.class), anyString(), anyString(), any(int.class)))
                 .thenReturn(true);
-        PowerMockito.when(MessageDialog.openConfirm(null, anyString(), anyString())).thenReturn(true);
+        PowerMockito.when(MessageDialog.openConfirm(ArgumentMatchers.isNull(), anyString(), anyString())).thenReturn(true);
 
         PowerMockito.mockStatic(RepositoryResourceUtil.class);
         when(RepositoryResourceUtil.isOpenedInEditor(any(IRepositoryViewObject.class))).thenReturn(null);
