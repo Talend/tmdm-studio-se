@@ -16,9 +16,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IMarker;
@@ -160,7 +162,7 @@ public class MDMProblemView extends MarkerSupportView implements IValidationMark
     @Override
     public void init(IViewSite site, IMemento memento) throws PartInitException {
         super.init(site, memento);
-        IMenuService menuService = (IMenuService) site.getService(IMenuService.class);
+        IMenuService menuService = site.getService(IMenuService.class);
 
         hookModelGroup();
     }
@@ -229,12 +231,16 @@ public class MDMProblemView extends MarkerSupportView implements IValidationMark
     }
 
     private void updateSelectedResource(MarkerContentGenerator generator, Object[] selectedElements, boolean forceUpdate) {
+        if (selectedElements == null) {
+            return;
+        }
         try {
             Method method = MarkerContentGenerator.class.getDeclaredMethod(
                     "updateSelectedResource", Object[].class, boolean.class); //$NON-NLS-1$
             if (method != null) {
                 method.setAccessible(true);
-                Object param = selectedElements;
+                Object param = Arrays.asList(selectedElements).stream().filter(e -> e != null)
+                        .collect(Collectors.toList()).toArray();
                 method.invoke(generator, param, forceUpdate);
             }
         } catch (SecurityException e) {
