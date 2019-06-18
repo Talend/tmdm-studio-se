@@ -49,6 +49,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -60,6 +61,7 @@ import org.w3c.dom.Element;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ Util.class })
+@PowerMockIgnore({ "com.sun.org.apache.xerces.*", "javax.xml.parsers.*", "org.w3c.dom.*", "org.xml.sax.*" })
 public class UtilMockTest {
 
     private Logger log = Logger.getLogger(UtilMockTest.class);

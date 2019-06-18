@@ -28,6 +28,7 @@ import org.eclipse.jface.resource.JFaceResources;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -55,6 +56,7 @@ import com.amalto.workbench.image.ImageCache;
         ProjectManager.class, RepositoryNodeConfigurationManager.class, ProxyRepositoryFactory.class,
         RepositoryResourceUtil.class, ExAdapterManager.class, MdmpropertiesFactoryImpl.class,
         MDMWorbenchPlugin.class })
+@PowerMockIgnore({ "org.xml.sax.*", "org.xml.sax.helpers.*" })
 public class NewServiceConfigurationActionTest extends AbstractSimpleAddActionTest {
 
     @Test
