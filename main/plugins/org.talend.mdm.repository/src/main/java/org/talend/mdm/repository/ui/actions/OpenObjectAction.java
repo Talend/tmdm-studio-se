@@ -281,51 +281,51 @@ public class OpenObjectAction extends AbstractRepositoryAction implements IIntro
         IRepositoryNodeConfiguration configuration = RepositoryNodeConfigurationManager.getConfiguration(item);
         if (configuration != null) {
             try {
-            IRepositoryNodeActionProvider actionProvider = configuration.getActionProvider();
-            if (actionProvider != null) {
-                IRepositoryViewEditorInput editorInput = actionProvider.getOpenEditorInput(viewObject);
-                if (editorInput != null) {
-                    if (page == null) {
-                        this.page = getCommonViewer().getCommonNavigator().getSite().getWorkbenchWindow().getActivePage();
-                    }
-                    // do extra action
-                    MDMServerObject serverObject = ((MDMServerObjectItem) item).getMDMServerObject();
-                    if (!checkMissingJar(serverObject)) {
-                        return;
-                    }
-                    boolean selected = doSelectServer(item, editorInput);
-                    if (!selected) {
-                        return;
-                    }
-                    try { // svn lock
-                        ERepositoryStatus status = factory.getStatus(item);
-                        boolean isEditable = factory.isEditableAndLockIfPossible(item);
-                        if (isEditable) {
-                            getCommonViewer().refresh(viewObject);
+                IRepositoryNodeActionProvider actionProvider = configuration.getActionProvider();
+                if (actionProvider != null) {
+                    IRepositoryViewEditorInput editorInput = actionProvider.getOpenEditorInput(viewObject);
+                    if (editorInput != null) {
+                        if (page == null) {
+                            this.page = getCommonViewer().getCommonNavigator().getSite().getWorkbenchWindow().getActivePage();
                         }
-                        //
-                        editorInput.setReadOnly(status == ERepositoryStatus.LOCK_BY_OTHER
-                                || status == ERepositoryStatus.READ_ONLY || !isEditable);
+                        // do extra action
+                        MDMServerObject serverObject = ((MDMServerObjectItem) item).getMDMServerObject();
+                        if (!checkMissingJar(serverObject)) {
+                            return;
+                        }
+                        boolean selected = doSelectServer(item, editorInput);
+                        if (!selected) {
+                            return;
+                        }
+                        try { // svn lock
+                            ERepositoryStatus status = factory.getStatus(item);
+                            boolean isEditable = factory.isEditableAndLockIfPossible(item);
+                            if (isEditable) {
+                                getCommonViewer().refresh(viewObject);
+                            }
+                            //
+                            editorInput.setReadOnly(status == ERepositoryStatus.LOCK_BY_OTHER
+                                    || status == ERepositoryStatus.READ_ONLY || !isEditable);
 
-                        if (!editorInput.isReadOnly()) {
-                            editorInput.setReadOnly(item.getState().isDeleted());
-                        }
-                        updateEditorInputVersionInfo(editorInput, viewObject);
-                        activeEditor = this.page.openEditor(editorInput, editorInput.getEditorId());
-                        if (marker != null) {
-                            IDE.gotoMarker(activeEditor, marker);
-                        }
-                    } catch (PartInitException e) {
+                            if (!editorInput.isReadOnly()) {
+                                editorInput.setReadOnly(item.getState().isDeleted());
+                            }
+                            updateEditorInputVersionInfo(editorInput, viewObject);
+                            activeEditor = this.page.openEditor(editorInput, editorInput.getEditorId());
+                            if (marker != null) {
+                                IDE.gotoMarker(activeEditor, marker);
+                            }
+                        } catch (PartInitException e) {
                             LOG.error(e.getMessage(), e);
-                    }
-                } else {
-                    AbstractRepositoryAction openAction = actionProvider.getOpenAction(viewObject);
-                    if (openAction != null) {
-                        openAction.selectionChanged(getStructuredSelection());
-                        openAction.run();
+                        }
+                    } else {
+                        AbstractRepositoryAction openAction = actionProvider.getOpenAction(viewObject);
+                        if (openAction != null) {
+                            openAction.selectionChanged(getStructuredSelection());
+                            openAction.run();
+                        }
                     }
                 }
-            }
             } catch (UnsupportedOperationException ex) {
                 // for svn/git mode, open a deleted object would throw this exception, just log it
                 LOG.info("The Object is deleted from remote server");
