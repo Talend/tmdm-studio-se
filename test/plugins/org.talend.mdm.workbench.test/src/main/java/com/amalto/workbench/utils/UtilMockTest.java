@@ -49,6 +49,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -60,6 +61,7 @@ import org.w3c.dom.Element;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ Util.class })
+@PowerMockIgnore({ "com.sun.org.apache.xerces.*", "javax.xml.parsers.*", "org.w3c.dom.*", "org.xml.sax.*" })
 public class UtilMockTest {
 
     private Logger log = Logger.getLogger(UtilMockTest.class);
@@ -295,8 +297,8 @@ public class UtilMockTest {
             particleElementList1.add(xsdElementDeclaration2);
             //
 
-            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), any(XSDComplexTypeDefinition.class))
-            .thenReturn(particleElementList1);
+            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), anySet())
+                    .thenReturn(particleElementList1);
             Object result = Whitebox.invokeMethod(Util.class, method_findspecial, parent, xsdElementDeclaration1, complexTypes);
             assertSame(parent, result);
 
@@ -308,8 +310,8 @@ public class UtilMockTest {
             List<XSDElementDeclaration> particleElementList2 = new ArrayList<XSDElementDeclaration>();
             particleElementList2.add(xsdEleDeclaration1);
             particleElementList2.add(xsdEleDeclaration2);
-            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), any(XSDComplexTypeDefinition.class))
-            .thenReturn(particleElementList1, particleElementList2);
+            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), anySet())
+                    .thenReturn(particleElementList1, particleElementList2);
             result = Whitebox.invokeMethod(Util.class, method_findspecial, parent, xsdEleDeclaration1, complexTypes);
             assertSame(xsdElementDeclaration1, result);
 

@@ -12,10 +12,21 @@
 // ============================================================================
 package org.talend.mdm.repository.utils;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.io.ByteArrayOutputStream;
@@ -180,7 +191,7 @@ public class RepositoryResourceUtilTest {
 
         PowerMockito.mockStatic(RepositoryResourceUtil.class);
         PowerMockito.doCallRealMethod().when(RepositoryResourceUtil.class, "isLockedAndEdited",
-                (IRepositoryViewObject) Mockito.anyObject());
+                any(IRepositoryViewObject.class));
         when(RepositoryResourceUtil.isOpenedInEditor(mockViewObject)).thenReturn(mock(IEditorReference.class));
         islockedViewObject = RepositoryResourceUtil.isLockedAndEdited(mockViewObject);
         assertTrue(islockedViewObject);
@@ -712,7 +723,7 @@ public class RepositoryResourceUtilTest {
                 withDeleted);
 
         assertEquals(1, viewObjectss.size());
-        PowerMockito.verifyStatic(RepositoryResourceUtil.class, Mockito.atLeastOnce());
+        PowerMockito.verifyStatic(InteractiveService.class, Mockito.atLeastOnce());
         InteractiveService.findHandler(mockType);
     }
 

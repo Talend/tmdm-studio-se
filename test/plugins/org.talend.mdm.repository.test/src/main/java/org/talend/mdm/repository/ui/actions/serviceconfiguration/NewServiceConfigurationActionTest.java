@@ -12,20 +12,25 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.actions.serviceconfiguration;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.JFaceResources;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
@@ -46,10 +51,12 @@ import com.amalto.workbench.editors.ServiceConfigrationMainPage;
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.image.ImageCache;
 
+@RunWith(PowerMockRunner.class)
 @PrepareForTest({ ImageDescriptor.class, JFaceResources.class, ImageCache.class, ItemState.class, CoreRuntimePlugin.class,
         ProjectManager.class, RepositoryNodeConfigurationManager.class, ProxyRepositoryFactory.class,
         RepositoryResourceUtil.class, ExAdapterManager.class, MdmpropertiesFactoryImpl.class,
         MDMWorbenchPlugin.class })
+@PowerMockIgnore({ "org.xml.sax.*", "org.xml.sax.helpers.*" })
 public class NewServiceConfigurationActionTest extends AbstractSimpleAddActionTest {
 
     @Test

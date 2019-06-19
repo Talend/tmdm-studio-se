@@ -12,20 +12,19 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.actions;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.util.ResourceBundle;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.resource.JFaceResources;
 import org.junit.Before;
-import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Item;
@@ -48,8 +47,10 @@ import com.amalto.workbench.exadapter.ExAdapterManager;
 /**
  * DOC hbhong class global comment. Detailled comment
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ AbstractSimpleAddAction.class })
+@PrepareForTest({ AbstractSimpleAddAction.class, ResourceBundle.class, JFaceResources.class, ImageRegistry.class,
+        CoreRuntimePlugin.class, IProxyRepositoryFactory.class, RepositoryContext.class, ProjectManager.class,
+        IRepositoryResourceUtilExAdapter.class, RecycleBinNodeConfiguration.class, ProxyRepositoryFactory.class,
+        RepositoryNodeConfigurationManager.class, IRepositoryNodeResourceProvider.class })
 public class AbstractSimpleAddActionTest {
 
     @Before
@@ -98,12 +99,12 @@ public class AbstractSimpleAddActionTest {
 
         PowerMockito.mockStatic(RepositoryNodeConfigurationManager.class);
         IRepositoryNodeConfiguration rncMock = mock(IRepositoryNodeConfiguration.class);
-        when(RepositoryNodeConfigurationManager.getConfiguration((Item) anyObject())).thenReturn(rncMock);
+        when(RepositoryNodeConfigurationManager.getConfiguration(any(Item.class))).thenReturn(rncMock);
 
         IRepositoryNodeResourceProvider resourceProviderM = mock(IRepositoryNodeResourceProvider.class);
         when(rncMock.getResourceProvider()).thenReturn(resourceProviderM);
 
         when(resourceProviderM.needSaveReferenceFile()).thenReturn(true);
-        when(repositoryFactory.isEditableAndLockIfPossible((Item) anyObject())).thenReturn(true);
+        when(repositoryFactory.isEditableAndLockIfPossible(any(Item.class))).thenReturn(true);
     }
 }

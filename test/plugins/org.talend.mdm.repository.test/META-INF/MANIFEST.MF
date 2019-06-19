@@ -8,7 +8,8 @@ Require-Bundle: org.talend.testutils,
  org.hamcrest,
  org.eclipse.osgi.services,
  org.apache.commons.lang
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ META-INF/libs/xstream-1.4.10.jar
 Export-Package: org.talend.mdm.repository.ui.actions,
  org.talend.mdm.repository.ui.actions.datacontainer,
  org.talend.mdm.repository.ui.actions.datamodel,
