@@ -82,8 +82,9 @@ public class MDMOpenExistVersionProcessWizard extends OpenExistVersionProcessWiz
 
     @Override
     protected void openAnotherVersion(final RepositoryNode node, final boolean readonly) {
-        Display.getCurrent().asyncExec(new Runnable() {
+        Display.getDefault().asyncExec(new Runnable() {
 
+            @Override
             public void run() {
 
                 final IRepositoryViewObject viewObj = node.getObject();
@@ -148,7 +149,7 @@ public class MDMOpenExistVersionProcessWizard extends OpenExistVersionProcessWiz
         try {
             IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
             if (!factory.isLocalConnectionProvider()) {
-                IMDMSVNProviderService service = (IMDMSVNProviderService) GlobalServiceRegister.getDefault().getService(
+                IMDMSVNProviderService service = GlobalServiceRegister.getDefault().getService(
                         IMDMSVNProviderService.class);
                 if (service != null) {
                     if (service.isProjectInSvnMode()) {
