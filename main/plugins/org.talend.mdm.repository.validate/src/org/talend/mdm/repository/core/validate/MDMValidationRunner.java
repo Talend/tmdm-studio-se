@@ -22,11 +22,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ICoreRunnable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
@@ -123,7 +125,8 @@ public class MDMValidationRunner implements ICoreRunnable {
         MDMValidationRunner runner = new MDMValidationRunner(viewObjs, validationPref, forbidShowResultDialog,
                 showAfterSavingResultDialog);
         try {
-            ResourcesPlugin.getWorkspace().run(runner, new NullProgressMonitor());
+            ISchedulingRule folder = RepositoryResourceUtil.getFolder(viewObjs.get(0));
+            ResourcesPlugin.getWorkspace().run(runner, folder, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
         } catch (Exception e) {
             LOG.error("Failed to validate objects.", e);
         }
