@@ -480,6 +480,7 @@ public class DeployService {
     }
 
     public IStatus runCommands(List<AbstractDeployCommand> commands, MDMServerDef serverDef) {
+        filterInvalidCommands(commands);
         reorderCommandObjects(commands);
 
         CommandManager manager = CommandManager.getInstance();
@@ -502,6 +503,18 @@ public class DeployService {
 
         }
         return Status.CANCEL_STATUS;
+    }
+
+    private void filterInvalidCommands(List<AbstractDeployCommand> commands) {
+        if (commands != null) {
+            Iterator<AbstractDeployCommand> iterator = commands.iterator();
+            while (iterator.hasNext()) {
+                AbstractDeployCommand cmd = iterator.next();
+                if (cmd.getViewObject() == null) {
+                    iterator.remove();
+                }
+            }
+        }
     }
 
     private void reorderCommandObjects(List<AbstractDeployCommand> commands) {
