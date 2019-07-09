@@ -513,6 +513,9 @@ public abstract class MDMServerMessageConsole extends MessageConsole implements 
             if (HTTP_STATUS_OK == code) {
 
                 String fileName = getFileName(response);
+                if (fileName.contains("..")) {
+                    fileName = getLogFlag() + ".log";
+                }
                 is = response.getEntity().getContent();
                 monitor.worked(60);
                 File file = new File(dirPath + File.separator + fileName);
@@ -619,6 +622,11 @@ public abstract class MDMServerMessageConsole extends MessageConsole implements 
         MDMServerMessageConsole otherConsole = (MDMServerMessageConsole) obj;
         return serverDef == otherConsole.getServerDef();
     }
+
+    /*
+     * return a string that does not contains double dot, also can be used as a file name
+     */
+    protected abstract String getLogFlag();
 
     protected abstract String getLogPath();
 

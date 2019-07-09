@@ -75,6 +75,8 @@ public class Messages extends NLS {
 
     public static String MDMServerMessageConsole_Forbidden_Message;
 
+    public static String MDMServerMessageConsole_mdmFlag;
+
     public static String MDMServerMessageConsole_MonitorAction_PauseText;
 
     public static String MDMServerMessageConsole_MonitorAction_ResumeText;

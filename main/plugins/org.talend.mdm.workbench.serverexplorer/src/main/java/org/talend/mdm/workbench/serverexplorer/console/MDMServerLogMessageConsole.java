@@ -47,4 +47,9 @@ public class MDMServerLogMessageConsole extends MDMServerMessageConsole {
         }
     }
 
+    @Override
+    protected String getLogFlag() {
+        return Messages.MDMServerMessageConsole_mdmFlag;
+    }
+
 }
