@@ -513,12 +513,14 @@ public abstract class MDMServerMessageConsole extends MessageConsole implements 
             if (HTTP_STATUS_OK == code) {
 
                 String fileName = getFileName(response);
-                if (fileName.contains("..")) {
-                    fileName = getLogFlag() + ".log";
-                }
                 is = response.getEntity().getContent();
                 monitor.worked(60);
                 File file = new File(dirPath + File.separator + fileName);
+                if (!file.getCanonicalPath().startsWith(dirPath)) {
+                    fileName = getLogFlag() + ".log";
+                    file = new File(dirPath + File.separator + fileName);
+                }
+
                 os = new FileOutputStream(file);
                 IOUtils.copy(is, os);
                 monitor.worked(85);
