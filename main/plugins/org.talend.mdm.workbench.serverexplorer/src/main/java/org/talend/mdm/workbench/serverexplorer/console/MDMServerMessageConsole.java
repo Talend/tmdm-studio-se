@@ -73,7 +73,7 @@ import com.amalto.workbench.utils.Util;
  */
 public abstract class MDMServerMessageConsole extends MessageConsole implements IPropertyChangeListener {
 
-    private static final Log log = LogFactory.getLog(MDMServerMessageConsole.class);
+    private static final Log LOG = LogFactory.getLog(MDMServerMessageConsole.class);
 
     private static final int START_FROM_TAIL = -1;
 
@@ -140,9 +140,9 @@ public abstract class MDMServerMessageConsole extends MessageConsole implements 
                     }
                 });
             } catch (InvocationTargetException e) {
-                log.error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
             } catch (InterruptedException e) {
-                log.error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
             }
         }
     }
@@ -343,9 +343,9 @@ public abstract class MDMServerMessageConsole extends MessageConsole implements 
         try {
             response = httpClient.execute(httpGet);
         } catch (ClientProtocolException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
 
         return response;
@@ -394,7 +394,7 @@ public abstract class MDMServerMessageConsole extends MessageConsole implements 
             errorMsgStream.println(ex.getMessage());
             disposeTimer();
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             errorMsgStream.println(e.getMessage());
             disposeTimer();
         } catch (SecurityException e) {
@@ -404,35 +404,35 @@ public abstract class MDMServerMessageConsole extends MessageConsole implements 
                 try {
                     br.close();
                 } catch (IOException e) {
-                    log.error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                 }
             }
             if (isr != null) {
                 try {
                     isr.close();
                 } catch (IOException e) {
-                    log.error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                 }
             }
             if (is != null) {
                 try {
                     is.close();
                 } catch (IOException e) {
-                    log.error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                 }
             }
             if (msgStream != null) {
                 try {
                     msgStream.close();
                 } catch (IOException e) {
-                    log.error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                 }
             }
             if (errorMsgStream != null) {
                 try {
                     errorMsgStream.close();
                 } catch (IOException e) {
-                    log.error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                 }
             }
         }
@@ -517,6 +517,8 @@ public abstract class MDMServerMessageConsole extends MessageConsole implements 
                 monitor.worked(60);
                 File file = new File(dirPath + File.separator + fileName);
                 if (!file.getCanonicalPath().startsWith(dirPath)) {
+                    LOG.warn("Get invalid log filename '" + fileName + "' from url '" + monitorURL
+                            + "' when downloading server log");
                     fileName = getLogFlag() + ".log";
                     file = new File(dirPath + File.separator + fileName);
                 }
@@ -541,7 +543,7 @@ public abstract class MDMServerMessageConsole extends MessageConsole implements 
                 monitor.worked(90);
             }
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             newErrorMessageStream().println(Messages.MDMServerMessageConsole_DownloadFailed_Message);
             newErrorMessageStream().println(e.getMessage());
             monitor.worked(90);
@@ -552,14 +554,14 @@ public abstract class MDMServerMessageConsole extends MessageConsole implements 
                 try {
                     is.close();
                 } catch (IOException e) {
-                    log.error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                 }
             }
             if (os != null) {
                 try {
                     os.close();
                 } catch (IOException e) {
-                    log.error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                 }
             }
         }
