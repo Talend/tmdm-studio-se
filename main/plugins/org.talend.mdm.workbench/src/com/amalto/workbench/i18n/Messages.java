@@ -883,8 +883,6 @@ public class Messages extends NLS {
 
     public static String ViewMainPage_ascOrder;
 
-    public static String ViewMainPage_BrowseItems;
-
     public static String ViewMainPage_defaultField;
 
     public static String ViewMainPage_descOrder;
@@ -2020,26 +2018,6 @@ public class Messages extends NLS {
     public static String Util_32;
 
     public static String Util_33;
-
-    public static String Util_34;
-
-    public static String Util_35;
-
-    public static String Util_36;
-
-    public static String Util_37;
-
-    public static String Util_38;
-
-    public static String Util_39;
-
-    public static String Util_40;
-
-    public static String Util_41;
-
-    public static String Util_42;
-
-    public static String Util_43;
 
     public static String Util_44;
 
