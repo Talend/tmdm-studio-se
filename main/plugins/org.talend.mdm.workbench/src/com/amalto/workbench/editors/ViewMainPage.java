@@ -198,11 +198,13 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             // add listener
             btnRunProcess.addSelectionListener(new SelectionListener() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     cboProcessList.setEnabled(btnRunProcess.getSelection());
                     markDirtyWithoutCommit();
                 }
 
+                @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
                     cboProcessList.setEnabled(btnRunProcess.getSelection());
                     markDirtyWithoutCommit();
@@ -210,6 +212,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             });
             cboProcessList.addModifyListener(new ModifyListener() {
 
+                @Override
                 public void modifyText(ModifyEvent e) {
                     markDirtyWithoutCommit();
                 }
@@ -229,7 +232,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             viewableViewer = getNewTisTableViewer(viewablehGroup, toolkit, Arrays.asList(viewableElementColumns));
             viewableViewer.setTreeParent(treeParent);
             viewableViewer.setXpath(true);
-            if (viewName.startsWith(Messages.ViewMainPage_BrowseItems)) {
+            if (viewName.startsWith("Browse_items_")) {
                 concept = viewName.replaceAll("Browse_items_", "").replaceAll("#.*", "");//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$//$NON-NLS-4$
             }
             viewableViewer.setConceptName(concept);
@@ -674,6 +677,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
     protected void createActions() {
     }
 
+    @Override
     public void textChanged(TextEvent event) {
         markDirtyWithoutCommit();
     }
@@ -715,6 +719,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
 
         private int selected;
 
+        @Override
         public void dragFinished(DragSourceEvent event) {
             Control control = ((DragSource) event.widget).getControl();
             if ((control instanceof List) && ((event.detail & DND.DROP_MOVE) == DND.DROP_MOVE)) {
@@ -723,6 +728,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             }
         }
 
+        @Override
         public void dragSetData(DragSourceEvent event) {
             Control control = ((DragSource) event.widget).getControl();
             if ((control instanceof List)) {
@@ -733,6 +739,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             }
         }
 
+        @Override
         public void dragStart(DragSourceEvent event) {
             Control control = ((DragSource) event.widget).getControl();
             if ((control instanceof List)) {
@@ -743,6 +750,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
 
     class DCDropTargetListener implements DropTargetListener {
 
+        @Override
         public void dragEnter(DropTargetEvent event) {
             // priority to copy
             if ((event.operations & DND.DROP_COPY) == DND.DROP_COPY) {
@@ -754,15 +762,19 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             }
         }
 
+        @Override
         public void dragLeave(DropTargetEvent event) {
         }
 
+        @Override
         public void dragOperationChanged(DropTargetEvent event) {
         }
 
+        @Override
         public void dragOver(DropTargetEvent event) {
         }
 
+        @Override
         public void drop(DropTargetEvent event) {
             Control control = ((DropTarget) event.widget).getControl();
             if ((control instanceof List) && ((event.operations & DND.DROP_COPY) == DND.DROP_COPY)) {
@@ -775,6 +787,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             }
         }
 
+        @Override
         public void dropAccept(DropTargetEvent event) {
         }
 
@@ -799,6 +812,7 @@ public class ViewMainPage extends AMainPageV2 implements ITextListener {
             this.parentShell = shell;
         }
 
+        @Override
         public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             try {
                 monitor.beginTask(Messages.ViewMainPage_Addingkeypath, toAddViewableList.size());
