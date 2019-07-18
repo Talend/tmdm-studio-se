@@ -491,7 +491,7 @@ public class Util {
 
     public static IWebServiceHook getWebServiceHook() {
         if (webServceHook == null && GlobalServiceRegister.getDefault().isServiceRegistered(IWebServiceHook.class)) {
-            webServceHook = (IWebServiceHook) GlobalServiceRegister.getDefault().getService(IWebServiceHook.class);
+            webServceHook = GlobalServiceRegister.getDefault().getService(IWebServiceHook.class);
         }
         return webServceHook;
     }
@@ -1396,8 +1396,7 @@ public class Util {
     public static boolean checkConcept(XSDElementDeclaration decl) {
         boolean isConcept = false;
         EList<XSDIdentityConstraintDefinition> list = decl.getIdentityConstraintDefinitions();
-        for (Iterator<XSDIdentityConstraintDefinition> iter = list.iterator(); iter.hasNext();) {
-            XSDIdentityConstraintDefinition icd = iter.next();
+        for (XSDIdentityConstraintDefinition icd : list) {
             if (icd.getIdentityConstraintCategory().equals(XSDIdentityConstraintCategory.UNIQUE_LITERAL)) {
                 isConcept = true;
                 break;
@@ -2048,31 +2047,31 @@ public class Util {
     public static String getComponentName(Object component) {
         if (component instanceof XSDElementDeclaration) {
             XSDElementDeclaration decl = (XSDElementDeclaration) component;
-            return Messages.Util_34 + decl.getName() + Messages.Util_35;
+            return "name=\"" + decl.getName() + "\"";
 
         } else if (component instanceof XSDParticle) {
             XSDParticle particle = (XSDParticle) component;
             XSDTerm term = particle.getTerm();
             if (term instanceof XSDElementDeclaration) {
-                return Messages.Util_36 + ((XSDElementDeclaration) term).getName() + Messages.Util_37;
+                return "name=\"" + ((XSDElementDeclaration) term).getName() + "\"";
             }
 
         } else if (component instanceof XSDComplexTypeDefinition) {
             XSDComplexTypeDefinition type = (XSDComplexTypeDefinition) component;
-            return Messages.Util_36 + type.getName() + Messages.Util_37;
+            return "name=\"" + type.getName() + "\"";
 
         } else if (component instanceof XSDSimpleTypeDefinition) {
 
-            return Messages.Util_38 + ((XSDSimpleTypeDefinition) component).getName() + Messages.Util_39;
+            return "name=\"" + ((XSDSimpleTypeDefinition) component).getName() + "\"";
 
         }
 
         else if (component instanceof XSDIdentityConstraintDefinition) {
             XSDIdentityConstraintDefinition identify = (XSDIdentityConstraintDefinition) component;
-            return Messages.Util_40 + identify.getName() + Messages.Util_41;
+            return "name=\"" + identify.getName() + "\"";
         } else if (component instanceof XSDXPathDefinition) {
             XSDXPathDefinition path = (XSDXPathDefinition) component;
-            return Messages.Util_42 + path.getValue() + Messages.Util_43;
+            return "xpath=\"" + path.getValue() + "\"";
         }
         return null;
     }
