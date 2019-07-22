@@ -492,7 +492,7 @@ public class Util {
 
     public static IWebServiceHook getWebServiceHook() {
         if (webServceHook == null && GlobalServiceRegister.getDefault().isServiceRegistered(IWebServiceHook.class)) {
-            webServceHook = GlobalServiceRegister.getDefault().getService(IWebServiceHook.class);
+            webServceHook = (IWebServiceHook) GlobalServiceRegister.getDefault().getService(IWebServiceHook.class);
         }
         return webServceHook;
     }
