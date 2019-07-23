@@ -127,8 +127,12 @@ public class RemoveFromRepositoryAction extends AbstractRepositoryAction {
         removed.clear();
 
         if (lockedObjs.size() > 0) {
-            MessageDialog.openError(getShell(), Messages.AbstractRepositoryAction_lockedObjTitle, getAlertMsg());
+            error();
         }
+    }
+
+    private void error() {
+        MessageDialog.openError(getShell(), Messages.AbstractRepositoryAction_lockedObjTitle, getAlertMsg());
     }
 
     private void warn() {
