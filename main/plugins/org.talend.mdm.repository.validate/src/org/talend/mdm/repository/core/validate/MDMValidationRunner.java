@@ -146,14 +146,14 @@ public class MDMValidationRunner implements ICoreRunnable {
                 ERepositoryObjectType type = viewObj.getRepositoryObjectType();
                 if (type == IServerObjectRepositoryType.TYPE_DATAMODEL) {
                     Item item = viewObj.getProperty().getItem();
-                    file = RepositoryResourceUtil.findReferenceFile(type, item, "xsd"); //$NON-NLS-1$
+                    file = findReferenceFile(type, item, "xsd"); //$NON-NLS-1$
                     if (file != null) {
                         files.add(file);
                     }
                 }
                 if (type == IServerObjectRepositoryType.TYPE_VIEW) {
                     Item item = viewObj.getProperty().getItem();
-                    file = RepositoryResourceUtil.findReferenceFile(type, item, "item"); //$NON-NLS-1$
+                    file = findReferenceFile(type, item, "item"); //$NON-NLS-1$
                     if (file != null) {
                         files.add(file);
                     }
@@ -161,7 +161,7 @@ public class MDMValidationRunner implements ICoreRunnable {
                 }
                 if (type == IServerObjectRepositoryType.TYPE_WORKFLOW) {
                     Item item = viewObj.getProperty().getItem();
-                    file = RepositoryResourceUtil.findReferenceFile(type, item, "conf"); //$NON-NLS-1$
+                    file = findReferenceFile(type, item, "conf"); //$NON-NLS-1$
                     if (file != null) {
                         files.add(file);
                     }
@@ -174,6 +174,16 @@ public class MDMValidationRunner implements ICoreRunnable {
                 lockDirtyDialog = new LockedDirtyObjectDialog(null, Messages.MDMValidationRunner_promptToSaveEditors, viewObjs);
             }
         }
+    }
+
+    private IFile findReferenceFile(ERepositoryObjectType type, Item item, String extension) {
+        IFile file = null;
+        try {
+            file = RepositoryResourceUtil.findReferenceFile(type, item, extension);
+        } catch (Exception e) {
+            LOG.error("Failed to find reference file for type" + type.getLabel() + "with extension " + extension, e);
+        }
+        return file;
     }
 
     /*
