@@ -1066,9 +1066,15 @@ public class RepositoryResourceUtil {
                 Item item = property.getItem();
                 Resource eResource = item.eResource();
                 reload = eResource == null || eResource.getResourceSet() == null;
+                // it is unnecessary to reload if it is deleted.
+                boolean deleted = item.getState().isDeleted();
+                if (reload && deleted) {
+                    reload = false;
+                }
             } else {
                 reload = true;
             }
+
             if (reload) {
                 IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
                 try {
