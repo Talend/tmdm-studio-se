@@ -117,7 +117,7 @@ public class DataModelSchemaUpdator extends AbstractDataModelUpdator {
                     }
 
                     if (!hasUUIDElement) {
-                        Element element = createElement(document, UUID, "false");
+                        Element element = createElement(document, UUID, "false", "1");
                         modified = true;
                         if (time_in_millis_Element != null) {
                             sequenceNode.insertBefore(element, time_in_millis_Element.getNextSibling());
@@ -126,7 +126,7 @@ public class DataModelSchemaUpdator extends AbstractDataModelUpdator {
                         }
                     }
                     if (!hasPKInfo) {
-                        Element element = createElement(document, PRIMARY_KEY_INFO, "true");
+                        Element element = createElement(document, PRIMARY_KEY_INFO, "true", "0");
                         modified = true;
                         if (KEY != null) {
                             sequenceNode.insertBefore(element, key.getNextSibling());
@@ -141,10 +141,10 @@ public class DataModelSchemaUpdator extends AbstractDataModelUpdator {
         return modified;
     }
 
-    private Element createElement(Document document, String nameValue, String nillable) {
+    private Element createElement(Document document, String nameValue, String nillable, String minOccurs) {
         Element idElement = document.createElement(TAG_XSD_ELEMENT);
         idElement.setAttribute("maxOccurs", "1");
-        idElement.setAttribute("minOccurs", "1");
+        idElement.setAttribute("minOccurs", minOccurs);
         idElement.setAttribute("name", nameValue);
         idElement.setAttribute("nillable", nillable);
         idElement.setAttribute("type", "xsd:string");
