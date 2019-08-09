@@ -79,7 +79,7 @@ public class DataModelSchemaUpdatorTest {
             assertTrue(updated);
             assertNotNull(xsdSchema);
             assertTrue(xsdSchema.contains(
-                    "<xsd:element maxOccurs=\"1\" minOccurs=\"1\" name=\"PrimaryKeyInfo\" nillable=\"true\" type=\"xsd:string\"/>"));
+                    "<xsd:element maxOccurs=\"1\" minOccurs=\"0\" name=\"PrimaryKeyInfo\" nillable=\"true\" type=\"xsd:string\"/>"));
             assertTrue(xsdSchema.contains(
                     "<xsd:element maxOccurs=\"1\" minOccurs=\"1\" name=\"UUID\" nillable=\"false\" type=\"xsd:string\"/>"));
         } catch (Exception e) {
