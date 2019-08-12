@@ -1,8 +1,10 @@
 package com.amalto.workbench.utils;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +12,11 @@ import org.mockito.ArgumentMatchers;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.talend.daikon.security.CryptoHelper;
+import org.talend.utils.security.StudioEncryption;
 
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ PasswordUtil.class, CryptoHelper.class })
+@PrepareForTest({ PasswordUtil.class, StudioEncryption.class })
 public class PasswordUtilTest {
 
     @Test
@@ -56,11 +58,9 @@ public class PasswordUtilTest {
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V2;
-        PowerMockito.mockStatic(CryptoHelper.class);
-        CryptoHelper mockCryptoHelper = PowerMockito.mock(CryptoHelper.class);
+        PowerMockito.mockStatic(StudioEncryption.class);
         String decryptPassword_expect2 = decryptPassword_expect + "2"; //$NON-NLS-1$
-        PowerMockito.when(mockCryptoHelper.decrypt(anyString())).thenReturn(decryptPassword_expect2);
-        PowerMockito.when(CryptoHelper.getDefault()).thenReturn(mockCryptoHelper);
+        PowerMockito.when(StudioEncryption.decrypt(anyString())).thenReturn(decryptPassword_expect2);
         decryptPassword = PasswordUtil.decryptPassword(encodedPassword, algorithm);
         assertEquals(decryptPassword_expect2, decryptPassword);
     }
@@ -112,11 +112,9 @@ public class PasswordUtilTest {
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V2;
-        PowerMockito.mockStatic(CryptoHelper.class);
-        CryptoHelper mockCryptoHelper = PowerMockito.mock(CryptoHelper.class);
+        PowerMockito.mockStatic(StudioEncryption.class);
         String encryptedPassword_expect2 = encryptedPassword_expect + "2"; //$NON-NLS-1$
-        PowerMockito.when(mockCryptoHelper.encrypt(anyString())).thenReturn(encryptedPassword_expect2);
-        PowerMockito.when(CryptoHelper.getDefault()).thenReturn(mockCryptoHelper);
+        PowerMockito.when(StudioEncryption.encrypt(anyString())).thenReturn(encryptedPassword_expect2);
         encryptedPassword = PasswordUtil.encryptPassword(plainPassword, algorithm);
         assertEquals(encryptedPassword_expect2, encryptedPassword);
     }

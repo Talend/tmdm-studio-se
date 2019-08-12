@@ -10,5 +10,6 @@ Require-Bundle: org.talend.core,
  org.eclipse.ui.workbench,
  org.eclipse.core.runtime,
  org.eclipse.equinox.registry,
- org.talend.designer.codegen
+ org.talend.designer.codegen,
+ org.talend.commons.runtime
 Eclipse-BundleShape: dir
