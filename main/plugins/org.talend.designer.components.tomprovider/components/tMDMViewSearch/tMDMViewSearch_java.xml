@@ -192,7 +192,7 @@
 
       <IMPORT NAME="SOAP-JAF" MODULE="activation.jar" MVN="mvn:org.talend.libraries/activation/6.0.0"  UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/activation.jar" BundleID="" REQUIRED="true" />
       <!-- Jars for cxf begin -->
-                               <IMPORT
+                <IMPORT
                     NAME="cxf-core-3.3.1"
                     MODULE="cxf-core-3.3.1.jar"
                     MVN="mvn:org.apache.cxf/cxf-core/3.3.1"
