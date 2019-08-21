@@ -118,7 +118,7 @@ public class XSDEditor extends MultiPageEditorPart
             "The complex type may not have duplicate name",
             "XSD: An element reference may only have an id, minOccurs, or maxOccurs" };
 
-    private static Log log = LogFactory.getLog(XSDEditor.class);
+    private static Log LOG = LogFactory.getLog(XSDEditor.class);
 
     public static final String CONTRUIBUTIONID_DATAMODELPAGE = "org.talend.mdm.workbench.propertyContributor.datamodel";
 
@@ -146,7 +146,7 @@ public class XSDEditor extends MultiPageEditorPart
             reader = new InputStreamReader(file.getContents());
             fileContents = IOUtils.toByteArray(reader, "utf-8");
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } finally {
             if (reader != null) {
                 IOUtils.closeQuietly(reader);
@@ -183,7 +183,7 @@ public class XSDEditor extends MultiPageEditorPart
             getDataModelEditorPage().setDirty(false);
 
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } finally {
             IOUtils.closeQuietly(stream);
             if (null != monitor) {
@@ -264,7 +264,7 @@ public class XSDEditor extends MultiPageEditorPart
         } catch (SAXParseException ex) {
             // do nothing
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -468,7 +468,7 @@ public class XSDEditor extends MultiPageEditorPart
                     }
                 }
             } catch (Exception e) {
-                log.error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
             }
 
             return false;
@@ -605,7 +605,7 @@ public class XSDEditor extends MultiPageEditorPart
         } catch (SAXParseException e) {
             ex = e;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             ex = e;
         }
 
@@ -737,6 +737,12 @@ public class XSDEditor extends MultiPageEditorPart
                     }
                 }
             }
+        } else {
+            try {
+                page.showView(MDMPerspective.VIEWID_PROPERTYVIEW);
+            } catch (PartInitException e) {
+                LOG.error("Error occurred while showing properties view.", e);
+            }
         }
     }
 
@@ -796,7 +802,7 @@ public class XSDEditor extends MultiPageEditorPart
                 file.setContents(new ByteArrayInputStream(fileContents), IFile.FORCE, null);
             }
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } finally {
             try {
 
@@ -807,7 +813,7 @@ public class XSDEditor extends MultiPageEditorPart
                 }
                 System.gc();
             } catch (Throwable e) {
-                log.error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
             }
         }
 
