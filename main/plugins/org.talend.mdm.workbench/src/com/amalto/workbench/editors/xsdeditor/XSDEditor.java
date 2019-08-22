@@ -118,7 +118,7 @@ public class XSDEditor extends MultiPageEditorPart
             "The complex type may not have duplicate name",
             "XSD: An element reference may only have an id, minOccurs, or maxOccurs" };
 
-    private static Log LOG = LogFactory.getLog(XSDEditor.class);
+    private static final Log LOG = LogFactory.getLog(XSDEditor.class);
 
     public static final String CONTRUIBUTIONID_DATAMODELPAGE = "org.talend.mdm.workbench.propertyContributor.datamodel";
 
