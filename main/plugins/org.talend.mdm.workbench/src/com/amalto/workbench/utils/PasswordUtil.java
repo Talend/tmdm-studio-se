@@ -25,6 +25,8 @@ public class PasswordUtil {
 
     public static final String ALGORITHM_COMMON_V2 = "CommonV2"; //$NON-NLS-1$
 
+    private static StudioEncryption se = StudioEncryption.getStudioEncryption(null);
+
     public static String decryptPassword(String encodedPassword, String algorithm) {
         if (encodedPassword == null) {
             throw new IllegalArgumentException();
@@ -32,7 +34,7 @@ public class PasswordUtil {
         if (algorithm != null) {
             if (algorithm.equals(ALGORITHM_COMMON_V2)) {
                 try {
-                    String decryptedPassword = StudioEncryption.decrypt(encodedPassword);
+                    String decryptedPassword = se.decrypt(encodedPassword);
                     return decryptedPassword;
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
@@ -66,7 +68,7 @@ public class PasswordUtil {
         if (algorithm != null) {
             if (algorithm.equals(ALGORITHM_COMMON_V2)) {
                 try {
-                    return StudioEncryption.encrypt(plainPassword);
+                    return se.encrypt(plainPassword);
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
                 }

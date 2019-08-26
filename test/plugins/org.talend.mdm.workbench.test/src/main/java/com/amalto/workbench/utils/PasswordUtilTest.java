@@ -19,6 +19,8 @@ import org.talend.utils.security.StudioEncryption;
 @PrepareForTest({ PasswordUtil.class, StudioEncryption.class })
 public class PasswordUtilTest {
 
+    private StudioEncryption se = StudioEncryption.getStudioEncryption(null);
+
     @Test
     public void testDecryptPasswordStringString() {
         String encodedPassword = null;
@@ -58,9 +60,8 @@ public class PasswordUtilTest {
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V2;
-        PowerMockito.mockStatic(StudioEncryption.class);
         String decryptPassword_expect2 = decryptPassword_expect + "2"; //$NON-NLS-1$
-        PowerMockito.when(StudioEncryption.decrypt(anyString())).thenReturn(decryptPassword_expect2);
+        PowerMockito.when(se.decrypt(anyString())).thenReturn(decryptPassword_expect2);
         decryptPassword = PasswordUtil.decryptPassword(encodedPassword, algorithm);
         assertEquals(decryptPassword_expect2, decryptPassword);
     }
@@ -112,9 +113,8 @@ public class PasswordUtilTest {
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V2;
-        PowerMockito.mockStatic(StudioEncryption.class);
         String encryptedPassword_expect2 = encryptedPassword_expect + "2"; //$NON-NLS-1$
-        PowerMockito.when(StudioEncryption.encrypt(anyString())).thenReturn(encryptedPassword_expect2);
+        PowerMockito.when(se.encrypt(anyString())).thenReturn(encryptedPassword_expect2);
         encryptedPassword = PasswordUtil.encryptPassword(plainPassword, algorithm);
         assertEquals(encryptedPassword_expect2, encryptedPassword);
     }
