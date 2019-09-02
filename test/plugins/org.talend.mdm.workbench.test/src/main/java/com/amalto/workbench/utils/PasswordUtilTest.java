@@ -12,14 +12,12 @@ import org.mockito.ArgumentMatchers;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.talend.utils.security.StudioEncryption;
+import org.talend.utils.security.CryptoHelperWrapper;
 
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ PasswordUtil.class, StudioEncryption.class })
+@PrepareForTest({ PasswordUtil.class, CryptoHelperWrapper.class })
 public class PasswordUtilTest {
-
-    private StudioEncryption se = StudioEncryption.getStudioEncryption(null);
 
     @Test
     public void testDecryptPasswordStringString() {
@@ -61,7 +59,8 @@ public class PasswordUtilTest {
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V2;
         String decryptPassword_expect2 = decryptPassword_expect + "2"; //$NON-NLS-1$
-        PowerMockito.when(se.decrypt(anyString())).thenReturn(decryptPassword_expect2);
+        PowerMockito.mockStatic(CryptoHelperWrapper.class);
+        PowerMockito.when(CryptoHelperWrapper.decrypt(anyString())).thenReturn(decryptPassword_expect2);
         decryptPassword = PasswordUtil.decryptPassword(encodedPassword, algorithm);
         assertEquals(decryptPassword_expect2, decryptPassword);
     }
@@ -114,7 +113,8 @@ public class PasswordUtilTest {
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V2;
         String encryptedPassword_expect2 = encryptedPassword_expect + "2"; //$NON-NLS-1$
-        PowerMockito.when(se.encrypt(anyString())).thenReturn(encryptedPassword_expect2);
+        PowerMockito.mockStatic(CryptoHelperWrapper.class);
+        PowerMockito.when(CryptoHelperWrapper.encrypt(anyString())).thenReturn(encryptedPassword_expect2);
         encryptedPassword = PasswordUtil.encryptPassword(plainPassword, algorithm);
         assertEquals(encryptedPassword_expect2, encryptedPassword);
     }

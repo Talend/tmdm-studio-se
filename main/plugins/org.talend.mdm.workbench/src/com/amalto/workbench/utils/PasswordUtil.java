@@ -14,7 +14,7 @@ package com.amalto.workbench.utils;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import org.talend.utils.security.StudioEncryption;
+import org.talend.utils.security.CryptoHelperWrapper;
 
 
 public class PasswordUtil {
@@ -25,8 +25,6 @@ public class PasswordUtil {
 
     public static final String ALGORITHM_COMMON_V2 = "CommonV2"; //$NON-NLS-1$
 
-    private static StudioEncryption se = StudioEncryption.getStudioEncryption(null);
-
     public static String decryptPassword(String encodedPassword, String algorithm) {
         if (encodedPassword == null) {
             throw new IllegalArgumentException();
@@ -34,7 +32,7 @@ public class PasswordUtil {
         if (algorithm != null) {
             if (algorithm.equals(ALGORITHM_COMMON_V2)) {
                 try {
-                    String decryptedPassword = se.decrypt(encodedPassword);
+                    String decryptedPassword = CryptoHelperWrapper.decrypt(encodedPassword);
                     return decryptedPassword;
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
@@ -68,7 +66,7 @@ public class PasswordUtil {
         if (algorithm != null) {
             if (algorithm.equals(ALGORITHM_COMMON_V2)) {
                 try {
-                    return se.encrypt(plainPassword);
+                    return CryptoHelperWrapper.encrypt(plainPassword);
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
                 }
