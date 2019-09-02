@@ -1,10 +1,8 @@
 package com.amalto.workbench.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,9 +56,10 @@ public class PasswordUtilTest {
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V2;
-        String decryptPassword_expect2 = decryptPassword_expect + "2"; //$NON-NLS-1$
         PowerMockito.mockStatic(CryptoHelperWrapper.class);
-        PowerMockito.when(CryptoHelperWrapper.decrypt(anyString())).thenReturn(decryptPassword_expect2);
+        CryptoHelperWrapper mockCryptoHelper = PowerMockito.mock(CryptoHelperWrapper.class);
+        String decryptPassword_expect2 = decryptPassword_expect + "2"; //$NON-NLS-1$
+        PowerMockito.when(mockCryptoHelper.decrypt(anyString())).thenReturn(decryptPassword_expect2);
         decryptPassword = PasswordUtil.decryptPassword(encodedPassword, algorithm);
         assertEquals(decryptPassword_expect2, decryptPassword);
     }
@@ -112,9 +111,10 @@ public class PasswordUtilTest {
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V2;
-        String encryptedPassword_expect2 = encryptedPassword_expect + "2"; //$NON-NLS-1$
         PowerMockito.mockStatic(CryptoHelperWrapper.class);
-        PowerMockito.when(CryptoHelperWrapper.encrypt(anyString())).thenReturn(encryptedPassword_expect2);
+        CryptoHelperWrapper mockCryptoHelper = PowerMockito.mock(CryptoHelperWrapper.class);
+        String encryptedPassword_expect2 = encryptedPassword_expect + "2"; //$NON-NLS-1$
+        PowerMockito.when(mockCryptoHelper.encrypt(anyString())).thenReturn(encryptedPassword_expect2);
         encryptedPassword = PasswordUtil.encryptPassword(plainPassword, algorithm);
         assertEquals(encryptedPassword_expect2, encryptedPassword);
     }
