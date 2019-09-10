@@ -32,6 +32,8 @@ public interface IAnnotationConst {
 
     String KEY_NO_REMOVE = "X_No_Remove"; //$NON-NLS-1$
 
+    String KEY_CATEGORY = "X_Category";
+
     //
     String KEY_PK_INFO = "X_PrimaryKeyInfo"; //$NON-NLS-1$
 
