@@ -902,7 +902,6 @@ public class XSDAnnotationsStructure {
             categoryFieldsMap.get(category).add(field);
         }
         for (Element element : annotation.getApplicationInformation()) {
-
             String name = element.getLocalName();
             if (APPINFO.equals(name.toLowerCase())) {
                 name = element.getAttribute(SOURCE);
@@ -963,7 +962,6 @@ public class XSDAnnotationsStructure {
      */
     public Map<String, Map<String, String>> getCategoryFromElement(Element element) {
         Map<String, Map<String, String>> categories = new LinkedHashMap<>();
-
         String name = element.getLocalName();
         if (APPINFO.equals(name.toLowerCase())) {
             name = element.getAttribute(SOURCE);
