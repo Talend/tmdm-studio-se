@@ -901,7 +901,6 @@ public class XSDAnnotationsStructure {
             }
             categoryFieldsMap.get(category).add(field);
         }
-
         for (Element element : annotation.getApplicationInformation()) {
 
             String name = element.getLocalName();

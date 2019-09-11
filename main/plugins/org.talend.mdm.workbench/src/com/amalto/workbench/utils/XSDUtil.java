@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xsd.XSDAnnotation;
@@ -319,8 +320,14 @@ public class XSDUtil {
      * @return List<String> object which includes the field's name.
      */
     public static List<String> getFields(XSDElementDeclaration concept) {
-        List<String> fields = new ArrayList<String>();
         XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) concept.getType();
+        List<String> fields = getFields(complexType);
+        fields = fields.stream().sorted().collect(Collectors.toList());
+        return fields;
+    }
+
+    private static List<String> getFields(XSDComplexTypeDefinition complexType) {
+        List<String> fields = new ArrayList<String>();
         XSDModelGroup term = (XSDModelGroup) ((XSDParticle) complexType.getContent()).getTerm();
         for (XSDParticle elementParticle : term.getContents()) {
             XSDParticleContent content = elementParticle.getContent();
@@ -329,6 +336,13 @@ public class XSDUtil {
                 if (field.getName() != null) {
                     fields.add(field.getName());
                 }
+            }
+        }
+        XSDTypeDefinition baseType = complexType.getBaseTypeDefinition();
+        if (baseType != null && baseType != complexType && baseType instanceof XSDComplexTypeDefinition) {
+            List<String> parentFields = getFields((XSDComplexTypeDefinition) baseType);
+            if (parentFields != null) {
+                fields.addAll(parentFields);
             }
         }
         return fields;
