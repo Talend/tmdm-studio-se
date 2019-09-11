@@ -15,6 +15,8 @@ package com.amalto.workbench.utils;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -42,11 +44,16 @@ import org.talend.mdm.commmon.util.core.EUUIDCustomType;
 import org.talend.mdm.commmon.util.core.ICoreConstants;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.models.IAnnotationConst;
 
 public class XSDAnnotationsStructure {
+
+    private static final String CATEGORY_FIELD = "field";
+
+    private static final String CATEGORY_NAME = "name";
 
     private static final String SOURCE = "source";
 
@@ -816,6 +823,239 @@ public class XSDAnnotationsStructure {
         return targetSystems;
     }
 
+    /**
+     * return all existed category names, it is simple wrapper for getCategoryFromElement() method
+     * 
+     * @return return a Set object included all category names
+     */
+    public Set<String> getCategoryNamesFromEntity() {
+        Set<String> categoryNames = new HashSet<>();
+
+        for (Element element : annotation.getApplicationInformation()) {
+            Map<String, Map<String, String>> category = getCategoryFromElement(element);
+            categoryNames.addAll(category.keySet());
+        }
+        return categoryNames;
+    }
+
+    /**
+     * Return filed-> category map for current entity.
+     * 
+     * @return filed-> category map
+     */
+    public Map<String, String> getFieldCategoryMap() {
+        Map<String, String> fieldMap = new HashMap<>();
+
+        for (Element element : annotation.getApplicationInformation()) {
+            String name = element.getLocalName();
+            if (APPINFO.equals(name.toLowerCase())) {
+                name = element.getAttribute(SOURCE);
+                if (name.equals(IAnnotationConst.KEY_CATEGORY)) {
+                    NodeList childNodes = element.getChildNodes();
+                    List<String> fields = new ArrayList<>();
+                    String categoryName = null;
+                    for (int i = 0; i < childNodes.getLength(); i++) {
+                        Node node = childNodes.item(i);
+                        String localName = node.getLocalName();
+                        if (localName != null) {
+                            Node subChild = node.getFirstChild();
+                            if (subChild != null) {
+                                String nodeValue = subChild.getNodeValue();
+                                if (nodeValue != null) {
+                                    if (localName.equalsIgnoreCase(CATEGORY_NAME)) {
+                                        categoryName = nodeValue;
+                                    } else if (localName.equalsIgnoreCase(CATEGORY_FIELD) && nodeValue != null) {
+                                        fields.add(nodeValue);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (categoryName != null) {
+                        for (String field : fields) {
+                            fieldMap.put(field, categoryName);
+                        }
+                    }
+                }
+            }
+        }
+        return fieldMap;
+    }
+
+    /**
+     * Set fields for category
+     * 
+     * @param fieldMap field->category map
+     * @return return true when field is updated successfully.
+     */
+    public boolean setCategoryFields(Map<String, String> fieldMap) {
+        if (fieldMap == null || fieldMap.isEmpty()) {
+            return false;
+        }
+        // convert the map from field->category to category-List(fields)
+        Map<String, List<String>> categoryFieldsMap = new LinkedHashMap<>();
+        for (String field : fieldMap.keySet()) {
+            String category = fieldMap.get(field);
+            if (!categoryFieldsMap.containsKey(category)) {
+                categoryFieldsMap.put(category, new ArrayList<String>());
+            }
+            categoryFieldsMap.get(category).add(field);
+        }
+
+        for (Element element : annotation.getApplicationInformation()) {
+
+            String name = element.getLocalName();
+            if (APPINFO.equals(name.toLowerCase())) {
+                name = element.getAttribute(SOURCE);
+                if (name.equals(IAnnotationConst.KEY_CATEGORY)) {
+                    NodeList childNodes = element.getChildNodes();
+                    List<Node> fieldNodes = new ArrayList<>();
+                    String categoryName = null;
+                    for (int i = 0; i < childNodes.getLength(); i++) {
+                        Node node = childNodes.item(i);
+                        String localName = node.getLocalName();
+                        if (localName != null) {
+                            Node subChild = node.getFirstChild();
+                            if (subChild != null) {
+                                String nodeValue = subChild.getNodeValue();
+                                if (nodeValue != null) {
+                                    if (localName.equalsIgnoreCase(CATEGORY_NAME)) {
+                                        categoryName = nodeValue;
+                                    } else if (localName.equalsIgnoreCase(CATEGORY_FIELD) && nodeValue != null) {
+                                        fieldNodes.add(node);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (categoryName != null) {
+                        for (Node fieldNode : fieldNodes) {
+                            element.removeChild(fieldNode);
+                        }
+                        List<String> fields = categoryFieldsMap.get(categoryName);
+                        if (fields != null) {
+                            for (String field : fields) {
+                                Element fieldElement = element.getOwnerDocument().createElementNS(null, CATEGORY_FIELD);
+                                Node fieldValue = element.getOwnerDocument().createTextNode(field);
+                                fieldElement.appendChild(fieldValue);
+                                element.appendChild(fieldElement);
+                                hasChanged = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (hasChanged) {
+            annotation.updateElement();
+            return true;
+        }
+        return false;
+
+    }
+
+    /**
+     * Query all categories definitions
+     * 
+     * @param element annotation element
+     * @return this method return a map,( key=> category name, value => multi-language labels,such as<en:categorylabel>
+     * )
+     */
+    public Map<String, Map<String, String>> getCategoryFromElement(Element element) {
+        Map<String, Map<String, String>> categories = new LinkedHashMap<>();
+
+        String name = element.getLocalName();
+        if (APPINFO.equals(name.toLowerCase())) {
+            name = element.getAttribute(SOURCE);
+            if (name.equals(IAnnotationConst.KEY_CATEGORY)) {
+                NodeList childNodes = element.getChildNodes();
+                Map<String, String> labels = new LinkedHashMap<>();
+                String categoryName = null;
+                for (int i = 0; i < childNodes.getLength(); i++) {
+                    Node node = childNodes.item(i);
+                    String localName = node.getLocalName();
+                    if (localName != null) {
+                        Node subChild = node.getFirstChild();
+                        if (subChild != null) {
+                            String nodeValue = subChild.getNodeValue();
+                            if (nodeValue != null) {
+                                if (localName.equalsIgnoreCase(CATEGORY_NAME)) {
+                                    categoryName = nodeValue;
+                                } else if (localName.startsWith("label_")) {
+                                    String lang = localName.substring(6);
+                                    labels.put(lang, nodeValue);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (categoryName != null) {
+                    categories.put(categoryName, labels);
+                }
+            }
+        }
+        return categories;
+    }
+
+    /**
+     * Create or replace a category with multi-language
+     * 
+     * @param oldNode when oldNode is null then create a new category, else replace category of oldNode with new one.
+     * category
+     * @param categoryName
+     * @param labels multi-language labels
+     * @return return True when create/replace successfully
+     */
+    public boolean setCategory4Entity(Element oldNode, String categoryName, Map<String, String> labels) {
+        if (categoryName == null) {
+            return false;
+        }
+        if (declaration != null) {
+            if (declaration.getAnnotation() == null) {
+                declaration.setAnnotation(annotation);
+            }
+        }
+
+        Element appinfo = annotation.createApplicationInformation(IAnnotationConst.KEY_CATEGORY);
+        Element element = appinfo.getOwnerDocument().createElementNS(null, CATEGORY_NAME);
+        Node nameValue = appinfo.getOwnerDocument().createTextNode(categoryName);
+        element.appendChild(nameValue);
+        appinfo.appendChild(element);
+        if (labels != null) {
+            for (String lang : labels.keySet()) {
+                String labelValue = labels.get(lang);
+                Element langElement = appinfo.getOwnerDocument().createElementNS(null, "label_" + lang);
+                Node labelNode = appinfo.getOwnerDocument().createTextNode(labelValue);
+                langElement.appendChild(labelNode);
+                appinfo.appendChild(langElement);
+            }
+        }
+        if (oldNode == null) {
+            annotation.getElement().appendChild(appinfo);
+        } else {
+            annotation.getElement().replaceChild(appinfo, oldNode);
+            annotation.getApplicationInformation().remove(oldNode);
+        }
+        hasChanged = true;
+
+        return true;
+    }
+
+    /**
+     * Remove the category element definition from annotation.
+     * 
+     * @param categoryElement
+     * @return true when it run successful.
+     */
+    public boolean removeCategory(Element categoryElement) {
+        if (removeAnnotation(categoryElement)) {
+            hasChanged = true;
+            return true;
+        }
+        return false;
+    }
+
     /*************************************************************
      * Multilingual facet error messages
      *************************************************************/
@@ -985,6 +1225,14 @@ public class XSDAnnotationsStructure {
             }
         } while (appInfo != null);
         return somethingRemoved;
+    }
+
+    private boolean removeAnnotation(Node node) {
+        if (node != null) {
+            annotation.getElement().removeChild(node);
+            return annotation.getApplicationInformation().remove(node); // yes we need to do that too....
+        }
+        return false;
     }
 
     private boolean setAppInfo(String type, String value, boolean overwrite) {

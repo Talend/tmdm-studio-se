@@ -207,7 +207,7 @@ public class XSDUtil {
         Map<XSDElementDeclaration, List<XSDComplexTypeDefinition>> entityMapComplexTypes = buildEntityUsedComplexTypeMap(schema);
 
         Iterator<XSDElementDeclaration> iterator = entityMapComplexTypes.keySet().iterator();
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             XSDElementDeclaration concept = iterator.next();
             List<XSDComplexTypeDefinition> ctypes = entityMapComplexTypes.get(concept);
             for (XSDComplexTypeDefinition ctype : ctypes) {
@@ -228,7 +228,7 @@ public class XSDUtil {
         return false;
     }
 
-    public static Map<XSDElementDeclaration,List<XSDComplexTypeDefinition>> buildEntityUsedComplexTypeMap(XSDSchema schema) {
+    public static Map<XSDElementDeclaration, List<XSDComplexTypeDefinition>> buildEntityUsedComplexTypeMap(XSDSchema schema) {
         Map<XSDElementDeclaration, List<XSDComplexTypeDefinition>> entityMapComplexType = new HashMap<XSDElementDeclaration, List<XSDComplexTypeDefinition>>();
 
         EList<XSDSchemaContent> contents = schema.getContents();
@@ -265,16 +265,16 @@ public class XSDUtil {
     }
 
     public static boolean isPrimaryKeyElement(XSDParticle particle) {
-        if(isSimpleTypeElement(particle)) {
+        if (isSimpleTypeElement(particle)) {
             Map<XSDElementDeclaration, List<XSDComplexTypeDefinition>> entityMapComplexTypes = buildEntityUsedComplexTypeMap(
                     (XSDSchema) particle.getRootContainer());
 
             Iterator<XSDElementDeclaration> iterator = entityMapComplexTypes.keySet().iterator();
-            while(iterator.hasNext()) {
+            while (iterator.hasNext()) {
                 XSDElementDeclaration concept = iterator.next();
-                List<String> keyFields  = getKeyFields(concept);
+                List<String> keyFields = getKeyFields(concept);
 
-                if(keyFields.contains(((XSDElementDeclaration)particle.getTerm()).getName())) {
+                if (keyFields.contains(((XSDElementDeclaration) particle.getTerm()).getName())) {
                     List<XSDComplexTypeDefinition> ctypes = entityMapComplexTypes.get(concept);
                     for (XSDComplexTypeDefinition ctype : ctypes) {
                         XSDComplexTypeContent ctypeContent = ctype.getContent();
@@ -283,7 +283,7 @@ public class XSDUtil {
                             XSDParticleContent particleContent = typeParticle.getContent();
                             if (particleContent instanceof XSDModelGroup) {
                                 XSDModelGroup particleGroup = (XSDModelGroup) particleContent;
-                                if(particleGroup.getContents().contains(particle)) {
+                                if (particleGroup.getContents().contains(particle)) {
                                     return true;
                                 }
                             }
@@ -301,15 +301,37 @@ public class XSDUtil {
         List<String> keyFields = new ArrayList<String>();
 
         EList<XSDIdentityConstraintDefinition> identityConstraintDefinitions = concept.getIdentityConstraintDefinitions();
-        for(XSDIdentityConstraintDefinition icd:identityConstraintDefinitions) {
-            if(concept.getName().equals(icd.getName())) {
+        for (XSDIdentityConstraintDefinition icd : identityConstraintDefinitions) {
+            if (concept.getName().equals(icd.getName())) {
                 EList<XSDXPathDefinition> fields = icd.getFields();
-                for(XSDXPathDefinition xpathdef:fields) {
+                for (XSDXPathDefinition xpathdef : fields) {
                     keyFields.add(xpathdef.getValue());
                 }
             }
         }
         return keyFields;
+    }
+
+    /**
+     * Find all first level fields for the entity
+     * 
+     * @param concept Entity XSD object
+     * @return List<String> object which includes the field's name.
+     */
+    public static List<String> getFields(XSDElementDeclaration concept) {
+        List<String> fields = new ArrayList<String>();
+        XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) concept.getType();
+        XSDModelGroup term = (XSDModelGroup) ((XSDParticle) complexType.getContent()).getTerm();
+        for (XSDParticle elementParticle : term.getContents()) {
+            XSDParticleContent content = elementParticle.getContent();
+            if (content instanceof XSDElementDeclaration) {
+                XSDElementDeclaration field = (XSDElementDeclaration) content;
+                if (field.getName() != null) {
+                    fields.add(field.getName());
+                }
+            }
+        }
+        return fields;
     }
 
     public static List<String> getAllPKXpaths(XSDSchema schema) {
