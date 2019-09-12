@@ -85,6 +85,16 @@ public class CategoryTest {
     }
 
     @Test
+    public void testClearFields() {
+        XSDElementDeclaration decl = getEntity(0);
+        XSDAnnotationsStructure struct = new XSDAnnotationsStructure(decl);
+        Map<String, String> newFieldMap = new HashMap<>();
+        struct.setCategoryFields(newFieldMap);
+        Map<String, String> fieldCategoryMap = struct.getFieldCategoryMap();
+        assertTrue(fieldCategoryMap.size() == 0);
+    }
+
+    @Test
     public void testGetCategoryFromElement() {
         XSDElementDeclaration decl = getEntity(0);
         XSDAnnotationsStructure struct = new XSDAnnotationsStructure(decl);

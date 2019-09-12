@@ -889,7 +889,7 @@ public class XSDAnnotationsStructure {
      * @return return true when field is updated successfully.
      */
     public boolean setCategoryFields(Map<String, String> fieldMap) {
-        if (fieldMap == null || fieldMap.isEmpty()) {
+        if (fieldMap == null) {
             return false;
         }
         // convert the map from field->category to category-List(fields)
