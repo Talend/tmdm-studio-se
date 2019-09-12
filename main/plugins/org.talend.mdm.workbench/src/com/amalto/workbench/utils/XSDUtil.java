@@ -27,6 +27,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDComplexTypeContent;
 import org.eclipse.xsd.XSDComplexTypeDefinition;
+import org.eclipse.xsd.XSDConcreteComponent;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDModelGroup;
@@ -365,6 +366,27 @@ public class XSDUtil {
         }
 
         return entity2xpaths;
+    }
+
+    public static XSDComplexTypeDefinition getContainerTypeOfField(XSDParticle particle) {
+        if (particle == null) {
+            return null;
+        }
+
+        XSDConcreteComponent fieldContainer = particle.getContainer();
+        XSDConcreteComponent modelgroupContainer = fieldContainer.getContainer();
+        XSDConcreteComponent typeContainer = modelgroupContainer.getContainer();
+        XSDComplexTypeDefinition complexTypedef = (XSDComplexTypeDefinition) typeContainer;
+
+        return complexTypedef;
+    }
+
+    public static boolean isAnonymousType(XSDTypeDefinition typedef) {
+        if (typedef instanceof XSDComplexTypeDefinition) {
+            return ((XSDComplexTypeDefinition) typedef).getName() == null;
+        }
+
+        return false;
     }
 
     public static boolean isValidatedXSDDate(String newText) {

@@ -13,6 +13,7 @@
 package com.amalto.workbench.actions;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,10 +23,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
+import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTerm;
 import org.eclipse.xsd.XSDXPathDefinition;
 
@@ -34,6 +37,8 @@ import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.utils.Util;
+import com.amalto.workbench.utils.XSDAnnotationsStructure;
+import com.amalto.workbench.utils.XSDUtil;
 import com.amalto.workbench.utils.XtentisException;
 
 public class XSDDeleteParticleAction extends UndoAction {
@@ -97,6 +102,21 @@ public class XSDDeleteParticleAction extends UndoAction {
             XSDModelGroup group = (XSDModelGroup) particle.getContainer();
             group.getContents().remove(particle);
 
+            String fieldName = decl.getName();
+            XSDComplexTypeDefinition typedef = XSDUtil.getContainerTypeOfField(particle);
+
+            XSDSchema schema = particle.getSchema();
+            List<XSDElementDeclaration> concepts = schema.getElementDeclarations();
+            for (XSDElementDeclaration concept : concepts) {
+                if (hasBoundToConcept(typedef, concept)) {
+                    XSDAnnotationsStructure annoStructure = new XSDAnnotationsStructure(concept);
+                    Map<String, String> fieldCategoryMap = annoStructure.getFieldCategoryMap();
+                    fieldCategoryMap.remove(fieldName);
+                    annoStructure.setCategoryFields(fieldCategoryMap);
+                    concept.updateElement();
+                }
+            }
+
             // if (term instanceof XSDElementDeclaration) {
             // //remove type definition is no more used and type is not built in
             // XSDTypeDefinition typeDef = decl.getTypeDefinition();
@@ -109,7 +129,6 @@ public class XSDDeleteParticleAction extends UndoAction {
             // }
             // }
 
-            group.updateElement();
             xsdPartle = null;
             page.refresh();
             page.markDirty();
@@ -122,6 +141,25 @@ public class XSDDeleteParticleAction extends UndoAction {
         }
         return Status.OK_STATUS;
     }
+
+    /////////////
+
+    private boolean hasBoundToConcept(XSDComplexTypeDefinition ctypeDef, XSDElementDeclaration concept) {
+        XSDComplexTypeDefinition typeDefinition = (XSDComplexTypeDefinition) concept.getTypeDefinition();
+        if (typeDefinition == ctypeDef) {
+            return true;
+        }
+
+        if (!XSDUtil.isAnonymousType(ctypeDef) && !XSDUtil.isAnonymousType(typeDefinition)) {
+            List<XSDComplexTypeDefinition> superComplexTypes = Util.getAllSuperComplexTypes(typeDefinition);
+            if (superComplexTypes.contains(ctypeDef)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+    ////////////
 
     public void runWithEvent(Event event) {
         super.runWithEvent(event);
