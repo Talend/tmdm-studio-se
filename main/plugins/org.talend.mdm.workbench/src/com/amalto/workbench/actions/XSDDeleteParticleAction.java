@@ -12,6 +12,7 @@
 // ============================================================================
 package com.amalto.workbench.actions;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -28,7 +30,6 @@ import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDModelGroup;
 import org.eclipse.xsd.XSDParticle;
-import org.eclipse.xsd.XSDSchema;
 import org.eclipse.xsd.XSDTerm;
 import org.eclipse.xsd.XSDXPathDefinition;
 
@@ -36,7 +37,6 @@ import com.amalto.workbench.editors.DataModelMainPage;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
-import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XSDAnnotationsStructure;
 import com.amalto.workbench.utils.XSDUtil;
 import com.amalto.workbench.utils.XtentisException;
@@ -84,50 +84,23 @@ public class XSDDeleteParticleAction extends UndoAction {
                 return Status.CANCEL_STATUS;
             }
 
-            XSDIdentityConstraintDefinition identify = null;
-            XSDXPathDefinition keyPath = null;
-            List<Object> keyInfo = Util.getKeyInfo(decl);
-            if (keyInfo != null && keyInfo.size() > 0) {
-                identify = (XSDIdentityConstraintDefinition) keyInfo.get(0);
-                keyPath = (XSDXPathDefinition) keyInfo.get(1);
-                identify.getFields().remove(keyPath);
-                if (identify.getFields().size() == 0) {
-                    XSDElementDeclaration top = (XSDElementDeclaration) Util.getParent(decl);
-                    top.getIdentityConstraintDefinitions().remove(identify);
-                }
+            if (!(particle.getContainer() instanceof XSDModelGroup)) {
+                throw new XtentisException(Messages.bind(Messages.XSDDeleteParticleAction_ExceptionInfo,
+                        particle.getContainer().getClass().getName()));
             }
-            if (!(particle.getContainer() instanceof XSDModelGroup))
-                throw new XtentisException(Messages.bind(Messages.XSDDeleteParticleAction_ExceptionInfo, particle.getContainer().getClass().getName()));
 
+            List<XSDElementDeclaration> concepts = getConceptsOfField(particle);
+
+            for (XSDElementDeclaration concept : concepts) {
+                removePK(concept, decl);
+                //
+                syncEntityAnnotation(concept, particle, decl.getName());
+            }
+
+            //
             XSDModelGroup group = (XSDModelGroup) particle.getContainer();
             group.getContents().remove(particle);
-
-            String fieldName = decl.getName();
-            XSDComplexTypeDefinition typedef = XSDUtil.getContainerTypeOfField(particle);
-
-            XSDSchema schema = particle.getSchema();
-            List<XSDElementDeclaration> concepts = schema.getElementDeclarations();
-            for (XSDElementDeclaration concept : concepts) {
-                if (hasBoundToConcept(typedef, concept)) {
-                    XSDAnnotationsStructure annoStructure = new XSDAnnotationsStructure(concept);
-                    Map<String, String> fieldCategoryMap = annoStructure.getFieldCategoryMap();
-                    fieldCategoryMap.remove(fieldName);
-                    annoStructure.setCategoryFields(fieldCategoryMap);
-                    concept.updateElement();
-                }
-            }
-
-            // if (term instanceof XSDElementDeclaration) {
-            // //remove type definition is no more used and type is not built in
-            // XSDTypeDefinition typeDef = decl.getTypeDefinition();
-            // if ( (typeDef.getName()!=null) && //anonymous type
-            // (!typeDef.getSchema().getSchemaForSchemaNamespace().equals(typeDef.getTargetNamespace()))
-            // ){
-            // if (Util.findElementsUsingType(group.getSchema(),typeDef.getTargetNamespace(),
-            // typeDef.getName()).size()==0)
-            // group.getSchema().getContents().remove(typeDef);
-            // }
-            // }
+            group.updateElement();
 
             xsdPartle = null;
             page.refresh();
@@ -142,24 +115,54 @@ public class XSDDeleteParticleAction extends UndoAction {
         return Status.OK_STATUS;
     }
 
-    /////////////
+    private List<XSDElementDeclaration> getConceptsOfField(XSDParticle field) {
+        XSDComplexTypeDefinition typedef = XSDUtil.getContainerTypeOfField(field);
+        List<XSDElementDeclaration> concepts = schema.getElementDeclarations();
 
-    private boolean hasBoundToConcept(XSDComplexTypeDefinition ctypeDef, XSDElementDeclaration concept) {
-        XSDComplexTypeDefinition typeDefinition = (XSDComplexTypeDefinition) concept.getTypeDefinition();
-        if (typeDefinition == ctypeDef) {
-            return true;
-        }
-
-        if (!XSDUtil.isAnonymousType(ctypeDef) && !XSDUtil.isAnonymousType(typeDefinition)) {
-            List<XSDComplexTypeDefinition> superComplexTypes = Util.getAllSuperComplexTypes(typeDefinition);
-            if (superComplexTypes.contains(ctypeDef)) {
-                return true;
+        List<XSDElementDeclaration> conceptsOfField = new ArrayList<>();
+        for (XSDElementDeclaration concept : concepts) {
+            if (XSDUtil.hasBoundToConcept(typedef, concept)) {
+                conceptsOfField.add(concept);
             }
         }
 
-        return false;
+        return conceptsOfField;
     }
-    ////////////
+
+    private void removePK(XSDElementDeclaration concept, XSDElementDeclaration field) {
+        XSDIdentityConstraintDefinition identify = null;
+        XSDXPathDefinition keyPath = null;
+
+        List<Object> keyInfo = new ArrayList<>();
+        EList<XSDIdentityConstraintDefinition> idtylist = concept.getIdentityConstraintDefinitions();
+        for (XSDIdentityConstraintDefinition idty : idtylist) {
+            EList<XSDXPathDefinition> fields = idty.getFields();
+            for (XSDXPathDefinition path : fields) {
+                if ((path.getValue()).equals(field.getName())) {
+                    keyInfo.add(idty);
+                    keyInfo.add(path);
+                    break;
+                }
+            }
+        }
+        // List<Object> keyInfo = Util.getKeyInfo(decl);
+        if (keyInfo != null && keyInfo.size() > 0) {
+            identify = (XSDIdentityConstraintDefinition) keyInfo.get(0);
+            keyPath = (XSDXPathDefinition) keyInfo.get(1);
+            identify.getFields().remove(keyPath);
+            if (identify.getFields().size() == 0) {
+                concept.getIdentityConstraintDefinitions().remove(identify);
+            }
+        }
+    }
+
+    private void syncEntityAnnotation(XSDElementDeclaration conceptOfPariticle, XSDParticle particle, String fieldName) {
+        XSDAnnotationsStructure annoStructure = new XSDAnnotationsStructure(conceptOfPariticle);
+        Map<String, String> fieldCategoryMap = annoStructure.getFieldCategoryMap();
+        fieldCategoryMap.remove(fieldName);
+        annoStructure.setCategoryFields(fieldCategoryMap);
+        conceptOfPariticle.updateElement();
+    }
 
     public void runWithEvent(Event event) {
         super.runWithEvent(event);

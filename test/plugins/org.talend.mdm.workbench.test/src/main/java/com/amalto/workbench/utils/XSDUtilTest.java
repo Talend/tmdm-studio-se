@@ -455,6 +455,49 @@ public class XSDUtilTest {
     }
 
     @Test
+    public void testHasBoundToConcept() throws Exception {
+        String fileName = "TestCategory03.xsd"; //$NON-NLS-1$
+        String xsdString = TestUtil.readTestResource(XSDUtilTest.this.getClass(), fileName);
+        XSDSchema xsdSchema = Util.getXSDSchema(xsdString);
+
+        XSDComplexTypeDefinition typeO = null, typeA = null, typeB = null;
+        EList<XSDTypeDefinition> typeDefinitions = xsdSchema.getTypeDefinitions();
+        for (XSDTypeDefinition type : typeDefinitions) {
+            if (type instanceof XSDComplexTypeDefinition) {
+                if (type.getName().equals("CType")) {
+                    typeO = (XSDComplexTypeDefinition) type;
+                } else if (type.getName().equals("CTypeA")) {
+                    typeA = (XSDComplexTypeDefinition) type;
+                } else if (type.getName().equals("CTypeB")) {
+                    typeB = (XSDComplexTypeDefinition) type;
+                }
+            }
+        }
+
+        XSDElementDeclaration conceptA = null, conceptB = null, conceptC = null;
+        EList<XSDElementDeclaration> elementDeclarations = xsdSchema.getElementDeclarations();
+        for (XSDElementDeclaration concept : elementDeclarations) {
+            if (concept.getName().equals("EntityA")) {
+                conceptA = concept;
+            } else if (concept.getName().equals("EntityB")) {
+                conceptB = concept;
+            } else if (concept.getName().equals("EntityC")) {
+                conceptC = concept;
+            }
+        }
+
+        assertTrue(XSDUtil.hasBoundToConcept(typeO, conceptA));
+        assertTrue(XSDUtil.hasBoundToConcept(typeO, conceptB));
+        assertTrue(XSDUtil.hasBoundToConcept(typeA, conceptA));
+        assertTrue(XSDUtil.hasBoundToConcept(typeA, conceptB));
+        assertFalse(XSDUtil.hasBoundToConcept(typeB, conceptA));
+        assertTrue(XSDUtil.hasBoundToConcept(typeB, conceptB));
+        assertFalse(XSDUtil.hasBoundToConcept(typeO, conceptC));
+        assertFalse(XSDUtil.hasBoundToConcept(typeA, conceptC));
+        assertFalse(XSDUtil.hasBoundToConcept(typeB, conceptC));
+    }
+
+    @Test
     public void testIsValidatedXSDTime() {
         assertTrue(XSDUtil.isValidatedXSDTime("23:01:59")); //$NON-NLS-1$
         assertFalse(XSDUtil.isValidatedXSDTime("23:01:61")); //$NON-NLS-1$

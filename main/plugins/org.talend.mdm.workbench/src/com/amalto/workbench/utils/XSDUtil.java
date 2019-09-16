@@ -368,17 +368,36 @@ public class XSDUtil {
         return entity2xpaths;
     }
 
-    public static XSDComplexTypeDefinition getContainerTypeOfField(XSDParticle particle) {
-        if (particle == null) {
+    public static XSDComplexTypeDefinition getContainerTypeOfField(XSDParticle field) {
+        if (field == null) {
             return null;
         }
 
-        XSDConcreteComponent fieldContainer = particle.getContainer();
-        XSDConcreteComponent modelgroupContainer = fieldContainer.getContainer();
-        XSDConcreteComponent typeContainer = modelgroupContainer.getContainer();
-        XSDComplexTypeDefinition complexTypedef = (XSDComplexTypeDefinition) typeContainer;
+        XSDConcreteComponent modelGroup = field.getContainer();
+        XSDConcreteComponent particle = modelGroup.getContainer();
+        XSDConcreteComponent complexType = particle.getContainer();
+        XSDComplexTypeDefinition complexTypedef = (XSDComplexTypeDefinition) complexType;
 
         return complexTypedef;
+    }
+
+    /**
+     * check if <b>ctypeDef</b> has been used for <b>concept</b>'s type (concept.getTypeDefinition()) 
+     */
+    public static boolean hasBoundToConcept(XSDComplexTypeDefinition ctypeDef, XSDElementDeclaration concept) {
+        XSDComplexTypeDefinition typeDefinition = (XSDComplexTypeDefinition) concept.getTypeDefinition();
+        if (typeDefinition == ctypeDef) {
+            return true;
+        }
+
+        if (!isAnonymousType(ctypeDef) && !isAnonymousType(typeDefinition)) {
+            List<XSDComplexTypeDefinition> superComplexTypes = Util.getAllSuperComplexTypes(typeDefinition);
+            if (superComplexTypes.contains(ctypeDef)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static boolean isAnonymousType(XSDTypeDefinition typedef) {
