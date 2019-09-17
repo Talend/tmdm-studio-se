@@ -47,5 +47,7 @@ public interface IDataModelMainPageExAdapter extends IExAdapter<DataModelMainPag
 
     void setAnnotationActions2(Object obj, IMenuManager manager);
 
+    void setCategoryActions(Object obj, IMenuManager manager);
+
     void doubleClick(int elem);
 }

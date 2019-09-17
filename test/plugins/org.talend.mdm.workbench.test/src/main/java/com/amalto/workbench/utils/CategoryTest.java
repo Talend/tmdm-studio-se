@@ -1,3 +1,15 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
 package com.amalto.workbench.utils;
 
 import static org.junit.Assert.assertTrue;
@@ -22,7 +34,7 @@ import com.amalto.workbench.models.IAnnotationConst;
 @SuppressWarnings("nls")
 public class CategoryTest {
 
-    private static Logger log = Logger.getLogger(CategoryTest.class);
+    private static final Logger LOG = Logger.getLogger(CategoryTest.class);
 
     private XSDSchema getSchema(String resourceName) {
         InputStream inputStream = getClass().getResourceAsStream(resourceName); // $NON-NLS-1$
@@ -33,7 +45,7 @@ public class CategoryTest {
             XSDSchema schema = Util.getXSDSchema(xsd);
             return schema;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } finally {
             IOUtils.closeQuietly(outputStream);
             IOUtils.closeQuietly(inputStream);

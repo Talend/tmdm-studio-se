@@ -1265,6 +1265,8 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
                     return 124;
                 } else if (source.equals(IAnnotationConst.KEY_NO_REMOVE)) {
                     return 125;
+                } else if (source.equals(IAnnotationConst.KEY_CATEGORY)) {
+                    return 126;
                 }
             }
 
@@ -1504,7 +1506,6 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
                         // Xpath
                         manager.add(new Separator());
                         manager.add(getXPathAction);
-
                     }
                 }
             }
@@ -1614,6 +1615,10 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
 
         manager.add(new Separator());
 
+        // category
+        if (exAdapter != null) {
+            exAdapter.setCategoryActions(obj, manager);
+        }
         drillDownAdapter.addNavigationActions(manager);
         // Other plug-ins can contribute there actions here
         manager.add(new Separator(ADDITIONMENUID));
@@ -1720,7 +1725,6 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
                 manager.add(new Separator());
             }
         }
-
     }
 
     private IMenuManager getAddElementMenuForTypeClass(Class<?> typeClass, String menuName) {
@@ -2668,6 +2672,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
             case 117:
             case 124:
             case 125:
+            case 126:
                 if (exAdapter != null) {
                     exAdapter.doubleClick(elem);
                 }
@@ -3004,7 +3009,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
     }
 
     public boolean isReadOnly() {
-        Boolean readOnly = (Boolean) getEditorInput().getAdapter(Boolean.class);
+        Boolean readOnly = getEditorInput().getAdapter(Boolean.class);
         return readOnly;
     }
 
