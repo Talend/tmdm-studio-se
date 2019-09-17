@@ -90,14 +90,11 @@ public class XSDDeleteParticleAction extends UndoAction {
             }
 
             List<XSDElementDeclaration> concepts = getConceptsOfField(particle);
-
             for (XSDElementDeclaration concept : concepts) {
                 removePK(concept, decl);
-                //
                 syncEntityAnnotation(concept, particle, decl.getName());
             }
 
-            //
             XSDModelGroup group = (XSDModelGroup) particle.getContainer();
             group.getContents().remove(particle);
             group.updateElement();
@@ -116,10 +113,10 @@ public class XSDDeleteParticleAction extends UndoAction {
     }
 
     private List<XSDElementDeclaration> getConceptsOfField(XSDParticle field) {
+        List<XSDElementDeclaration> conceptsOfField = new ArrayList<>();
+
         XSDComplexTypeDefinition typedef = XSDUtil.getContainerTypeOfField(field);
         List<XSDElementDeclaration> concepts = schema.getElementDeclarations();
-
-        List<XSDElementDeclaration> conceptsOfField = new ArrayList<>();
         for (XSDElementDeclaration concept : concepts) {
             if (XSDUtil.hasBoundToConcept(typedef, concept)) {
                 conceptsOfField.add(concept);
@@ -145,7 +142,7 @@ public class XSDDeleteParticleAction extends UndoAction {
                 }
             }
         }
-        // List<Object> keyInfo = Util.getKeyInfo(decl);
+
         if (keyInfo != null && keyInfo.size() > 0) {
             identify = (XSDIdentityConstraintDefinition) keyInfo.get(0);
             keyPath = (XSDXPathDefinition) keyInfo.get(1);
