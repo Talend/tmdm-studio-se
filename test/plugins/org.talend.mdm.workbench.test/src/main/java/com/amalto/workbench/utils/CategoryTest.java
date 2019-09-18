@@ -45,7 +45,7 @@ public class CategoryTest {
             XSDSchema schema = Util.getXSDSchema(xsd);
             return schema;
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOG.error("Fail in parsing schema:", e);
         } finally {
             IOUtils.closeQuietly(outputStream);
             IOUtils.closeQuietly(inputStream);
