@@ -89,7 +89,7 @@ public class XSDDeleteParticleAction extends UndoAction {
             List<XSDElementDeclaration> concepts = XSDUtil.getConceptsOfField(particle);
             for (XSDElementDeclaration concept : concepts) {
                 removePK(concept, decl);
-                XSDUtil.syncEntityCategoryAnnotation(concept, particle, decl.getName(), null);
+                XSDUtil.syncEntityCategoryAnnotation(concept, decl.getName(), null);
                 concept.updateElement();
             }
 

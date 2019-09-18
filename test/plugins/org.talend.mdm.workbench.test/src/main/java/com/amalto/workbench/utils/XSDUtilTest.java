@@ -27,6 +27,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -474,6 +475,8 @@ public class XSDUtilTest {
             }
         }
 
+        assertTrue(typeO != null && typeA != null && typeB != null);
+
         XSDElementDeclaration conceptA = null, conceptB = null, conceptC = null;
         EList<XSDElementDeclaration> elementDeclarations = xsdSchema.getElementDeclarations();
         for (XSDElementDeclaration concept : elementDeclarations) {
@@ -495,6 +498,77 @@ public class XSDUtilTest {
         assertFalse(XSDUtil.hasBoundToConcept(typeO, conceptC));
         assertFalse(XSDUtil.hasBoundToConcept(typeA, conceptC));
         assertFalse(XSDUtil.hasBoundToConcept(typeB, conceptC));
+    }
+
+    @Test
+    public void testGetConceptsOfField() throws Exception {
+        String fileName = "TestCategory03.xsd"; //$NON-NLS-1$
+        String xsdString = TestUtil.readTestResource(XSDUtilTest.this.getClass(), fileName);
+        XSDSchema xsdSchema = Util.getXSDSchema(xsdString);
+
+        XSDComplexTypeDefinition typeA = null, typeB = null;
+        EList<XSDTypeDefinition> typeDefinitions = xsdSchema.getTypeDefinitions();
+        for (XSDTypeDefinition type : typeDefinitions) {
+            if (type instanceof XSDComplexTypeDefinition) {
+                if (type.getName().equals("CTypeA")) {
+                    typeA = (XSDComplexTypeDefinition) type;
+                } else if (type.getName().equals("CTypeB")) {
+                    typeB = (XSDComplexTypeDefinition) type;
+                }
+            }
+        }
+
+        assertTrue(typeA != null && typeB != null);
+        if (typeA.getContent() instanceof XSDParticle) {
+            XSDParticle particle = (XSDParticle) typeA.getContent();
+            if (particle.getTerm() instanceof XSDModelGroup) {
+                XSDModelGroup group = (XSDModelGroup) particle.getTerm();
+                EList<XSDParticle> elist = group.getContents();
+                for (XSDParticle field : elist) {
+                    List<XSDElementDeclaration> concepts = XSDUtil.getConceptsOfField(field);
+                    List<String> conceptNames = concepts.stream().map(f -> f.getName()).collect(Collectors.toList());
+                    assertTrue(conceptNames.size() == 2 && conceptNames.contains("EntityA") && conceptNames.contains("EntityB"));
+                }
+            }
+        }
+        if (typeB.getContent() instanceof XSDParticle) {
+            XSDParticle particle = (XSDParticle) typeB.getContent();
+            if (particle.getTerm() instanceof XSDModelGroup) {
+                XSDModelGroup group = (XSDModelGroup) particle.getTerm();
+                EList<XSDParticle> elist = group.getContents();
+                for (XSDParticle field : elist) {
+                    List<XSDElementDeclaration> concepts = XSDUtil.getConceptsOfField(field);
+                    List<String> conceptNames = concepts.stream().map(f -> f.getName()).collect(Collectors.toList());
+                    if (conceptNames.size() == 1) {
+                        assertTrue(conceptNames.contains("EntityB") && !conceptNames.contains("EntityA"));
+                    } else {
+                        assertTrue(
+                                conceptNames.size() == 2 && conceptNames.contains("EntityB") && conceptNames.contains("EntityA"));
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testSyncEntityCategoryAnnotation() throws Exception {
+        String fileName = "TestCategory03.xsd"; //$NON-NLS-1$
+        String xsdString = TestUtil.readTestResource(XSDUtilTest.this.getClass(), fileName);
+        XSDSchema schema = Util.getXSDSchema(xsdString);
+        for (XSDElementDeclaration concept : schema.getElementDeclarations()) {
+            if (concept.getName().equals("EntityA")) {
+                XSDUtil.syncEntityCategoryAnnotation(concept, "name", "newname");
+                XSDAnnotationsStructure annoStructure = new XSDAnnotationsStructure(concept);
+                Map<String, String> fieldCategoryMap = annoStructure.getFieldCategoryMap();
+                assertTrue(!fieldCategoryMap.containsKey("name") && fieldCategoryMap.containsKey("newname"));
+            }
+            if (concept.getName().equals("EntityC")) {
+                XSDUtil.syncEntityCategoryAnnotation(concept, "name", "newname");
+                XSDAnnotationsStructure annoStructure = new XSDAnnotationsStructure(concept);
+                Map<String, String> fieldCategoryMap = annoStructure.getFieldCategoryMap();
+                assertTrue(!fieldCategoryMap.containsKey("name") && fieldCategoryMap.containsKey("newname"));
+            }
+        }
     }
 
     @Test

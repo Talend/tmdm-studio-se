@@ -428,8 +428,8 @@ public class XSDUtil {
         return conceptsOfField;
     }
 
-    public static void syncEntityCategoryAnnotation(XSDElementDeclaration conceptOfPariticle, XSDParticle particle,
-            String oldFieldName, String newFieldName) {
+    public static void syncEntityCategoryAnnotation(XSDElementDeclaration conceptOfPariticle, String oldFieldName,
+            String newFieldName) {
         Objects.requireNonNull(oldFieldName);
 
         XSDAnnotationsStructure annoStructure = new XSDAnnotationsStructure(conceptOfPariticle);
