@@ -14,7 +14,6 @@ package com.amalto.workbench.actions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -25,7 +24,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.xsd.XSDComplexTypeDefinition;
 import org.eclipse.xsd.XSDElementDeclaration;
 import org.eclipse.xsd.XSDIdentityConstraintDefinition;
 import org.eclipse.xsd.XSDModelGroup;
@@ -37,7 +35,6 @@ import com.amalto.workbench.editors.DataModelMainPage;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
-import com.amalto.workbench.utils.XSDAnnotationsStructure;
 import com.amalto.workbench.utils.XSDUtil;
 import com.amalto.workbench.utils.XtentisException;
 
@@ -89,10 +86,11 @@ public class XSDDeleteParticleAction extends UndoAction {
                         particle.getContainer().getClass().getName()));
             }
 
-            List<XSDElementDeclaration> concepts = getConceptsOfField(particle);
+            List<XSDElementDeclaration> concepts = XSDUtil.getConceptsOfField(particle);
             for (XSDElementDeclaration concept : concepts) {
                 removePK(concept, decl);
-                syncEntityAnnotation(concept, particle, decl.getName());
+                XSDUtil.syncEntityCategoryAnnotation(concept, particle, decl.getName(), null);
+                concept.updateElement();
             }
 
             XSDModelGroup group = (XSDModelGroup) particle.getContainer();
@@ -110,20 +108,6 @@ public class XSDDeleteParticleAction extends UndoAction {
             return Status.CANCEL_STATUS;
         }
         return Status.OK_STATUS;
-    }
-
-    private List<XSDElementDeclaration> getConceptsOfField(XSDParticle field) {
-        List<XSDElementDeclaration> conceptsOfField = new ArrayList<>();
-
-        XSDComplexTypeDefinition typedef = XSDUtil.getContainerTypeOfField(field);
-        List<XSDElementDeclaration> concepts = schema.getElementDeclarations();
-        for (XSDElementDeclaration concept : concepts) {
-            if (XSDUtil.hasBoundToConcept(typedef, concept)) {
-                conceptsOfField.add(concept);
-            }
-        }
-
-        return conceptsOfField;
     }
 
     private void removePK(XSDElementDeclaration concept, XSDElementDeclaration field) {
@@ -151,14 +135,6 @@ public class XSDDeleteParticleAction extends UndoAction {
                 concept.getIdentityConstraintDefinitions().remove(identify);
             }
         }
-    }
-
-    private void syncEntityAnnotation(XSDElementDeclaration conceptOfPariticle, XSDParticle particle, String fieldName) {
-        XSDAnnotationsStructure annoStructure = new XSDAnnotationsStructure(conceptOfPariticle);
-        Map<String, String> fieldCategoryMap = annoStructure.getFieldCategoryMap();
-        fieldCategoryMap.remove(fieldName);
-        annoStructure.setCategoryFields(fieldCategoryMap);
-        conceptOfPariticle.updateElement();
     }
 
     public void runWithEvent(Event event) {

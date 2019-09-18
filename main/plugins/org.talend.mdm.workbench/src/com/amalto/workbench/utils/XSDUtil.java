@@ -19,10 +19,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDComplexTypeContent;
@@ -406,6 +408,41 @@ public class XSDUtil {
         }
 
         return false;
+    }
+
+    /*
+     * search the entities that own the 'field' as 1-level children
+     */
+    public static List<XSDElementDeclaration> getConceptsOfField(XSDParticle field) {
+        List<XSDElementDeclaration> conceptsOfField = new ArrayList<>();
+
+        XSDSchema schema = field.getSchema();
+        XSDComplexTypeDefinition typedef = XSDUtil.getContainerTypeOfField(field);
+        List<XSDElementDeclaration> concepts = schema.getElementDeclarations();
+        for (XSDElementDeclaration concept : concepts) {
+            if (XSDUtil.hasBoundToConcept(typedef, concept)) {
+                conceptsOfField.add(concept);
+            }
+        }
+
+        return conceptsOfField;
+    }
+
+    public static void syncEntityCategoryAnnotation(XSDElementDeclaration conceptOfPariticle, XSDParticle particle,
+            String oldFieldName, String newFieldName) {
+        Objects.requireNonNull(oldFieldName);
+
+        XSDAnnotationsStructure annoStructure = new XSDAnnotationsStructure(conceptOfPariticle);
+        Map<String, String> fieldCategoryMap = annoStructure.getFieldCategoryMap();
+        if (StringUtils.isBlank(newFieldName)) {
+            fieldCategoryMap.remove(oldFieldName);
+            annoStructure.setCategoryFields(fieldCategoryMap);
+        } else if (!oldFieldName.equals(newFieldName)) {
+            String category = fieldCategoryMap.get(oldFieldName);
+            fieldCategoryMap.remove(oldFieldName);
+            fieldCategoryMap.put(newFieldName, category);
+            annoStructure.setCategoryFields(fieldCategoryMap);
+        }
     }
 
     public static boolean isValidatedXSDDate(String newText) {

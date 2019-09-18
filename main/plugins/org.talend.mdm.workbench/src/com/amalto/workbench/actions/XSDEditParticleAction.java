@@ -50,6 +50,7 @@ import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.providers.datamodel.SchemaTreeContentProvider;
 import com.amalto.workbench.utils.IConstants;
 import com.amalto.workbench.utils.Util;
+import com.amalto.workbench.utils.XSDUtil;
 
 public class XSDEditParticleAction extends UndoAction implements SelectionListener {
 
@@ -176,15 +177,34 @@ public class XSDEditParticleAction extends UndoAction implements SelectionListen
                 if (elem.getAttributes().getNamedItem("type") != null) {
                     elem.getAttributes().removeNamedItem("type");//$NON-NLS-1$
                 }
+
+                if (ref == null) {
+                    // TODO remove from entity category annotation if exist
+                    List<XSDElementDeclaration> conceptsOfField = XSDUtil.getConceptsOfField(selParticle);
+                    for (XSDElementDeclaration concept : conceptsOfField) {
+                        XSDUtil.syncEntityCategoryAnnotation(concept, selParticle, decl.getName(), null);
+                        concept.updateElement();
+                    }
+                }
                 decl.updateElement();
-            } else if (ref != null) {
-                XSDSimpleTypeDefinition stringType = ((SchemaTreeContentProvider) page.getTreeViewer().getContentProvider())
-                        .getXsdSchema().getSchemaForSchema()
-                        .resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"); //$NON-NLS-1$
-                decl.setResolvedElementDeclaration(decl);
-                selParticle.setTerm(decl);
-                decl.setTypeDefinition(stringType);
-                decl.updateElement();
+            } else {
+                if (ref != null) {
+                    XSDSimpleTypeDefinition stringType = ((SchemaTreeContentProvider) page.getTreeViewer().getContentProvider())
+                            .getXsdSchema().getSchemaForSchema()
+                            .resolveSimpleTypeDefinition(XSDConstants.SCHEMA_FOR_SCHEMA_URI_2001, "string"); //$NON-NLS-1$
+                    decl.setResolvedElementDeclaration(decl);
+                    selParticle.setTerm(decl);
+                    decl.setTypeDefinition(stringType);
+                    decl.updateElement();
+                } else {
+                    // TODO handle entity category annotation change if exist
+                    List<XSDElementDeclaration> conceptsOfField = XSDUtil.getConceptsOfField(selParticle);
+                    for (XSDElementDeclaration concept : conceptsOfField) {
+                        XSDUtil.syncEntityCategoryAnnotation(concept, selParticle, initEleName, elementName);
+                        concept.updateElement();
+                    }
+                }
+
                 selParticle.updateElement();
             }
 
