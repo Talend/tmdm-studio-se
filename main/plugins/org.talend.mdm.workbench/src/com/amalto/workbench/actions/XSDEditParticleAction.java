@@ -178,8 +178,7 @@ public class XSDEditParticleAction extends UndoAction implements SelectionListen
                     elem.getAttributes().removeNamedItem("type");//$NON-NLS-1$
                 }
 
-                if (ref == null) {
-                    // TODO remove from entity category annotation if exist
+                if (ref == null) {// remove from entity category annotation if exist
                     List<XSDElementDeclaration> conceptsOfField = XSDUtil.getConceptsOfField(selParticle);
                     for (XSDElementDeclaration concept : conceptsOfField) {
                         XSDUtil.syncEntityCategoryAnnotation(concept, decl.getName(), null);
@@ -196,8 +195,7 @@ public class XSDEditParticleAction extends UndoAction implements SelectionListen
                     selParticle.setTerm(decl);
                     decl.setTypeDefinition(stringType);
                     decl.updateElement();
-                } else {
-                    // TODO handle entity category annotation change if exist
+                } else {// handle entity category annotation change if exist
                     List<XSDElementDeclaration> conceptsOfField = XSDUtil.getConceptsOfField(selParticle);
                     for (XSDElementDeclaration concept : conceptsOfField) {
                         XSDUtil.syncEntityCategoryAnnotation(concept, initEleName, elementName);
