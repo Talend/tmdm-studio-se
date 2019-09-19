@@ -5,6 +5,7 @@ import java.net.URL;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.model.components.AbstractComponentsProvider;
 
 
@@ -18,7 +19,7 @@ public class TomLocalComponentsProvider extends AbstractComponentsProvider {
             fileUrl = FileLocator.toFileURL(url);
             return new File(fileUrl.getPath());
         } catch (Exception e) {
-            // ExceptionHandler.process(e);
+            ExceptionHandler.process(e);
         }
         return null;
     }
