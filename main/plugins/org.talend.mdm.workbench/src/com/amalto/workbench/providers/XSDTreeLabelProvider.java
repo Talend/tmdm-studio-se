@@ -61,6 +61,7 @@ import org.w3c.dom.Element;
 
 import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
 import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter.FilterResult;
+import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -70,7 +71,7 @@ import com.amalto.workbench.utils.XSDUtil;
 
 public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabelProvider, IColorProvider, IFontProvider {
 
-    private static Log log = LogFactory.getLog(XSDTreeLabelProvider.class);
+    private static final Log LOG = LogFactory.getLog(XSDTreeLabelProvider.class);
 
     private final IXPathSelectionFilter filter;
 
@@ -81,6 +82,8 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
     private static FontData defaultFontData = JFaceResources.getDefaultFont().getFontData()[0];
 
     public static final Font FONT_BOLD = FontUtils.getBoldFont(new Font(Display.getDefault(), defaultFontData));
+
+    private IXSDTreeLabelPoviderExAdapter exAdapter;
 
     private static Color getColor(int systemColorID) {
         Display display = Display.getCurrent();
@@ -94,14 +97,11 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
 
     public XSDTreeLabelProvider(IXPathSelectionFilter filter) {
         this.filter = filter;
-
+        exAdapter = ExAdapterManager.getAdapter(this, IXSDTreeLabelPoviderExAdapter.class);
     }
 
     @Override
     public String getText(Object obj) {
-
-        // log.info("getText   "+obj.getClass().getName());
-
         if (obj instanceof XSDElementDeclaration) {
             String name = ((XSDElementDeclaration) obj).getName();
             if (((XSDElementDeclaration) obj).isAbstract()) {
@@ -237,8 +237,8 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
                     if (source != null) {
                         if (source.startsWith("X_Label_")) {//$NON-NLS-1$
                             return Messages.bind(Messages.XSDTreeLabelProvider_1,
-                                    Util.iso2lang.get(source.substring(8).toLowerCase()), e.getChildNodes().item(0)
-                                            .getNodeValue());
+                                    Util.iso2lang.get(source.substring(8).toLowerCase()),
+                                    e.getChildNodes().item(0).getNodeValue());
                         } else if (source.equals("X_ForeignKey")) {//$NON-NLS-1$
                             return Messages.bind(Messages.XSDTreeLabelProvider_2, e.getChildNodes().item(0).getNodeValue());
                         } else if (source.equals("X_ForeignKey_NotSep")) {//$NON-NLS-1$
@@ -261,8 +261,8 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
                             return Messages.bind(Messages.XSDTreeLabelProvider_9, e.getChildNodes().item(0).getNodeValue());
                         } else if (source.startsWith("X_Description_")) {//$NON-NLS-1$
                             return Messages.bind(Messages.XSDTreeLabelProvider_10,
-                                    Util.iso2lang.get(source.substring(14).toLowerCase()), e.getChildNodes().item(0)
-                                            .getNodeValue());
+                                    Util.iso2lang.get(source.substring(14).toLowerCase()),
+                                    e.getChildNodes().item(0).getNodeValue());
                         } else if (source.equals("X_Write")) {//$NON-NLS-1$
                             return Messages.bind(Messages.XSDTreeLabelProvider_11, e.getChildNodes().item(0).getNodeValue());
                         } else if (source.equals("X_No_Add")) {//$NON-NLS-1$
@@ -285,8 +285,8 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
                         } else if (source.equals("X_AutoExpand")) {//$NON-NLS-1$
                             return Messages.bind(Messages.XSDTreeLabelProvider_18, e.getChildNodes().item(0).getNodeValue());
                         } else if (source.startsWith("X_Facet")) {//$NON-NLS-1$
-                            return Messages.bind(Messages.XSDTreeLabelProvider_19, source.substring(2, 7), source.substring(8), e
-                                    .getChildNodes().item(0).getNodeValue());
+                            return Messages.bind(Messages.XSDTreeLabelProvider_19, source.substring(2, 7), source.substring(8),
+                                    e.getChildNodes().item(0).getNodeValue());
                             // made schematron show:Schematron: schematron
                         } else if (source.startsWith("X_Display_Format_")) {//$NON-NLS-1$
                             return source + ": " + e.getChildNodes().item(0).getNodeValue();//$NON-NLS-1$
@@ -308,16 +308,18 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
                             return Messages.bind(Messages.XSDTreeLabelProvider_24, e.getChildNodes().item(0).getNodeValue());
                         } else if (source.equals("X_FKIntegrity_Override")) {//$NON-NLS-1$
                             return Messages.bind(Messages.XSDTreeLabelProvider_25, e.getChildNodes().item(0).getNodeValue());
-                        }
-
-                        if (source.equals("X_ForeignKey_Filter")) {//$NON-NLS-1$
+                        } else if (source.equals("X_ForeignKey_Filter")) {//$NON-NLS-1$
                             String nodeValue = e.getChildNodes().item(0).getNodeValue();
                             if (nodeValue.startsWith("$CFFP:")) {//$NON-NLS-1$
                                 nodeValue = StringEscapeUtils.unescapeXml(nodeValue).substring(6);
                             }
                             return Messages.bind(Messages.XSDTreeLabelProvider_26, nodeValue);
                         } else {
-                            return source + ": " + Util.nodeToString((Element) obj);//$NON-NLS-1$
+                            if (exAdapter != null) {
+                                return exAdapter.getText4SourceElement((Element) obj);
+                            } else {
+                                return source + ": " + Util.nodeToString((Element) obj);//$NON-NLS-1$
+                            }
                         }
                     } else {
                         return Util.nodeToString((Element) obj);
@@ -326,8 +328,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
                     return Util.nodeToString((Element) obj);
                 }
             } catch (Exception e) {
-
-                log.error(e.getMessage(), e);
+                LOG.error("Fail in parsing XSD object:", e);
             }
         }
 
@@ -405,7 +406,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
             } else if (xsdTerm instanceof XSDWildcard) {
                 return ImageCache.getCreatedImage("icons/wildcard.gif");//$NON-NLS-1$
             } else {
-                log.info(Messages.bind(Messages.XSDTreeLabelProvider_27, xsdTerm.getClass().getName()));
+                LOG.info(Messages.bind(Messages.XSDTreeLabelProvider_27, xsdTerm.getClass().getName()));
                 return ImageCache.getCreatedImage("icons/error.gif");//$NON-NLS-1$
             }
         }
@@ -431,7 +432,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
                 }
             } else {
                 // simple Type!!!
-                log.info(Messages.bind(Messages.XSDTreeLabelProvider_28, ctc.getClass().getName()));
+                LOG.info(Messages.bind(Messages.XSDTreeLabelProvider_28, ctc.getClass().getName()));
                 return ImageCache.getCreatedImage("icons/error.gif");//$NON-NLS-1$
             }
         }
@@ -564,8 +565,7 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
                     return ImageCache.getCreatedImage(EImage.DOCUMENTATION.getPath());
                 }
             } catch (Exception e) {
-
-                log.error(e.getMessage(), e);
+                LOG.error("Fail in parsing XSD component:", e);
             }
         }
 
@@ -590,8 +590,8 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
              *
              * }
              */
-            s += xsdSimpleTypeDefinition.getName() != null ? xsdSimpleTypeDefinition.getName() : xsdSimpleTypeDefinition
-                    .getBaseTypeDefinition().getName();
+            s += xsdSimpleTypeDefinition.getName() != null ? xsdSimpleTypeDefinition.getName()
+                    : xsdSimpleTypeDefinition.getBaseTypeDefinition().getName();
         } else if (xsdSimpleTypeDefinition.getElement() != null
                 && xsdSimpleTypeDefinition.getElement().hasAttribute(XSDConstants.ID_ATTRIBUTE)) {
             s += xsdSimpleTypeDefinition.getName();
