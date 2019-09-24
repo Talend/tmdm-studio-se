@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.ILabelProviderListener;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -111,7 +112,7 @@ public class AnnotationLanguageLabelsDialog extends Dialog {
         });
         languagesCombo.select(0);
         labelText = new Text(composite, SWT.BORDER | SWT.SINGLE);
-        labelText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+        labelText.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 1, 1));
         ((GridData) labelText.getLayoutData()).minimumWidth = 150;
         labelText.addKeyListener(new KeyListener() {
 
@@ -130,7 +131,7 @@ public class AnnotationLanguageLabelsDialog extends Dialog {
         });
 
         Button addLabelButton = new Button(composite, SWT.PUSH);
-        addLabelButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true, 1, 1));
+        addLabelButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
         addLabelButton.setImage(ImageCache.getCreatedImage(EImage.ADD_OBJ.getPath()));
         addLabelButton.setToolTipText(Messages.AnnotationLanguageLabelsDialog_Add);
         addLabelButton.addSelectionListener(new SelectionListener() {
@@ -176,7 +177,10 @@ public class AnnotationLanguageLabelsDialog extends Dialog {
 
             @Override
             public void widgetSelected(org.eclipse.swt.events.SelectionEvent e) {
-                deleteItem();
+                ISelection selection = descriptionsViewer.getSelection();
+                if (selection != null && !selection.isEmpty()) {
+                    deleteItem();
+                }
             };
         });
         // Create the cell editors --> We actually discard those later: not natural for an user
@@ -321,7 +325,8 @@ public class AnnotationLanguageLabelsDialog extends Dialog {
 
             @Override
             public void keyReleased(KeyEvent e) {
-                if ((e.stateMask == 0) && (e.character == SWT.DEL) && (descriptionsViewer.getSelection() != null)) {
+                ISelection selection = descriptionsViewer.getSelection();
+                if ((e.stateMask == 0) && (e.character == SWT.DEL) && (selection != null && !selection.isEmpty())) {
                     deleteItem();
                 }
             }
