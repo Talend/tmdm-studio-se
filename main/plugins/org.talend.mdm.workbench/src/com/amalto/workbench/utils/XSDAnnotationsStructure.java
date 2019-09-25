@@ -1014,28 +1014,58 @@ public class XSDAnnotationsStructure {
             }
         }
 
-        Element appinfo = annotation.createApplicationInformation(IAnnotationConst.KEY_CATEGORY);
-        Element element = appinfo.getOwnerDocument().createElementNS(null, CATEGORY_NAME);
-        Node nameValue = appinfo.getOwnerDocument().createTextNode(categoryName);
-        element.appendChild(nameValue);
-        appinfo.appendChild(element);
-        if (labels != null) {
-            for (String lang : labels.keySet()) {
-                String labelValue = labels.get(lang);
-                Element langElement = appinfo.getOwnerDocument().createElementNS(null, "label_" + lang);
-                Node labelNode = appinfo.getOwnerDocument().createTextNode(labelValue);
-                langElement.appendChild(labelNode);
-                appinfo.appendChild(langElement);
-            }
-        }
         if (oldNode == null) {
+            Element appinfo = annotation.createApplicationInformation(IAnnotationConst.KEY_CATEGORY);
+            Element element = appinfo.getOwnerDocument().createElementNS(null, CATEGORY_NAME);
+            Node nameValue = appinfo.getOwnerDocument().createTextNode(categoryName);
+            element.appendChild(nameValue);
+            appinfo.appendChild(element);
+            if (labels != null) {
+                for (String lang : labels.keySet()) {
+                    String labelValue = labels.get(lang);
+                    Element langElement = appinfo.getOwnerDocument().createElementNS(null, "label_" + lang);
+                    Node labelNode = appinfo.getOwnerDocument().createTextNode(labelValue);
+                    langElement.appendChild(labelNode);
+                    appinfo.appendChild(langElement);
+                }
+            }
             annotation.getElement().appendChild(appinfo);
         } else {
-            annotation.getElement().replaceChild(appinfo, oldNode);
-            annotation.getApplicationInformation().remove(oldNode);
+            NodeList childNodes = oldNode.getChildNodes();
+            List<Node> labelNodes = new ArrayList<>();
+
+            for (int i = 0; i < childNodes.getLength(); i++) {
+                Node node = childNodes.item(i);
+                String localName = node.getLocalName();
+                if (localName != null) {
+                    Node subChild = node.getFirstChild();
+                    if (subChild != null) {
+                        String nodeValue = subChild.getNodeValue();
+                        if (nodeValue != null) {
+                            if (localName.equalsIgnoreCase(CATEGORY_NAME) && !categoryName.equals(nodeValue)) {
+                                subChild.setNodeValue(categoryName);
+                            } else if (localName.startsWith("label_")) {
+                                labelNodes.add(node);
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (Node fieldNode : labelNodes) {
+                oldNode.removeChild(fieldNode);
+            }
+            if (labels != null) {
+                for (String lang : labels.keySet()) {
+                    String labelValue = labels.get(lang);
+                    Element langElement = oldNode.getOwnerDocument().createElementNS(null, "label_" + lang);
+                    Node labelNode = oldNode.getOwnerDocument().createTextNode(labelValue);
+                    langElement.appendChild(labelNode);
+                    oldNode.appendChild(langElement);
+                }
+            }
         }
         hasChanged = true;
-
         return true;
     }
 

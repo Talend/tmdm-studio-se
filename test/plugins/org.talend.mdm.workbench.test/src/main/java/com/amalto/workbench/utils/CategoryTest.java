@@ -187,4 +187,31 @@ public class CategoryTest {
         assertTrue(fields.get(1).equals("name"));
         assertTrue(fields.get(2).equals("size"));
     }
+
+    @Test
+    public void testRenameCategory() {
+        XSDSchema schema = getSchema("TestCategory04.xsd");
+        XSDElementDeclaration decl = schema.getElementDeclarations().get(0);
+        XSDAnnotationsStructure struct = new XSDAnnotationsStructure(decl);
+        List<Element> elements = getCategoryElements(decl);
+        assertTrue(elements.size() == 2);
+
+        Map<String, Map<String, String>> categoryMap = struct.getCategoryFromElement(elements.get(1));
+        assertTrue(categoryMap.size() == 1);
+        String oldCategoryName = "c4";
+        Map<String, String> labelmap = categoryMap.get(oldCategoryName);
+
+        Map<String, String> fieldCategoryMap = struct.getFieldCategoryMap();
+        assertTrue(fieldCategoryMap.size() == 3);
+        assertTrue(fieldCategoryMap.get("size").equals(oldCategoryName));
+        assertTrue(fieldCategoryMap.get("name").equals(oldCategoryName));
+        // rename
+        String newCategoryName = "C2";
+        struct.setCategory4Entity(elements.get(1), newCategoryName, labelmap);
+        elements = getCategoryElements(decl);
+        fieldCategoryMap = struct.getFieldCategoryMap();
+        assertTrue(fieldCategoryMap.size() == 3);
+        assertTrue(fieldCategoryMap.get("size").equals(newCategoryName));
+        assertTrue(fieldCategoryMap.get("name").equals(newCategoryName));
+    }
 }
