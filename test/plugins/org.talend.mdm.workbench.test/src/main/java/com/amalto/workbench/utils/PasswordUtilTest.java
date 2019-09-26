@@ -10,11 +10,11 @@ import org.mockito.ArgumentMatchers;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.talend.utils.security.CryptoHelperWrapper;
+import org.talend.utils.security.CryptoMigrationUtil;
 
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ PasswordUtil.class, CryptoHelperWrapper.class })
+@PrepareForTest({ PasswordUtil.class, CryptoMigrationUtil.class })
 public class PasswordUtilTest {
 
     @Test
@@ -56,8 +56,8 @@ public class PasswordUtilTest {
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V2;
-        PowerMockito.mockStatic(CryptoHelperWrapper.class);
-        CryptoHelperWrapper mockCryptoHelper = PowerMockito.mock(CryptoHelperWrapper.class);
+        PowerMockito.mockStatic(CryptoMigrationUtil.class);
+        CryptoMigrationUtil mockCryptoHelper = PowerMockito.mock(CryptoMigrationUtil.class);
         String decryptPassword_expect2 = decryptPassword_expect + "2"; //$NON-NLS-1$
         PowerMockito.when(mockCryptoHelper.decrypt(anyString())).thenReturn(decryptPassword_expect2);
         decryptPassword = PasswordUtil.decryptPassword(encodedPassword, algorithm);
@@ -111,8 +111,8 @@ public class PasswordUtilTest {
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V2;
-        PowerMockito.mockStatic(CryptoHelperWrapper.class);
-        CryptoHelperWrapper mockCryptoHelper = PowerMockito.mock(CryptoHelperWrapper.class);
+        PowerMockito.mockStatic(CryptoMigrationUtil.class);
+        CryptoMigrationUtil mockCryptoHelper = PowerMockito.mock(CryptoMigrationUtil.class);
         String encryptedPassword_expect2 = encryptedPassword_expect + "2"; //$NON-NLS-1$
         PowerMockito.when(mockCryptoHelper.encrypt(anyString())).thenReturn(encryptedPassword_expect2);
         encryptedPassword = PasswordUtil.encryptPassword(plainPassword, algorithm);
