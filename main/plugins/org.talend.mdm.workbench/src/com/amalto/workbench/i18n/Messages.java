@@ -1815,6 +1815,14 @@ public class Messages extends NLS {
 
     public static String XSDTreeLabelProvider_9;
 
+    public static String XSDUtil_duplicatedCategoryName;
+
+    public static String XSDUtil_duplicatedFieldNameInEntity;
+
+    public static String XSDUtil_duplicatedFieldNameInField;
+
+    public static String XSDUtil_empyCategoryName;
+
     public static String XSLTEditor_saveback;
 
     public static String CommitBarComposite_Apply;

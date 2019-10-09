@@ -12,7 +12,11 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -24,7 +28,10 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.xsd.XSDAnnotation;
 import org.eclipse.xsd.XSDComplexTypeContent;
@@ -41,17 +48,30 @@ import org.eclipse.xsd.XSDSimpleTypeDefinition;
 import org.eclipse.xsd.XSDTerm;
 import org.eclipse.xsd.XSDTypeDefinition;
 import org.eclipse.xsd.XSDXPathDefinition;
+import org.eclipse.xsd.util.XSDParser;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter;
 import com.amalto.workbench.dialogs.datamodel.IXPathSelectionFilter.FilterResult;
+import com.amalto.workbench.i18n.Messages;
+import com.amalto.workbench.models.IAnnotationConst;
 
 /**
  * DOC hbhong class global comment. Detailled comment
  */
 public class XSDUtil {
+
+    private static final String FIELD = "field";
+
+    private static final String NAME = "name";
+
+    private static final Log LOG = LogFactory.getLog(XSDUtil.class);
+
+    private static final String SOURCE = "source";
+
+    private static final String APPINFO = "appinfo";
 
     private static final String X_FOREIGN_KEY = "X_ForeignKey"; //$NON-NLS-1$
 
@@ -67,8 +87,8 @@ public class XSDUtil {
             EList<Element> applicationInformation = annotation.getApplicationInformation();
             if (applicationInformation != null) {
                 for (Element element : applicationInformation) {
-                    if (element.getLocalName().equalsIgnoreCase("appinfo")) { //$NON-NLS-1$
-                        String source = element.getAttribute("source"); //$NON-NLS-1$
+                    if (element.getLocalName().equalsIgnoreCase(APPINFO)) {
+                        String source = element.getAttribute(SOURCE);
                         if (key.equalsIgnoreCase(source)) {
                             NodeList childNodes = element.getChildNodes();
                             String nodeValue = null;
@@ -384,7 +404,7 @@ public class XSDUtil {
     }
 
     /**
-     * check if <b>ctypeDef</b> has been used for <b>concept</b>'s type (concept.getTypeDefinition()) 
+     * check if <b>ctypeDef</b> has been used for <b>concept</b>'s type (concept.getTypeDefinition())
      */
     public static boolean hasBoundToConcept(XSDComplexTypeDefinition ctypeDef, XSDElementDeclaration concept) {
         XSDComplexTypeDefinition typeDefinition = (XSDComplexTypeDefinition) concept.getTypeDefinition();
@@ -488,5 +508,98 @@ public class XSDUtil {
         Pattern pattern = Pattern.compile(regex);
         boolean match = pattern.matcher(newText).matches();
         return match;
+    }
+
+    private static String validateCategory(XSDElementDeclaration elementDesc) {
+        XSDAnnotation annotation = elementDesc.getAnnotation();
+        if (annotation != null) {
+            String entityName = elementDesc.getName();
+            List<String> categoryNames = new ArrayList<>();
+            List<List<String>> allFields = new ArrayList<>();
+            for (Element element : annotation.getApplicationInformation()) {
+                String name = element.getLocalName();
+                if (APPINFO.equals(name.toLowerCase())) {
+                    name = element.getAttribute(SOURCE);
+                    if (name.equals(IAnnotationConst.KEY_CATEGORY)) {
+                        NodeList childNodes = element.getChildNodes();
+                        List<String> fields = new ArrayList<>();
+                        String categoryName = null;
+                        for (int i = 0; i < childNodes.getLength(); i++) {
+                            Node node = childNodes.item(i);
+                            String localName = node.getLocalName();
+                            if (localName != null) {
+                                Node subChild = node.getFirstChild();
+                                if (subChild != null) {
+                                    String nodeValue = subChild.getNodeValue();
+                                    if (nodeValue != null) {
+                                        if (localName.equalsIgnoreCase(NAME)) {
+                                            categoryName = nodeValue;
+                                        } else if (localName.equalsIgnoreCase(FIELD) && nodeValue != null) {
+                                            fields.add(nodeValue);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (StringUtils.isEmpty(categoryName)) {
+                            return Messages.bind(Messages.XSDUtil_empyCategoryName, entityName);
+                        } else {
+                            // check duplicated category name
+                            if (categoryNames.contains(categoryName)) {
+                                return Messages.bind(Messages.XSDUtil_duplicatedCategoryName, entityName, categoryName);
+                            } else {
+                                categoryNames.add(categoryName);
+                            }
+                            // check duplicated
+                            for (int i = 0; i < fields.size(); i++) {
+                                String fieldName = fields.get(i);
+                                if (fields.lastIndexOf(fieldName) != i) {
+                                    return Messages.bind(Messages.XSDUtil_duplicatedFieldNameInEntity, categoryName, fieldName,
+                                            entityName);
+                                }
+                            }
+                            for (String fieldName : fields) {
+                                for (int i = 0; i < allFields.size(); i++) {
+                                    if (allFields.get(i).contains(fieldName)) {
+                                        return Messages.bind(Messages.XSDUtil_duplicatedFieldNameInField, fieldName, categoryName,
+                                                categoryNames.get(i), entityName);
+                                    }
+                                }
+                            }
+                            allFields.add(fields);
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Map<String, String> validateCategory(XSDSchema schema) {
+        if (schema != null) {
+            for (XSDElementDeclaration elementDesc : schema.getElementDeclarations()) {
+                String error = validateCategory(elementDesc);
+                if (error != null) {
+                    return Collections.singletonMap(elementDesc.getName(), error);
+                }
+            }
+        }
+        return null;
+    }
+
+    public static Map<String, String> validateCategory(File file) {
+        FileInputStream inputStream = null;
+        try {
+            inputStream = new FileInputStream(file);
+            XSDParser parse = new XSDParser(null);
+            parse.parse(inputStream);
+            XSDSchema schema = parse.getSchema();
+            return validateCategory(schema);
+        } catch (IOException ex) {
+            LOG.error("Fail in parsing XSD file:", ex);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+        return null;
     }
 }

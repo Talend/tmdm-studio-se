@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.resources.IFile;
@@ -103,6 +104,7 @@ import com.amalto.workbench.i18n.Messages;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.providers.datamodel.SchemaTreeContentProvider;
 import com.amalto.workbench.utils.Util;
+import com.amalto.workbench.utils.XSDUtil;
 import com.amalto.workbench.views.MDMPerspective;
 import com.amalto.workbench.webservices.WSDataModel;
 
@@ -664,6 +666,12 @@ public class XSDEditor extends MultiPageEditorPart
                     error += dia.getMessage() + "\n";
                     errors.add(dia.getMessage());
                 }
+            }
+        }
+        if (StringUtils.isEmpty(error)) {
+            Map<String, String> categoryError = XSDUtil.validateCategory(xsdSchema);
+            if (categoryError != null) {
+                return categoryError.values().iterator().next();
             }
         }
         return error;

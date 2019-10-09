@@ -16,19 +16,31 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.collections.map.MultiKeyMap;
 import org.apache.log4j.Logger;
-import org.talend.mdm.commmon.metadata.*;
+import org.talend.mdm.commmon.metadata.ComplexTypeMetadata;
+import org.talend.mdm.commmon.metadata.FieldMetadata;
+import org.talend.mdm.commmon.metadata.MetadataRepository;
+import org.talend.mdm.commmon.metadata.MetadataVisitor;
+import org.talend.mdm.commmon.metadata.TypeMetadata;
+import org.talend.mdm.commmon.metadata.ValidationError;
+import org.talend.mdm.commmon.metadata.ValidationHandler;
 import org.talend.mdm.commmon.metadata.validation.ValidationFactory;
 import org.talend.mdm.commmon.metadata.validation.ValidationRule;
 import org.talend.mdm.repository.core.validate.datamodel.IChecker;
 import org.talend.mdm.repository.core.validate.datamodel.validator.ModelValidationMessage;
 import org.talend.mdm.repository.core.validate.datamodel.validator.rule.IComponentValidationRule;
 import org.w3c.dom.Element;
+
+import com.amalto.workbench.utils.XSDUtil;
 
 public class DataModelChecker implements IChecker<ModelValidationMessage> {
 
@@ -51,7 +63,8 @@ public class DataModelChecker implements IChecker<ModelValidationMessage> {
         if (!file.canRead()) {
             throw new IllegalArgumentException("File '" + file + "' exists but cannot be read.");
         }
-        ValidationHandlerAdapter validationHandler = new ValidationHandlerAdapter(getDataModelName(file.getName()));
+        String modelName = getDataModelName(file.getName());
+        ValidationHandlerAdapter validationHandler = new ValidationHandlerAdapter(modelName);
         FileInputStream inputStream = null;
         try {
             inputStream = new FileInputStream(file);
@@ -71,10 +84,21 @@ public class DataModelChecker implements IChecker<ModelValidationMessage> {
             }
 
         }
-        return validationHandler.getMessages();
+        List<ModelValidationMessage> messages = validationHandler.getMessages();
+        Map<String, String> categoryErrors = XSDUtil.validateCategory(file);
+        if (categoryErrors != null) {
+            String entityName = categoryErrors.keySet().iterator().next();
+            String errorMsg = categoryErrors.get(entityName);
+            ModelValidationMessage categoryErrorMsg = new ModelValidationMessage(IComponentValidationRule.SEV_ERROR, errorMsg,
+                    "key", modelName, -1, -1, IComponentValidationRule.MSG_GROUP_ENTITY, null, entityName, null, null);
+            messages.add(categoryErrorMsg);
+        }
+        return messages;
     }
 
     private static class ValidationHandlerAdapter implements ValidationHandler {
+
+        private static final String KEY = "key";
 
         public static final String ANONYMOUS_TYPE_NAME = "<Anonymous>"; //$NON-NLS-1$
 
@@ -129,9 +153,8 @@ public class DataModelChecker implements IChecker<ModelValidationMessage> {
             if (error != ValidationError.XML_SCHEMA) {
                 int group = type.isInstantiable() ? IComponentValidationRule.MSG_GROUP_ENTITY
                         : IComponentValidationRule.MSG_GROUP_TYPE;
-                ModelValidationMessage validationMessage = new ModelValidationMessage(IComponentValidationRule.SEV_ERROR,
-                        message,
-                        "key", // TODO
+                ModelValidationMessage validationMessage = new ModelValidationMessage(IComponentValidationRule.SEV_ERROR, message,
+                        KEY,
                         dataModelName, getValue(lineNumber, -1), getValue(columnNumber, -1), group, element, getTypeName(type),
                         getTypeName(type), getTypeName(type));
                 addMessage(getValue(lineNumber, -1), getValue(columnNumber, -1), error, validationMessage);
@@ -139,7 +162,8 @@ public class DataModelChecker implements IChecker<ModelValidationMessage> {
             }
         }
 
-        private void addMessage(int lineNumber, int columnNumber, ValidationError error, ModelValidationMessage validationMessage) {
+        private void addMessage(int lineNumber, int columnNumber, ValidationError error,
+                ModelValidationMessage validationMessage) {
             MultiKeyMap errorsByType = errors.get(error);
             if (errorsByType == null) {
                 errorsByType = new MultiKeyMap();
@@ -153,9 +177,8 @@ public class DataModelChecker implements IChecker<ModelValidationMessage> {
                 ValidationError error) {
             int group = type.isInstantiable() ? IComponentValidationRule.MSG_GROUP_ENTITY
                     : IComponentValidationRule.MSG_GROUP_TYPE;
-            ModelValidationMessage validationMessage = new ModelValidationMessage(IComponentValidationRule.SEV_WARNING,
-                    message,
-                    "key", // TODO
+            ModelValidationMessage validationMessage = new ModelValidationMessage(IComponentValidationRule.SEV_WARNING, message,
+                    KEY,
                     dataModelName, getValue(lineNumber, -1), getValue(columnNumber, -1), group, element, getTypeName(type),
                     getTypeName(type), getTypeName(type));
             addMessage(getValue(lineNumber, -1), getValue(columnNumber, -1), error, validationMessage);
@@ -179,11 +202,10 @@ public class DataModelChecker implements IChecker<ModelValidationMessage> {
                 } catch (Exception e) {
                     group = IComponentValidationRule.MSG_GROUP_ENTITY;
                 }
-                ModelValidationMessage validationMessage = new ModelValidationMessage(IComponentValidationRule.SEV_ERROR,
-                        message,
-                        "key", // TODO
-                        dataModelName, getValue(lineNumber, -1), getValue(columnNumber, -1), group, element,
-                        getEntityName(field), getEntityName(field), field.getPath());
+                ModelValidationMessage validationMessage = new ModelValidationMessage(IComponentValidationRule.SEV_ERROR, message,
+                        KEY,
+                        dataModelName, getValue(lineNumber, -1), getValue(columnNumber, -1), group, element, getEntityName(field),
+                        getEntityName(field), field.getPath());
                 addMessage(getValue(lineNumber, -1), getValue(columnNumber, -1), error, validationMessage);
                 errorCount++;
             }
@@ -194,9 +216,8 @@ public class DataModelChecker implements IChecker<ModelValidationMessage> {
                 ValidationError error) {
             int group = field.getContainingType().isInstantiable() ? IComponentValidationRule.MSG_GROUP_ENTITY
                     : IComponentValidationRule.MSG_GROUP_TYPE;
-            ModelValidationMessage validationMessage = new ModelValidationMessage(IComponentValidationRule.SEV_WARNING,
-                    message,
-                    "key", // TODO
+            ModelValidationMessage validationMessage = new ModelValidationMessage(IComponentValidationRule.SEV_WARNING, message,
+                    KEY,
                     dataModelName, getValue(lineNumber, -1), getValue(columnNumber, -1), group, element, getEntityName(field),
                     getEntityName(field), field.getPath());
             addMessage(getValue(lineNumber, -1), getValue(columnNumber, -1), error, validationMessage);
