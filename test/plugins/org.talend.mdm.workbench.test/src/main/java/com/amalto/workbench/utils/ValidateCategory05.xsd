@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">  
+  <xsd:complexType name="BaseType"> 
+    <xsd:sequence> 
+      <xsd:element maxOccurs="1" minOccurs="1" name="id" type="xsd:string"/>  
+      <xsd:element maxOccurs="1" minOccurs="0" name="name" type="xsd:string"/> 
+    </xsd:sequence> 
+  </xsd:complexType>  
+  <xsd:complexType name="CType"> 
+    <xsd:complexContent> 
+      <xsd:extension base="BaseType"> 
+        <xsd:sequence> 
+          <xsd:element maxOccurs="1" minOccurs="1" name="size" type="xsd:string"/> 
+        </xsd:sequence> 
+      </xsd:extension>
+    </xsd:complexContent> 
+  </xsd:complexType>  
+  <xsd:element name="EntityA" type="CType"> 
+    <xsd:annotation> 
+      <xsd:appinfo source="X_Category"> 
+        <name>C1</name>  
+        <field>id</field> 
+      </xsd:appinfo>  
+      <xsd:appinfo source="X_Category"> 
+        <name>C2</name>  
+        <field>name</field> 
+      </xsd:appinfo>  
+      <xsd:appinfo source="X_Category"> 
+        <name>C3</name>
+        <label_en>abc</label_en>
+        <field>name</field>
+      </xsd:appinfo> 
+    </xsd:annotation>  
+    <xsd:unique name="EntityA"> 
+      <xsd:selector xpath="."/>  
+      <xsd:field xpath="id"/> 
+    </xsd:unique> 
+  </xsd:element> 
+</xsd:schema>
+  
