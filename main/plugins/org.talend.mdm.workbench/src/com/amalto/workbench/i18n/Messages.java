@@ -1817,11 +1817,11 @@ public class Messages extends NLS {
 
     public static String XSDUtil_duplicatedCategoryName;
 
-    public static String XSDUtil_duplicatedFieldNameInEntity;
+    public static String XSDUtil_duplicatedFieldInSameCatetory;
 
-    public static String XSDUtil_duplicatedFieldNameInField;
+    public static String XSDUtil_duplicatedFieldInDifferentCatetory;
 
-    public static String XSDUtil_empyCategoryName;
+    public static String XSDUtil_emptyCategoryName;
 
     public static String XSLTEditor_saveback;
 

@@ -542,7 +542,7 @@ public class XSDUtil {
                             }
                         }
                         if (StringUtils.isEmpty(categoryName)) {
-                            return Messages.bind(Messages.XSDUtil_empyCategoryName, entityName);
+                            return Messages.bind(Messages.XSDUtil_emptyCategoryName, entityName);
                         } else {
                             // check duplicated category name
                             if (categoryNames.contains(categoryName)) {
@@ -554,14 +554,14 @@ public class XSDUtil {
                             for (int i = 0; i < fields.size(); i++) {
                                 String fieldName = fields.get(i);
                                 if (fields.lastIndexOf(fieldName) != i) {
-                                    return Messages.bind(Messages.XSDUtil_duplicatedFieldNameInEntity, categoryName, fieldName,
+                                    return Messages.bind(Messages.XSDUtil_duplicatedFieldInSameCatetory, categoryName, fieldName,
                                             entityName);
                                 }
                             }
                             for (String fieldName : fields) {
                                 for (int i = 0; i < allFields.size(); i++) {
                                     if (allFields.get(i).contains(fieldName)) {
-                                        return Messages.bind(Messages.XSDUtil_duplicatedFieldNameInField, fieldName, categoryName,
+                                        return Messages.bind(Messages.XSDUtil_duplicatedFieldInDifferentCatetory, fieldName, categoryName,
                                                 categoryNames.get(i), entityName);
                                     }
                                 }
