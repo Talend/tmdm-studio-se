@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -345,7 +344,6 @@ public class XSDUtil {
     public static List<String> getFields(XSDElementDeclaration concept) {
         XSDComplexTypeDefinition complexType = (XSDComplexTypeDefinition) concept.getType();
         List<String> fields = getFields(complexType);
-        fields = fields.stream().sorted().collect(Collectors.toList());
         return fields;
     }
 
@@ -356,7 +354,7 @@ public class XSDUtil {
             XSDParticleContent content = elementParticle.getContent();
             if (content instanceof XSDElementDeclaration) {
                 XSDElementDeclaration field = (XSDElementDeclaration) content;
-                if (field.getName() != null) {
+                if (field.getName() != null && field.getType() != null) {
                     fields.add(field.getName());
                 }
             }

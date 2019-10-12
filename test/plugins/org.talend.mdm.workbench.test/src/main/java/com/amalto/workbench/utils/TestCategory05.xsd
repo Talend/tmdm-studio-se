@@ -1,0 +1,25 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:element name="EntityA">
+        <xsd:complexType>
+            <xsd:all>
+                <xsd:element name="EntityAId" type="xsd:string" />
+            </xsd:all>
+        </xsd:complexType>
+        <xsd:unique name="EntityA">
+            <xsd:selector xpath="." />
+            <xsd:field xpath="EntityAId" />
+        </xsd:unique>
+    </xsd:element>
+    <xsd:element name="EntityB">
+        <xsd:complexType>
+            <xsd:all>
+                <xsd:element name="EntityBId" type="xsd:string" />
+                <xsd:element maxOccurs="1" minOccurs="0" ref="EntityA" />
+            </xsd:all>
+        </xsd:complexType>
+        <xsd:unique name="EntityB">
+            <xsd:selector xpath="." />
+            <xsd:field xpath="EntityBId" />
+        </xsd:unique>
+    </xsd:element>
+</xsd:schema>

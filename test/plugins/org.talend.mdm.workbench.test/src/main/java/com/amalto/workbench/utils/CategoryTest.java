@@ -183,9 +183,20 @@ public class CategoryTest {
 
         List<String> fields = XSDUtil.getFields(decl);
         assertTrue(fields.size() == 3);
-        assertTrue(fields.get(0).equals("id"));
-        assertTrue(fields.get(1).equals("name"));
-        assertTrue(fields.get(2).equals("size"));
+        assertTrue(fields.get(0).equals("size"));
+        assertTrue(fields.get(1).equals("id"));
+        assertTrue(fields.get(2).equals("name"));
+    }
+
+    @Test
+    public void testGetFieldsWithReference() {
+        XSDSchema schema = getSchema("TestCategory05.xsd");
+        XSDElementDeclaration decl = schema.getElementDeclarations().get(1);
+
+        // the return list shouldn't include the field with reference type.
+        List<String> fields = XSDUtil.getFields(decl);
+        assertTrue(fields.size() == 1);
+        assertTrue(fields.get(0).equals("EntityBId"));
     }
 
     @Test
