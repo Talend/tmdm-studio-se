@@ -1817,9 +1817,9 @@ public class Messages extends NLS {
 
     public static String XSDUtil_duplicatedCategoryName;
 
-    public static String XSDUtil_duplicatedFieldInSameCatetory;
+    public static String XSDUtil_duplicatedElementInSameCatetory;
 
-    public static String XSDUtil_duplicatedFieldInDifferentCatetory;
+    public static String XSDUtil_duplicatedElementInDifferentCatetory;
 
     public static String XSDUtil_emptyCategoryName;
 
@@ -2608,6 +2608,8 @@ public class Messages extends NLS {
     public static String AnnotationLanguageLabelsDialog_Label;
 
     public static String AnnotationLanguageLabelsDialog_Language;
+
+    public static String AnnotationLanguageLabelsDialog_LanguageLabel;
 
     public static String AnnotationOrderedListsDialog_;
 

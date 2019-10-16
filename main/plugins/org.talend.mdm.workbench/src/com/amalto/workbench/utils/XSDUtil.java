@@ -552,14 +552,14 @@ public class XSDUtil {
                             for (int i = 0; i < fields.size(); i++) {
                                 String fieldName = fields.get(i);
                                 if (fields.lastIndexOf(fieldName) != i) {
-                                    return Messages.bind(Messages.XSDUtil_duplicatedFieldInSameCatetory, categoryName, fieldName,
+                                    return Messages.bind(Messages.XSDUtil_duplicatedElementInSameCatetory, categoryName, fieldName,
                                             entityName);
                                 }
                             }
                             for (String fieldName : fields) {
                                 for (int i = 0; i < allFields.size(); i++) {
                                     if (allFields.get(i).contains(fieldName)) {
-                                        return Messages.bind(Messages.XSDUtil_duplicatedFieldInDifferentCatetory, fieldName, categoryName,
+                                        return Messages.bind(Messages.XSDUtil_duplicatedElementInDifferentCatetory, fieldName, categoryName,
                                                 categoryNames.get(i), entityName);
                                     }
                                 }
