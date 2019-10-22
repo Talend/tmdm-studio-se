@@ -1616,7 +1616,7 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
         manager.add(new Separator());
 
         // category
-        if (exAdapter != null) {
+        if (exAdapter != null && selectedObjs.length == 1) {
             exAdapter.setCategoryActions(obj, manager);
         }
         drillDownAdapter.addNavigationActions(manager);
