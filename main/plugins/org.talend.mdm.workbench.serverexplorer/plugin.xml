@@ -131,7 +131,7 @@
            description="Unify the entryption for pass fields of parameters of MDM Server Definition"
            id="org.talend.mdm.workbench.serverexplorer.migration.UnifyPasswordEncryption4MDMServerDefMigrationTask2019-10-10"
            name="UnifyPasswordEncryption4MDMServerDefMigrationTask"
-           version="6.0.0">
+           version="7.3.1">
      </projecttask>
   </extension>
 </plugin>
