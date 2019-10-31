@@ -973,11 +973,12 @@ public class XSDAnnotationsStructure {
                     Node node = childNodes.item(i);
                     String localName = node.getLocalName();
                     if (localName != null) {
+                        localName = localName.toLowerCase();
                         Node subChild = node.getFirstChild();
                         if (subChild != null) {
                             String nodeValue = subChild.getNodeValue();
                             if (nodeValue != null) {
-                                if (localName.equalsIgnoreCase(CATEGORY_NAME)) {
+                                if (localName.equals(CATEGORY_NAME)) {
                                     categoryName = nodeValue;
                                 } else if (localName.startsWith("label_")) {
                                     String lang = localName.substring(6);
