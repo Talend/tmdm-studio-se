@@ -225,16 +225,30 @@
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="jaxb-core-2.3.0"
-                    MODULE="jaxb-core-2.3.0.jar"
-                    MVN="mvn:com.sun.xml.bind/jaxb-core/2.3.0"
+                    NAME="jakarta.xml.bind-api-2.3.2"
+                    MODULE="jakarta.xml.bind-api-2.3.2.jar"
+                    MVN="mvn:jakarta.xml.bind/jakarta.xml.bind-api/2.3.2"
                     REQUIRED="true"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="jaxb-impl-2.3.0"
-                    MODULE="jaxb-impl-2.3.0.jar"
-                    MVN="mvn:com.sun.xml.bind/jaxb-impl/2.3.0"
+                    NAME="jaxb-runtime-2.3.2"
+                    MODULE="jaxb-runtime-2.3.2.jar"
+                    MVN="mvn:org.glassfish.jaxb/jaxb-runtime/2.3.2"
+                    REQUIRED="true"
+                    BundleID=""
+                    />
+                <IMPORT
+                    NAME="txw2-2.3.2"
+                    MODULE="txw2-2.3.2.jar"
+                    MVN="mvn:org.glassfish.jaxb/txw2/2.3.2"
+                    REQUIRED="true"
+                    BundleID=""
+                    />
+                <IMPORT
+                    NAME="istack-commons-runtime-3.0.8"
+                    MODULE="istack-commons-runtime-3.0.8.jar"
+                    MVN="mvn:com.sun.istack/istack-commons-runtime/3.0.8"
                     REQUIRED="true"
                     BundleID=""
                     />
@@ -285,13 +299,6 @@
                     NAME="javax.annotation-api-1.3.2"
                     MODULE="javax.annotation-api-1.3.2.jar"
                     MVN="mvn:javax.annotation/javax.annotation-api/1.3.2"
-                    REQUIRED="true"
-                    BundleID=""
-                    />
-                <IMPORT
-                    NAME="jaxb-api-2.3.0"
-                    MODULE="jaxb-api-2.3.0.jar"
-                    MVN="mvn:javax.xml.bind/jaxb-api/2.3.0"
                     REQUIRED="true"
                     BundleID=""
                     />

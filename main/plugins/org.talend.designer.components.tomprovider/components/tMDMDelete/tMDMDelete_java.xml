@@ -191,29 +191,29 @@
       <IMPORT NAME="SOAP-JAF" MODULE="activation.jar" MVN="mvn:org.talend.libraries/activation/6.0.0"  UrlPath="platform:/plugin/org.talend.libraries.apache.axis2/lib/activation.jar" BundleID="" REQUIRED="true" />
        <!-- Jars for cxf begin -->
                 <IMPORT
-                    NAME="cxf-core-3.3.1"
-                    MODULE="cxf-core-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-core/3.3.1"
+                    NAME="cxf-core-3.3.4"
+                    MODULE="cxf-core-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-core/3.3.4"
                     REQUIRED="true"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-bindings-soap-3.3.1"
-                    MODULE="cxf-rt-bindings-soap-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-bindings-soap/3.3.1"
+                    NAME="cxf-rt-bindings-soap-3.3.4"
+                    MODULE="cxf-rt-bindings-soap-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-bindings-soap/3.3.4"
                     REQUIRED="true"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-bindings-xml-3.3.1"
-                    MODULE="cxf-rt-bindings-xml-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-bindings-xml/3.3.1"
+                    NAME="cxf-rt-bindings-xml-3.3.4"
+                    MODULE="cxf-rt-bindings-xml-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-bindings-xml/3.3.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-databinding-jaxb-3.3.1"
-                    MODULE="cxf-rt-databinding-jaxb-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-databinding-jaxb/3.3.1"
+                    NAME="cxf-rt-databinding-jaxb-3.3.4"
+                    MODULE="cxf-rt-databinding-jaxb-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-databinding-jaxb/3.3.4"
                     REQUIRED="true"
                     BundleID=""
                     />
@@ -239,94 +239,108 @@
                     BundleID=""
                     />
                  <IMPORT
-                    NAME="cxf-rt-transports-http-3.3.1"
-                    MODULE="cxf-rt-transports-http-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-transports-http/3.3.1"
+                    NAME="cxf-rt-transports-http-3.3.4"
+                    MODULE="cxf-rt-transports-http-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-transports-http/3.3.4"
                     REQUIRED="true"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-frontend-jaxws-3.3.1"
-                    MODULE="cxf-rt-frontend-jaxws-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-frontend-jaxws/3.3.1"
+                    NAME="cxf-rt-frontend-jaxws-3.3.4"
+                    MODULE="cxf-rt-frontend-jaxws-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-frontend-jaxws/3.3.4"
                     REQUIRED="true"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-frontend-simple-3.3.1"
-                    MODULE="cxf-rt-frontend-simple-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-frontend-simple/3.3.1"
+                    NAME="cxf-rt-frontend-simple-3.3.4"
+                    MODULE="cxf-rt-frontend-simple-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-frontend-simple/3.3.4"
                     REQUIRED="true"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-security-3.3.1"
-                    MODULE="cxf-rt-security-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-security/3.3.1"
+                    NAME="cxf-rt-security-3.3.4"
+                    MODULE="cxf-rt-security-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-security/3.3.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-ws-addr-3.3.1"
-                    MODULE="cxf-rt-ws-addr-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-ws-addr/3.3.1"
+                    NAME="cxf-rt-ws-addr-3.3.4"
+                    MODULE="cxf-rt-ws-addr-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-ws-addr/3.3.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-ws-mex-3.3.1"
-                    MODULE="cxf-rt-ws-mex-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-ws-mex/3.3.1"
+                    NAME="cxf-rt-ws-mex-3.3.4"
+                    MODULE="cxf-rt-ws-mex-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-ws-mex/3.3.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-ws-policy-3.3.1"
-                    MODULE="cxf-rt-ws-policy-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-ws-policy/3.3.1"
+                    NAME="cxf-rt-ws-policy-3.3.4"
+                    MODULE="cxf-rt-ws-policy-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-ws-policy/3.3.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-ws-rm-3.3.1"
-                    MODULE="cxf-rt-ws-rm-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-ws-rm/3.3.1"
+                    NAME="cxf-rt-ws-rm-3.3.4"
+                    MODULE="cxf-rt-ws-rm-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-ws-rm/3.3.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-ws-security-3.3.1"
-                    MODULE="cxf-rt-ws-security-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-ws-security/3.3.1"
+                    NAME="cxf-rt-ws-security-3.3.4"
+                    MODULE="cxf-rt-ws-security-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-ws-security/3.3.4"
                     REQUIRED="true"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-security-saml-3.3.1"
-                    MODULE="cxf-rt-security-saml-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-security-saml/3.3.1"
+                    NAME="cxf-rt-security-saml-3.3.4"
+                    MODULE="cxf-rt-security-saml-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-security-saml/3.3.4"
                     REQUIRED="true"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-rt-wsdl-3.3.1"
-                    MODULE="cxf-rt-wsdl-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf/cxf-rt-wsdl/3.3.1"
+                    NAME="cxf-rt-wsdl-3.3.4"
+                    MODULE="cxf-rt-wsdl-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf/cxf-rt-wsdl/3.3.4"
                     REQUIRED="true"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="cxf-services-sts-core-3.3.1"
-                    MODULE="cxf-services-sts-core-3.3.1.jar"
-                    MVN="mvn:org.apache.cxf.services.sts/cxf-services-sts-core/3.3.1"
+                    NAME="cxf-services-sts-core-3.3.4"
+                    MODULE="cxf-services-sts-core-3.3.4.jar"
+                    MVN="mvn:org.apache.cxf.services.sts/cxf-services-sts-core/3.3.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="jaxb-core-2.3.0"
-                    MODULE="jaxb-core-2.3.0.jar"
-                    MVN="mvn:com.sun.xml.bind/jaxb-core/2.3.0"
+                    NAME="jakarta.xml.bind-api-2.3.2"
+                    MODULE="jakarta.xml.bind-api-2.3.2.jar"
+                    MVN="mvn:jakarta.xml.bind/jakarta.xml.bind-api/2.3.2"
                     REQUIRED="true"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="jaxb-impl-2.3.0"
-                    MODULE="jaxb-impl-2.3.0.jar"
-                    MVN="mvn:com.sun.xml.bind/jaxb-impl/2.3.0"
+                    NAME="jaxb-runtime-2.3.2"
+                    MODULE="jaxb-runtime-2.3.2.jar"
+                    MVN="mvn:org.glassfish.jaxb/jaxb-runtime/2.3.2"
+                    REQUIRED="true"
+                    BundleID=""
+                    />
+                <IMPORT
+                    NAME="txw2-2.3.2"
+                    MODULE="txw2-2.3.2.jar"
+                    MVN="mvn:org.glassfish.jaxb/txw2/2.3.2"
+                    REQUIRED="true"
+                    BundleID=""
+                    />
+                <IMPORT
+                    NAME="istack-commons-runtime-3.0.8"
+                    MODULE="istack-commons-runtime-3.0.8.jar"
+                    MVN="mvn:com.sun.istack/istack-commons-runtime/3.0.8"
                     REQUIRED="true"
                     BundleID=""
                     />
@@ -338,52 +352,45 @@
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="wss4j-bindings-2.2.1"
-                    MODULE="wss4j-bindings-2.2.1.jar"
-                    MVN="mvn:org.apache.wss4j/wss4j-bindings/2.2.1"
+                    NAME="wss4j-bindings-2.2.4"
+                    MODULE="wss4j-bindings-2.2.4.jar"
+                    MVN="mvn:org.apache.wss4j/wss4j-bindings/2.2.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="wss4j-policy-2.2.1"
-                    MODULE="wss4j-policy-2.2.1.jar"
-                    MVN="mvn:org.apache.wss4j/wss4j-policy/2.2.1"
+                    NAME="wss4j-policy-2.2.4"
+                    MODULE="wss4j-policy-2.2.4.jar"
+                    MVN="mvn:org.apache.wss4j/wss4j-policy/2.2.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="wss4j-ws-security-common-2.2.1"
-                    MODULE="wss4j-ws-security-common-2.2.1.jar"
-                    MVN="mvn:org.apache.wss4j/wss4j-ws-security-common/2.2.1"
+                    NAME="wss4j-ws-security-common-2.2.4"
+                    MODULE="wss4j-ws-security-common-2.2.4.jar"
+                    MVN="mvn:org.apache.wss4j/wss4j-ws-security-common/2.2.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="wss4j-ws-security-dom-2.2.1"
-                    MODULE="wss4j-ws-security-dom-2.2.1.jar"
-                    MVN="mvn:org.apache.wss4j/wss4j-ws-security-dom/2.2.1"
+                    NAME="wss4j-ws-security-dom-2.2.4"
+                    MODULE="wss4j-ws-security-dom-2.2.4.jar"
+                    MVN="mvn:org.apache.wss4j/wss4j-ws-security-dom/2.2.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="wss4j-ws-security-policy-stax-2.2.1"
-                    MODULE="wss4j-ws-security-policy-stax-2.2.1.jar"
-                    MVN="mvn:org.apache.wss4j/wss4j-ws-security-policy-stax/2.2.1"
+                    NAME="wss4j-ws-security-policy-stax-2.2.4"
+                    MODULE="wss4j-ws-security-policy-stax-2.2.4.jar"
+                    MVN="mvn:org.apache.wss4j/wss4j-ws-security-policy-stax/2.2.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="wss4j-ws-security-stax-2.2.1"
-                    MODULE="wss4j-ws-security-stax-2.2.1.jar"
-                    MVN="mvn:org.apache.wss4j/wss4j-ws-security-stax/2.2.1"
+                    NAME="wss4j-ws-security-stax-2.2.4"
+                    MODULE="wss4j-ws-security-stax-2.2.4.jar"
+                    MVN="mvn:org.apache.wss4j/wss4j-ws-security-stax/2.2.4"
                     BundleID=""
                     />
                 <IMPORT
-                    NAME="javax.annotation-api-1.3"
-                    MODULE="javax.annotation-api-1.3.jar"
-                    MVN="mvn:javax.annotation/javax.annotation-api/1.3"
-                    REQUIRED="true"
-                    BundleID=""
-                    />
-                <IMPORT
-                    NAME="jaxb-api-2.3.0"
-                    MODULE="jaxb-api-2.3.0.jar"
-                    MVN="mvn:javax.xml.bind/jaxb-api/2.3.0"
+                    NAME="javax.annotation-api-1.3.2"
+                    MODULE="javax.annotation-api-1.3.2.jar"
+                    MVN="mvn:javax.annotation/javax.annotation-api/1.3.2"
                     REQUIRED="true"
                     BundleID=""
                     />
