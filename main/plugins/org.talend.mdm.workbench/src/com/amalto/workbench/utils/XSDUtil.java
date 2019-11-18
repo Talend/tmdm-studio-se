@@ -15,6 +15,7 @@ package com.amalto.workbench.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -589,15 +590,19 @@ public class XSDUtil {
         FileInputStream inputStream = null;
         try {
             inputStream = new FileInputStream(file);
-            XSDParser parse = new XSDParser(null);
-            parse.parse(inputStream);
-            XSDSchema schema = parse.getSchema();
-            return validateCategory(schema);
+            return validateCategory(inputStream);
         } catch (IOException ex) {
             LOG.error("Fail in parsing XSD file:", ex);
         } finally {
             IOUtils.closeQuietly(inputStream);
         }
         return null;
+    }
+
+    public static Map<String, String> validateCategory(InputStream inputStream) {
+        XSDParser parse = new XSDParser(null);
+        parse.parse(inputStream);
+        XSDSchema schema = parse.getSchema();
+        return validateCategory(schema);
     }
 }

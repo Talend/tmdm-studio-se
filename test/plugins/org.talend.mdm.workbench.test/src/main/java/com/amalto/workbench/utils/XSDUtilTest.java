@@ -22,7 +22,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -611,24 +610,23 @@ public class XSDUtilTest {
     @Test
     public void testValidateCategory() {
         // #1 no error
-        Map<String, String> result = XSDUtil
-                .validateCategory(new File(XSDUtilTest.class.getResource("ValidateCategory01.xsd").getFile()));
+        Map<String, String> result = XSDUtil.validateCategory(XSDUtilTest.class.getResourceAsStream("ValidateCategory01.xsd"));
         assertNull(result);
 
         // #2
-        result = XSDUtil.validateCategory(new File(XSDUtilTest.class.getResource("ValidateCategory02.xsd").getFile()));
+        result = XSDUtil.validateCategory(XSDUtilTest.class.getResourceAsStream("ValidateCategory02.xsd"));
         assertEquals(1, result.size());
         assertTrue(result.containsKey("EntityA"));
         // #3
-        result = XSDUtil.validateCategory(new File(XSDUtilTest.class.getResource("ValidateCategory03.xsd").getFile()));
+        result = XSDUtil.validateCategory(XSDUtilTest.class.getResourceAsStream("ValidateCategory03.xsd"));
         assertEquals(1, result.size());
         assertTrue(result.containsKey("EntityA"));
         // #4
-        result = XSDUtil.validateCategory(new File(XSDUtilTest.class.getResource("ValidateCategory04.xsd").getFile()));
+        result = XSDUtil.validateCategory(XSDUtilTest.class.getResourceAsStream("ValidateCategory04.xsd"));
         assertEquals(1, result.size());
         assertTrue(result.containsKey("EntityA"));
         // #5
-        result = XSDUtil.validateCategory(new File(XSDUtilTest.class.getResource("ValidateCategory05.xsd").getFile()));
+        result = XSDUtil.validateCategory(XSDUtilTest.class.getResourceAsStream("ValidateCategory05.xsd"));
         assertEquals(1, result.size());
         assertTrue(result.containsKey("EntityA"));
     }
