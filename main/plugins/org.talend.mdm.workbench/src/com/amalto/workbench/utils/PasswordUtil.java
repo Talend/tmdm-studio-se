@@ -34,9 +34,7 @@ public class PasswordUtil {
         if (algorithm != null) {
             if (algorithm.equals(ALGORITHM_COMMON_V3)) {
                 try {
-                    String decryptedPassword = StudioEncryption.getStudioEncryption(StudioEncryption.EncryptionKeyName.SYSTEM)
-                            .decrypt(encodedPassword);
-                    return decryptedPassword;
+                    return decryptPasswordAES(encodedPassword);
                 } catch (Exception e) {
                     LOGGER.error(e.getMessage(), e);
                     return null;
@@ -47,6 +45,12 @@ public class PasswordUtil {
             }
         }
         return decryptPasswordBase64(encodedPassword);
+    }
+
+    private static String decryptPasswordAES(String encodedPassword) {
+        String decryptedPassword = StudioEncryption.getStudioEncryption(StudioEncryption.EncryptionKeyName.SYSTEM)
+                .decrypt(encodedPassword);
+        return decryptedPassword;
     }
 
     public static String decryptPassword(String encodedPassword) {
@@ -70,8 +74,7 @@ public class PasswordUtil {
         if (algorithm != null) {
             if (algorithm.equals(ALGORITHM_COMMON_V3)) {
                 try {
-                    return StudioEncryption.getStudioEncryption(StudioEncryption.EncryptionKeyName.SYSTEM)
-                            .encrypt(plainPassword);
+                    return encryptPasswordAES(plainPassword);
                 } catch (Exception e) {
                     LOGGER.error(e.getMessage(), e);
                     return null;
@@ -84,6 +87,11 @@ public class PasswordUtil {
 
         return encryptPasswordBase64(plainPassword);
 
+    }
+
+    private static String encryptPasswordAES(String plainPassword) {
+        return StudioEncryption.getStudioEncryption(StudioEncryption.EncryptionKeyName.SYSTEM)
+                .encrypt(plainPassword);
     }
 
     public static String encryptPassword(String plainPassword) {
