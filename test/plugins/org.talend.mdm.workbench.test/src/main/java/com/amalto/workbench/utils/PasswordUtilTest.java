@@ -24,11 +24,10 @@ import org.mockito.ArgumentMatchers;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.talend.utils.security.CryptoMigrationUtil;
 import org.talend.utils.security.StudioEncryption;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ PasswordUtil.class, StudioEncryption.class,CryptoMigrationUtil.class })
+@PrepareForTest({ PasswordUtil.class, StudioEncryption.class})
 public class PasswordUtilTest {
     @Test
     public void testDecryptPasswordStringString() throws Exception {
