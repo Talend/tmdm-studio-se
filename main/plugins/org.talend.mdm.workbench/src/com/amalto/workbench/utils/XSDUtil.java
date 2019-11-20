@@ -600,9 +600,9 @@ public class XSDUtil {
     }
 
     public static Map<String, String> validateCategory(InputStream inputStream) {
-        XSDParser parse = new XSDParser(null);
-        parse.parse(inputStream);
-        XSDSchema schema = parse.getSchema();
+        XSDParser parser = new XSDParser(null);
+        parser.parse(inputStream);
+        XSDSchema schema = parser.getSchema();
         return validateCategory(schema);
     }
 }
