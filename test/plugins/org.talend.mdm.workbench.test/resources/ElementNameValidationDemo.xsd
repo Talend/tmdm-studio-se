@@ -1,0 +1,76 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">  
+  <xsd:import namespace="http://www.w3.org/2001/XMLSchema"/>  
+  <xsd:complexType name="CTypeA"> 
+    <xsd:all> 
+      <xsd:element maxOccurs="1" minOccurs="1" name="aId" type="xsd:string"/>  
+      <xsd:element maxOccurs="1" minOccurs="0" name="ref_field_сс08" type="xsd:string"></xsd:element>  
+      <xsd:element maxOccurs="1" minOccurs="0" ref="EntityB_сс08"/>  
+      <xsd:element maxOccurs="1" minOccurs="0" ref="EntityC_сс08"/> 
+    </xsd:all> 
+  </xsd:complexType>  
+  <xsd:complexType name="CTypeC_сс08"> 
+    <xsd:all> 
+      <xsd:element maxOccurs="1" minOccurs="1" name="cId" type="xsd:string"/> 
+    </xsd:all> 
+  </xsd:complexType>  
+  <xsd:element name="EntityB_сс08"> 
+    <xsd:complexType> 
+      <xsd:all> 
+        <xsd:element maxOccurs="1" minOccurs="1" name="cId" type="xsd:string"/>  
+        <xsd:element maxOccurs="1" minOccurs="0" name="simpleField_сс08" type="xsd:string"/>  
+        <xsd:element maxOccurs="1" minOccurs="0" name="水电费" type="xsd:string"/>  
+        <xsd:element maxOccurs="1" minOccurs="0" name="containerField_сс08" type="CTypeB"/> 
+      </xsd:all> 
+    </xsd:complexType>  
+    <xsd:unique name="EntityC"> 
+      <xsd:selector xpath="."/>  
+      <xsd:field xpath="cId"/> 
+    </xsd:unique> 
+  </xsd:element>  
+  <xsd:element name="EntityC_сс08" type="CTypeC_сс08"/>  
+  <xsd:element name="EntityA_CTypeA" type="CTypeA"> 
+    <xsd:unique name="EntityA_CTypeA"> 
+      <xsd:selector xpath="."/>  
+      <xsd:field xpath="aId"/> 
+    </xsd:unique> 
+  </xsd:element>  
+  <xsd:element name="Mapping" type="cacdo_RegisterTSWDetailsType"> 
+    <xsd:annotation> 
+      <xsd:appinfo source="X_Write">CDI_Administrator</xsd:appinfo>  
+      <xsd:appinfo source="X_Write">CDI_Interactive</xsd:appinfo>  
+      <xsd:appinfo source="X_Write">CDI_Manager</xsd:appinfo>  
+      <xsd:appinfo source="X_Deny_Create">CDI_User</xsd:appinfo>  
+      <xsd:appinfo source="X_Deny_LogicalDelete">CDI_Administrator</xsd:appinfo>  
+      <xsd:appinfo source="X_Deny_LogicalDelete">CDI_User</xsd:appinfo>  
+      <xsd:appinfo source="X_Deny_LogicalDelete">CDI_Manager</xsd:appinfo>  
+      <xsd:appinfo source="X_Deny_LogicalDelete">CDI_Interactive</xsd:appinfo>  
+      <xsd:appinfo source="X_Deny_PhysicalDelete">CDI_User</xsd:appinfo> 
+    </xsd:annotation>  
+    <xsd:unique name="Mapping"> 
+      <xsd:selector xpath="."/>  
+      <xsd:field xpath="cid"/> 
+    </xsd:unique> 
+  </xsd:element>  
+  <xsd:complexType name="cacdo_RegisterTSWDetailsType"> 
+    <xsd:all> 
+      <xsd:element maxOccurs="1" minOccurs="1" name="cid" type="xsd:string"/>  
+      <xsd:element maxOccurs="1" minOccurs="0" name="cacdo_tswdetails" type="cacdo_WarehouseDetailsType_сс08"> 
+        <xsd:annotation> 
+          <xsd:appinfo source="X_Write">CDI_Administrator</xsd:appinfo>  
+          <xsd:appinfo source="X_Write">CDI_Interactive</xsd:appinfo>  
+          <xsd:appinfo source="X_Write">CDI_Manager</xsd:appinfo> 
+        </xsd:annotation> 
+      </xsd:element> 
+    </xsd:all> 
+  </xsd:complexType>  
+  <xsd:complexType name="cacdo_WarehouseDetailsType_сс08"> 
+    <xsd:all> 
+      <xsd:element maxOccurs="1" minOccurs="1" name="cid" type="xsd:string"/> 
+    </xsd:all> 
+  </xsd:complexType>  
+  <xsd:complexType name="CTypeB"> 
+    <xsd:all> 
+      <xsd:element maxOccurs="1" minOccurs="1" name="cId" type="xsd:string"/> 
+    </xsd:all> 
+  </xsd:complexType> 
+</xsd:schema>
