@@ -59,6 +59,10 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.collections.map.MultiKeyMap;
 import org.apache.commons.io.IOUtils;
@@ -173,8 +177,6 @@ import com.amalto.workbench.webservices.WSVersion;
 import com.amalto.workbench.webservices.WSViewPK;
 import com.amalto.workbench.webservices.WSWhereCondition;
 import com.amalto.workbench.webservices.WSWhereOperator;
-import com.sun.org.apache.xpath.internal.XPathAPI;
-import com.sun.org.apache.xpath.internal.objects.XObject;
 import com.sun.xml.ws.wsdl.parser.InaccessibleWSDLException;
 
 /**
@@ -642,7 +644,7 @@ public class Util {
      * @throws Exception
      */
     public static NodeList getNodeList(Document d, String xPath) throws Exception {
-        return getNodeList(d.getDocumentElement(), xPath, null, null);
+        return getNodeList(d.getDocumentElement(), xPath);
     }
 
     /**
@@ -651,21 +653,13 @@ public class Util {
      * @throws Exception
      */
     public static NodeList getNodeList(Node contextNode, String xPath) throws Exception {
-        return getNodeList(contextNode, xPath, null, null);
-    }
+        XPathFactory factory = XPathFactory.newInstance();
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        XPath xpath = factory.newXPath();
+        XPathExpression expr = xpath.compile(xPath);
 
-    /**
-     * Get a nodelist from an xPath
-     *
-     * @throws Exception
-     */
-    public static NodeList getNodeList(Node contextNode, String xPath, String namespace, String prefix) throws Exception {
-        XObject xo = XPathAPI.eval(contextNode, xPath,
-                (namespace == null) ? contextNode : Util.getRootElement("nsholder", namespace, prefix));//$NON-NLS-1$
-        if (xo.getType() != XObject.CLASS_NODESET) {
-            return null;
-        }
-        return xo.nodelist();
+        NodeList result = (NodeList) expr.evaluate(contextNode, XPathConstants.NODESET);
+        return result;
     }
 
     /**
@@ -739,10 +733,6 @@ public class Util {
     }
 
     public static String[] getTextNodes(Node contextNode, String xPath) throws XtentisException {
-        return getTextNodes(contextNode, xPath, contextNode);
-    }
-
-    public static String[] getTextNodes(Node contextNode, String xPath, Node namespaceNode) throws XtentisException {
         String[] results = null;
 
         // test for hard-coded values
@@ -758,17 +748,12 @@ public class Util {
         }
 
         try {
-            XObject xo = XPathAPI.eval(contextNode, xPath, namespaceNode);
-            if (xo.getType() == XObject.CLASS_NODESET) {
-                NodeList l = xo.nodelist();
-                int len = l.getLength();
-                results = new String[len];
-                for (int i = 0; i < len; i++) {
-                    Node n = l.item(i);
-                    results[i] = n.getNodeValue();
-                }
-            } else {
-                results = new String[] { xo.toString() };
+            NodeList nodeList = getNodeList(contextNode, xPath);
+            int len = nodeList.getLength();
+            results = new String[len];
+            for (int i = 0; i < len; i++) {
+                Node n = nodeList.item(i);
+                results[i] = n.getNodeValue();
             }
         } catch (Exception e) {
             String err = Messages.Util_18 + xPath + Messages.Util_19 + e.getClass().getName() + Messages.Util_20
@@ -776,19 +761,14 @@ public class Util {
             throw new XtentisException(err);
         }
         return results;
-
     }
 
-    public static String getFirstTextNode(Node contextNode, String xPath, Node namespaceNode) throws XtentisException {
-        String[] res = getTextNodes(contextNode, xPath, namespaceNode);
+    public static String getFirstTextNode(Node contextNode, String xPath) throws XtentisException {
+        String[] res = getTextNodes(contextNode, xPath);
         if (res.length == 0) {
             return null;
         }
         return res[0];
-    }
-
-    public static String getFirstTextNode(Node contextNode, String xPath) throws XtentisException {
-        return getFirstTextNode(contextNode, xPath, contextNode);
     }
 
     /*********************************************************************

@@ -12,7 +12,12 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -583,15 +588,12 @@ public class UtilTest {
     public void testGetTextNodes() {
         Node contextNode = null;
         String xpath = ""; //$NON-NLS-1$
-        Node namespaceNode = contextNode;
-
         try {
             xpath = "\"pathA\""; //$NON-NLS-1$
-            String[] textNodes = Util.getTextNodes(contextNode, xpath, namespaceNode);
+            String[] textNodes = Util.getTextNodes(contextNode, xpath);
             assertNotNull(textNodes);
             assertEquals(1, textNodes.length);
             assertEquals("pathA", textNodes[0]); //$NON-NLS-1$
-
 
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
@@ -606,25 +608,24 @@ public class UtilTest {
             pictureElement.appendChild(doc.createElement("xsd:annotation")); //$NON-NLS-1$
 
             xpath = "@name"; //$NON-NLS-1$
-            textNodes = Util.getTextNodes(nameElement, xpath, nameElement);
+            textNodes = Util.getTextNodes(nameElement, xpath);
             assertNotNull(textNodes);
             assertEquals(1, textNodes.length);
             assertEquals("NameA", textNodes[0]); //$NON-NLS-1$
-            textNodes = Util.getTextNodes(pictureElement, xpath, pictureElement);
+            textNodes = Util.getTextNodes(pictureElement, xpath);
             assertNotNull(textNodes);
             assertEquals(1, textNodes.length);
             assertEquals("PictureA", textNodes[0]); //$NON-NLS-1$
 
             xpath = "@type"; //$NON-NLS-1$
-            textNodes = Util.getTextNodes(nameElement, xpath, nameElement);
+            textNodes = Util.getTextNodes(nameElement, xpath);
             assertNotNull(textNodes);
             assertEquals(1, textNodes.length);
             assertEquals("xsd:string", textNodes[0]); //$NON-NLS-1$
-            textNodes = Util.getTextNodes(pictureElement, xpath, pictureElement);
+            textNodes = Util.getTextNodes(pictureElement, xpath);
             assertNotNull(textNodes);
             assertEquals(1, textNodes.length);
             assertEquals("PICTURE", textNodes[0]); //$NON-NLS-1$
-
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
@@ -1255,8 +1256,8 @@ public class UtilTest {
         List<XSDNamedComponent> allElements = Arrays.asList(checkedElements);
         assertNotNull(duplicatedElems);
         assertTrue(checkedElements.length == duplicatedElems.length);
-        for (int i = 0; i < duplicatedElems.length; i++) {
-            assertTrue(allElements.contains(duplicatedElems[i]));
+        for (Object duplicatedElem : duplicatedElems) {
+            assertTrue(allElements.contains(duplicatedElem));
         }
 
         //
@@ -1279,8 +1280,8 @@ public class UtilTest {
         duplicatedElems = Util.filterOutDuplicatedElems(checkedElements2);
         assertNotNull(duplicatedElems);
         assertTrue(checkedElements.length == duplicatedElems.length);
-        for (int i = 0; i < duplicatedElems.length; i++) {
-            assertTrue(allElements.contains(duplicatedElems[i]));
+        for (Object duplicatedElem : duplicatedElems) {
+            assertTrue(allElements.contains(duplicatedElem));
         }
     }
 
