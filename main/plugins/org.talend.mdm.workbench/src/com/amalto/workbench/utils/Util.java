@@ -658,8 +658,7 @@ public class Util {
         XPath xpath = factory.newXPath();
         XPathExpression expr = xpath.compile(xPath);
 
-        NodeList result = (NodeList) expr.evaluate(contextNode, XPathConstants.NODESET);
-        return result;
+        return (NodeList) expr.evaluate(contextNode, XPathConstants.NODESET);
     }
 
     /**
