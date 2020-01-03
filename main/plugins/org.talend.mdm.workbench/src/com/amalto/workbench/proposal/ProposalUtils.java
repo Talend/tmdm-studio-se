@@ -21,7 +21,6 @@ import org.eclipse.swt.custom.VerifyKeyListener;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Text;
-import org.talend.commons.ui.swt.proposal.ContentProposalAdapterExtended;
 
 
 /**
