@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -35,6 +36,7 @@ import org.dom4j.Attribute;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
+import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ITreeViewerListener;
@@ -168,11 +170,14 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
         credentials.put(UnifyUrl(ur), credal);
     }
 
+    private List<Element> selectElement(Node node, String path) {
+        return node.selectNodes(path).stream().map(n -> (Element) n).collect(Collectors.toList());
+    }
     private void doUpgrade(String url) {
         Document doc = credentials.get(url).doc;
         String path = "//child::*[text() = '" + TreeObject.CATEGORY_FOLDER + "' and count(@Universe) = 0 and count(@Url) = 0"//$NON-NLS-1$//$NON-NLS-2$
                 + "]";//$NON-NLS-1$
-        List<Element> categorys = doc.selectNodes(path);
+        List<Element> categorys = selectElement(doc, path);
 
         for (Element elem : categorys) {
             Attribute attr = elem.attribute(URL);
@@ -220,6 +225,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
 
     }
 
+    @Override
     public void handleEvent(int type, TreeObject parent, TreeObject child) {
         if (internalCheck || child.getServerRoot() == null) {
             return;
@@ -249,7 +255,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
     private Element getTopElementWithUser(String user, String ip) {
         Document doc = credentials.get(ip).doc;
         user = transformForXPath(user);
-        List<Element> userRoots = doc.selectNodes(rootPath + "/" + user);//$NON-NLS-1$
+        List<Element> userRoots = selectElement(doc, rootPath + "/" + user);
         Element elementUser;
         if (userRoots.isEmpty()) {
             elementUser = doc.getRootElement().addElement(user);
@@ -376,7 +382,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
         }
         String xpath = getXPathForTreeObject(child);
         Document doc = credentials.get(UnifyUrl(parent.getServerRoot().getWsKey().toString())).doc;
-        List<Element> models = doc.selectNodes(xpath);
+        List<Element> models = selectElement(doc, xpath);
         if (!models.isEmpty() && child instanceof TreeParent) {
             Element model = models.get(0);
             if (isAEXtentisObjects(model, child) == MODEL_LEVEL) {
@@ -393,7 +399,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
             if (child.getType() == TreeObject.CATEGORY_FOLDER) {
                 xpathTail = "' and @Url='" + getURLFromTreeObject(child);//$NON-NLS-1$
             }
-            List<Element> list = elemFolder.selectNodes(xpath + xpathTail + xpathTailOther);
+            List<Element> list = selectElement(elemFolder, xpath + xpathTail + xpathTailOther);
             if (list.isEmpty() && (catalog.equals("") || catalog == null)) {//$NON-NLS-1$
                 Element childElem = elemFolder.addElement(filterOutBlank(child.getDisplayName()));
                 childElem.setText(child.getType() + "");//$NON-NLS-1$
@@ -420,7 +426,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
         if (elemFolder == null) {
             return;
         }
-        List<Element> list = elemFolder.selectNodes(xpath);
+        List<Element> list = selectElement(elemFolder, xpath);
         if (!list.isEmpty()) {
             elemFolder.remove(list.get(0));
         }
@@ -437,7 +443,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
         }
         String xpath = getXPathForTreeObject(category);
         Document doc = credentials.get(UnifyUrl(category.getServerRoot().getWsKey().toString())).doc;
-        List<Element> elems = doc.selectNodes(xpath);
+        List<Element> elems = selectElement(doc, xpath);
         if (elems.size() > 0) {
             Element elem = elems.get(0);
             String value = elem.attributeValue(REALNAME);
@@ -593,7 +599,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
 
                     Document doc = credentials.get(UnifyUrl(folder.getServerRoot().getWsKey().toString())).doc;
                     if (systemCatalog == null) {
-                        List<Element> elems = doc.selectNodes(xpath);
+                        List<Element> elems = selectElement(doc, xpath);
                         if (elems.isEmpty()) {
                             systemCatalog = new TreeParent(DEFAULT_CATALOG, folder.getServerRoot(), TreeObject.CATEGORY_FOLDER,
                                     null, null);
@@ -624,7 +630,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
                         if (!exist) {
                             folder.removeChild(theObj);
                             systemCatalog.addChild(theObj);
-                            List<Element> elems = doc.selectNodes(xpath);
+                            List<Element> elems = selectElement(doc, xpath);
                             if (!elems.isEmpty()) {
                                 elems.get(0).addElement(filterOutBlank(theObj.getDisplayName())).setText(theObj.getType() + "");//$NON-NLS-1$
                                 saveDocument(folder);
@@ -668,9 +674,9 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
                 + "//child::*[text() = '" + TreeObject.CATEGORY_FOLDER + "' and @Url='" + getURLFromTreeObject(model) + "']";//$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
         Document doc = credentials.get(UnifyUrl(model.getServerRoot().getWsKey().toString())).doc;
         String xpathForModel = getXPathForTreeObject(model);
-        List<Element> elems = doc.selectNodes(xpathForModel);
+        List<Element> elems = selectElement(doc, xpathForModel);
         Element modelElem = elems.get(0);
-        elems = doc.selectNodes(xpath);
+        elems = selectElement(doc, xpath);
         for (Element elem : elems) {
             Element spec = elem;
             ArrayList<Element> hierarchicalList = new ArrayList<Element>();
@@ -725,7 +731,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
         }
         Document doc = credentials.get(UnifyUrl(folder.getServerRoot().getWsKey().toString())).doc;
         String path = this.getXPathForTreeObject(folder);
-        List<Element> topElems = doc.selectNodes(path);
+        List<Element> topElems = selectElement(doc, path);
         if (topElems.size() > 0 && folder.getParent() != null) {
             if (isAEXtentisObjects(topElems.get(0), folder) == XTENTIS_LEVEL && folder.getParent().getType() == 23) {
                 if (topElems.get(0).getParent() != null) {
@@ -754,7 +760,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
                 + "' and count(child::*) = 0]";//$NON-NLS-1$
 
         TreeParent subFolder = folder;
-        List<Element> elems = doc.selectNodes(xpath);
+        List<Element> elems = selectElement(doc, xpath);
         for (Element elem : elems) {
             String xpaths = getXPathForElem(elem);
             int modelPos = xpaths.indexOf(filterOutBlank(folder.getDisplayName()));
@@ -768,7 +774,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
             while (modelPos != -1 || (!xpaths.equals("") && modelPos == -1)) {//$NON-NLS-1$
                 String nodeName = modelPos != -1 ? xpaths.substring(0, modelPos) : xpaths;
                 xpathTrack += "/" + nodeName;//$NON-NLS-1$
-                List<Element> parnts = doc.selectNodes(xpathTrack);
+                List<Element> parnts = selectElement(doc, xpathTrack);
                 if (parnts.size() > 0 && parnts.get(0).attributeValue(REALNAME) != null) {
                     nodeName = parnts.get(0).attributeValue(REALNAME);
                 }
@@ -816,7 +822,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
                     + "//child::*[text() = '" + TreeObject.CATEGORY_FOLDER + "' and @Url='" + url + "']//child::*";//$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
             Document doc = credentials.get(getURLFromTreeObject(folder)).doc;
-            List<Element> elems = doc.selectNodes(xpath);
+            List<Element> elems = selectElement(doc, xpath);
             for (Element elem : elems) {
                 String xpathElem = getXPathForElem(elem);
                 String xpathObj = getXPathForTreeObject(theObj);
@@ -905,7 +911,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
             level = XTENTIS_LEVEL + 1;
         }
         Document doc = credentials.get(UnifyUrl(xobj.getServerRoot().getWsKey().toString())).doc;
-        List<Element> elems = doc.selectNodes(path);
+        List<Element> elems = selectElement(doc, path);
         if (!elems.isEmpty()) {
             Element elem = elems.get(0);
             while (isAEXtentisObjects(elem, xobj) >= level) {
@@ -937,7 +943,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
         if (treeObject.getType() == TreeObject.CATEGORY_FOLDER) {
             String xpath = getXPathForTreeObject(treeObject);
             Document doc = credentials.get(UnifyUrl(treeObject.getServerRoot().getWsKey().toString())).doc;
-            List<Element> elems = doc.selectNodes(xpath);
+            List<Element> elems = selectElement(doc, xpath);
             if (!elems.isEmpty()) {
                 if (catalogTreeObj == null) {
                     catalogTreeObj = elems.get(0);
@@ -968,7 +974,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
             if (xobject.getType() == TreeObject.CATEGORY_FOLDER && xobject.getDisplayName().equals("System")) {//$NON-NLS-1$
                 Document doc = credentials.get(UnifyUrl(xobject.getServerRoot().getWsKey().toString())).doc;
                 String path = this.getXPathForTreeObject(xobject);
-                List<Element> elems = doc.selectNodes(path);
+                List<Element> elems = selectElement(doc, path);
                 if (!elems.isEmpty()) {
                     Element elem = elems.get(0);
                     if (isAEXtentisObjects(elem, xobject) == XTENTIS_LEVEL) {
@@ -983,10 +989,12 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
         }
     }
 
+    @Override
     public void treeCollapsed(TreeExpansionEvent event) {
         setTreeNodeImage(event, false);
     }
 
+    @Override
     public void treeExpanded(TreeExpansionEvent event) {
         setTreeNodeImage(event, true);
     }
@@ -1011,7 +1019,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
                 + "' and name()='" + filterOutBlank(category.getDisplayName()) + "' and @Url = '" + getURLFromTreeObject(category) + "']";//$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
 
         Document doc = credentials.get(UnifyUrl(category.getServerRoot().getWsKey().toString())).doc;
-        List<Element> elms = doc.selectNodes(xpath);
+        List<Element> elms = selectElement(doc, xpath);
 
         return !elms.isEmpty() ? elms.get(0) : null;
     }
@@ -1198,7 +1206,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
 
             String url = getURLFromTreeObject(serverRoot);
             String urlXquery = "descendant::*[@Url != '" + url + "']";//$NON-NLS-1$//$NON-NLS-2$
-            List<Element> elems = spareDoc.selectNodes(urlXquery);
+            List<Element> elems = selectElement(spareDoc, urlXquery);
             for (Element elem : elems) {
                 elem.addAttribute("Url", url);//$NON-NLS-1$
             }
@@ -1286,7 +1294,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
 
             subRoot = this.pingElement(xpathPrefix + "/" + subRoot.getName(), root);//$NON-NLS-1$
             String xpathForCategory = "//descendant::*[text()='" + TreeObject.CATEGORY_FOLDER + "']";//$NON-NLS-1$//$NON-NLS-2$
-            List<Element> elementList = subRoot.selectNodes(xpathForCategory);
+            List<Element> elementList = selectElement(subRoot, xpathForCategory);
             List<String> categoryXpathForCurDoc = new ArrayList<String>();
             List<String> categoryXpathForOrgDoc = new ArrayList<String>();
 
@@ -1306,7 +1314,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
             // + "[text()='" + element.getTextTrim() + "']";
             String topElemXpath = xpathPrefix + "/" + subRoot.getName();//$NON-NLS-1$
             Element topElem = pingElement(topElemXpath, orgDoc.getRootElement());
-            elementList = orgDoc.getRootElement().selectNodes(xpathForCategory);
+            elementList = selectElement(orgDoc.getRootElement(), xpathForCategory);
             for (Element elem : elementList) {
                 List<String> categoryHierarchicals = parseXpathForElement(elem, topElem);
                 String xpathForOrgCategory = xpathPrefix + "/" + subRoot.getName();//$NON-NLS-1$
@@ -1411,7 +1419,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
                 Element elem = (Element) obj;
                 if (!elem.getTextTrim().equals(TreeObject.CATEGORY_FOLDER + "")) {//$NON-NLS-1$
                     String xpath = ".//descendant::" + elem.getName() + "[text()='" + elem.getTextTrim() + "']";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-                    List<Element> es = targtElemRoot.selectNodes(xpath);
+                    List<Element> es = selectElement(targtElemRoot, xpath);
                     Element newElem = null;
                     for (Element elemExist : es) {
                         if (elemExist.getParent() != null
@@ -1438,7 +1446,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
     }
 
     private Element pingElement(String xpath, Element root) {
-        List<Element> elems = root.selectNodes(xpath);
+        List<Element> elems = selectElement(root, xpath);
         if (elems.size() > 0) {
             return elems.get(0);
         }
@@ -1532,7 +1540,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
         Iterator<Element> iter = outPutSchemas.values().iterator();
         while (iter.hasNext()) {
             Element divisionElement = iter.next();
-            List<Element> categorys = divisionElement.selectNodes(xpath);
+            List<Element> categorys = selectElement(divisionElement, xpath);
 
             if (categorys != null) {
                 for (Element categoryElems : categorys) {

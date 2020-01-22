@@ -8,8 +8,6 @@
 	<classpathentry exported="true" kind="lib" path="META-INF/lib/jakarta-oro-2.0.8.jar"/>
 	<classpathentry exported="true" kind="lib" path="META-INF/lib/axis.jar"/>
 	<classpathentry exported="true" kind="lib" path="META-INF/lib/z.commons-lang-2.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/dom4j-1.6.1.jar" sourcepath="C:/Users/zscyun/.m2/repository/dom4j/dom4j/1.6.1/dom4j-1.6.1-sources.jar"/>
-	<classpathentry exported="true" kind="lib" path="META-INF/lib/jaxen-1.1-beta-6.jar"/>
 	<classpathentry exported="true" kind="lib" path="META-INF/lib/resolver.jar"/>
 	<classpathentry exported="true" kind="lib" path="META-INF/lib/serializer.jar"/>
 	<classpathentry exported="true" kind="lib" path="META-INF/lib/trang.jar"/>

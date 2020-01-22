@@ -15,7 +15,6 @@ package com.amalto.workbench.export;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -30,8 +29,6 @@ import java.util.Map.Entry;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -75,11 +72,9 @@ import com.amalto.workbench.providers.XObjectEditorInput;
 import com.amalto.workbench.utils.EXtentisObjects;
 import com.amalto.workbench.utils.LocalTreeObjectRepository;
 import com.amalto.workbench.utils.Util;
-import com.amalto.workbench.utils.XmlUtil;
 import com.amalto.workbench.webservices.TMDMService;
 import com.amalto.workbench.webservices.WSAutoIncrement;
 import com.amalto.workbench.webservices.WSItem;
-import com.amalto.workbench.webservices.WSTransformerV2;
 import com.amalto.workbench.widgets.FileSelectWidget;
 import com.amalto.workbench.widgets.RepositoryCheckTreeViewer;
 import com.amalto.workbench.widgets.WidgetFactory;
@@ -156,6 +151,7 @@ public class ImportItemsWizard extends Wizard {
         final Object[] objs = getCheckedObjects();
         IRunnableWithProgress iRunnableWithProgress = new IRunnableWithProgress() {
 
+            @Override
             public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                 try {
                     doImport(objs, monitor);
@@ -283,6 +279,7 @@ public class ImportItemsWizard extends Wizard {
 
         }
 
+        @Override
         public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
             parses(importFromArchieve, zipFilePath, monitor);
         }
@@ -444,6 +441,7 @@ public class ImportItemsWizard extends Wizard {
             }
             Display.getDefault().syncExec(new Runnable() {
 
+                @Override
                 public void run() {
                     treeViewer.setRoot(reserverRoot);
                     treeViewer.getViewer().setInput(null);
@@ -502,19 +500,6 @@ public class ImportItemsWizard extends Wizard {
 
     public void doImport(Object[] selectedObjs, IProgressMonitor monitor) {
         // empty
-    }
-
-    private boolean isV2Transformer(String inputPath) throws DocumentException, FileNotFoundException {
-
-        boolean isV2Transformer = false;
-        Document document = XmlUtil.parse(new FileInputStream(inputPath));
-        if (document != null && document.getRootElement() != null) {
-            String rootElementName = document.getRootElement().getName();
-            if (rootElementName.equals(WSTransformerV2.class.getSimpleName())) {
-                isV2Transformer = true;
-            }
-        }
-        return isV2Transformer;
     }
 
     protected void importClusterContents(TreeObject item, TMDMService port, HashMap<String, String> picturePathMap)
@@ -611,6 +596,7 @@ public class ImportItemsWizard extends Wizard {
             this.page = page;
         }
 
+        @Override
         public void handleEvent(Event event) {
             page.checkCompleted();
             parse();
@@ -643,6 +629,7 @@ public class ImportItemsWizard extends Wizard {
             }
         }
 
+        @Override
         public void createControl(Composite parent) {
             Composite composite = new Composite(parent, SWT.BORDER);
             composite.setLayout(new GridLayout(4, false));
@@ -657,10 +644,12 @@ public class ImportItemsWizard extends Wizard {
             // false, 1, 1));
             folderBtn.addSelectionListener(new SelectionListener() {
 
+                @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
 
                 }
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     folder.setEnabled(folderBtn.getSelection());
                     checkCompleted();
@@ -687,9 +676,11 @@ public class ImportItemsWizard extends Wizard {
             exchangeBtn.setEnabled(false);
             exchangeBtn.addSelectionListener(new SelectionListener() {
 
+                @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
                 }
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     exchangeImport();
                 }
@@ -698,10 +689,12 @@ public class ImportItemsWizard extends Wizard {
 
             zipBtn.addSelectionListener(new SelectionListener() {
 
+                @Override
                 public void widgetDefaultSelected(SelectionEvent e) {
 
                 }
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     zip.setEnabled(zipBtn.getSelection());
                     exchangeBtn.setEnabled(zipBtn.getSelection());
