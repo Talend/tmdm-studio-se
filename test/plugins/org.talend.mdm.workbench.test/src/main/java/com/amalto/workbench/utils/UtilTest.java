@@ -38,6 +38,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.axis.utils.IOUtils;
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.impl.common.IOUtil;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -1346,6 +1347,51 @@ public class UtilTest {
         refName = "ProductFamily"; //$NON-NLS-1$
         referencedEntity = Util.findReference(refName, xschema);
         assertNull(referencedEntity);
+    }
+
+    /*
+     * Test method: Util.unZipFile(,,,), to check "Zip Slip" style attacks during unzip file
+     */
+    @Test
+    public void testUnZipInvalidFile() {
+        String usrDir = System.getProperty("java.io.tmpdir");//$NON-NLS-1$
+
+        long currentTimeMillis = System.currentTimeMillis();
+        File zipFolder = new File(usrDir + File.separator + currentTimeMillis);
+        if (!zipFolder.exists()) {
+            zipFolder.mkdirs();
+        }
+        File unzipFolder = new File(usrDir + File.separator + currentTimeMillis + 1);
+        if (!unzipFolder.exists()) {
+            unzipFolder.mkdirs();
+        }
+
+        String file = new File(zipFolder, "testzp.zip").getAbsolutePath(); //$NON-NLS-1$
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            IOUtil.copyCompletely(getClass().getResourceAsStream("/resources/zip-slip.zip"), fileOutputStream);
+            Util.unZipFile(file, unzipFolder.getAbsolutePath(), 8, new NullProgressMonitor());
+            String[] unzippedFiles = unzipFolder.list();
+            assertNotNull(unzippedFiles);
+            assertTrue(unzippedFiles.length == 1);
+
+        } catch (IOException e) {
+            assertTrue(e.getMessage().contains("Invalid output path"));
+        } finally {
+            try {
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (IOException e) {
+                //
+            }
+            try {
+                ZipToFile.deleteDirectory(zipFolder);
+                ZipToFile.deleteDirectory(unzipFolder);
+            } catch (Exception e) {
+            }
+        }
     }
 
     @Test
