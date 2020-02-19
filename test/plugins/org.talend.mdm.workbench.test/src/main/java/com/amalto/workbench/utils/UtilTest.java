@@ -75,9 +75,9 @@ import com.amalto.workbench.webservices.WSWhereOperator;
 
 public class UtilTest {
 
-    private Logger log = Logger.getLogger(UtilTest.class);
+    private static final Logger LOG = Logger.getLogger(UtilTest.class);
 
-    XSDSchema schema;
+    private XSDSchema schema;
 
     @Before
     public void setUp() throws Exception {
@@ -628,7 +628,7 @@ public class UtilTest {
             assertEquals(1, textNodes.length);
             assertEquals("PICTURE", textNodes[0]); //$NON-NLS-1$
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -784,7 +784,7 @@ public class UtilTest {
             assertTrue(list.size() == 1);
             assertTrue(list.contains("Store")); //$NON-NLS-1$
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -895,7 +895,7 @@ public class UtilTest {
             assertTrue(list.contains("StoreE")); //$NON-NLS-1$
             assertTrue(list.contains("StoreF")); //$NON-NLS-1$
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -1075,7 +1075,7 @@ public class UtilTest {
 
 
         } catch (ParserConfigurationException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
 
     }
@@ -1372,10 +1372,6 @@ public class UtilTest {
             fileOutputStream = new FileOutputStream(file);
             IOUtil.copyCompletely(getClass().getResourceAsStream("/resources/zip-slip.zip"), fileOutputStream);
             Util.unZipFile(file, unzipFolder.getAbsolutePath(), 8, new NullProgressMonitor());
-            String[] unzippedFiles = unzipFolder.list();
-            assertNotNull(unzippedFiles);
-            assertTrue(unzippedFiles.length == 1);
-
         } catch (IOException e) {
             assertTrue(e.getMessage().contains("Invalid output path"));
         } finally {
@@ -1384,12 +1380,13 @@ public class UtilTest {
                     fileOutputStream.close();
                 }
             } catch (IOException e) {
-                //
+                LOG.error(e.getMessage(), e);
             }
             try {
                 ZipToFile.deleteDirectory(zipFolder);
                 ZipToFile.deleteDirectory(unzipFolder);
             } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
             }
         }
     }
@@ -1416,14 +1413,14 @@ public class UtilTest {
             String[] unzippedFiles = unzipFolder.list();
             assertNotNull(unzippedFiles);
             assertTrue(unzippedFiles.length == 1);
-
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } finally {
             try {
                 ZipToFile.deleteDirectory(zipFolder);
                 ZipToFile.deleteDirectory(unzipFolder);
             } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
             }
         }
     }
@@ -1442,14 +1439,14 @@ public class UtilTest {
             byte[] data = sb.toString().getBytes();
             out.write(data, 0, data.length);
         } catch (Exception e) {//
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } finally {
             if (out != null) {
                 try {
                     out.closeEntry();
                     out.close();
                 } catch (IOException e) {//
-                    log.error(e.getMessage(), e);
+                    LOG.error(e.getMessage(), e);
                 }
             }
         }
@@ -1520,7 +1517,7 @@ public class UtilTest {
             assertEquals(expectedObjNames[5], name);
 
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -1590,7 +1587,7 @@ public class UtilTest {
             assertEquals(element1, primaryKey);
 
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
