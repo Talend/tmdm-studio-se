@@ -75,7 +75,7 @@ import com.amalto.workbench.webservices.WSWhereOperator;
 
 public class UtilTest {
 
-    private static final Logger LOG = Logger.getLogger(UtilTest.class);
+    private static final Logger LOGGER = Logger.getLogger(UtilTest.class);
 
     private XSDSchema schema;
 
@@ -628,7 +628,7 @@ public class UtilTest {
             assertEquals(1, textNodes.length);
             assertEquals("PICTURE", textNodes[0]); //$NON-NLS-1$
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -784,7 +784,7 @@ public class UtilTest {
             assertTrue(list.size() == 1);
             assertTrue(list.contains("Store")); //$NON-NLS-1$
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -895,7 +895,7 @@ public class UtilTest {
             assertTrue(list.contains("StoreE")); //$NON-NLS-1$
             assertTrue(list.contains("StoreF")); //$NON-NLS-1$
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -1075,7 +1075,7 @@ public class UtilTest {
 
 
         } catch (ParserConfigurationException e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
 
     }
@@ -1380,13 +1380,13 @@ public class UtilTest {
                     fileOutputStream.close();
                 }
             } catch (IOException e) {
-                LOG.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             }
             try {
                 ZipToFile.deleteDirectory(zipFolder);
                 ZipToFile.deleteDirectory(unzipFolder);
             } catch (Exception e) {
-                LOG.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }
@@ -1414,13 +1414,13 @@ public class UtilTest {
             assertNotNull(unzippedFiles);
             assertTrue(unzippedFiles.length == 1);
         } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             try {
                 ZipToFile.deleteDirectory(zipFolder);
                 ZipToFile.deleteDirectory(unzipFolder);
             } catch (Exception e) {
-                LOG.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }
@@ -1439,14 +1439,14 @@ public class UtilTest {
             byte[] data = sb.toString().getBytes();
             out.write(data, 0, data.length);
         } catch (Exception e) {//
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (out != null) {
                 try {
                     out.closeEntry();
                     out.close();
                 } catch (IOException e) {//
-                    LOG.error(e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         }
@@ -1517,7 +1517,7 @@ public class UtilTest {
             assertEquals(expectedObjNames[5], name);
 
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -1587,7 +1587,7 @@ public class UtilTest {
             assertEquals(element1, primaryKey);
 
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
