@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -38,6 +39,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.axis.utils.IOUtils;
 import org.apache.log4j.Logger;
+import org.apache.xmlbeans.impl.common.IOUtil;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -74,9 +76,9 @@ import com.amalto.workbench.webservices.WSWhereOperator;
 
 public class UtilTest {
 
-    private Logger log = Logger.getLogger(UtilTest.class);
+    private static final Logger LOGGER = Logger.getLogger(UtilTest.class);
 
-    XSDSchema schema;
+    private XSDSchema schema;
 
     @Before
     public void setUp() throws Exception {
@@ -627,7 +629,7 @@ public class UtilTest {
             assertEquals(1, textNodes.length);
             assertEquals("PICTURE", textNodes[0]); //$NON-NLS-1$
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -783,7 +785,7 @@ public class UtilTest {
             assertTrue(list.size() == 1);
             assertTrue(list.contains("Store")); //$NON-NLS-1$
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -894,7 +896,7 @@ public class UtilTest {
             assertTrue(list.contains("StoreE")); //$NON-NLS-1$
             assertTrue(list.contains("StoreF")); //$NON-NLS-1$
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -1074,7 +1076,7 @@ public class UtilTest {
 
 
         } catch (ParserConfigurationException e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
 
     }
@@ -1348,19 +1350,43 @@ public class UtilTest {
         assertNull(referencedEntity);
     }
 
+    /*
+     * Test method: Util.unZipFile(,,,), to check "Zip Slip" style attacks during unzip file
+     */
     @Test
-    public void testUnZipFile() {
-        String usrDir = System.getProperty("java.io.tmpdir");//$NON-NLS-1$
+    public void testUnZipInvalidFile() throws IOException {
+        File zipFolder = Files.createTempDirectory("zipfolder").toFile();
+        File unzipFolder = Files.createTempDirectory("unzipfolder").toFile();
 
-        long currentTimeMillis = System.currentTimeMillis();
-        File zipFolder = new File(usrDir + File.separator + currentTimeMillis);
-        if (!zipFolder.exists()) {
-            zipFolder.mkdirs();
+        String file = new File(zipFolder, "testzp.zip").getAbsolutePath(); //$NON-NLS-1$
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(file);
+            IOUtil.copyCompletely(getClass().getResourceAsStream("/resources/zip-slip.zip"), fileOutputStream);
+            Util.unZipFile(file, unzipFolder.getAbsolutePath(), 8, new NullProgressMonitor());
+        } catch (IOException e) {
+            assertTrue(e.getMessage().contains("Invalid output path"));
+        } finally {
+            try {
+                if (fileOutputStream != null) {
+                    fileOutputStream.close();
+                }
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+            try {
+                ZipToFile.deleteDirectory(zipFolder);
+                ZipToFile.deleteDirectory(unzipFolder);
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            }
         }
-        File unzipFolder = new File(usrDir + File.separator + currentTimeMillis + 1);
-        if (!unzipFolder.exists()) {
-            unzipFolder.mkdirs();
-        }
+    }
+
+    @Test
+    public void testUnZipFile() throws IOException {
+        File zipFolder = Files.createTempDirectory("zipfolder").toFile();
+        File unzipFolder = Files.createTempDirectory("unzipfolder").toFile();
 
         String file = new File(zipFolder, "testzp.zip").getAbsolutePath(); //$NON-NLS-1$
         createZipFile(file);
@@ -1370,14 +1396,14 @@ public class UtilTest {
             String[] unzippedFiles = unzipFolder.list();
             assertNotNull(unzippedFiles);
             assertTrue(unzippedFiles.length == 1);
-
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             try {
                 ZipToFile.deleteDirectory(zipFolder);
                 ZipToFile.deleteDirectory(unzipFolder);
             } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }
@@ -1396,14 +1422,14 @@ public class UtilTest {
             byte[] data = sb.toString().getBytes();
             out.write(data, 0, data.length);
         } catch (Exception e) {//
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (out != null) {
                 try {
                     out.closeEntry();
                     out.close();
                 } catch (IOException e) {//
-                    log.error(e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         }
@@ -1474,7 +1500,7 @@ public class UtilTest {
             assertEquals(expectedObjNames[5], name);
 
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -1544,7 +1570,7 @@ public class UtilTest {
             assertEquals(element1, primaryKey);
 
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

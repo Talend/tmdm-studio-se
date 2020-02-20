@@ -138,6 +138,7 @@ import org.talend.mdm.commmon.util.core.ICoreConstants;
 import org.talend.mdm.commmon.util.webapp.XSystemObjects;
 import org.talend.mdm.commmon.util.workbench.Version;
 import org.talend.mdm.commmon.util.workbench.ZipToFile;
+import org.talend.utils.io.FilesUtils;
 import org.talend.utils.xml.XmlUtils;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.Document;
@@ -3466,16 +3467,21 @@ public class Util {
     public static void unZipFile(String zipfile, String unzipdir, int totalProgress, IProgressMonitor monitor)
             throws IOException {
         monitor.setTaskName(Messages.Util_50);
+
         File unzipF = new File(unzipdir);
         if (!unzipF.exists()) {
             unzipF.mkdirs();
         }
+        unzipdir = unzipdir.replace('\\', '/');
+        if (!unzipdir.endsWith("/")) { //$NON-NLS-1$
+            unzipdir = unzipdir + "/"; //$NON-NLS-1$
+        }
+
         ZipFile zfile = null;
 
         try {
             zfile = new ZipFile(zipfile);
             int total = zfile.size();
-            // System.out.println("zip's entry size:"+total);
             int interval, step;
             if (totalProgress / total > 0) {
                 interval = 1;
@@ -3490,17 +3496,16 @@ public class Util {
             int tmp = 1;
             while (zList.hasMoreElements()) {
                 ze = (ZipEntry) zList.nextElement();
+                String filename = unzipdir + ze.getName();
+                FilesUtils.validateDestPath(unzipdir, filename);
+
                 monitor.subTask(ze.getName());
                 if (ze.isDirectory()) {
                     File f = new File(unzipdir + ze.getName());
                     f.mkdirs();
                     continue;
                 }
-                unzipdir = unzipdir.replace('\\', '/');
-                if (!unzipdir.endsWith("/")) { //$NON-NLS-1$
-                    unzipdir = unzipdir + "/"; //$NON-NLS-1$
-                }
-                String filename = unzipdir + ze.getName();
+
                 File zeF = new File(filename);
                 if (!zeF.getParentFile().exists()) {
                     zeF.getParentFile().mkdirs();
