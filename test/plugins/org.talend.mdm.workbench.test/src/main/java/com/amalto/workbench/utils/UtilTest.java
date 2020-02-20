@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -1353,18 +1354,9 @@ public class UtilTest {
      * Test method: Util.unZipFile(,,,), to check "Zip Slip" style attacks during unzip file
      */
     @Test
-    public void testUnZipInvalidFile() {
-        String usrDir = System.getProperty("java.io.tmpdir");//$NON-NLS-1$
-
-        long currentTimeMillis = System.currentTimeMillis();
-        File zipFolder = new File(usrDir + File.separator + currentTimeMillis);
-        if (!zipFolder.exists()) {
-            zipFolder.mkdirs();
-        }
-        File unzipFolder = new File(usrDir + File.separator + currentTimeMillis + 1);
-        if (!unzipFolder.exists()) {
-            unzipFolder.mkdirs();
-        }
+    public void testUnZipInvalidFile() throws IOException {
+        File zipFolder = Files.createTempDirectory("zipfolder").toFile();
+        File unzipFolder = Files.createTempDirectory("unzipfolder").toFile();
 
         String file = new File(zipFolder, "testzp.zip").getAbsolutePath(); //$NON-NLS-1$
         FileOutputStream fileOutputStream = null;
@@ -1392,18 +1384,9 @@ public class UtilTest {
     }
 
     @Test
-    public void testUnZipFile() {
-        String usrDir = System.getProperty("java.io.tmpdir");//$NON-NLS-1$
-
-        long currentTimeMillis = System.currentTimeMillis();
-        File zipFolder = new File(usrDir + File.separator + currentTimeMillis);
-        if (!zipFolder.exists()) {
-            zipFolder.mkdirs();
-        }
-        File unzipFolder = new File(usrDir + File.separator + currentTimeMillis + 1);
-        if (!unzipFolder.exists()) {
-            unzipFolder.mkdirs();
-        }
+    public void testUnZipFile() throws IOException {
+        File zipFolder = Files.createTempDirectory("zipfolder").toFile();
+        File unzipFolder = Files.createTempDirectory("unzipfolder").toFile();
 
         String file = new File(zipFolder, "testzp.zip").getAbsolutePath(); //$NON-NLS-1$
         createZipFile(file);
