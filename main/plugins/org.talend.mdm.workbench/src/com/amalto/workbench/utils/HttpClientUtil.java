@@ -65,9 +65,9 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
+import org.talend.core.service.IMDMWebServiceHook;
 
 import com.amalto.workbench.i18n.Messages;
-import com.amalto.workbench.service.IWebServiceHook;
 
 /**
  * created by HHB on 2013-6-27 This tool class wrap DefaultHttpClient to provide some methods for other class,for
@@ -209,7 +209,7 @@ public class HttpClientUtil {
     }
 
     public static String[] getStudioToken(String userName) {
-        IWebServiceHook webServiceHook = Util.getWebServiceHook();
+        IMDMWebServiceHook webServiceHook = Util.getWebServiceHook();
         if (webServiceHook != null) {
             String[] tokenPair = new String[2];
             tokenPair[0] = webServiceHook.getTokenKey();

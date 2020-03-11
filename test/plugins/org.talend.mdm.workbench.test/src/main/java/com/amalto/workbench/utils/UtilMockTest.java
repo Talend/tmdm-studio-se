@@ -27,6 +27,8 @@ import java.util.Set;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.ws.BindingProvider;
+import javax.xml.ws.handler.MessageContext;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.BasicEList;
@@ -53,6 +55,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+import org.talend.core.service.IMDMWebServiceHook;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -896,7 +899,40 @@ public class UtilMockTest {
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
 
+    @Test
+    public void testPreRequestSendingHook() throws Exception {
+        String username = "username";
+
+        PowerMockito.mockStatic(Util.class);
+        PowerMockito.doCallRealMethod().when(Util.class, "preRequestSendingHook", any(BindingProvider.class), anyString());
+
+        // mock IMDMWebServiceHook
+        IMDMWebServiceHook mockWebServiceHook = Mockito.mock(IMDMWebServiceHook.class);
+        PowerMockito.when(mockWebServiceHook.buildStudioToken(anyString())).thenReturn("AE6D37D6FA60B30F");
+        PowerMockito.when(mockWebServiceHook.getTokenKey()).thenReturn("t_stoken");
+
+        PowerMockito.when(Util.getWebServiceHook()).thenReturn(mockWebServiceHook);
+
+        // mock BindingProvider
+        Map<String, Object> requestContext = new HashMap<>();
+        BindingProvider mockStub = Mockito.mock(BindingProvider.class);
+        Mockito.when(mockStub.getRequestContext()).thenReturn(requestContext);
+
+        try {
+            Whitebox.invokeMethod(Util.class, mockStub, username);
+        } catch (Exception e) {
+
+        }
+
+        assertTrue(!requestContext.isEmpty());
+        assertTrue(requestContext.containsKey(MessageContext.HTTP_REQUEST_HEADERS));
+        Object obj = requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
+        assertTrue(obj instanceof Map);
+        Map<String, List<String>> headers = (Map<String, List<String>>) obj;
+        assertTrue(headers.containsKey("t_stoken"));
+        assertTrue(!headers.get("t_stoken").isEmpty());
     }
 
 }
