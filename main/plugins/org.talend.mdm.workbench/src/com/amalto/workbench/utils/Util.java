@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -60,7 +59,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.WebServiceException;
-import javax.xml.ws.handler.MessageContext;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpression;
@@ -422,7 +420,10 @@ public class Util {
                 context.put(BindingProvider.USERNAME_PROPERTY, username);
                 context.put(BindingProvider.PASSWORD_PROPERTY, password);
 
-                preRequestSendingHook(stub, username);
+                IMDMWebServiceHook wsHook = getWebServiceHook();
+                if (wsHook != null) {
+                    wsHook.preRequestSendingHook(stub.getRequestContext(), username);
+                }
 
                 cachedMDMService.put(url, username, password, service);
             } catch (WebServiceException e) {
@@ -465,19 +466,6 @@ public class Util {
             }
         }
         return url;
-    }
-
-    private static void preRequestSendingHook(BindingProvider provider, String username) {
-        IMDMWebServiceHook wsHook = getWebServiceHook();
-        if (wsHook != null) {
-            String studioToken = wsHook.buildStudioToken(username);
-
-            Map<String, List<String>> headers = new HashMap<String, List<String>>();
-            List<String> values = Collections.singletonList(studioToken);
-            headers.put(wsHook.getTokenKey(), values);
-
-            provider.getRequestContext().put(MessageContext.HTTP_REQUEST_HEADERS, headers);
-        }
     }
 
     public static XtentisException convertWebServiceException(WebServiceException wsEx) {
