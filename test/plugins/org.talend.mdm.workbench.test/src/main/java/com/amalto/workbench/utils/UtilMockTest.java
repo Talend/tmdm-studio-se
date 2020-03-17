@@ -12,12 +12,29 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyListOf;
+import static org.mockito.ArgumentMatchers.anySet;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -55,16 +72,23 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.service.IMDMWebServiceHook;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import com.amalto.workbench.service.MissingJarService;
+import com.amalto.workbench.webservices.TMDMService;
+import com.amalto.workbench.webservices.TMDMService_Service;
 
 /**
  *
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ Util.class })
-@PowerMockIgnore({ "com.sun.org.apache.xerces.*", "javax.xml.parsers.*", "org.w3c.dom.*", "org.xml.sax.*" })
+@PrepareForTest({ Util.class, MissingJarService.class, GlobalServiceRegister.class })
+@PowerMockIgnore({ "com.sun.org.apache.xerces.*", "javax.xml.catalog.*",
+        "javax.xml.parsers.*", "org.w3c.dom.*", "org.eclipse.osgi.*", "org.eclipse.core.runtime.*", "org.eclipse.osgi.util.*",
+        "org.xml.sax.*" })
 public class UtilMockTest {
 
     private Logger log = Logger.getLogger(UtilMockTest.class);
@@ -902,30 +926,38 @@ public class UtilMockTest {
     }
 
     @Test
-    public void testPreRequestSendingHook() throws Exception {
+    public void testGetMDMService4Params() throws Exception {
         String username = "username";
+        String password = "password";
+        String _url = "http://localhost:8180/talendmdm/services/soap?wsdl";
+        URL url = new URL(_url);
 
+        // set test method to be real call method
         PowerMockito.mockStatic(Util.class);
-        PowerMockito.doCallRealMethod().when(Util.class, "preRequestSendingHook", any(BindingProvider.class), anyString());
+        PowerMockito.doCallRealMethod().when(Util.class, "getMDMService", any(URL.class), anyString(), anyString(), eq(false));
+        
+        // handle Missing jar service
+        PowerMockito.mockStatic(MissingJarService.class);
+        MissingJarService mockMissingJarService = PowerMockito.mock(MissingJarService.class);
+        PowerMockito.when(mockMissingJarService.checkMissingJar(anyBoolean())).thenReturn(true);
+        PowerMockito.when(MissingJarService.getInstance()).thenReturn(mockMissingJarService);
 
         // mock IMDMWebServiceHook
-        IMDMWebServiceHook mockWebServiceHook = Mockito.mock(IMDMWebServiceHook.class);
-        PowerMockito.when(mockWebServiceHook.buildStudioToken(anyString())).thenReturn("AE6D37D6FA60B30F");
-        PowerMockito.when(mockWebServiceHook.getTokenKey()).thenReturn("t_stoken");
+        IMDMWebServiceHook webServiceHookStub = Mockito.spy(new WebserviceHookStub());
+        PowerMockito.when(Util.getWebServiceHook()).thenReturn(webServiceHookStub);
 
-        PowerMockito.when(Util.getWebServiceHook()).thenReturn(mockWebServiceHook);
-
-        // mock BindingProvider
+        // service context
         Map<String, Object> requestContext = new HashMap<>();
-        BindingProvider mockStub = Mockito.mock(BindingProvider.class);
+        Stub_TMDMService mockStub = Mockito.mock(Stub_TMDMService.class);
         Mockito.when(mockStub.getRequestContext()).thenReturn(requestContext);
 
-        try {
-            Whitebox.invokeMethod(Util.class, mockStub, username);
-        } catch (Exception e) {
+        TMDMService_Service mockService_service = PowerMockito.mock(TMDMService_Service.class);
+        PowerMockito.whenNew(TMDMService_Service.class).withAnyArguments().thenReturn(mockService_service);
+        PowerMockito.when(mockService_service.getTMDMPort()).thenReturn(mockStub);
 
-        }
-
+        // call and verify
+        TMDMService mdmService = Util.getMDMService(url, username, password, false);
+        assertNotNull(mdmService);
         assertTrue(!requestContext.isEmpty());
         assertTrue(requestContext.containsKey(MessageContext.HTTP_REQUEST_HEADERS));
         Object obj = requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
@@ -933,6 +965,34 @@ public class UtilMockTest {
         Map<String, List<String>> headers = (Map<String, List<String>>) obj;
         assertTrue(headers.containsKey("t_stoken"));
         assertTrue(!headers.get("t_stoken").isEmpty());
+    }
+
+    static interface Stub_TMDMService extends TMDMService, BindingProvider {
+        // empty
+    }
+
+    static class WebserviceHookStub implements IMDMWebServiceHook {
+
+        @Override
+        public void preRequestSendingHook(Map<String, Object> requestContext, String userName) {
+            String studioToken = buildStudioToken(userName);
+
+            Map<String, List<String>> headers = new HashMap<String, List<String>>();
+            List<String> values = Collections.singletonList(studioToken);
+            headers.put(getTokenKey(), values);
+
+            requestContext.put(MessageContext.HTTP_REQUEST_HEADERS, headers);
+        }
+
+        @Override
+        public String buildStudioToken(String username) {
+            return "AE6D37D6FA60B30F";
+        }
+
+        @Override
+        public String getTokenKey() {
+            return "t_stoken";
+        }
     }
 
 }
