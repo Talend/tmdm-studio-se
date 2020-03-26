@@ -133,6 +133,7 @@ import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDSchemaLocator;
 import org.osgi.framework.Bundle;
 import org.talend.core.GlobalServiceRegister;
+import org.talend.core.service.IMDMWebServiceHook;
 import org.talend.mdm.commmon.util.core.EUUIDCustomType;
 import org.talend.mdm.commmon.util.core.ICoreConstants;
 import org.talend.mdm.commmon.util.webapp.XSystemObjects;
@@ -156,7 +157,6 @@ import com.amalto.workbench.image.ImageCache;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.models.TreeObjectTransfer;
 import com.amalto.workbench.models.TreeParent;
-import com.amalto.workbench.service.IWebServiceHook;
 import com.amalto.workbench.service.MissingJarService;
 import com.amalto.workbench.service.MissingJarsException;
 import com.amalto.workbench.webservices.TMDMService;
@@ -349,7 +349,7 @@ public class Util {
 
     public static String default_endpoint_address = "http://localhost:8180/talendmdm/services/soap";//$NON-NLS-1$
 
-    private static IWebServiceHook webServceHook;
+    private static IMDMWebServiceHook webServceHook;
 
     /*********************************************************************
      * WEB SERVICES
@@ -420,9 +420,9 @@ public class Util {
                 context.put(BindingProvider.USERNAME_PROPERTY, username);
                 context.put(BindingProvider.PASSWORD_PROPERTY, password);
 
-                IWebServiceHook wsHook = getWebServiceHook();
+                IMDMWebServiceHook wsHook = getWebServiceHook();
                 if (wsHook != null) {
-                    wsHook.preRequestSendingHook(stub, username);
+                    wsHook.preRequestSendingHook(stub.getRequestContext(), username);
                 }
 
                 cachedMDMService.put(url, username, password, service);
@@ -492,9 +492,9 @@ public class Util {
         return wsEx;
     }
 
-    public static IWebServiceHook getWebServiceHook() {
-        if (webServceHook == null && GlobalServiceRegister.getDefault().isServiceRegistered(IWebServiceHook.class)) {
-            webServceHook = GlobalServiceRegister.getDefault().getService(IWebServiceHook.class);
+    public static IMDMWebServiceHook getWebServiceHook() {
+        if (webServceHook == null && GlobalServiceRegister.getDefault().isServiceRegistered(IMDMWebServiceHook.class)) {
+            webServceHook = GlobalServiceRegister.getDefault().getService(IMDMWebServiceHook.class);
         }
         return webServceHook;
     }
