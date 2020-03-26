@@ -45,6 +45,7 @@ import org.exolab.castor.mapping.Mapping;
 import org.exolab.castor.xml.MarshalException;
 import org.exolab.castor.xml.Unmarshaller;
 import org.exolab.castor.xml.ValidationException;
+import org.talend.core.service.IMDMWebServiceHook;
 import org.talend.mdm.bulkload.client.BulkloadClient;
 import org.talend.mdm.bulkload.client.BulkloadOptions;
 import org.talend.mdm.bulkload.client.InputStreamMerger;
@@ -56,7 +57,6 @@ import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.plugin.RepositoryPlugin;
 import org.talend.mdm.repository.ui.dialogs.datacontent.DataProcessRuleDialog;
 
-import com.amalto.workbench.service.IWebServiceHook;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.webservices.WSItem;
 
@@ -291,7 +291,7 @@ public class ImportDataContentProcess extends AbstractDataContentProcess {
                 String datamodel = keys[2];
                 BulkloadClient bulkloadClient = new BulkloadClient(url, userName, password, cluster, concept, datamodel);
                 bulkloadClient.setOptions(new BulkloadOptions(false, false, 500));
-                IWebServiceHook webServiceHook = Util.getWebServiceHook();
+                IMDMWebServiceHook webServiceHook = Util.getWebServiceHook();
                 if (webServiceHook != null) {
                     String tokenKey = webServiceHook.getTokenKey();
                     String studioToken = webServiceHook.buildStudioToken(userName);
