@@ -297,3 +297,4 @@ Export-Package: com.sun.istack,
  org.codehaus.stax2.typed,
  org.codehaus.stax2.util,
  org.codehaus.stax2.validation
+Bundle-RequiredExecutionEnvironment: JavaSE-11

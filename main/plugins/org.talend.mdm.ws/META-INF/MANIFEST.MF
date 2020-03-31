@@ -8,5 +8,4 @@ Require-Bundle: javax.wsdl,
  org.eclipse.core.runtime
 Eclipse-ExtensibleAPI: true
 Export-Package: com.amalto.workbench.webservices
-Bundle-Activator: com.amalto.workbench.ws.MdmwsCEPlugin
 Bundle-ActivationPolicy: lazy
