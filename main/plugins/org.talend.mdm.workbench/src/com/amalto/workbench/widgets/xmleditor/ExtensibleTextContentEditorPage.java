@@ -53,12 +53,11 @@ public class ExtensibleTextContentEditorPage extends ExtensibleContentEditorPage
     @Override
     public void refresh() {
 
-        if (getCurrentContent().equals(getContent().getContent())) {
+        if (getCurrentContent().equals(getContent().getMaskContent())) {
             return;
         }
 
-        textViewer.setDocument(new Document(getContent().getContent()));
-
+        textViewer.setDocument(new Document(getContent().getMaskContent()));
     }
 
     @Override
