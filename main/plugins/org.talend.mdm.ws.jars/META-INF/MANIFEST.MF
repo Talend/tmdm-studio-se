@@ -297,4 +297,4 @@ Export-Package: com.sun.istack,
  org.codehaus.stax2.typed,
  org.codehaus.stax2.util,
  org.codehaus.stax2.validation
-Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=11))"
+Bundle-RequiredExecutionEnvironment: JavaSE-9
