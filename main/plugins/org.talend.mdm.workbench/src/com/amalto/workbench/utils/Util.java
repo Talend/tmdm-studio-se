@@ -402,7 +402,11 @@ public class Util {
                 throw new MissingJarsException("Missing dependency libraries."); //$NON-NLS-1$
             }
 
+            ClassLoader oldContextClassLoader = Thread.currentThread().getContextClassLoader();
             try {
+                //
+                Thread.currentThread().setContextClassLoader(TMDMService_Service.class.getClassLoader());
+
                 TMDMService_Service service_service = new TMDMService_Service(url);
 
                 service = service_service.getTMDMPort();
@@ -432,6 +436,8 @@ public class Util {
                 if (ex != null) {
                     throw ex;
                 }
+            } finally {
+                Thread.currentThread().setContextClassLoader(oldContextClassLoader);
             }
 
         }
