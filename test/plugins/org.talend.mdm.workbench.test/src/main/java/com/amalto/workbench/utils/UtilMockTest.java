@@ -68,6 +68,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.powermock.reflect.Whitebox;
@@ -79,10 +80,7 @@ import org.w3c.dom.Element;
 import com.amalto.workbench.service.MissingJarService;
 import com.amalto.workbench.webservices.TMDMService;
 import com.amalto.workbench.webservices.TMDMService_Service;
-/**
- *
- */
- */
+
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ Util.class, MissingJarService.class, GlobalServiceRegister.class })
 @PowerMockIgnore({ "com.sun.org.apache.xerces.*", "javax.xml.catalog.*",
