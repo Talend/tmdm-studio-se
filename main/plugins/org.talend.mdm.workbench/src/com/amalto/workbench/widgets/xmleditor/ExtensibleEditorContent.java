@@ -18,8 +18,6 @@ public class ExtensibleEditorContent {
 
     private static final String TAG_PASSWORD_END = "</password>";
 
-    private static final String TAG_PASSWORD_EMPTY = "<password/>";
-
     private static final String MASKCODE_CHAR = "*";
 
     private static final String MASKCODE = "*******";
@@ -55,8 +53,7 @@ public class ExtensibleEditorContent {
                         this.content = splitNewContent[0] + splitContent[1] + splitNewContent[2];
                     } else {
                         // origin content does not contains password part, this handle copy/input contents which
-                        // contains
-                        // password part, result: leave password empty
+                        // contains password part, result: leave password empty
                         this.content = splitNewContent[0] + (TAG_PASSWORD_BEGIN + TAG_PASSWORD_END) + splitNewContent[2];
                     }
 
@@ -103,18 +100,12 @@ public class ExtensibleEditorContent {
         return true;
     }
 
-    // empty tag has low priority
+    // No need consider empty tag
     private String[] splitByPasswordTag(String _content) {
         int start = _content.indexOf(TAG_PASSWORD_BEGIN);
         int end = _content.lastIndexOf(TAG_PASSWORD_END) + TAG_PASSWORD_END.length();
-        int firstEmptyTagIndex = _content.indexOf(TAG_PASSWORD_EMPTY);
         if (start != -1) {
             return new String[] { _content.substring(0, start), _content.substring(start, end), _content.substring(end) };
-        } else if (firstEmptyTagIndex != -1) {
-            int lastEmptyTagIndex = _content.lastIndexOf(TAG_PASSWORD_EMPTY);
-            return new String[] { _content.substring(0, firstEmptyTagIndex),
-                    _content.substring(firstEmptyTagIndex, lastEmptyTagIndex + TAG_PASSWORD_EMPTY.length()),
-                    _content.substring(lastEmptyTagIndex + TAG_PASSWORD_EMPTY.length()) };
         }
 
         return null;
