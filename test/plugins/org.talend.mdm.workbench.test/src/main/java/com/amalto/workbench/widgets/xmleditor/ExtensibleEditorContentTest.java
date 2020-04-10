@@ -26,9 +26,9 @@ public class ExtensibleEditorContentTest {
     public void testSplitbyPasswordTag() {
         // check cases:common password, masked password, empty password
         String[] checkPasswordPart = { "<password>talend</password>", "<password>******</password>",
-                "<password>*talend</password>", "<password></password>", "<password/>" };
+                "<password>*talend</password>", "<password></password>" };
         String[] expectedPasswordPart = { "<password>talend</password>", "<password>******</password>",
-                "<password>*talend</password>", "<password></password>", "<password/>" };
+                "<password>*talend</password>", "<password></password>" };
         
         String checkContent1 = "<parameters>\r\n  <processId>Product_Product</processId>\r\n  <processVersion>1.0</processVersion>\r\n  <username>admin</username>\r\n  ";
                  
@@ -68,31 +68,10 @@ public class ExtensibleEditorContentTest {
             expected[1] = expectedPasswordPart[0] + pad + expectedPasswordPart[3];
             Assert.assertArrayEquals(expected, splited);
 
-            // empty password tag behind common password tag
-            checkContent = checkContent1 + checkPasswordPart[0] + pad + checkPasswordPart[4] + checkContent2;
+            checkContent = checkContent1 + checkPasswordPart[1] + pad + checkPasswordPart[3] + checkContent2;
             splited = (String[]) declaredMethod.invoke(extensibleEditorContent, checkContent);
-            expected[1] = expectedPasswordPart[0];
-            Assert.assertArrayEquals(new String[] { expected[0], expected[1], pad + expectedPasswordPart[4] + expected[2] },
-                    splited);
-
-            // empty password tag before common password tag
-            checkContent = checkContent1 + checkPasswordPart[4] + pad + checkPasswordPart[0] + checkContent2;
-            splited = (String[]) declaredMethod.invoke(extensibleEditorContent, checkContent);
-            expected[1] = expectedPasswordPart[0];
-            Assert.assertArrayEquals(new String[] { expected[0] + checkPasswordPart[4] + pad, expected[1], expected[2] },
-                    splited);
-
-            checkContent = checkContent1 + checkPasswordPart[4] + pad + checkPasswordPart[3] + checkContent2;
-            splited = (String[]) declaredMethod.invoke(extensibleEditorContent, checkContent);
-            expected[1] = expectedPasswordPart[3];
-            Assert.assertArrayEquals(new String[] { expected[0] + checkPasswordPart[4] + pad, expected[1], expected[2] },
-                    splited);
-
-            checkContent = checkContent1 + checkPasswordPart[4] + pad + checkPasswordPart[4] + checkContent2;
-            splited = (String[]) declaredMethod.invoke(extensibleEditorContent, checkContent);
-            expected[1] = checkPasswordPart[4] + pad + checkPasswordPart[4];
+            expected[1] = expectedPasswordPart[1] + pad + expectedPasswordPart[3];
             Assert.assertArrayEquals(expected, splited);
-
         } catch (Exception e) {
             fail();
         }
