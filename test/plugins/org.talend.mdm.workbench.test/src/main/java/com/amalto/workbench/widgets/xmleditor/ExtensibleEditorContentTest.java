@@ -24,7 +24,7 @@ public class ExtensibleEditorContentTest {
 
     @Test
     public void testSplitbyPasswordTag() {
-        // check cases:common password, masked password, empty password
+        // check cases:common password, masked password
         String[] checkPasswordPart = { "<password>talend</password>", "<password>******</password>",
                 "<password>*talend</password>", "<password></password>" };
         String[] expectedPasswordPart = { "<password>talend</password>", "<password>******</password>",
