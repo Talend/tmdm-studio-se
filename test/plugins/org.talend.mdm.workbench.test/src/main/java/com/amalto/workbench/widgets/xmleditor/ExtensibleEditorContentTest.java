@@ -148,6 +148,16 @@ public class ExtensibleEditorContentTest {
             splited = PasswordTagUtil.splitByPasswordTag(checkContent);
             expected[1] = passwordPart[1] + pad + passwordPart[3];
             Assert.assertArrayEquals(expected, splited);
+
+            // invalid password tag pair
+            checkContent = checkContent1 + "<password>" + checkContent2;
+            splited = PasswordTagUtil.splitByPasswordTag(checkContent);
+            Assert.assertNull(splited);
+
+            checkContent = checkContent1 + "</password>" + checkContent2;
+            splited = PasswordTagUtil.splitByPasswordTag(checkContent);
+            Assert.assertNull(splited);
+
         } catch (Exception e) {
             fail();
         }

@@ -113,8 +113,9 @@ public class ExtensibleEditorContent {
         // No need consider empty tag
         public static String[] splitByPasswordTag(String _content) {
             int start = _content.indexOf(TAG_PASSWORD_BEGIN);
-            int end = _content.lastIndexOf(TAG_PASSWORD_END) + TAG_PASSWORD_END.length();
-            if (start != -1) {
+            int end = _content.lastIndexOf(TAG_PASSWORD_END);
+            if (start != -1 && end != -1) {
+                end = end + TAG_PASSWORD_END.length();
                 return new String[] { _content.substring(0, start), _content.substring(start, end), _content.substring(end) };
             }
 
