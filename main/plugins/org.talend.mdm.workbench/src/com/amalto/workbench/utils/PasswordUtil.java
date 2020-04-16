@@ -47,7 +47,7 @@ public class PasswordUtil {
         return decryptPasswordBase64(encodedPassword);
     }
 
-    private static String decryptPasswordAES(String encodedPassword) {
+    public static String decryptPasswordAES(String encodedPassword) {
         return StudioEncryption.getStudioEncryption(StudioEncryption.EncryptionKeyName.SYSTEM).decrypt(encodedPassword);
     }
 
@@ -87,7 +87,7 @@ public class PasswordUtil {
 
     }
 
-    private static String encryptPasswordAES(String plainPassword) {
+    public static String encryptPasswordAES(String plainPassword) {
         return StudioEncryption.getStudioEncryption(StudioEncryption.EncryptionKeyName.SYSTEM)
                 .encrypt(plainPassword);
     }
