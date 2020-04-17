@@ -13,9 +13,8 @@
 
 package com.amalto.workbench.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,10 +22,17 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.reflect.Whitebox;
 
 import com.amalto.workbench.models.KeyValue;
 import com.amalto.workbench.models.Line;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ FKFilterParser.class })
 public class FKFilterParserTest {
 
     private Logger log = Logger.getLogger(FKFilterParser.class);
@@ -48,19 +54,23 @@ public class FKFilterParserTest {
         Line line2 = new Line(keyValues2);
 
         try {
-            List<Line> lines = FKFilterParser.buildLine(criteria, keyNames); // $NON-NLS-1$
+            PowerMockito.mockStatic(FKFilterParser.class);
+            PowerMockito.when(FKFilterParser.class, "buildLine", anyString(), any(String[].class)).thenCallRealMethod(); //$NON-NLS-1$
+            PowerMockito.when(FKFilterParser.class, "buildKeyValue", any(String[].class), any(String[].class)) //$NON-NLS-1$
+                    .thenCallRealMethod();
+            List<Line> lines = Whitebox.invokeMethod(FKFilterParser.class, "buildLine", criteria, keyNames); //$NON-NLS-1$
             assertNotNull(lines);
             assertEquals(2, lines.size());
             assertTrue(lines.contains(line1));
             assertTrue(lines.contains(line2));
 
-            lines = FKFilterParser.buildLine((String) null, keyNames); // $NON-NLS-1$
+            lines = Whitebox.invokeMethod(FKFilterParser.class, "buildLine", (String) null, keyNames); //$NON-NLS-1$
             assertTrue(lines.size() == 0);
 
-            lines = FKFilterParser.buildLine(criteria, null); // $NON-NLS-1$
+            lines = Whitebox.invokeMethod(FKFilterParser.class, "buildLine", criteria, null); //$NON-NLS-1$
             assertTrue(lines.size() == 0);
 
-            lines = FKFilterParser.buildLine((String) null, null); // $NON-NLS-1$
+            lines = Whitebox.invokeMethod(FKFilterParser.class, "buildLine", (String) null, null); //$NON-NLS-1$
             assertTrue(lines.size() == 0);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

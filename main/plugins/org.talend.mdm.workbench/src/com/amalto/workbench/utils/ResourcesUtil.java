@@ -72,7 +72,7 @@ public class ResourcesUtil {
         }
     }
 
-    public static String getXMLString(String uri, TreeObject treeObject) {
+    private static String getXMLString(String uri, TreeObject treeObject) {
         String responseBody = "";//$NON-NLS-1$
         try {
             responseBody = HttpClientUtil.getStringContentByHttpget(uri, treeObject.getUsername(), treeObject.getPassword());

@@ -38,7 +38,7 @@ public class FKFilterParser {
         }
     }
 
-    public static List<Line> buildLine(String criteria, String[] keyNames) {
+    private static List<Line> buildLine(String criteria, String[] keyNames) {
         List<Line> lines = new ArrayList<Line>();
         if (criteria != null && keyNames != null) {
             String[] criterias = criteria.split(endSeparator);

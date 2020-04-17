@@ -15,13 +15,24 @@ package com.amalto.workbench.utils;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
+import org.talend.utils.security.StudioEncryption;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest({ PasswordUtil.class, StudioEncryption.class})
 public class PasswordUtilTest {
     @Test
     public void testDecryptPasswordStringString() throws Exception {
         String encodedPassword = null;
+        String decryptPassword_expect = "decryptPassword"; //$NON-NLS-1$
 
         //
         try {
@@ -29,22 +40,26 @@ public class PasswordUtilTest {
         } catch (Exception e) {
             assertTrue(e instanceof IllegalArgumentException);
         }
-        encodedPassword = "ecodedPassword"; //$NON-NLS-1$
 
         //
-        String plainPassword = "plainPassword"; //$NON-NLS-1$
-        String encryptPasswordBase64 = "cGxhaW5QYXNzd29yZA=="; //$NON-NLS-1$
-        //
         String algorithm = null;
-        String decryptPassword = PasswordUtil.decryptPassword(encryptPasswordBase64, algorithm);
-        assertEquals(plainPassword, decryptPassword);
-        assertEquals(plainPassword, PasswordUtil.decryptPasswordBase64(encryptPasswordBase64));
+        PowerMockito.mockStatic(PasswordUtil.class);
+        PowerMockito.when(PasswordUtil.decryptPassword(anyString(), (String) ArgumentMatchers.isNull())).thenCallRealMethod();
+        PowerMockito.when(PasswordUtil.decryptPassword(anyString(), anyString())).thenCallRealMethod();
+        PowerMockito.when(PasswordUtil.decryptPasswordBase64(anyString())).thenReturn(decryptPassword_expect);
+
+        encodedPassword = "ecodedPassword"; //$NON-NLS-1$
+        String decryptPassword = PasswordUtil.decryptPassword(encodedPassword, algorithm);
+        assertEquals(decryptPassword_expect, decryptPassword);
+        PowerMockito.verifyStatic(PasswordUtil.class, times(1));
+        PasswordUtil.decryptPasswordBase64(encodedPassword);
 
         //
         algorithm = "arbitrary algorithm";// on behalf of arbitrary algorithm,not null //$NON-NLS-1$
-        decryptPassword = PasswordUtil.decryptPassword(encryptPasswordBase64, algorithm);
-        assertEquals(plainPassword, decryptPassword);
-        assertEquals(plainPassword, PasswordUtil.decryptPasswordBase64(encryptPasswordBase64));
+        decryptPassword = PasswordUtil.decryptPassword(encodedPassword, algorithm);
+        assertEquals(decryptPassword_expect, decryptPassword);
+        PowerMockito.verifyStatic(PasswordUtil.class, times(2));
+        PasswordUtil.decryptPasswordBase64(encodedPassword);
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON;
@@ -58,10 +73,14 @@ public class PasswordUtilTest {
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V3;
-        String encryptPasswordAES = "enc:system.encryption.key.v1:Fxw4XQoKfAbUuEzhUodUEx2q93zLxY1Tv9nGRs6xiUlBW/xyNSWUTBE=";
-        decryptPassword = PasswordUtil.decryptPassword(encryptPasswordAES, algorithm);
-        assertEquals(plainPassword, decryptPassword);
-        assertEquals(plainPassword, PasswordUtil.decryptPasswordAES(encryptPasswordAES));
+        String decryptPassword_expect3 = decryptPassword_expect + "3"; //$NON-NLS-1$
+
+        PowerMockito.mockStatic(PasswordUtil.class);
+        PowerMockito.when(PasswordUtil.decryptPassword(anyString(), anyString())).thenCallRealMethod();
+        PowerMockito.when(PasswordUtil.class, "decryptPasswordAES", anyString()).thenReturn(decryptPassword_expect3);
+
+        decryptPassword = PasswordUtil.decryptPassword(encodedPassword, algorithm);
+        assertEquals(decryptPassword_expect3, decryptPassword);
     }
 
     @Test
@@ -75,6 +94,7 @@ public class PasswordUtilTest {
     @Test
     public void testEncryptPasswordStringString() throws Exception {
         String plainPassword = null;
+        String encryptedPassword_expect = "encryptedPassword"; //$NON-NLS-1$
 
         //
         try {
@@ -83,19 +103,25 @@ public class PasswordUtilTest {
             assertTrue(e instanceof IllegalArgumentException);
         }
 
-        plainPassword = "plainPassword"; //$NON-NLS-1$
-        String encryptPasswordBase64 = "cGxhaW5QYXNzd29yZA=="; //$NON-NLS-1$
         //
         String algorithm = null;
+        PowerMockito.mockStatic(PasswordUtil.class);
+        PowerMockito.when(PasswordUtil.encryptPassword(anyString(), (String) ArgumentMatchers.isNull())).thenCallRealMethod();
+        PowerMockito.when(PasswordUtil.encryptPassword(anyString(), anyString())).thenCallRealMethod();
+        PowerMockito.when(PasswordUtil.encryptPasswordBase64(anyString())).thenReturn(encryptedPassword_expect);
+
+        plainPassword = "plainPassword"; //$NON-NLS-1$
         String encryptedPassword = PasswordUtil.encryptPassword(plainPassword, algorithm);
-        assertEquals(encryptPasswordBase64, encryptedPassword);
-        assertEquals(encryptPasswordBase64, PasswordUtil.encryptPasswordBase64(plainPassword));
+        assertEquals(encryptedPassword_expect, encryptedPassword);
+        PowerMockito.verifyStatic(PasswordUtil.class, times(1));
+        PasswordUtil.encryptPasswordBase64(plainPassword);
 
         //
         algorithm = "arbitrary algorithm";// on behalf of arbitrary algorithm,not null //$NON-NLS-1$
         encryptedPassword = PasswordUtil.encryptPassword(plainPassword, algorithm);
-        assertEquals(encryptPasswordBase64, encryptedPassword);
-        assertEquals(encryptPasswordBase64, PasswordUtil.encryptPasswordBase64(plainPassword));
+        assertEquals(encryptedPassword_expect, encryptedPassword);
+        PowerMockito.verifyStatic(PasswordUtil.class, times(2));
+        PasswordUtil.encryptPasswordBase64(plainPassword);
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON;
@@ -109,9 +135,14 @@ public class PasswordUtilTest {
 
         //
         algorithm = PasswordUtil.ALGORITHM_COMMON_V3;
+        String encryptedPassword_expect3 = encryptedPassword_expect + "3"; //$NON-NLS-1$
+        
+        PowerMockito.mockStatic(PasswordUtil.class);
+        PowerMockito.when(PasswordUtil.encryptPassword(anyString(), anyString())).thenCallRealMethod();
+        PowerMockito.when(PasswordUtil.class, "encryptPasswordAES", anyString()).thenReturn(encryptedPassword_expect3);
         
         encryptedPassword = PasswordUtil.encryptPassword(plainPassword, algorithm);
-        assertTrue(encryptedPassword.startsWith("enc:system.encryption.key"));
+        assertEquals(encryptedPassword_expect3, encryptedPassword);
     }
 
     @Test
@@ -122,18 +153,4 @@ public class PasswordUtilTest {
         assertEquals(encryptPasswordBase64, encryptPasswordBase64_2);
     }
 
-    @Test
-    public void testEncryptPasswordAES() {
-        String plainPassword = "plainPassword"; //$NON-NLS-1$
-        String encrypted = PasswordUtil.encryptPasswordAES(plainPassword);
-        assertTrue(encrypted.startsWith("enc:system.encryption.key"));
-    }
-
-    @Test
-    public void decryptPasswordAES() {
-        String plainPassword = "plainPassword"; //$NON-NLS-1$
-        String encryptPasswordAES = "enc:system.encryption.key.v1:Fxw4XQoKfAbUuEzhUodUEx2q93zLxY1Tv9nGRs6xiUlBW/xyNSWUTBE=";
-        String dencrypted = PasswordUtil.decryptPasswordAES(encryptPasswordAES);
-        assertEquals(plainPassword, dencrypted);
-    }
 }
