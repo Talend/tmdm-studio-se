@@ -275,7 +275,7 @@ public class ConsistencyService {
         }
     }
 
-    private String calculateDigestValueByObjectResource(Item item) {
+    public String calculateDigestValueByObjectResource(Item item) {
         EObject copy = null;
         if (item instanceof ProcessItem) {
             copy = EcoreUtil.copy(((ProcessItem) item).getProcess());
@@ -377,7 +377,7 @@ public class ConsistencyService {
 
     }
 
-    private String calculateDigestValueByRefFile(Item item, ERepositoryObjectType type) {
+    public String calculateDigestValueByRefFile(Item item, ERepositoryObjectType type) {
 
         IFile file = getReferenceFile(item, type);
         if (file != null && file.exists()) {
@@ -407,7 +407,7 @@ public class ConsistencyService {
         return null;
     }
 
-    private String calculateDigestValueBySortedObject(Item item, ERepositoryObjectType type) {
+    public String calculateDigestValueBySortedObject(Item item, ERepositoryObjectType type) {
         if (item.eClass().getClassifierID() == MdmpropertiesPackage.WS_WORKFLOW_ITEM) {
 
             IFile file = getReferenceFile(item, type);
@@ -466,7 +466,7 @@ public class ConsistencyService {
 
     }
 
-    private ConsistencyCheckResult warnUserWhenConflict(Map<IRepositoryViewObject, Integer> viewObCmdOpjMap,
+    public ConsistencyCheckResult warnUserWhenConflict(Map<IRepositoryViewObject, Integer> viewObCmdOpjMap,
             Map<IRepositoryViewObject, WSDigest> viewObjMap, int conflictCount) {
         ConsistencyCheckResult result;
         ConfirmConflictMessageDialog confirmDialog = new ConfirmConflictMessageDialog(getShell(), conflictCount);
@@ -485,7 +485,7 @@ public class ConsistencyService {
         return result;
     }
 
-    private void correctCheckResult(ConsistencyCheckResult result) {
+    public void correctCheckResult(ConsistencyCheckResult result) {
         correctCheckResultForAssociatedObj(result.getToDeployObjects(), result.getToSkipObjects());
         correctCheckResultForAssociatedObj(result.getToSkipObjects(), result.getToDeployObjects());
     }
@@ -532,7 +532,7 @@ public class ConsistencyService {
         return returnObjs;
     }
 
-    private ConsistencyCheckResult getCheckResultByStrategy(int strategy, Map<IRepositoryViewObject, WSDigest> viewObjMap,
+    public ConsistencyCheckResult getCheckResultByStrategy(int strategy, Map<IRepositoryViewObject, WSDigest> viewObjMap,
             Map<IRepositoryViewObject, Integer> viewObCmdOpjMap) {
         List<IRepositoryViewObject> toDeployObjs = new LinkedList<IRepositoryViewObject>();
         List<IRepositoryViewObject> toSkipObjs = new LinkedList<IRepositoryViewObject>();
@@ -622,7 +622,7 @@ public class ConsistencyService {
         return null;
     }
 
-    private DigestCalStrategyEnum getDigetValueCaculateStrategy(Item item) {
+    public DigestCalStrategyEnum getDigetValueCaculateStrategy(Item item) {
         if (item instanceof ProcessItem) {
             return DigestCalStrategyEnum.OBJ_RESOURCE;
         }
@@ -708,7 +708,7 @@ public class ConsistencyService {
         return Display.getDefault().getActiveShell();
     }
 
-    private int getConflictCount(Map<IRepositoryViewObject, WSDigest> map) {
+    public int getConflictCount(Map<IRepositoryViewObject, WSDigest> map) {
         int total = 0;
         for (IRepositoryViewObject viewObj : map.keySet()) {
             WSDigest digestTime = map.get(viewObj);
@@ -757,7 +757,7 @@ public class ConsistencyService {
         }
     }
 
-    private String getObjectName(IRepositoryViewObject viewObj) {
+    public String getObjectName(IRepositoryViewObject viewObj) {
         String objectName = viewObj.getLabel();
 
         if (exAdapter != null) {
@@ -767,7 +767,7 @@ public class ConsistencyService {
         return objectName;
     }
 
-    private String getObjectName(TreeObject treeObj) {
+    public String getObjectName(TreeObject treeObj) {
         String objectName = treeObj.getDisplayName();
 
         if (exAdapter != null) {
@@ -810,7 +810,7 @@ public class ConsistencyService {
         return result;
     }
 
-    private void updateLocalDigestValue(Item item, String digestValue) {
+    public void updateLocalDigestValue(Item item, String digestValue) {
         if (item instanceof MDMServerObjectItem) {
             ((MDMServerObjectItem) item).getMDMServerObject().setDigestValue(digestValue);
         } else if (item instanceof ProcessItem) {
@@ -824,7 +824,7 @@ public class ConsistencyService {
         }
     }
 
-    private void updateCurrentDigestValue(Item item, String digestValue) {
+    public void updateCurrentDigestValue(Item item, String digestValue) {
         if (item instanceof MDMServerObjectItem) {
             ((MDMServerObjectItem) item).getMDMServerObject().setCurrentDigestValue(digestValue);
         } else if (item instanceof ProcessItem) {
@@ -859,7 +859,7 @@ public class ConsistencyService {
         updateCurrentDigestValue(item, digestValue);
     }
 
-    private void updateLocalTimestamp(Item item, long timestamp) {
+    public void updateLocalTimestamp(Item item, long timestamp) {
         if (item instanceof MDMServerObjectItem) {
             ((MDMServerObjectItem) item).getMDMServerObject().setTimestamp(timestamp);
         } else if (item instanceof ProcessItem) {
@@ -871,7 +871,7 @@ public class ConsistencyService {
         }
     }
 
-    private IPreferenceStore getPreferenceStore() {
+    public IPreferenceStore getPreferenceStore() {
         IPreferenceStore preferenceStore = RepositoryPlugin.getDefault().getPreferenceStore();
         return preferenceStore;
     }
