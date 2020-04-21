@@ -62,9 +62,13 @@ public class NewDataContainerAction extends AbstractSimpleAddAction {
 
         if (parentItem != null) {
             item.getState().setPath(parentItem.getState().getPath());
-            RepositoryResourceUtil.createItem(item, key);
+            createItemAndSave(item, key);
         }
         return item;
+    }
+
+    protected void createItemAndSave(WSDataClusterItem item, String key) {
+        RepositoryResourceUtil.createItem(item, key);
     }
 
     @Override

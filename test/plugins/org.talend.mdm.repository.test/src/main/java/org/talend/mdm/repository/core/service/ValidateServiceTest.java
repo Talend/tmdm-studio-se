@@ -1,33 +1,23 @@
 package org.talend.mdm.repository.core.service;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.Mockito;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.mdm.repository.core.IServerObjectRepositoryType;
-import org.talend.mdm.repository.utils.RepositoryResourceUtil;
-import org.talend.repository.model.IProxyRepositoryFactory;
 
 import com.amalto.workbench.service.IValidateService;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ RepositoryResourceUtil.class, CoreRuntimePlugin.class })
-@PowerMockIgnore({ "org.eclipse.core.runtime.*" })
 public class ValidateServiceTest {
 
     private static Logger log = Logger.getLogger(ValidateServiceTest.class);
@@ -56,52 +46,43 @@ public class ValidateServiceTest {
 
         try {
 
-            PowerMockito.mockStatic(RepositoryResourceUtil.class);
-            PowerMockito.when(RepositoryResourceUtil.findViewObjectByName(any(ERepositoryObjectType.class), anyString()))
-                    .thenCallRealMethod();
-            PowerMockito.when(RepositoryResourceUtil.findAllViewObjectsWithDeleted(any(ERepositoryObjectType.class)))
-                    .thenCallRealMethod();
-            PowerMockito.when(
-                    RepositoryResourceUtil.findAllViewObjects(any(ERepositoryObjectType.class), anyBoolean(), anyBoolean()))
-                    .thenCallRealMethod();
+            IRepositoryViewObject mockViewObj = Mockito.mock(IRepositoryViewObject.class);
+            Property mockProperty = Mockito.mock(Property.class);
+            Mockito.when(mockProperty.getLabel()).thenReturn(name);
+            Item mockItem = Mockito.mock(Item.class);
+            ItemState mockState = Mockito.mock(ItemState.class);
+            Mockito.when(mockState.isDeleted()).thenReturn(true);// ////
+            Mockito.when(mockItem.getState()).thenReturn(mockState);
+            Mockito.when(mockProperty.getItem()).thenReturn(mockItem);
+            Mockito.when(mockViewObj.getProperty()).thenReturn(mockProperty);
 
-            IRepositoryViewObject mockViewObj = PowerMockito.mock(IRepositoryViewObject.class);
-            Property mockProperty = PowerMockito.mock(Property.class);
-            PowerMockito.when(mockProperty.getLabel()).thenReturn(name);
-            Item mockItem = PowerMockito.mock(Item.class);
-            ItemState mockState = PowerMockito.mock(ItemState.class);
-            PowerMockito.when(mockState.isDeleted()).thenReturn(true);// ////
-            PowerMockito.when(mockItem.getState()).thenReturn(mockState);
-            PowerMockito.when(mockProperty.getItem()).thenReturn(mockItem);
-            PowerMockito.when(mockViewObj.getProperty()).thenReturn(mockProperty);
-            IProxyRepositoryFactory mockRepositoryFactory = PowerMockito.mock(IProxyRepositoryFactory.class);
-            List<IRepositoryViewObject> viewObjs = new ArrayList<IRepositoryViewObject>();
-            viewObjs.add(mockViewObj);
-            PowerMockito.when(mockRepositoryFactory.getAll(any(ERepositoryObjectType.class), anyBoolean())).thenReturn(viewObjs);
-            PowerMockito.when(RepositoryResourceUtil.assertViewObject(any(IRepositoryViewObject.class))).thenReturn(mockViewObj);
-            PowerMockito.when(RepositoryResourceUtil.class, "getCacheViewObject", any(Property.class), //$NON-NLS-1$
-                    any(IRepositoryViewObject.class)).thenReturn(mockViewObj);
 
-            PowerMockito.mockStatic(CoreRuntimePlugin.class);
-            CoreRuntimePlugin mockCoreRuntimePlugin = PowerMockito.mock(CoreRuntimePlugin.class);
-            PowerMockito.when(CoreRuntimePlugin.getInstance()).thenReturn(mockCoreRuntimePlugin);
-            PowerMockito.when(mockCoreRuntimePlugin.getProxyRepositoryFactory()).thenReturn(mockRepositoryFactory);
-
+            validateService = mock(ValidateService.class);
+            doCallRealMethod().when(validateService).validateObjectExistence(Mockito.eq(objectType), Mockito.eq(name));
+            when(validateService.lookupViewObject(Mockito.eq(objectType), Mockito.eq(name))).thenReturn(mockViewObj);
             // check
             int validateResult = validateService.validateObjectExistence(objectType, name);
             assertEquals(IValidateService.STATUS_DELETED, validateResult);
 
             //
-            PowerMockito.when(mockState.isDeleted()).thenReturn(false);// ////
+            Mockito.when(mockState.isDeleted()).thenReturn(false);// ////
             validateResult = validateService.validateObjectExistence(objectType, name);
             assertEquals(IValidateService.STATUS_EXISTED, validateResult);
 
             //
-            PowerMockito.when(RepositoryResourceUtil.class, "getCacheViewObject", any(Property.class), //$NON-NLS-1$
-                    any(IRepositoryViewObject.class)).thenReturn(PowerMockito.mock(IRepositoryViewObject.class));
+            Mockito.when(mockProperty.getItem()).thenReturn(null);
             validateResult = validateService.validateObjectExistence(objectType, name);
             assertEquals(IValidateService.STATUS_OK, validateResult);
 
+            //
+            Mockito.when(mockViewObj.getProperty()).thenReturn(mockProperty);
+            validateResult = validateService.validateObjectExistence(objectType, name);
+            assertEquals(IValidateService.STATUS_OK, validateResult);
+
+            //
+            when(validateService.lookupViewObject(Mockito.eq(objectType), Mockito.eq(name))).thenReturn(null);
+            validateResult = validateService.validateObjectExistence(objectType, name);
+            assertEquals(IValidateService.STATUS_OK, validateResult);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }

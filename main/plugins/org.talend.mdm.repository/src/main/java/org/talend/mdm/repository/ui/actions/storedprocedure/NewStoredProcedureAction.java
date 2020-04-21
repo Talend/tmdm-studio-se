@@ -63,9 +63,13 @@ public class NewStoredProcedureAction extends AbstractSimpleAddAction {
 
         if (parentItem != null) {
             item.getState().setPath(parentItem.getState().getPath());
-            RepositoryResourceUtil.createItem(item, key);
+            createItemAndSave(item, key);
         }
         return item;
+    }
+
+    protected void createItemAndSave(WSStoredProcedureItem item, String key) {
+        RepositoryResourceUtil.createItem(item, key);
     }
 
 }

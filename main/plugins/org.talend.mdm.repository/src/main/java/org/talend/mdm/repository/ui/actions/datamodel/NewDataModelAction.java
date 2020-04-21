@@ -77,7 +77,7 @@ public class NewDataModelAction extends AbstractSimpleAddAction implements IIntr
         return Messages.NewDataModelAction_newDataModel;
     }
 
-    private WSDataModelE newBlankDataModel(String key) {
+    protected WSDataModelE newBlankDataModel(String key) {
 
         WSDataModelE dataModel = MdmserverobjectFactory.eINSTANCE.createWSDataModelE();
         dataModel.setName(key);
@@ -102,7 +102,7 @@ public class NewDataModelAction extends AbstractSimpleAddAction implements IIntr
 
         if (parentItem != null) {
             item.getState().setPath(parentItem.getState().getPath());
-            RepositoryResourceUtil.createItem(item, key);
+            createItemAndSave(key, item);
 
             createERDocument(item);
             createMatchRuleMapInfo(item);
@@ -114,13 +114,17 @@ public class NewDataModelAction extends AbstractSimpleAddAction implements IIntr
         return item;
     }
 
-    private void createERDocument(WSDataModelItem item) {
+    protected void createItemAndSave(String key, WSDataModelItem item) {
+        RepositoryResourceUtil.createItem(item, key);
+    }
+
+    protected void createERDocument(WSDataModelItem item) {
         if (exAdapter != null) {
             exAdapter.createERDocument(item);
         }
     }
 
-    private void createMatchRuleMapInfo(WSDataModelItem item) {
+    protected void createMatchRuleMapInfo(WSDataModelItem item) {
         IMatchRuleMapInfoService mapInfoService = ServiceUtil.getService(IMatchRuleMapInfoService.class);
         if (mapInfoService != null) {
             mapInfoService.loadMatchRuleMapInfo(item);
