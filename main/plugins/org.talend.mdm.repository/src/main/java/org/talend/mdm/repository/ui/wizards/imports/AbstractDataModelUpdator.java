@@ -61,12 +61,16 @@ public abstract class AbstractDataModelUpdator {
             }
 
 
-            if (modified) {
-                RepositoryResourceUtil.saveItem(item);
-            }
+            saveItem(item, modified);
         }
 
         return modified;
+    }
+
+    protected void saveItem(Item item, boolean modified) {
+        if (modified) {
+            RepositoryResourceUtil.saveItem(item);
+        }
     }
 
     protected abstract boolean accept(Item item);

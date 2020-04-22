@@ -12,8 +12,11 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.wizards.imports;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,25 +24,17 @@ import java.io.FileInputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.Mockito;
 import org.talend.core.model.properties.ByteArray;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.ReferenceFileItem;
 import org.talend.mdm.repository.model.mdmproperties.MdmpropertiesFactory;
 import org.talend.mdm.repository.model.mdmproperties.WSDataModelItem;
 import org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectFactory;
 import org.talend.mdm.repository.model.mdmserverobject.WSDataModelE;
-import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 
-import com.amalto.workbench.exadapter.ExAdapterManager;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ RepositoryResourceUtil.class, ExAdapterManager.class })
-@PowerMockIgnore({ "org.eclipse.core.runtime.*" })
 public class DataModelOperatorUpdatorTest {
 
     private static final Logger LOG = Logger.getLogger(DataModelOperatorUpdatorTest.class);
@@ -65,16 +60,25 @@ public class DataModelOperatorUpdatorTest {
             WSDataModelE wsdataModelE = MdmserverobjectFactory.eINSTANCE.createWSDataModelE();
             wsdataModelE.setXsdSchema(null);
             wsdataModelItem.setWsDataModel(wsdataModelE);
+            ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
+            itemState.setPath("system");
+            wsdataModelItem.setState(itemState);
 
-            PowerMockito.mockStatic(RepositoryResourceUtil.class);
+            DataModelOperatorUpdator dataModelOperatorUpdator = Mockito.spy(new DataModelOperatorUpdator());
+            Mockito.doNothing().when(dataModelOperatorUpdator).saveItem(Mockito.any(Item.class), Mockito.anyBoolean());
 
-            boolean updated = new DataModelOperatorUpdator().updateConditionOperator(wsdataModelItem);
-            String xsdSchema = wsdataModelItem.getWsDataModel().getXsdSchema();
+            boolean updated = dataModelOperatorUpdator.updateConditionOperator(wsdataModelItem);
+            assertFalse(updated);
+
+            itemState.setPath("");
+            updated = dataModelOperatorUpdator.updateConditionOperator(wsdataModelItem);
             assertTrue(updated);
+            String xsdSchema = wsdataModelItem.getWsDataModel().getXsdSchema();
             assertNotNull(xsdSchema);
             assertFalse(xsdSchema.contains("Strict Contains")); //$NON-NLS-1$
             assertFalse(xsdSchema.contains("Contains Text Of")); //$NON-NLS-1$
             assertTrue(xsdSchema.contains("Contains")); //$NON-NLS-1$
+            Mockito.verify(dataModelOperatorUpdator).saveItem(Mockito.any(Item.class), Mockito.anyBoolean());
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }

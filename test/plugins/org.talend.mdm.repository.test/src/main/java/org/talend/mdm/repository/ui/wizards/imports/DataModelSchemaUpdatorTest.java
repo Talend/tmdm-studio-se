@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.wizards.imports;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.spy;
@@ -23,12 +24,9 @@ import java.io.FileInputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.Mockito;
 import org.talend.core.model.properties.ByteArray;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.ReferenceFileItem;
@@ -36,13 +34,7 @@ import org.talend.mdm.repository.model.mdmproperties.MdmpropertiesFactory;
 import org.talend.mdm.repository.model.mdmproperties.WSDataModelItem;
 import org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectFactory;
 import org.talend.mdm.repository.model.mdmserverobject.WSDataModelE;
-import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 
-import com.amalto.workbench.exadapter.ExAdapterManager;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ RepositoryResourceUtil.class, ExAdapterManager.class })
-@PowerMockIgnore({ "org.eclipse.core.runtime.*" })
 @SuppressWarnings("nls")
 public class DataModelSchemaUpdatorTest {
 
@@ -57,7 +49,7 @@ public class DataModelSchemaUpdatorTest {
 
             WSDataModelItem wsdataModelItem = MdmpropertiesFactory.eINSTANCE.createWSDataModelItem();
             Property property = PropertiesFactory.eINSTANCE.createProperty();
-            property.setLabel("UpdateReport");
+            property.setLabel("notUpdateReport");
             wsdataModelItem.setProperty(property);
             ReferenceFileItem xsdFileItem = PropertiesFactory.eINSTANCE.createReferenceFileItem();
             ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
@@ -72,16 +64,22 @@ public class DataModelSchemaUpdatorTest {
             wsdataModelE.setXsdSchema(null);
             wsdataModelItem.setWsDataModel(wsdataModelE);
 
-            PowerMockito.mockStatic(RepositoryResourceUtil.class);
+            DataModelSchemaUpdator dataModelSchemaUpdator = Mockito.spy(new DataModelSchemaUpdator());
+            Mockito.doNothing().when(dataModelSchemaUpdator).saveItem(Mockito.any(Item.class), Mockito.anyBoolean());
 
-            boolean updated = new DataModelSchemaUpdator().updateDatamodel(wsdataModelItem);
-            String xsdSchema = wsdataModelItem.getWsDataModel().getXsdSchema();
+            boolean updated = dataModelSchemaUpdator.updateDatamodel(wsdataModelItem);
+            assertFalse(updated);
+
+            property.setLabel("UpdateReport");
+            updated = dataModelSchemaUpdator.updateDatamodel(wsdataModelItem);
             assertTrue(updated);
+            String xsdSchema = wsdataModelItem.getWsDataModel().getXsdSchema();
             assertNotNull(xsdSchema);
             assertTrue(xsdSchema.contains(
                     "<xsd:element maxOccurs=\"1\" minOccurs=\"0\" name=\"PrimaryKeyInfo\" nillable=\"true\" type=\"xsd:string\"/>"));
             assertTrue(xsdSchema.contains(
                     "<xsd:element maxOccurs=\"1\" minOccurs=\"1\" name=\"UUID\" nillable=\"false\" type=\"xsd:string\"/>"));
+            Mockito.verify(dataModelSchemaUpdator).saveItem(Mockito.any(Item.class), Mockito.anyBoolean());
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }
