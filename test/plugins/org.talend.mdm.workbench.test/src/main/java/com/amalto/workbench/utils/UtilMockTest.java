@@ -21,18 +21,17 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -72,7 +71,6 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.service.IMDMWebServiceHook;
 import org.w3c.dom.Document;
@@ -87,8 +85,8 @@ import com.amalto.workbench.webservices.TMDMService_Service;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ Util.class, MissingJarService.class, GlobalServiceRegister.class })
-@PowerMockIgnore({ "com.sun.org.apache.xerces.*", "javax.xml.catalog.*", "javax.xml.parsers.*", "org.w3c.dom.*",
-        "org.eclipse.osgi.*", "org.eclipse.core.runtime.*", "org.eclipse.osgi.util.*", "org.xml.sax.*" })
+@PowerMockIgnore({
+        "com.sun.org.apache.xerces.*", "javax.xml.catalog.*", "javax.xml.parsers.*", "org.w3c.dom.*", "org.xml.sax.*" })
 public class UtilMockTest {
 
     private Logger log = Logger.getLogger(UtilMockTest.class);
@@ -392,17 +390,23 @@ public class UtilMockTest {
 
     @Test
     public void testUpdateReferenceToXSDTypeDefinition() {
-        String method_getall = "getAllObject"; //$NON-NLS-1$
-        String method_updateref = "updateReferenceToXSDTypeDefinition"; //$NON-NLS-1$
-        PowerMockito.mockStatic(Util.class);
         try {
-            PowerMockito.when(Util.class, method_updateref, any(), any(XSDTypeDefinition.class),
-                    any(IStructuredContentProvider.class)).thenCallRealMethod();
-
-            Object[] allNodes = {};
             XSDFactory factory = XSDFactory.eINSTANCE;
+            XSDSchema schema = factory.createXSDSchema();
 
-            XSDTypeDefinition[] newTypes = { factory.createXSDComplexTypeDefinition(), factory.createXSDSimpleTypeDefinition() };
+            XSDComplexTypeDefinition ctype1 = Mockito.spy(factory.createXSDComplexTypeDefinition());
+            ctype1.setName("ctype1");
+            when(ctype1.getSchema()).thenReturn(schema);
+            XSDComplexTypeDefinition ctype2 = Mockito.spy(factory.createXSDComplexTypeDefinition());
+            ctype2.setName("ctype2");
+            when(ctype2.getSchema()).thenReturn(schema);
+            XSDSimpleTypeDefinition stype = Mockito.spy(factory.createXSDSimpleTypeDefinition());
+            stype.setName("stype");
+            when(stype.getSchema()).thenReturn(schema);
+
+            XSDTypeDefinition[] newTypes = { ctype1, stype };
+            schema.getTypeDefinitions().addAll(Arrays.asList(ctype1, ctype2, stype));
+
             for (XSDTypeDefinition newType : newTypes) {
                 //
                 XSDElementDeclaration mockElementDecl = mock(XSDElementDeclaration.class);//
@@ -429,7 +433,7 @@ public class UtilMockTest {
 
                 XSDParticle particle_c3 = mock(XSDParticle.class);
                 XSDElementDeclaration mockElementDec_c3 = mock(XSDElementDeclaration.class);
-                when(mockElementDec_c3.getTypeDefinition()).thenReturn(factory.createXSDComplexTypeDefinition());
+                when(mockElementDec_c3.getTypeDefinition()).thenReturn(ctype1);
                 when(particle_c3.getContent()).thenReturn(mockElementDec_c3);
 
                 XSDModelGroup xsdModelGroup = mock(XSDModelGroup.class);
@@ -440,21 +444,17 @@ public class UtilMockTest {
                 when(xsdModelGroup.getContents()).thenReturn(elist);
                 when(xsdParticle2.getTerm()).thenReturn(xsdModelGroup);
 
-                allNodes = new Object[] { mockElementDecl, xsdParticle1, xsdParticle2 };
+                Object[] allNodes = new Object[] { mockElementDecl, xsdParticle1, xsdParticle2 };
 
                 //
-                PowerMockito.when(Util.class, method_getall, any(), anyList(), any(IStructuredContentProvider.class))
-                .thenReturn(allNodes);
-                Util.updateReferenceToXSDTypeDefinition(new Object(), newType, mock(IStructuredContentProvider.class));
+                IStructuredContentProvider mockContentProvider = mock(IStructuredContentProvider.class);
+                when(mockContentProvider.getElements(Mockito.any())).thenReturn(allNodes);
+                Util.updateReferenceToXSDTypeDefinition(new Object(), newType, mockContentProvider);
 
                 Mockito.verify(mockElementDecl).setTypeDefinition(newType);
                 Mockito.verify(mockElementDec2).setTypeDefinition(newType);
                 Mockito.verify(mockElementDec_c1).setTypeDefinition(newType);
                 Mockito.verify(mockElementDec_c2).setTypeDefinition(newType);
-                if (newType instanceof XSDComplexTypeDefinition) {
-                    PowerMockito.verifyStatic(null, null);
-                    Util.updateChildrenReferenceToComplexType((XSDComplexTypeDefinition) newType);
-                }
             }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -521,23 +521,13 @@ public class UtilMockTest {
     @Test
     public void testUpdateReference() {
         String oldValue = "oldValue", newValue = "newValue"; //$NON-NLS-1$ //$NON-NLS-2$
-        String methodToExecute = "updateReference"; //$NON-NLS-1$
-        String method_private = "updatePrimaryKeyInfo"; //$NON-NLS-1$
 
         XSDFactory factory = XSDFactory.eINSTANCE;
-        PowerMockito.mockStatic(Util.class);
         try {
-            PowerMockito
-                    .when(Util.class, methodToExecute, any(), any(Object[].class), any(Object[].class), anyString(), anyString())
-                    .thenCallRealMethod();
-
             Object[] objs = new Object[4];
             Object[] allForeignKeyAndInfos = new Object[0];
 
             Util.updateReference(new Object(), objs, allForeignKeyAndInfos, oldValue, newValue);
-            PowerMockito.verifyStatic(null, times(0));
-            Util.updateForeignKeyRelatedInfo(oldValue, newValue, allForeignKeyAndInfos);
-            Whitebox.invokeMethod(Util.class, method_private, any(XSDElementDeclaration.class), eq(oldValue), eq(newValue));
 
             //
             XSDModelGroup xsdModelGroup = factory.createXSDModelGroup();
@@ -571,10 +561,6 @@ public class UtilMockTest {
             objs[3] = particle4;
 
             Util.updateReference(xsdEleDecl, objs, allForeignKeyAndInfos, oldValue, newValue);
-            PowerMockito.verifyStatic(null, null);
-            Util.updateForeignKeyRelatedInfo(oldValue, newValue, allForeignKeyAndInfos);
-            Whitebox.invokeMethod(Util.class, method_private, any(XSDElementDeclaration.class), eq(oldValue), eq(newValue));
-
             verify(particle1).setTerm(xsdEleDecl);
             verify(particle1).updateElement();
             verify(mockDeclaration1).setResolvedElementDeclaration(xsdEleDecl);
@@ -882,7 +868,6 @@ public class UtilMockTest {
     public void testGetSimpleTypeDefinitionChildren() {
         XSDFactory factory = XSDFactory.eINSTANCE;
         XSDSimpleTypeDefinition simpleTypeDefinition = factory.createXSDSimpleTypeDefinition();
-
 
         try {
             //
