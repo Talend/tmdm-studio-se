@@ -52,7 +52,7 @@ public class ValidateService implements IValidateService {
      */
     public int validateObjectExistence(ERepositoryObjectType objectType, String name) {
         if (objectType != null && name != null) {
-            IRepositoryViewObject viewObject = RepositoryResourceUtil.findViewObjectByName(objectType, name);
+            IRepositoryViewObject viewObject = lookupViewObject(objectType, name);
             if (viewObject != null) {
                 Property property = viewObject.getProperty();
                 if (property != null) {
@@ -70,6 +70,10 @@ public class ValidateService implements IValidateService {
             throw new IllegalArgumentException("Wrong treeObject type"); //$NON-NLS-1$
         }
         return STATUS_OK;
+    }
+
+    protected IRepositoryViewObject lookupViewObject(ERepositoryObjectType objectType, String name) {
+        return RepositoryResourceUtil.findViewObjectByName(objectType, name);
     }
 
     /*

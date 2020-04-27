@@ -125,7 +125,7 @@ public class ContainerCacheService {
         }
     }
 
-    private static String correctPath(String path) {
+    public static String correctPath(String path) {
         if (path != null && path.length() > 0) {
             if (!path.startsWith(DIVIDE)) {
                 return DIVIDE + path;

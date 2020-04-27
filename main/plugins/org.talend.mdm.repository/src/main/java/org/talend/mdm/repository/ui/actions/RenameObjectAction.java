@@ -122,7 +122,7 @@ public class RenameObjectAction extends AbstractRepositoryAction {
 
     }
 
-    private String showRenameDlg(final ERepositoryObjectType type, final ContainerItem parentItem, final String originalName) {
+    protected String showRenameDlg(final ERepositoryObjectType type, final ContainerItem parentItem, final String originalName) {
 
         CustomInputDialog dlg = new CustomInputDialog(getShell(), Messages.RenameObjectAction_rename, Messages.Common_rename, originalName,
                 null);

@@ -12,22 +12,20 @@
 // ============================================================================
 package org.talend.mdm.repository.utils;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.talend.mdm.repository.model.mdmserverobject.MDMServerObject;
 import org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectFactory;
 import org.talend.mdm.repository.model.mdmserverobject.WSMenuE;
@@ -39,14 +37,12 @@ import com.amalto.workbench.webservices.WSMenu;
 import com.amalto.workbench.webservices.WSMenuEntry;
 import com.amalto.workbench.webservices.WSMenuMenuEntriesDescriptions;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ Bean2EObjUtil.class, System.class, IOUtil.class, EMFClassUtil.class, Logger.class })
 public class Bean2EObjUtilTest {
 
     @Test
     public void testPrivateConstructor() throws ClassNotFoundException {
         Class<?> utilClass = Class.forName(Bean2EObjUtil.class.getCanonicalName());
-        Constructor<?>[] constructors = utilClass.getConstructors();
+        Constructor<?>[] constructors = utilClass.getDeclaredConstructors();
         assertNotNull(constructors);
         assertEquals(1, constructors.length);
         assertFalse(constructors[0].isAccessible());
@@ -67,7 +63,7 @@ public class Bean2EObjUtilTest {
     @Test
     public void testRegisterClassMap() throws Exception {
         Bean2EObjUtil util = Bean2EObjUtil.getInstance();
-        Bean2EObjUtil spyUtil = PowerMockito.spy(util);
+        Bean2EObjUtil spyUtil = Mockito.spy(util);
         spyUtil.registerClassMap(WSMenu.class);
 
         assertNotNull(spyUtil.classMap);
@@ -205,7 +201,7 @@ public class Bean2EObjUtilTest {
         TreeObject treeObject = util.wrapEObjWithTreeObject(eobj, wsObj);
         assertNull(treeObject);
 
-        MDMServerObject mdmServerObject = PowerMockito.mock(MDMServerObject.class);
+        MDMServerObject mdmServerObject = Mockito.mock(MDMServerObject.class);
         when(mdmServerObject.getName()).thenReturn("name");
         when(mdmServerObject.getType()).thenReturn(2);
         eobj = mdmServerObject;
@@ -230,7 +226,7 @@ public class Bean2EObjUtilTest {
         TreeObject treeObject = util.wrapEObjWithTreeObject(eobj);
         assertNull(treeObject);
 
-        MDMServerObject mdmServerObject = PowerMockito.mock(MDMServerObject.class);
+        MDMServerObject mdmServerObject = Mockito.mock(MDMServerObject.class);
         when(mdmServerObject.getName()).thenReturn("name");
         when(mdmServerObject.getType()).thenReturn(2);
         eobj = mdmServerObject;

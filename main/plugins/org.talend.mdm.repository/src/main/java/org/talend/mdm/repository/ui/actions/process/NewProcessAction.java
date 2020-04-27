@@ -220,9 +220,13 @@ public class NewProcessAction extends AbstractSimpleAddAction implements ITransf
 
         if (parentItem != null) {
             item.getState().setPath(parentItem.getState().getPath());
-            RepositoryResourceUtil.createItem(item, key);
+            createItemAndSave(item, key);
         }
         return item;
+    }
+
+    protected void createItemAndSave(WSTransformerV2Item item, String key) {
+        RepositoryResourceUtil.createItem(item, key);
     }
 
     protected Item createServerObject(WSTransformerV2E process) {

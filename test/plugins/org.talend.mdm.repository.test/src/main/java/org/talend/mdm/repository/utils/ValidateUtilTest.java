@@ -12,19 +12,13 @@
 // ============================================================================
 package org.talend.mdm.repository.utils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Random;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ ValidateUtil.class })
 public class ValidateUtilTest {
 
     String str = "aaaaabbbbbccccc"; //$NON-NLS-1$
@@ -149,28 +143,17 @@ public class ValidateUtilTest {
 
     @Test
     public void testMatchSmartViewRegex() throws Exception {
-        PowerMockito.mockStatic(ValidateUtil.class);
-
-        PowerMockito.doCallRealMethod().when(ValidateUtil.class, "matchSmartViewRegex", Mockito.anyString());
-        Mockito.when(ValidateUtil.matchViewProcessRegex(Mockito.anyString())).thenReturn(true);
-
         String smartViewProcess = "Smart_view_a";
         boolean matchSmartViewRegex = ValidateUtil.matchSmartViewRegex(smartViewProcess);
         assertTrue(matchSmartViewRegex);
-        PowerMockito.verifyStatic(ValidateUtil.class, Mockito.atLeastOnce());
-        ValidateUtil.matchViewProcessRegex(Mockito.anyString());
 
         smartViewProcess = "Smart_view_a#b";
         matchSmartViewRegex = ValidateUtil.matchSmartViewRegex(smartViewProcess);
         assertTrue(matchSmartViewRegex);
-        PowerMockito.verifyStatic(ValidateUtil.class, Mockito.atLeastOnce());
-        ValidateUtil.matchViewProcessRegex(Mockito.anyString());
 
         smartViewProcess = "Smart_view_a#b#c";
         matchSmartViewRegex = ValidateUtil.matchSmartViewRegex(smartViewProcess);
         assertFalse(matchSmartViewRegex);
-        PowerMockito.verifyStatic(ValidateUtil.class, Mockito.times(2));
-        ValidateUtil.matchViewProcessRegex(Mockito.anyString());
     }
 
     @Test

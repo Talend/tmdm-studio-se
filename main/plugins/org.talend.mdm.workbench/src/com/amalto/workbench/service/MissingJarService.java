@@ -47,7 +47,7 @@ public class MissingJarService {
         return instance;
     }
 
-    private List<String> getMissingJarList() {
+    public List<String> getMissingJarList() {
         List<ModuleNeeded> modulesNeeded = ModulesNeededProvider.getModulesNeeded(mdmComponentName);
         List<String> jars = new LinkedList<String>();
         for (ModuleNeeded module : modulesNeeded) {

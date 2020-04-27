@@ -12,7 +12,11 @@
 // ============================================================================
 package org.talend.mdm.repository.utils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -27,16 +31,9 @@ import org.eclipse.swt.SWT;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
 import com.amalto.workbench.webservices.WSMenu;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ BeanClassUtil.class })
 public class BeanClassUtilTest {
 
     private BeanClassUtil bClassUtil;
@@ -122,13 +119,16 @@ public class BeanClassUtilTest {
 
     @Test
     public void testCalGetMethodName() throws Exception {
-        BeanClassUtil spy = PowerMockito.spy(bClassUtil);
+        BeanClassUtil spy = bClassUtil;
+        String calGetMethodName = "calGetMethodName";
+        Method declaredMethod = bClassUtil.getClass().getDeclaredMethod(calGetMethodName, Field.class);
+        declaredMethod.setAccessible(true);
 
         String prefix = "get";
         Field[] fields = BaseTypeClass.class.getFields();
         for (int i = 0; i < fields.length; i++) {
             if (!fields[i].getType().getName().equals("boolean")) {
-                String getMethod = Whitebox.invokeMethod(spy, "calGetMethodName", fields[i]);
+                String getMethod = (String) declaredMethod.invoke(spy, fields[i]);
                 if (!getMethod.startsWith(prefix)) {
                     fail("there exists method that's not started with " + prefix);
                 }
@@ -139,7 +139,7 @@ public class BeanClassUtilTest {
         for (Field field : fields) {
             String fieldTypeName = field.getType().getName();
             if (!fieldTypeName.equals("java.lang.Boolean")) {
-                String getMethod = Whitebox.invokeMethod(spy, "calGetMethodName", field);
+                String getMethod = (String) declaredMethod.invoke(spy, field);
                 if (!getMethod.startsWith(prefix)) {
                     fail("there exists method that's not started with " + prefix);
                 }
@@ -150,12 +150,15 @@ public class BeanClassUtilTest {
     @Test
     public void testCalSetMethodName() throws Exception {
         String prefix = "set";
+        String calSetMethodName = "calSetMethodName";
+        Method declaredMethod = bClassUtil.getClass().getDeclaredMethod(calSetMethodName, Field.class);
+        declaredMethod.setAccessible(true);
 
-        BeanClassUtil spy = PowerMockito.spy(bClassUtil);
+        BeanClassUtil spy = bClassUtil;
 
         Field[] fields = BaseTypeClass.class.getFields();
         for (Field field : fields) {
-            String getMethod = Whitebox.invokeMethod(spy, "calSetMethodName", field);
+            String getMethod = (String) declaredMethod.invoke(spy, field);
             if (!getMethod.startsWith(prefix)) {
                 fail("method name is not started with " + prefix);
             }
@@ -163,7 +166,7 @@ public class BeanClassUtilTest {
 
         fields = ObjectClass.class.getFields();
         for (Field field : fields) {
-            String getMethod = Whitebox.invokeMethod(spy, "calSetMethodName", field);
+            String getMethod = (String) declaredMethod.invoke(spy, field);
             if (!getMethod.startsWith(prefix)) {
                 fail("method name is not started with " + prefix);
             }
