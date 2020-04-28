@@ -41,6 +41,8 @@ import org.eclipse.emf.ecore.impl.EClassImpl;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.talend.commons.runtime.model.repository.ERepositoryStatus;
@@ -77,6 +79,10 @@ import org.talend.repository.model.RepositoryNode;
 
 public class RepositoryResourceUtilTest {
 
+    private static Map<Class, IService> services = null;
+
+    private static IService originService = null;
+
     public class StubFolderRepositoryObject extends FolderRepositoryObject {
 
         public StubFolderRepositoryObject(Property prop) {
@@ -89,28 +95,36 @@ public class RepositoryResourceUtilTest {
         }
     }
 
+    @BeforeClass
+    public static void before() throws Exception {
+        Field serviceField = GlobalServiceRegister.class.getDeclaredField("services");
+        serviceField.setAccessible(true);
+        services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
+        originService = services.get(IProxyRepositoryService.class);
+    }
+
+    @AfterClass
+    public static void after() {
+        if (services != null) {
+            services.put(IProxyRepositoryService.class, originService);
+        }
+    }
+
     @Test
     public void testIsLockedViewObject() throws Exception {
         IRepositoryViewObject mockViewObject = mock(IRepositoryViewObject.class);
-
         IProxyRepositoryService mockRepoService = Mockito.mock(IProxyRepositoryService.class);
         IProxyRepositoryFactory repositoryFactory = Mockito.mock(IProxyRepositoryFactory.class);
         Mockito.when(mockRepoService.getProxyRepositoryFactory()).thenReturn(repositoryFactory);
-        Field serviceField = GlobalServiceRegister.class.getDeclaredField("services");
-        serviceField.setAccessible(true);
-        Map<Class, IService> services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
-        IService iService = services.get(IProxyRepositoryService.class);
-        services.put(IProxyRepositoryService.class, mockRepoService);
 
+        services.put(IProxyRepositoryService.class, mockRepoService);
         // true
         when(repositoryFactory.getStatus(mockViewObject)).thenReturn(ERepositoryStatus.LOCK_BY_OTHER);
         boolean islockedViewObject = RepositoryResourceUtil.isLockedViewObject(mockViewObject);
         assertTrue(islockedViewObject);
-
         when(repositoryFactory.getStatus(mockViewObject)).thenReturn(ERepositoryStatus.LOCK_BY_USER);
         islockedViewObject = RepositoryResourceUtil.isLockedViewObject(mockViewObject);
         assertTrue(islockedViewObject);
-
         // false
         ERepositoryStatus[] statuss = { ERepositoryStatus.DEFAULT, ERepositoryStatus.DELETED, ERepositoryStatus.EDITABLE,
                 ERepositoryStatus.ERROR, ERepositoryStatus.NEW, ERepositoryStatus.NOT_UP_TO_DATE, ERepositoryStatus.READ_ONLY,
@@ -129,20 +143,15 @@ public class RepositoryResourceUtilTest {
         IProxyRepositoryService mockRepoService = Mockito.mock(IProxyRepositoryService.class);
         IProxyRepositoryFactory repositoryFactory = Mockito.mock(IProxyRepositoryFactory.class);
         Mockito.when(mockRepoService.getProxyRepositoryFactory()).thenReturn(repositoryFactory);
-        Field serviceField = GlobalServiceRegister.class.getDeclaredField("services");
-        serviceField.setAccessible(true);
-        Map<Class, IService> services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
-        IService iService = services.get(IProxyRepositoryService.class);
+
         services.put(IProxyRepositoryService.class, mockRepoService);
 
         when(repositoryFactory.getStatus(mockItem)).thenReturn(ERepositoryStatus.LOCK_BY_OTHER);
         boolean islockedViewObject = RepositoryResourceUtil.isLockedItem(mockItem);
         assertTrue(islockedViewObject);
-
         when(repositoryFactory.getStatus(mockItem)).thenReturn(ERepositoryStatus.LOCK_BY_USER);
         islockedViewObject = RepositoryResourceUtil.isLockedItem(mockItem);
         assertTrue(islockedViewObject);
-
         // false
         ERepositoryStatus[] statuss = { ERepositoryStatus.DEFAULT, ERepositoryStatus.DELETED, ERepositoryStatus.EDITABLE,
                 ERepositoryStatus.ERROR, ERepositoryStatus.NEW, ERepositoryStatus.NOT_UP_TO_DATE, ERepositoryStatus.READ_ONLY,
@@ -180,10 +189,6 @@ public class RepositoryResourceUtilTest {
         IProxyRepositoryService mockRepoService = Mockito.mock(IProxyRepositoryService.class);
         IProxyRepositoryFactory repositoryFactory = Mockito.mock(IProxyRepositoryFactory.class);
         Mockito.when(mockRepoService.getProxyRepositoryFactory()).thenReturn(repositoryFactory);
-        Field serviceField = GlobalServiceRegister.class.getDeclaredField("services");
-        serviceField.setAccessible(true);
-        Map<Class, IService> services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
-        IService iService = services.get(IProxyRepositoryService.class);
         services.put(IProxyRepositoryService.class, mockRepoService);
 
         RepositoryResourceUtil.saveItem(mockItem);
@@ -204,10 +209,6 @@ public class RepositoryResourceUtilTest {
         IProxyRepositoryService mockRepoService = Mockito.mock(IProxyRepositoryService.class);
         IProxyRepositoryFactory repositoryFactory = Mockito.mock(IProxyRepositoryFactory.class);
         Mockito.when(mockRepoService.getProxyRepositoryFactory()).thenReturn(repositoryFactory);
-        Field serviceField = GlobalServiceRegister.class.getDeclaredField("services");
-        serviceField.setAccessible(true);
-        Map<Class, IService> services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
-        IService iService = services.get(IProxyRepositoryService.class);
         services.put(IProxyRepositoryService.class, mockRepoService);
 
         RepositoryContext mockContext = mock(RepositoryContext.class);
@@ -251,7 +252,6 @@ public class RepositoryResourceUtilTest {
         Mockito.when(mockResource.getResourceSet()).thenReturn(resourceSet);
 
         boolean createItem = RepositoryResourceUtil.createItem(mockItem, propLabel);
-        services.put(IProxyRepositoryService.class, iService);
 
         verify(mockProperty, times(1)).setId(nextId);
         verify(mockProperty, times(1)).setVersion(Mockito.anyString());
@@ -390,10 +390,6 @@ public class RepositoryResourceUtilTest {
         IProxyRepositoryService mockRepoService = Mockito.mock(IProxyRepositoryService.class);
         IProxyRepositoryFactory repositoryFactory = Mockito.mock(IProxyRepositoryFactory.class);
         Mockito.when(mockRepoService.getProxyRepositoryFactory()).thenReturn(repositoryFactory);
-        Field serviceField = GlobalServiceRegister.class.getDeclaredField("services");
-        serviceField.setAccessible(true);
-        Map<Class, IService> services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
-        IService iService = services.get(IProxyRepositoryService.class);
         services.put(IProxyRepositoryService.class, mockRepoService);
 
         List<IRepositoryViewObject> viewObjects = new ArrayList<IRepositoryViewObject>();
@@ -439,10 +435,6 @@ public class RepositoryResourceUtilTest {
         IProxyRepositoryService mockRepoService = Mockito.mock(IProxyRepositoryService.class);
         IProxyRepositoryFactory mockFactory = Mockito.mock(IProxyRepositoryFactory.class);
         Mockito.when(mockRepoService.getProxyRepositoryFactory()).thenReturn(mockFactory);
-        Field serviceField = GlobalServiceRegister.class.getDeclaredField("services");
-        serviceField.setAccessible(true);
-        Map<Class, IService> services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
-        IService iService = services.get(IProxyRepositoryService.class);
         services.put(IProxyRepositoryService.class, mockRepoService);
 
         String propID = "propertyId";
@@ -580,10 +572,6 @@ public class RepositoryResourceUtilTest {
         IProxyRepositoryService mockRepoService = Mockito.mock(IProxyRepositoryService.class);
         IProxyRepositoryFactory repositoryFactory = Mockito.mock(IProxyRepositoryFactory.class);
         Mockito.when(mockRepoService.getProxyRepositoryFactory()).thenReturn(repositoryFactory);
-        Field serviceField = GlobalServiceRegister.class.getDeclaredField("services");
-        serviceField.setAccessible(true);
-        Map<Class, IService> services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
-        IService iService = services.get(IProxyRepositoryService.class);
         services.put(IProxyRepositoryService.class, mockRepoService);
 
         when(repositoryFactory.getAllVersion(ProjectManager.getInstance().getCurrentProject(), id, path, type))
@@ -641,10 +629,6 @@ public class RepositoryResourceUtilTest {
         IProxyRepositoryService mockRepoService = Mockito.mock(IProxyRepositoryService.class);
         IProxyRepositoryFactory mockFactory = Mockito.mock(IProxyRepositoryFactory.class);
         Mockito.when(mockRepoService.getProxyRepositoryFactory()).thenReturn(mockFactory);
-        Field serviceField = GlobalServiceRegister.class.getDeclaredField("services");
-        serviceField.setAccessible(true);
-        Map<Class, IService> services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
-        IService iService = services.get(IProxyRepositoryService.class);
         services.put(IProxyRepositoryService.class, mockRepoService);
 
         int option = IRepositoryFactory.OPTION_DYNAMIC_OBJECTS | IRepositoryFactory.OPTION_NOT_INCLUDE_CHILDRENS
