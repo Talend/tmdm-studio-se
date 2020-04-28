@@ -102,15 +102,20 @@ public class ContainerCacheServiceTest {
         assertEquals(mockViewObj, ContainerCacheService.get(propId));
 
         ContainerCacheService.clearCache();
+
+        Map<Class<?>, AbstractDQModelService> dqModelServices = null;
+        Map<Class, IService> services = null;
+        IProxyRepositoryService originRepoService = null;
+        AbstractDQModelService originDQService = null;
         try {
             Field declaredField = GlobalServiceRegister.class.getDeclaredField("dqModelServices");
             declaredField.setAccessible(true);
-            Map<Class<?>, AbstractDQModelService> map = (Map<Class<?>, AbstractDQModelService>) declaredField
-                    .get(GlobalServiceRegister.getDefault());
+            dqModelServices = (Map<Class<?>, AbstractDQModelService>) declaredField.get(GlobalServiceRegister.getDefault());
             AbstractDQModelService mockDQService = Mockito.mock(AbstractDQModelService.class);
             Mockito.when(mockDQService.getTDQRepObjType(any(Item.class)))
                     .thenReturn(IServerObjectRepositoryType.TYPE_CUSTOM_FORM);
-            map.put(AbstractDQModelService.class, mockDQService);
+            originDQService = dqModelServices.get(AbstractDQModelService.class);
+            dqModelServices.put(AbstractDQModelService.class, mockDQService);
 
             Field serviceField = GlobalServiceRegister.class.getDeclaredField("services");
             serviceField.setAccessible(true);
@@ -118,7 +123,8 @@ public class ContainerCacheServiceTest {
             IProxyRepositoryFactory mockFactory = Mockito.mock(IProxyRepositoryFactory.class);
             Mockito.when(mockRepoService.getProxyRepositoryFactory()).thenReturn(mockFactory);
 
-            Map<Class, IService> services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
+            services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
+            originRepoService = (IProxyRepositoryService) dqModelServices.get(IProxyRepositoryService.class);
             services.put(IProxyRepositoryService.class, mockRepoService);
 
             ItemState mockItemState = Mockito.mock(ItemState.class);
@@ -132,6 +138,13 @@ public class ContainerCacheServiceTest {
             assertTrue(ContainerCacheService.get(propId) != null);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+        } finally {
+            if (dqModelServices != null) {
+                dqModelServices.put(AbstractDQModelService.class, originDQService);
+            }
+            if (services != null) {
+                services.put(IProxyRepositoryService.class, originRepoService);
+            }
         }
     }
 
@@ -154,15 +167,19 @@ public class ContainerCacheServiceTest {
 
         ContainerCacheService.clearCache();
         //
+        Map<Class<?>, AbstractDQModelService> dqModelServices = null;
+        Map<Class, IService> services = null;
+        IProxyRepositoryService originRepoService = null;
+        AbstractDQModelService originDQService = null;
         try {
             Field declaredField = GlobalServiceRegister.class.getDeclaredField("dqModelServices");
             declaredField.setAccessible(true);
-            Map<Class<?>, AbstractDQModelService> map = (Map<Class<?>, AbstractDQModelService>) declaredField
-                    .get(GlobalServiceRegister.getDefault());
+            dqModelServices = (Map<Class<?>, AbstractDQModelService>) declaredField.get(GlobalServiceRegister.getDefault());
             AbstractDQModelService mockDQService = Mockito.mock(AbstractDQModelService.class);
             Mockito.when(mockDQService.getTDQRepObjType(any(Item.class)))
                     .thenReturn(IServerObjectRepositoryType.TYPE_CUSTOM_FORM);
-            map.put(AbstractDQModelService.class, mockDQService);
+            originDQService = dqModelServices.get(AbstractDQModelService.class);
+            dqModelServices.put(AbstractDQModelService.class, mockDQService);
 
             Field serviceField = GlobalServiceRegister.class.getDeclaredField("services");
             serviceField.setAccessible(true);
@@ -170,7 +187,8 @@ public class ContainerCacheServiceTest {
             IProxyRepositoryFactory mockFactory = Mockito.mock(IProxyRepositoryFactory.class);
             Mockito.when(mockRepoService.getProxyRepositoryFactory()).thenReturn(mockFactory);
 
-            Map<Class, IService> services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
+            services = (Map<Class, IService>) serviceField.get(GlobalServiceRegister.getDefault());
+            originRepoService = (IProxyRepositoryService) services.get(IProxyRepositoryService.class);
             services.put(IProxyRepositoryService.class, mockRepoService);
 
             Property mockProp = Mockito.mock(Property.class);
@@ -190,6 +208,13 @@ public class ContainerCacheServiceTest {
             assertTrue(ContainerCacheService.get(propId) != null);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
+        } finally {
+            if (dqModelServices != null) {
+                dqModelServices.put(AbstractDQModelService.class, originDQService);
+            }
+            if (services != null) {
+                services.put(IProxyRepositoryService.class, originRepoService);
+            }
         }
     }
 
