@@ -21,6 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,7 +38,6 @@ import org.apache.http.HttpStatus;
 import org.apache.http.HttpVersion;
 import org.apache.http.ParseException;
 import org.apache.http.StatusLine;
-import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.AuthenticationException;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.AuthCache;
@@ -78,7 +78,7 @@ public class HttpClientUtil {
 
     private static final String DEFAULT_CHARSET = "UTF-8"; //$NON-NLS-1$
 
-    private static Log log = LogFactory.getLog(HttpClientUtil.class);
+    private static Log LOG = LogFactory.getLog(HttpClientUtil.class);
 
     private static final String STRING_CONTENT_TYPE = "text/plain"; //$NON-NLS-1$
 
@@ -99,13 +99,16 @@ public class HttpClientUtil {
         return new DefaultHttpClient(cm, params);
     }
 
-    private static DefaultHttpClient wrapAuthClient(String url, String username, String password) throws SecurityException {
-        DefaultHttpClient client = createClient();
-        URI uri = URI.create(url);
-        AuthScope authScope = new AuthScope(uri.getHost(), uri.getPort());
-        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
-        client.getCredentialsProvider().setCredentials(authScope, credentials);
-        return client;
+    private static void wrapHttpRequest(HttpUriRequest httpRequest, String username, String password) {
+        if (httpRequest instanceof HttpGet || httpRequest instanceof HttpPut || httpRequest instanceof HttpPost) {
+            try {
+                byte[] authBytes = (username + ":" + password).getBytes("UTF-8");
+                String authString = Base64.getEncoder().encodeToString(authBytes);
+                httpRequest.addHeader("Authorization", "Basic " + authString);
+            } catch (Exception e) {
+                LOG.error(e.getMessage(), e);
+            }
+        }
     }
 
     private static HttpContext getPreemptiveContext(String url) {
@@ -132,8 +135,8 @@ public class HttpClientUtil {
     }
 
     public static String getStringContentByHttpget(String url, String username, String password) throws XtentisException {
-        DefaultHttpClient client = wrapAuthClient(url, username, password);
-        return commonGetRequest(client, url, username, "", String.class); //$NON-NLS-1$
+        DefaultHttpClient client = createClient();
+        return commonGetRequest(client, url, username, password, "", String.class); //$NON-NLS-1$
     }
 
     public static byte[] getByteArrayContentByHttpget(String url) throws XtentisException {
@@ -149,9 +152,10 @@ public class HttpClientUtil {
     public static InputStream getInStreamContentByHttpget(String url, String userName, String password) throws XtentisException {
         InputStream inputStream = null;
 
-        DefaultHttpClient wrapAuthClient = wrapAuthClient(url, userName, password);
+        DefaultHttpClient wrapAuthClient = createClient();
 
         HttpGet get = new HttpGet(url);
+        wrapHttpRequest(get, userName, password);
         addStudioToken(get, userName);
 
         inputStream = getResponseContentStream(wrapAuthClient, get, ""); //$NON-NLS-1$
@@ -161,12 +165,16 @@ public class HttpClientUtil {
 
     private static <T> T commonGetRequest(String url, Class<T> t) throws XtentisException {
         DefaultHttpClient client = createClient();
-        return commonGetRequest(client, url, null, "", t); //$NON-NLS-1$
+        return commonGetRequest(client, url, null, null, "", t); //$NON-NLS-1$
     }
 
-    private static <T> T commonGetRequest(DefaultHttpClient client, String url, String username, String message, Class<T> t)
+    private static <T> T commonGetRequest(DefaultHttpClient client, String url, String username, String password, String message,
+            Class<T> t)
             throws XtentisException {
         HttpGet get = new HttpGet(url);
+        if (username != null && password != null) {
+            wrapHttpRequest(get, username, password);
+        }
         if (username != null) {
             addStudioToken(get, username);
         }
@@ -223,7 +231,8 @@ public class HttpClientUtil {
     public static String uploadFileToAppServer(String URL, String localFilename, String username, String password)
             throws XtentisException {
         HttpUriRequest request = createUploadFileToServerRequest(URL, username, localFilename);
-        DefaultHttpClient client = wrapAuthClient(URL, username, password);
+        wrapHttpRequest(request, username, password);
+        DefaultHttpClient client = createClient();
         HttpContext preemptiveContext = getPreemptiveContext(URL);
         authenticate(username, password, request, preemptiveContext);
         String errMessage = Messages.Util_21 + "%s" + Messages.Util_22 + "%s"; //$NON-NLS-1$//$NON-NLS-2$
@@ -241,7 +250,7 @@ public class HttpClientUtil {
                     preemptiveContext);
             request.addHeader(authenticateHeader);
         } catch (AuthenticationException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -268,8 +277,9 @@ public class HttpClientUtil {
         if (password == null) {
             password = "talend"; //$NON-NLS-1$
         }
+        wrapHttpRequest(request, userName, password);
         addStudioToken(request, userName);
-        DefaultHttpClient client = wrapAuthClient(uri, userName, password);
+        DefaultHttpClient client = createClient();
         byte[] data = getByteArrayStreamContent(client, request, null, "{}"); //$NON-NLS-1$
         if (null == data) {
             throw new XtentisException("no response data"); //$NON-NLS-1$
@@ -351,7 +361,7 @@ public class HttpClientUtil {
             closeResponse(response);
             throw ex;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             request.abort();
             closeResponse(response);
             throw new XtentisException(e.getMessage(), e);
@@ -365,7 +375,7 @@ public class HttpClientUtil {
                 try {
                     EntityUtils.consume(entity);
                 } catch (final IOException ex) {
-                    log.error(ex.getMessage(), ex);
+                    LOG.error(ex.getMessage(), ex);
                 }
             }
         }
@@ -406,7 +416,7 @@ public class HttpClientUtil {
         } catch (XtentisException ex) {
             throw ex;
         } catch (Exception e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             request.abort();
             throw new XtentisException(e.getMessage(), e);
         } finally {
@@ -415,10 +425,11 @@ public class HttpClientUtil {
     }
 
     public static byte[] downloadFile(String url, String userName, String password) throws IOException {
-        HttpUriRequest request = new HttpGet(url);
+        HttpGet request = new HttpGet(url);
+        wrapHttpRequest(request, userName, password);
         addStudioToken(request, userName);
         try {
-            DefaultHttpClient client = wrapAuthClient(url, userName, password);
+            DefaultHttpClient client = createClient();
             byte[] data = getByteArrayStreamContent(client, request, null, null);
             if (null == data) {
                 throw new IOException("no response content"); //$NON-NLS-1$
@@ -432,7 +443,8 @@ public class HttpClientUtil {
     public static String uploadImageFile(String URL, String localFilename, String filename, String imageCatalog, String username,
             String password, HashMap<String, String> picturePathMap) throws XtentisException {
         HttpUriRequest request = createUploadRequest(URL, username, localFilename, filename, imageCatalog, picturePathMap);
-        DefaultHttpClient client = wrapAuthClient(URL, username, password);
+        wrapHttpRequest(request, username, password);
+        DefaultHttpClient client = createClient();
         HttpContext preemptiveContext = getPreemptiveContext(URL);
         authenticate(username, password, request, preemptiveContext);
         String errMessage = Messages.Util_25 + "%s" + Messages.Util_26 + "%s"; //$NON-NLS-1$//$NON-NLS-2$
@@ -465,15 +477,16 @@ public class HttpClientUtil {
             HttpUriRequest request = null;
             request = createModelRequest(url, username, isUpdate, xsd);
             request.setHeader(HTTP.CONTENT_TYPE, APPLICATION_XML_CONTENT_TYPE);
-            DefaultHttpClient httpClient = wrapAuthClient(url, username, password);
+            wrapHttpRequest(request, username, password);
+            DefaultHttpClient httpClient = createClient();
             String errMessage = Messages.Util_21 + "%s" + Messages.Util_22 + "%s"; //$NON-NLS-1$//$NON-NLS-2$
             String content = getTextContent(httpClient, request, null, errMessage);
 
             return content;
         } catch (UnsupportedEncodingException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } catch (SecurityException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return null;
     }
@@ -483,10 +496,11 @@ public class HttpClientUtil {
         try {
             String url = protocol + host + ":" + port + contextPath + "/services/rest/tds/setup?model=" + modelName; //$NON-NLS-1$ //$NON-NLS-2$
 
-            DefaultHttpClient httpClient = wrapAuthClient(url, username, password);
+            DefaultHttpClient httpClient = createClient();
 
             HttpUriRequest request = new HttpPut(url);
             request.setHeader("Accept", "application/json"); //$NON-NLS-1$ //$NON-NLS-2$
+            wrapHttpRequest(request, username, password);
             addStudioToken(request, username);
             HttpContext preemptiveContext = getPreemptiveContext(url);
             authenticate(username, password, request, preemptiveContext);
@@ -497,7 +511,7 @@ public class HttpClientUtil {
             }
             return content;
         } catch (SecurityException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return null;
     }
@@ -527,17 +541,18 @@ public class HttpClientUtil {
         try {
             HttpPost request = new HttpPost(url);
             request.setHeader(HTTP.CONTENT_TYPE, APPLICATION_XML_CONTENT_TYPE);
+            wrapHttpRequest(request, userName, password);
             addStudioToken(request, userName);
 
             StringEntity entity = new StringEntity(records, HTTP.UTF_8);
             request.setEntity(entity);
 
-            DefaultHttpClient client = wrapAuthClient(url, userName, password);
+            DefaultHttpClient client = createClient();
             String errMessage = Messages.Util_21 + "%s" + Messages.Util_22 + "%s"; //$NON-NLS-1$//$NON-NLS-2$
             String content = getTextContent(client, request, null, errMessage);
             return content;
         } catch (SecurityException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
 
         return null;
@@ -581,9 +596,9 @@ public class HttpClientUtil {
             IOUtils.write(bytes, output);
             return output;
         } catch (MalformedURLException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } finally {
             IOUtils.closeQuietly(input);
             IOUtils.closeQuietly(output);
