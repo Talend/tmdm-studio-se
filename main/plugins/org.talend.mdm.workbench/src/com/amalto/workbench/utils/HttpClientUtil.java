@@ -104,7 +104,7 @@ public class HttpClientUtil {
             byte[] authBytes = (username + ":" + password).getBytes("UTF-8");
             String authString = Base64.getEncoder().encodeToString(authBytes);
             httpRequest.setHeader("Authorization", "Basic " + authString);
-        } catch (Exception e) {
+        } catch (UnsupportedEncodingException e) {
             LOG.error("The charset is not supported.", e);
         }
     }
