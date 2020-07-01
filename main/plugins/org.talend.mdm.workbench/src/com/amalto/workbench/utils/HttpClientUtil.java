@@ -100,14 +100,12 @@ public class HttpClientUtil {
     }
 
     private static void wrapHttpRequest(HttpUriRequest httpRequest, String username, String password) {
-        if (httpRequest instanceof HttpGet || httpRequest instanceof HttpPut || httpRequest instanceof HttpPost) {
-            try {
-                byte[] authBytes = (username + ":" + password).getBytes("UTF-8");
-                String authString = Base64.getEncoder().encodeToString(authBytes);
-                httpRequest.addHeader("Authorization", "Basic " + authString);
-            } catch (UnsupportedEncodingException e) {
-                LOG.error("The chartset is not supported.", e);
-            }
+        try {
+            byte[] authBytes = (username + ":" + password).getBytes("UTF-8");
+            String authString = Base64.getEncoder().encodeToString(authBytes);
+            httpRequest.addHeader("Authorization", "Basic " + authString);
+        } catch (Exception e) {
+            LOG.error("The charset is not supported.", e);
         }
     }
 
