@@ -425,7 +425,7 @@ public class HttpClientUtil {
     }
 
     public static byte[] downloadFile(String url, String userName, String password) throws IOException {
-        HttpGet request = new HttpGet(url);
+        HttpUriRequest request = new HttpGet(url);
         wrapHttpRequest(request, userName, password);
         addStudioToken(request, userName);
         try {
