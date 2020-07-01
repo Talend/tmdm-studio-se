@@ -360,7 +360,10 @@ public class HttpClientUtil {
             throw ex;
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            request.abort();
+            try {
+                request.abort();
+            } catch (Exception ue) {// empty
+            }
             closeResponse(response);
             throw new XtentisException(e.getMessage(), e);
         }
@@ -415,7 +418,10 @@ public class HttpClientUtil {
             throw ex;
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            request.abort();
+            try {
+                request.abort();
+            } catch (Exception e1) {// empty
+            }
             throw new XtentisException(e.getMessage(), e);
         } finally {
             closeResponse(response);
