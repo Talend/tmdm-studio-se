@@ -78,7 +78,7 @@ public class HttpClientUtil {
 
     private static final String DEFAULT_CHARSET = "UTF-8"; //$NON-NLS-1$
 
-    private static Log LOG = LogFactory.getLog(HttpClientUtil.class);
+    private static final Log LOG = LogFactory.getLog(HttpClientUtil.class);
 
     private static final String STRING_CONTENT_TYPE = "text/plain"; //$NON-NLS-1$
 
@@ -105,8 +105,8 @@ public class HttpClientUtil {
                 byte[] authBytes = (username + ":" + password).getBytes("UTF-8");
                 String authString = Base64.getEncoder().encodeToString(authBytes);
                 httpRequest.addHeader("Authorization", "Basic " + authString);
-            } catch (Exception e) {
-                LOG.error(e.getMessage(), e);
+            } catch (UnsupportedEncodingException e) {
+                LOG.error("The chartset is not supported.", e);
             }
         }
     }
