@@ -12,6 +12,7 @@
 
 	<properties>
 		<bulkload.dir>${project.basedir}/components/tMDMBulkLoad</bulkload.dir>
+		<mdm-transaction.dir>${project.basedir}/components/tMDMConnection</mdm-transaction.dir>
 	</properties>
 
 	<build>
@@ -27,6 +28,12 @@
 							<includes>
 								<include>bulkloadclient.jar</include>
 								<include>org.talend.mdm.bulkload.client*.jar</include>
+							</includes>
+						</fileset>
+						<fileset>
+							<directory>${mdm-transaction.dir}</directory>
+							<includes>
+								<include>mdm_transaction.jar</include>
 							</includes>
 						</fileset>
 					</filesets>
@@ -53,6 +60,25 @@
 									<overWrite>true</overWrite>
 									<outputDirectory>${bulkload.dir}</outputDirectory>
 									<includes>org.talend.mdm.bulkload.client*.jar</includes>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-jars</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.talend.libraries</groupId>
+									<artifactId>mdm_transaction</artifactId>
+									<version>1.2.0</version>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${mdm-transaction.dir}</outputDirectory>
 								</artifactItem>
 							</artifactItems>
 						</configuration>
