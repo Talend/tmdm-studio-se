@@ -43,7 +43,7 @@ public class GroovyPluginDetail extends AbstractPluginDetail {
 
     public String getDescription() {
         String description = ""; //$NON-NLS-1$
-        if (twoLettersLanguageCode.toLowerCase().equals("en")) { //$NON-NLS-1$
+        if (twoLettersLanguageCode.equalsIgnoreCase("en")) { //$NON-NLS-1$
             description = Messages.GroovyPluginDetail_PluginCallScript;
         } else {
             description = Messages.BatchProjectXX_UNSupportedLan;

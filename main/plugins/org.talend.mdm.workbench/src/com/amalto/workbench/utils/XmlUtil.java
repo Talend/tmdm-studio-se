@@ -211,10 +211,10 @@ public final class XmlUtil {
 
         OutputFormat format = null;
 
-        if (printMode.toLowerCase().equals("pretty")) {//$NON-NLS-1$
+        if (printMode.equalsIgnoreCase("pretty")) {//$NON-NLS-1$
             // Pretty print the document
             format = OutputFormat.createPrettyPrint();
-        } else if (printMode.toLowerCase().equals("compact")) {//$NON-NLS-1$
+        } else if (printMode.equalsIgnoreCase("compact")) {//$NON-NLS-1$
             // Compact format
             format = OutputFormat.createCompactFormat();
         }
