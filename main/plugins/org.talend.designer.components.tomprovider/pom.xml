@@ -75,7 +75,7 @@
 								<artifactItem>
 									<groupId>org.talend.libraries</groupId>
 									<artifactId>mdm_transaction</artifactId>
-									<version>1.2.0</version>
+									<version>1.0.1</version>
 									<type>jar</type>
 									<overWrite>true</overWrite>
 									<outputDirectory>${mdm-transaction.dir}</outputDirectory>
