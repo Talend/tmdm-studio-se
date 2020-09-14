@@ -60,17 +60,6 @@
           NUM_ROW="15"
           SHOW_IF="USE_EXISTING_CONNECTION == 'true'"
         />
-        
-        <PARAMETER NAME="SERVERVERSION" FIELD="CLOSED_LIST" NUM_ROW="12" REQUIRED="true" SHOW_IF="USE_EXISTING_CONNECTION == 'false'" REPOSITORY_VALUE="MDM_VERSION">
-            <ITEMS DEFAULT="SERVER_6_0">
-                <ITEM NAME="SERVER_6_0" VALUE="s60" />
-                <ITEM NAME="SERVER_5_6" VALUE="s56" />
-            </ITEMS>
-        </PARAMETER>
-        
-        <PARAMETER NAME="NOTE" FIELD="LABEL" NUM_ROW="12" SHOW_IF="(SERVERVERSION == 's56') and (USE_EXISTING_CONNECTION == 'false')">
-            <DEFAULT>suggest to use 6.0 url</DEFAULT>
-        </PARAMETER>
 
         <PARAMETER NAME="MDMURL" FIELD="TEXT" NUM_ROW="20"
             REQUIRED="true" SHOW_IF="USE_EXISTING_CONNECTION == 'false'">

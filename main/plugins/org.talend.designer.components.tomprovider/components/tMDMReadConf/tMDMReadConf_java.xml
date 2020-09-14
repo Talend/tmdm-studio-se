@@ -55,14 +55,7 @@
 	      REQUIRED="true"
 	      NUM_ROW="5"
 	    >
-	    </PARAMETER>
-	    
-	    <PARAMETER NAME="SERVERVERSION" FIELD="CLOSED_LIST" NUM_ROW="9" REQUIRED="true">
-            <ITEMS DEFAULT="SERVER_6_0">
-                <ITEM NAME="SERVER_6_0" VALUE="s60" />
-                <ITEM NAME="SERVER_5_6" VALUE="s56" />
-            </ITEMS>
-        </PARAMETER>
+	    </PARAMETER>	    	 
 
 		<PARAMETER
 	      NAME="USE_EXISTING_CONNECTION"

@@ -18,7 +18,6 @@ boolean isLog4jEnabled = ("true").equals(ElementParameterParser.getValue(node.ge
 
 String mdmUrl = ElementParameterParser.getValue(node, "__MDMURL__");
 String username = ElementParameterParser.getValue(node, "__USERNAME__");
-String version = ElementParameterParser.getValue(node, "__SERVERVERSION__");
 
 boolean useTransaction = "false".equals(ElementParameterParser.getValue(node, "__AUTO_COMMIT__"));
 boolean useClientTranId = "true".equals(ElementParameterParser.getValue(node, "__GEN_TRANSACTION_ID__"));
