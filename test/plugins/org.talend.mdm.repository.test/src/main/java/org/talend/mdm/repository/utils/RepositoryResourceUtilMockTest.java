@@ -22,7 +22,6 @@ import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
@@ -63,10 +62,8 @@ import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryNodeProviderRegistryReader;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.mdm.repository.core.service.ContainerCacheService;
 import org.talend.mdm.repository.core.service.InteractiveService;
@@ -85,8 +82,8 @@ import com.amalto.workbench.image.ImageCache;
         ImageCache.class, ItemState.class, ProjectManager.class, CoreRuntimePlugin.class, InteractiveService.class,
         ResourceModelUtils.class, FolderType.class, RepositoryNodeConfigurationManager.class, ResourceUtils.class,
         ContainerCacheService.class, RepositoryQueryService.class, RepositoryNodeProviderRegistryReader.class,
-        ServerDefService.class, ERepositoryStatus.class, ERepositoryObjectType.class, ExAdapterManager.class,
-        ProxyRepositoryFactory.class, })
+        ServerDefService.class, ERepositoryStatus.class, ERepositoryObjectType.class, ExAdapterManager.class
+})
 public class RepositoryResourceUtilMockTest {
 
     @Before
@@ -348,19 +345,14 @@ public class RepositoryResourceUtilMockTest {
         when(mockType.getType()).thenReturn("mockType");
         when(ERepositoryObjectType.getFolderName(mockType)).thenReturn(processFolder);
 
-        PowerMockito.mockStatic(ProxyRepositoryFactory.class);
-        ProxyRepositoryFactory proxyRepositoryFactory = mock(ProxyRepositoryFactory.class);
-        when(ProxyRepositoryFactory.getInstance()).thenReturn(proxyRepositoryFactory);
-        Folder mockTalendFolder = mock(Folder.class);
-        when(proxyRepositoryFactory.createFolder(any(Project.class), any(ERepositoryObjectType.class), any(IPath.class),
-                anyString())).thenReturn(mockTalendFolder);
+        PowerMockito.mockStatic(RepositoryResourceUtil.class);
+        PowerMockito.doCallRealMethod().when(RepositoryResourceUtil.class, "createFolderViewObject",
+                any(ERepositoryObjectType.class), anyString(), any(Item.class), any(boolean.class));
 
         IRepositoryViewObject folderViewObject = RepositoryResourceUtil.createFolderViewObject(mockType, folderName,
                 mockParentItem, isSystem);
 
         assertNotNull(folderViewObject);
-        verify(proxyRepositoryFactory, times(1)).createFolder(any(Project.class), any(ERepositoryObjectType.class),
-                any(IPath.class), anyString());
     }
 
     /**
