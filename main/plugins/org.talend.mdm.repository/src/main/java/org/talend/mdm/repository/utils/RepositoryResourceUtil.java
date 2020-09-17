@@ -483,8 +483,7 @@ public class RepositoryResourceUtil {
 
                 IFolder folder = fsProject.getFolder(path);
                 if (!folder.exists()) {
-                    Path parentPath = new Path(pItem.getState().getPath());
-                    ProxyRepositoryFactory.getInstance().createFolder(project, type, parentPath, folderName);
+                    createFolder(type, folderName, pItem, project);
                 }
 
             } else {
@@ -498,6 +497,12 @@ public class RepositoryResourceUtil {
         ContainerCacheService.putContainer(containerRepositoryObject);
         //
         return containerRepositoryObject;
+    }
+
+    private static void createFolder(ERepositoryObjectType type, String folderName, Item pItem, Project project)
+            throws PersistenceException {
+        Path parentPath = new Path(pItem.getState().getPath());
+        ProxyRepositoryFactory.getInstance().createFolder(project, type, parentPath, folderName);
     }
 
     public static FolderRepositoryObject createDeletedFolderViewObject(ERepositoryObjectType type, String path,
