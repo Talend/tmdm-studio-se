@@ -62,12 +62,10 @@ import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryNodeProviderRegistryReader;
 import org.talend.core.model.repository.ResourceModelUtils;
 import org.talend.core.repository.model.IRepositoryFactory;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.mdm.repository.core.IRepositoryNodeConfiguration;
 import org.talend.mdm.repository.core.IRepositoryNodeLabelProvider;
@@ -96,8 +94,7 @@ import com.amalto.workbench.image.ImageCache;
     ImageCache.class, ItemState.class, ProjectManager.class, CoreRuntimePlugin.class, InteractiveService.class,
     ResourceModelUtils.class, FolderType.class, RepositoryNodeConfigurationManager.class, ResourceUtils.class,
     ContainerCacheService.class, RepositoryQueryService.class, RepositoryNodeProviderRegistryReader.class,
-        ServerDefService.class, ERepositoryStatus.class, ERepositoryObjectType.class, ExAdapterManager.class,
-        ProxyRepositoryFactory.class,
+        ServerDefService.class, ERepositoryStatus.class, ERepositoryObjectType.class, ExAdapterManager.class
 })
 public class RepositoryResourceUtilTest {
 
@@ -546,20 +543,14 @@ public class RepositoryResourceUtilTest {
         when(mockType.getType()).thenReturn("mockType");
         when(ERepositoryObjectType.getFolderName(mockType)).thenReturn(processFolder);
 
-        PowerMockito.mockStatic(ProxyRepositoryFactory.class);
-        ProxyRepositoryFactory proxyRepositoryFactory = mock(ProxyRepositoryFactory.class);
-        when(ProxyRepositoryFactory.getInstance()).thenReturn(proxyRepositoryFactory);
-        Folder mockTalendFolder = mock(Folder.class);
-        when(
-                proxyRepositoryFactory.createFolder(any(Project.class), any(ERepositoryObjectType.class), any(IPath.class),
-                        anyString())).thenReturn(mockTalendFolder);
+        PowerMockito.mockStatic(RepositoryResourceUtil.class);
+        PowerMockito.doCallRealMethod().when(RepositoryResourceUtil.class, "createFolderViewObject",
+                any(ERepositoryObjectType.class), anyString(), any(Item.class), any(boolean.class));
 
         IRepositoryViewObject folderViewObject = RepositoryResourceUtil.createFolderViewObject(mockType, folderName,
                 mockParentItem, isSystem);
 
         assertNotNull(folderViewObject);
-        verify(proxyRepositoryFactory, times(1)).createFolder(any(Project.class), any(ERepositoryObjectType.class),
-                any(IPath.class), anyString());
     }
 
     @Test
@@ -712,7 +703,7 @@ public class RepositoryResourceUtilTest {
                 withDeleted);
 
         assertEquals(1, viewObjectss.size());
-        PowerMockito.verifyStatic(RepositoryResourceUtil.class, Mockito.atLeastOnce());
+        PowerMockito.verifyStatic(InteractiveService.class, Mockito.atLeastOnce());
         InteractiveService.findHandler(mockType);
     }
 
