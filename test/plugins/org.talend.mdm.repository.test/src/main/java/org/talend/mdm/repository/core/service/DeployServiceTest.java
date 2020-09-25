@@ -33,10 +33,11 @@ import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 import org.talend.mdm.repository.utils.UIUtil;
 
 import com.amalto.workbench.exadapter.ExAdapterManager;
+import com.thoughtworks.xstream.converters.reflection.ReflectionProvider;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ ModelImpactAnalyseService.class, CommandManager.class, ExAdapterManager.class, RepositoryResourceUtil.class,
-        ConsistencyService.class, UIUtil.class, ModelImpactAnalyseService.class })
+@PrepareForTest({ ModelImpactAnalyseService.class, CommandManager.class, ReflectionProvider.class, ExAdapterManager.class,
+        RepositoryResourceUtil.class, ConsistencyService.class, UIUtil.class, ModelImpactAnalyseService.class })
 @PowerMockIgnore({ "org.talend.core.runtime.CoreRuntimePlugin", "org.eclipse.core.runtime.*", "org.eclipse.osgi.util.*" })
 public class DeployServiceTest {
 

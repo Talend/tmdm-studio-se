@@ -103,9 +103,12 @@ public class NewServiceConfigurationAction extends AbstractSimpleAddAction {
 
         if (parentItem != null) {
             item.getState().setPath(parentItem.getState().getPath());
-            RepositoryResourceUtil.createItem(item, key);
+            createItemAndSave(item, key);
         }
         return item;
     }
 
+    protected void createItemAndSave(WSServiceConfigurationItem item, String key) {
+        RepositoryResourceUtil.createItem(item, key);
+    }
 }

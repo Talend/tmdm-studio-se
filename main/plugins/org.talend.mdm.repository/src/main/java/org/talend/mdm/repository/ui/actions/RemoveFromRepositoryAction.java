@@ -131,7 +131,7 @@ public class RemoveFromRepositoryAction extends AbstractRepositoryAction {
         }
     }
 
-    private void warn() {
+    protected void warn() {
         MessageDialog
         .openWarning(
                 getShell(),
@@ -139,14 +139,14 @@ public class RemoveFromRepositoryAction extends AbstractRepositoryAction {
                 Messages.RemoveFromRepositoryAction_CanNotDeleteFolder);
     }
 
-    private boolean confirm(int size) {
+    protected boolean confirm(int size) {
         return MessageDialog.openConfirm(getShell(), Messages.RemoveFromRepositoryAction_Title, Messages.bind(
                 Messages.RemoveFromRepositoryAction_confirm, size, size > 1 ? Messages.RemoveFromRepositoryAction_instances
                         : Messages.RemoveFromRepositoryAction_instance));
     }
 
 
-    private boolean hasOpenedObject(List selectedObject) {
+    protected boolean hasOpenedObject(List selectedObject) {
         if (selectedObject != null) {
             for (Object object : selectedObject) {
                 if (object instanceof FolderRepositoryObject) {
@@ -211,7 +211,7 @@ public class RemoveFromRepositoryAction extends AbstractRepositoryAction {
         return item instanceof MDMServerObjectItem || item instanceof TDQItem;
     }
 
-    private void removeServerObject(IRepositoryViewObject viewObj) {
+    protected void removeServerObject(IRepositoryViewObject viewObj) {
         if (removed.contains(viewObj.getId())) {
             return;
         }
@@ -238,7 +238,7 @@ public class RemoveFromRepositoryAction extends AbstractRepositoryAction {
         }
     }
 
-    private void removeFolderObject(IRepositoryViewObject viewObj) {
+    protected void removeFolderObject(IRepositoryViewObject viewObj) {
         if (removed.contains(viewObj.getId())) {
             return;
         }

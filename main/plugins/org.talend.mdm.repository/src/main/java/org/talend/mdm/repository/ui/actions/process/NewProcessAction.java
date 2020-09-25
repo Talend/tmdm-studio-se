@@ -162,7 +162,7 @@ public class NewProcessAction extends AbstractSimpleAddAction implements ITransf
         return type;
     }
 
-    private WSTransformerV2E newProcess(String key) {
+    protected WSTransformerV2E newProcess(String key) {
 
         WSTransformerV2E transformer = MdmserverobjectFactory.eINSTANCE.createWSTransformerV2E();
         transformer.setName(key);
@@ -220,9 +220,13 @@ public class NewProcessAction extends AbstractSimpleAddAction implements ITransf
 
         if (parentItem != null) {
             item.getState().setPath(parentItem.getState().getPath());
-            RepositoryResourceUtil.createItem(item, key);
+            createItemAndSave(item, key);
         }
         return item;
+    }
+
+    protected void createItemAndSave(WSTransformerV2Item item, String key) {
+        RepositoryResourceUtil.createItem(item, key);
     }
 
     protected Item createServerObject(WSTransformerV2E process) {
@@ -237,7 +241,7 @@ public class NewProcessAction extends AbstractSimpleAddAction implements ITransf
             String path = rebuildItemPath(process.getName());
 
             item.getState().setPath(path);
-            RepositoryResourceUtil.createItem(item, process.getName());
+            createItemAndSave(item, process.getName());
         }
         return item;
     }

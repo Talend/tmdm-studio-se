@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2019 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2020 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -12,72 +12,48 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.actions.menu;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.resource.JFaceResources;
+import java.lang.reflect.Field;
+
 import org.junit.Test;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.reflect.Whitebox;
+import org.mockito.Mockito;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.runtime.CoreRuntimePlugin;
-import org.talend.mdm.repository.extension.RepositoryNodeConfigurationManager;
 import org.talend.mdm.repository.model.mdmproperties.ContainerItem;
 import org.talend.mdm.repository.model.mdmproperties.MdmpropertiesFactory;
 import org.talend.mdm.repository.model.mdmproperties.WSMenuItem;
-import org.talend.mdm.repository.model.mdmproperties.impl.MdmpropertiesFactoryImpl;
-import org.talend.mdm.repository.model.mdmproperties.impl.WSMenuItemImpl;
-import org.talend.mdm.repository.ui.actions.AbstractSimpleAddActionTest;
-import org.talend.mdm.repository.utils.RepositoryResourceUtil;
-import org.talend.repository.ProjectManager;
+import org.talend.mdm.repository.ui.actions.AbstractSimpleAddAction;
 
-import com.amalto.workbench.MDMWorbenchPlugin;
-import com.amalto.workbench.exadapter.ExAdapterManager;
-import com.amalto.workbench.image.ImageCache;
-
-@PrepareForTest({ ImageDescriptor.class, JFaceResources.class, ImageCache.class, ItemState.class, CoreRuntimePlugin.class,
-        ProjectManager.class, RepositoryNodeConfigurationManager.class, ProxyRepositoryFactory.class,
-        RepositoryResourceUtil.class, ExAdapterManager.class, MdmpropertiesFactoryImpl.class,
-        MDMWorbenchPlugin.class })
-public class NewMenuActionTest extends AbstractSimpleAddActionTest {
+public class NewMenuActionTest {
 
     @Test
     public void testCreateServerObject() throws Exception {
+        String parentPath = "parentpath";
         //
         ContainerItem newItem = MdmpropertiesFactory.eINSTANCE.createContainerItem();
         ContainerItem mockContainerItem = spy(newItem);
-
-        PowerMockito.mockStatic(MDMWorbenchPlugin.class);
-        when(MDMWorbenchPlugin.getImageDescriptor(anyString())).thenReturn(mock(ImageDescriptor.class));
-
-        NewMenuAction action = new NewMenuAction();
-        NewMenuAction spyAction = spy(action);
-
-        Whitebox.setInternalState(spyAction, "parentItem", mockContainerItem); //$NON-NLS-1$
         ItemState itemState = mock(ItemState.class);
         when(mockContainerItem.getState()).thenReturn(itemState);
-        when(mockContainerItem.getState().getPath()).thenReturn(""); //$NON-NLS-1$
+        when(mockContainerItem.getState().getPath()).thenReturn(parentPath);
 
-        WSMenuItem item = MdmpropertiesFactory.eINSTANCE.createWSMenuItem();
-        WSMenuItem spyMenuItem = spy(item);
-        Resource mockResource = mock(Resource.class);
-        ResourceSet mockResourceSet = mock(ResourceSet.class);
-        when(mockResource.getResourceSet()).thenReturn(mockResourceSet);
-        when(spyMenuItem.eResource()).thenReturn(mockResource);
-        PowerMockito.whenNew(WSMenuItemImpl.class).withNoArguments().thenReturn((WSMenuItemImpl) spyMenuItem);
+        NewMenuAction mockAction = mock(NewMenuAction.class);
+        Mockito.doCallRealMethod().when(mockAction).createServerObject(Mockito.anyString());
+        Field declaredField = AbstractSimpleAddAction.class.getDeclaredField("parentItem");
+        declaredField.setAccessible(true);
+        declaredField.set(mockAction, mockContainerItem);
+        //
 
         // run
-        Item addedItem = spyAction.createServerObject("abc"); //$NON-NLS-1$
+        Item addedItem = mockAction.createServerObject("abc"); //$NON-NLS-1$
         assertThat(addedItem, notNullValue());
-
+        assertTrue(parentPath.equals(addedItem.getState().getPath()));
+        Mockito.verify(mockAction, Mockito.times(1)).createItemAndSave(Mockito.any(WSMenuItem.class), Mockito.anyString());
     }
 
 }

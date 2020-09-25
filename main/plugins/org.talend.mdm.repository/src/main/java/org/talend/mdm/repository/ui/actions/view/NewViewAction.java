@@ -141,8 +141,13 @@ public class NewViewAction extends AbstractSimpleAddAction implements IViewNodeC
                 item.getState().setPath(IPath.SEPARATOR + PATH_SEARCHFILTER);
             }
         }
-        RepositoryResourceUtil.createItem(item, key);
+        createItemAndSave(item, key);
+
         return item;
+    }
+
+    protected void createItemAndSave(WSViewItem item, String key) {
+        RepositoryResourceUtil.createItem(item, key);
     }
 
     protected WSViewE newView(String key) {

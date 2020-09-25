@@ -20,3 +20,4 @@ Export-Package: org.talend.mdm.repository.ui.actions,
  org.talend.mdm.repository.ui.actions.view,
  org.talend.mdm.repository.ui.wizards.view,
  org.talend.mdm.repository.utils
+Import-Package: com.thoughtworks.xstream.converters.reflection
