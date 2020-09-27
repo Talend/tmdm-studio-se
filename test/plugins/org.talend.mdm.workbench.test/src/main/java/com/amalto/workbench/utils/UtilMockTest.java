@@ -321,8 +321,7 @@ public class UtilMockTest {
             particleElementList1.add(xsdElementDeclaration2);
             //
 
-            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), any(XSDComplexTypeDefinition.class))
-            .thenReturn(particleElementList1);
+            PowerMockito.when(Util.class, method_findall, eq(parent), any(Set.class)).thenReturn(particleElementList1);
             Object result = Whitebox.invokeMethod(Util.class, method_findspecial, parent, xsdElementDeclaration1, complexTypes);
             assertSame(parent, result);
 
@@ -334,8 +333,10 @@ public class UtilMockTest {
             List<XSDElementDeclaration> particleElementList2 = new ArrayList<XSDElementDeclaration>();
             particleElementList2.add(xsdEleDeclaration1);
             particleElementList2.add(xsdEleDeclaration2);
-            PowerMockito.when(Util.class, method_findall, any(XSDElementDeclaration.class), any(XSDComplexTypeDefinition.class))
-            .thenReturn(particleElementList1, particleElementList2);
+
+            PowerMockito.when(Util.class, method_findall, eq(parent), any(Set.class)).thenReturn(particleElementList1);
+            PowerMockito.when(Util.class, method_findall, eq(xsdElementDeclaration1), any(Set.class))
+                    .thenReturn(particleElementList2);
             result = Whitebox.invokeMethod(Util.class, method_findspecial, parent, xsdEleDeclaration1, complexTypes);
             assertSame(xsdElementDeclaration1, result);
 
@@ -944,7 +945,7 @@ public class UtilMockTest {
         PowerMockito.when(Util.getWebServiceHook()).thenReturn(webServiceHookStub);
 
         // service context
-        Map<String, Object> requestContext = new HashMap<>();
+        Map<String, Object> requestContext = new HashMap<String, Object>();
         Stub_TMDMService mockStub = Mockito.mock(Stub_TMDMService.class);
         Mockito.when(mockStub.getRequestContext()).thenReturn(requestContext);
 
