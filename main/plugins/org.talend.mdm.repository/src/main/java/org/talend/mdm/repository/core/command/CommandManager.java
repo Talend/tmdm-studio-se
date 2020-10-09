@@ -240,6 +240,10 @@ public class CommandManager implements IMementoAware {
         }
     }
 
+    public void removeAllCommandStack() {
+        map.clear();
+    }
+
     @Override
     public void restoreState(IMemento aMemento) {
         if (map.isEmpty() && aMemento != null) {
