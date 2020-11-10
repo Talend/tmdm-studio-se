@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<genmodel:GenModel xmi:version="2.0"
-    xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+<genmodel:GenModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
     xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.talend.mdm.repository.model/src/main/java"
     modelPluginID="org.talend.mdm.repository.model" modelName="MDMServerObject" importerID="org.eclipse.emf.importer.ecore"
     complianceLevel="6.0" copyrightFields="false" runtimeVersion="2.6" usedGenPackages="../../org.talend.model/model/Business.genmodel#//business ../../org.talend.model/model/Component.genmodel#//component ../../org.talend.cwm.mip/model/cwm_mip.genmodel#//orgomg ../../org.talend.dataquality/model/dataquality.genmodel#//dataquality platform:/plugin/org.eclipse.emf.ecore/model/Ecore.genmodel#//ecore ../../org.talend.model/model/joblet.genmodel#//model MDMMetadata.genmodel#//mdmmetadata ../../org.talend.model/model/metadata.genmodel#//connection platform:/plugin/org.eclipse.gmf.runtime.notation/model/notation.genmodel#//notation ../../org.talend.model/model/properties.genmodel#//properties ../../org.talend.model/model/TalendFile.genmodel#//talendfile">
@@ -15,6 +14,8 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//MDMServerObject/type"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//MDMServerObject/timestamp"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//MDMServerObject/digestValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//MDMServerObject/currentDigestValue"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//MDMServerObject/lastServerName"/>
       <genOperations ecoreOperation="MDMServerObject.ecore#//MDMServerObject/getUniqueName"/>
     </genClasses>
     <genClasses ecoreClass="MDMServerObject.ecore#//WSMenuE">
@@ -52,6 +53,9 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//WSViewE/whereConditions"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//WSViewE/isTransformerActive"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSViewE/transformerPK"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSViewE/sortField"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//WSViewE/isAsc"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSViewE/customForm"/>
     </genClasses>
     <genClasses ecoreClass="MDMServerObject.ecore#//WSWhereConditionE">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSWhereConditionE/leftPath"/>
@@ -84,6 +88,7 @@
     </genClasses>
     <genClasses ecoreClass="MDMServerObject.ecore#//WSTransformerV2E">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//WSTransformerV2E/processSteps"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSTransformerV2E/withAdminPermissions"/>
     </genClasses>
     <genClasses ecoreClass="MDMServerObject.ecore#//WSTransformerProcessStepE">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSTransformerProcessStepE/pluginJNDI"/>
@@ -113,6 +118,7 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSRoutingRuleE/parameters"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSRoutingRuleE/condition"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSRoutingRuleE/deactive"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSRoutingRuleE/executeOrder"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//WSRoutingRuleE/wsRoutingRuleExpressions"/>
     </genClasses>
     <genClasses ecoreClass="MDMServerObject.ecore#//WSRoutingRuleExpressionE">
@@ -148,18 +154,32 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSCustomFormE/xml"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSCustomFormE/role"/>
     </genClasses>
+    <genClasses ecoreClass="MDMServerObject.ecore#//WSMatchRuleE">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSMatchRuleE/configurationXmlContent"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//WSMatchRuleE/PK"/>
+    </genClasses>
+    <genClasses ecoreClass="MDMServerObject.ecore#//WSMatchRulePKE">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSMatchRulePKE/pk"/>
+    </genClasses>
     <nestedGenPackages prefix="MatchRule" basePackage="org.talend.mdm.repository.model.mdmserverobject"
         disposableProviderFactory="true" ecorePackage="MDMServerObject.ecore#//matchrule">
       <genClasses ecoreClass="MDMServerObject.ecore#//matchrule/MatchRuleMapInfo">
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//matchrule/MatchRuleMapInfo/entityMapInfos"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//matchrule/MatchRuleMapInfo/modelName"/>
       </genClasses>
       <genClasses ecoreClass="MDMServerObject.ecore#//matchrule/EntityMapInfo">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//matchrule/EntityMapInfo/entityName"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//matchrule/EntityMapInfo/matchKeyMap"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//matchrule/EntityMapInfo/survivorshipKeyMap"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//matchrule/EntityMapInfo/blockingKeyDefinition"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//matchrule/EntityMapInfo/matchRuleDefName"/>
         <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference MDMServerObject.ecore#//matchrule/EntityMapInfo/parent"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//matchrule/EntityMapInfo/matchRuleMapInfoPages"/>
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//matchrule/EntityMapInfo/particularDefaultSurvivorshipColumnMap"/>
+      </genClasses>
+      <genClasses ecoreClass="MDMServerObject.ecore#//matchrule/MatchRuleMapInfoPage">
+        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//matchrule/MatchRuleMapInfoPage/matchKeyMap"/>
+        <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference MDMServerObject.ecore#//matchrule/MatchRuleMapInfoPage/parent"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//matchrule/MatchRuleMapInfoPage/name"/>
       </genClasses>
       <genClasses ecoreClass="MDMServerObject.ecore#//matchrule/KeyXPathMap">
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//matchrule/KeyXPathMap/key"/>
@@ -173,7 +193,6 @@
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//matchrule/BlockingKey/keyName"/>
       </genClasses>
       <genClasses ecoreClass="MDMServerObject.ecore#//matchrule/MatchRuleMapInfoContainer">
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//matchrule/MatchRuleMapInfoContainer/modelName"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//matchrule/MatchRuleMapInfoContainer/mapInfos"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//matchrule/MatchRuleMapInfoContainer/matchRuleDefinitions"/>
       </genClasses>

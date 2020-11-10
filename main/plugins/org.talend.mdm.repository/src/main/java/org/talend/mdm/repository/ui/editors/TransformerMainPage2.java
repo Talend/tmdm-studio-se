@@ -18,6 +18,12 @@ import java.util.Map;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -27,6 +33,7 @@ import org.talend.mdm.repository.core.IServerObjectRepositoryType;
 import org.talend.mdm.repository.core.command.CommandManager;
 import org.talend.mdm.repository.core.command.CommandStack;
 import org.talend.mdm.repository.core.command.ICommand;
+import org.talend.mdm.repository.core.impl.transformerV2.ITransformerV2NodeConsDef;
 import org.talend.mdm.repository.core.service.DeployService;
 import org.talend.mdm.repository.core.service.ITriggerProcessService;
 import org.talend.mdm.repository.core.service.RepositoryWebServiceAdapter;
@@ -53,6 +60,7 @@ public class TransformerMainPage2 extends TransformerMainPage {
 
     XObjectEditor2 editor2;
 
+    private Button withAdminPermissionsBtn;
     /**
      * DOC hbhong TransformerMainPage2 constructor comment.
      *
@@ -61,6 +69,25 @@ public class TransformerMainPage2 extends TransformerMainPage {
     public TransformerMainPage2(FormEditor editor) {
         super(editor);
         this.editor2 = (XObjectEditor2) editor;
+    }
+
+    protected void createOtherContent(final FormToolkit toolkit, Composite topComposite) {
+        if (transformer.getName().startsWith(ITransformerV2NodeConsDef.PREFIX_BEFORESAVE_UPPER)) {
+            withAdminPermissionsBtn = toolkit.createButton(topComposite, "Run the process with admin permissions", SWT.CHECK);
+            withAdminPermissionsBtn.setToolTipText("Run the process with admin permissions");
+            GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
+            layoutData.horizontalIndent = 5;
+            withAdminPermissionsBtn.setLayoutData(layoutData);
+            withAdminPermissionsBtn.setSelection(transformer.isWithAdminPermissions());
+            withAdminPermissionsBtn.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    transformer.setWithAdminPermissions(withAdminPermissionsBtn.getSelection());
+                    markDirtyWithoutCommit();
+                }
+            });
+        }
     }
 
     @Override

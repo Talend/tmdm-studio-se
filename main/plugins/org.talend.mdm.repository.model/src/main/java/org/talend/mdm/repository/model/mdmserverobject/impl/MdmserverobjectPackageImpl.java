@@ -324,7 +324,7 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
 
     /**
      * Creates, registers, and initializes the <b>Package</b> for this model, and for any others upon which it depends.
-     * 
+     *
      * <p>This method is used to initialize {@link MdmserverobjectPackage#eINSTANCE} when that field is accessed.
      * Clients should not invoke it directly. Instead, they should simply access that field to obtain the package.
      * <!-- begin-user-doc -->
@@ -769,6 +769,7 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getWSViewE_SortField() {
         return (EAttribute)wsViewEEClass.getEStructuralFeatures().get(6);
     }
@@ -778,6 +779,7 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EReference getWSViewE_IsAsc() {
         return (EReference)wsViewEEClass.getEStructuralFeatures().get(7);
     }
@@ -787,6 +789,7 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EAttribute getWSViewE_CustomForm() {
         return (EAttribute)wsViewEEClass.getEStructuralFeatures().get(8);
     }
@@ -1019,6 +1022,16 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
     @Override
     public EReference getWSTransformerV2E_ProcessSteps() {
         return (EReference)wsTransformerV2EEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public EAttribute getWSTransformerV2E_WithAdminPermissions() {
+        return (EAttribute)wsTransformerV2EEClass.getEStructuralFeatures().get(1);
     }
 
     /**
@@ -1703,6 +1716,7 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
 
         wsTransformerV2EEClass = createEClass(WS_TRANSFORMER_V2E);
         createEReference(wsTransformerV2EEClass, WS_TRANSFORMER_V2E__PROCESS_STEPS);
+        createEAttribute(wsTransformerV2EEClass, WS_TRANSFORMER_V2E__WITH_ADMIN_PERMISSIONS);
 
         wsTransformerProcessStepEEClass = createEClass(WS_TRANSFORMER_PROCESS_STEP_E);
         createEAttribute(wsTransformerProcessStepEEClass, WS_TRANSFORMER_PROCESS_STEP_E__PLUGIN_JNDI);
@@ -1917,6 +1931,7 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
 
         initEClass(wsTransformerV2EEClass, WSTransformerV2E.class, "WSTransformerV2E", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getWSTransformerV2E_ProcessSteps(), this.getWSTransformerProcessStepE(), null, "processSteps", null, 0, -1, WSTransformerV2E.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getWSTransformerV2E_WithAdminPermissions(), ecorePackage.getEBoolean(), "withAdminPermissions", "false", 0, 1, WSTransformerV2E.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(wsTransformerProcessStepEEClass, WSTransformerProcessStepE.class, "WSTransformerProcessStepE", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getWSTransformerProcessStepE_PluginJNDI(), ecorePackage.getEString(), "pluginJNDI", null, 0, 1, WSTransformerProcessStepE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

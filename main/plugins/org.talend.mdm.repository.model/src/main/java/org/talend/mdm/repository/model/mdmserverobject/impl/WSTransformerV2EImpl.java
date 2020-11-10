@@ -8,6 +8,7 @@ package org.talend.mdm.repository.model.mdmserverobject.impl;
 
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -15,6 +16,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -28,10 +30,11 @@ import org.talend.mdm.repository.model.mdmserverobject.WSTransformerV2E;
  * <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
+ * </p>
  * <ul>
  *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSTransformerV2EImpl#getProcessSteps <em>Process Steps</em>}</li>
+ *   <li>{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSTransformerV2EImpl#isWithAdminPermissions <em>With Admin Permissions</em>}</li>
  * </ul>
- * </p>
  *
  * @generated
  */
@@ -45,6 +48,25 @@ public class WSTransformerV2EImpl extends MDMServerObjectImpl implements WSTrans
      * @ordered
      */
     protected EList<WSTransformerProcessStepE> processSteps;
+
+    /**
+     * The default value of the '{@link #isWithAdminPermissions() <em>With Admin Permissions</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isWithAdminPermissions()
+     * @generated
+     * @ordered
+     */
+    protected static final boolean WITH_ADMIN_PERMISSIONS_EDEFAULT = false;
+    /**
+     * The cached value of the '{@link #isWithAdminPermissions() <em>With Admin Permissions</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isWithAdminPermissions()
+     * @generated
+     * @ordered
+     */
+    protected boolean withAdminPermissions = WITH_ADMIN_PERMISSIONS_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -70,11 +92,35 @@ public class WSTransformerV2EImpl extends MDMServerObjectImpl implements WSTrans
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public EList<WSTransformerProcessStepE> getProcessSteps() {
         if (processSteps == null) {
             processSteps = new EObjectContainmentEList<WSTransformerProcessStepE>(WSTransformerProcessStepE.class, this, MdmserverobjectPackage.WS_TRANSFORMER_V2E__PROCESS_STEPS);
         }
         return processSteps;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public boolean isWithAdminPermissions() {
+        return withAdminPermissions;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public void setWithAdminPermissions(boolean newWithAdminPermissions) {
+        boolean oldWithAdminPermissions = withAdminPermissions;
+        withAdminPermissions = newWithAdminPermissions;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, MdmserverobjectPackage.WS_TRANSFORMER_V2E__WITH_ADMIN_PERMISSIONS, oldWithAdminPermissions, withAdminPermissions));
     }
 
     /**
@@ -101,6 +147,8 @@ public class WSTransformerV2EImpl extends MDMServerObjectImpl implements WSTrans
         switch (featureID) {
             case MdmserverobjectPackage.WS_TRANSFORMER_V2E__PROCESS_STEPS:
                 return getProcessSteps();
+            case MdmserverobjectPackage.WS_TRANSFORMER_V2E__WITH_ADMIN_PERMISSIONS:
+                return isWithAdminPermissions();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -118,6 +166,9 @@ public class WSTransformerV2EImpl extends MDMServerObjectImpl implements WSTrans
                 getProcessSteps().clear();
                 getProcessSteps().addAll((Collection<? extends WSTransformerProcessStepE>)newValue);
                 return;
+            case MdmserverobjectPackage.WS_TRANSFORMER_V2E__WITH_ADMIN_PERMISSIONS:
+                setWithAdminPermissions((Boolean)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -133,6 +184,9 @@ public class WSTransformerV2EImpl extends MDMServerObjectImpl implements WSTrans
             case MdmserverobjectPackage.WS_TRANSFORMER_V2E__PROCESS_STEPS:
                 getProcessSteps().clear();
                 return;
+            case MdmserverobjectPackage.WS_TRANSFORMER_V2E__WITH_ADMIN_PERMISSIONS:
+                setWithAdminPermissions(WITH_ADMIN_PERMISSIONS_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -147,6 +201,8 @@ public class WSTransformerV2EImpl extends MDMServerObjectImpl implements WSTrans
         switch (featureID) {
             case MdmserverobjectPackage.WS_TRANSFORMER_V2E__PROCESS_STEPS:
                 return processSteps != null && !processSteps.isEmpty();
+            case MdmserverobjectPackage.WS_TRANSFORMER_V2E__WITH_ADMIN_PERMISSIONS:
+                return withAdminPermissions != WITH_ADMIN_PERMISSIONS_EDEFAULT;
         }
         return super.eIsSet(featureID);
     }

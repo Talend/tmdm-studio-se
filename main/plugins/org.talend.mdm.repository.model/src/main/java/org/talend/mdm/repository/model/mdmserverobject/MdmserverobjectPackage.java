@@ -1454,13 +1454,22 @@ public interface MdmserverobjectPackage extends EPackage {
     int WS_TRANSFORMER_V2E__PROCESS_STEPS = MDM_SERVER_OBJECT_FEATURE_COUNT + 0;
 
     /**
+     * The feature id for the '<em><b>With Admin Permissions</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int WS_TRANSFORMER_V2E__WITH_ADMIN_PERMISSIONS = MDM_SERVER_OBJECT_FEATURE_COUNT + 1;
+
+    /**
      * The number of structural features of the '<em>WS Transformer V2E</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int WS_TRANSFORMER_V2E_FEATURE_COUNT = MDM_SERVER_OBJECT_FEATURE_COUNT + 1;
+    int WS_TRANSFORMER_V2E_FEATURE_COUNT = MDM_SERVER_OBJECT_FEATURE_COUNT + 2;
 
     /**
      * The meta object id for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSTransformerProcessStepEImpl <em>WS Transformer Process Step E</em>}' class.
@@ -3483,6 +3492,17 @@ public interface MdmserverobjectPackage extends EPackage {
     EReference getWSTransformerV2E_ProcessSteps();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.mdm.repository.model.mdmserverobject.WSTransformerV2E#isWithAdminPermissions <em>With Admin Permissions</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>With Admin Permissions</em>'.
+     * @see org.talend.mdm.repository.model.mdmserverobject.WSTransformerV2E#isWithAdminPermissions()
+     * @see #getWSTransformerV2E()
+     * @generated
+     */
+    EAttribute getWSTransformerV2E_WithAdminPermissions();
+
+    /**
      * Returns the meta object for class '{@link org.talend.mdm.repository.model.mdmserverobject.WSTransformerProcessStepE <em>WS Transformer Process Step E</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -4668,6 +4688,14 @@ public interface MdmserverobjectPackage extends EPackage {
          * @generated
          */
         EReference WS_TRANSFORMER_V2E__PROCESS_STEPS = eINSTANCE.getWSTransformerV2E_ProcessSteps();
+
+        /**
+         * The meta object literal for the '<em><b>With Admin Permissions</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute WS_TRANSFORMER_V2E__WITH_ADMIN_PERMISSIONS = eINSTANCE.getWSTransformerV2E_WithAdminPermissions();
 
         /**
          * The meta object literal for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSTransformerProcessStepEImpl <em>WS Transformer Process Step E</em>}' class.
