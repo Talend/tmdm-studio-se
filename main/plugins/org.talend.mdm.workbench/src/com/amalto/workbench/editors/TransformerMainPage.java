@@ -699,7 +699,7 @@ public class TransformerMainPage extends AMainPageV2 {
 
     }
 
-    protected void createOtherContent(final FormToolkit toolkit, Composite topComposite) {
+    protected void createOtherContent(final FormToolkit toolkit, Composite topComposite) {// empty
     }
 
     private void addToolBarItem() {

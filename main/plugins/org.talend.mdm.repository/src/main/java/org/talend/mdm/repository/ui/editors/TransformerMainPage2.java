@@ -73,8 +73,8 @@ public class TransformerMainPage2 extends TransformerMainPage {
 
     protected void createOtherContent(final FormToolkit toolkit, Composite topComposite) {
         if (transformer.getName().startsWith(ITransformerV2NodeConsDef.PREFIX_BEFORESAVE_UPPER)) {
-            withAdminPermissionsBtn = toolkit.createButton(topComposite, "Run the process with admin permissions", SWT.CHECK);
-            withAdminPermissionsBtn.setToolTipText("Run the process with admin permissions");
+            withAdminPermissionsBtn = toolkit.createButton(topComposite, Messages.TransformerMainPage2_runWithAdminPermissions, SWT.CHECK);
+            withAdminPermissionsBtn.setToolTipText(Messages.TransformerMainPage2_runWithAdminPermissions);
             GridData layoutData = new GridData(SWT.FILL, SWT.FILL, true, true, 3, 1);
             layoutData.horizontalIndent = 5;
             withAdminPermissionsBtn.setLayoutData(layoutData);
