@@ -26,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -522,7 +523,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
     private String synchronizeWithElem(TreeObject theObj, TreeParent folder, boolean fireEvent) {
         internalCheck = fireEvent;
         String catalogPath = "";//$NON-NLS-1$
-        ArrayList<String> catalogs = checkUpCatalogRepositoryForTreeObject(theObj, folder);
+        List<String> catalogs = checkUpCatalogRepositoryForTreeObject(theObj, folder);
         if (catalogs != null && folder.getType() != TreeObject.CATEGORY_FOLDER) {
             // create a catalog folder and insert the theObj into it
             TreeParent subFolder = folder;
@@ -642,8 +643,13 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
 
         if (theObj instanceof TreeParent) {
             TreeParent subParent = (TreeParent) theObj;
-            for (TreeObject obj : subParent.getChildren()) {
-                synchronizeWithElem(obj, subParent, fireEvent);
+            TreeObject[] children = subParent.getChildren();
+            if (children != null) {
+                new Thread() {// handle if big amount data
+                    public void run() {
+                        Stream.of(children).parallel().forEach(treeobj -> synchronizeWithElem(treeobj, subParent, fireEvent));
+                    };
+                }.start();
             }
         }
 
@@ -804,7 +810,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
         accommodations.clear();
     }
 
-    private ArrayList<String> checkUpCatalogRepositoryForTreeObject(TreeObject theObj, TreeObject folder) {
+    private List<String> checkUpCatalogRepositoryForTreeObject(TreeObject theObj, TreeObject folder) {
         if (theObj.getType() == 0 || theObj.getType() == TreeObject.CATEGORY_FOLDER) {
             return null;
         }
@@ -826,7 +832,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
                 }
                 if (elem.getName().equals(filterOutBlank(theObj.getDisplayName()))
                         && elem.getData().toString().equals(theObj.getType() + "")) {//$NON-NLS-1$
-                    ArrayList<String> path = new ArrayList<String>();
+                    List<String> path = new ArrayList<String>();
                     HashMap<Integer, String> slice = new HashMap<Integer, String>();
                     while (isAEXtentisObjects(elem, theObj) > XTENTIS_LEVEL) {
                         String elemName = elem.getParent().getName();
@@ -844,7 +850,7 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
                         elem = elem.getParent();
                     }
 
-                    ArrayList<String> pathCpy = new ArrayList<String>(path);
+                    List<String> pathCpy = new ArrayList<String>(path);
                     Collections.reverse(path);
                     if (!isEqualString(xpathElem, xpathObj, path)) {
                         path = null;
@@ -868,9 +874,9 @@ public class LocalTreeObjectRepository implements IXObjectModelListener, ITreeVi
         return null;
     }
 
-    private boolean isEqualString(String xpathElem, String xpathObj, ArrayList<String> catalogs) {
-        ArrayList<String> elems = new ArrayList<String>(Arrays.asList(xpathElem.split("/")));//$NON-NLS-1$
-        ArrayList<String> objs = new ArrayList<String>(Arrays.asList(xpathObj.split("/")));//$NON-NLS-1$
+    private boolean isEqualString(String xpathElem, String xpathObj, List<String> catalogs) {
+        List<String> elems = new ArrayList<String>(Arrays.asList(xpathElem.split("/")));//$NON-NLS-1$
+        List<String> objs = new ArrayList<String>(Arrays.asList(xpathObj.split("/")));//$NON-NLS-1$
         int orgSize = objs.size();
         for (int i = 0; i < objs.size(); i++) {
             if (!objs.get(i).equals(elems.get(i))) {
