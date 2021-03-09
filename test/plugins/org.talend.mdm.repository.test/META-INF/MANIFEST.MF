@@ -10,7 +10,7 @@ Require-Bundle: org.talend.testutils,
  org.apache.commons.lang,
  org.apache.ant
 Bundle-ClassPath: .,
- META-INF/libs/xstream-1.4.12.jar
+ META-INF/libs/xstream-1.4.15.jar
 Export-Package: org.talend.mdm.repository.ui.actions,
  org.talend.mdm.repository.ui.actions.datacontainer,
  org.talend.mdm.repository.ui.actions.datamodel,
