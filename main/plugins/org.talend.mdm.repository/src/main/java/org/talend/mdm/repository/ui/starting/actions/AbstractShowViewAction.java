@@ -30,7 +30,7 @@ import org.talend.repository.token.RepositoryActionLogger;
 public abstract class AbstractShowViewAction implements IIntroAction {
 
     public void run(IIntroSite site, Properties params) {
-    	RepositoryActionLogger.logAction(getClass().getName());
+        RepositoryActionLogger.logAction(getClass().getName());
     	
         IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
         if (factory.isUserReadOnlyOnCurrentProject()) {

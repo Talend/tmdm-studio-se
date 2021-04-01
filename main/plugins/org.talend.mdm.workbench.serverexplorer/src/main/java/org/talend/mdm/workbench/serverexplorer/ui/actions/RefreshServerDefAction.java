@@ -24,7 +24,7 @@ public class RefreshServerDefAction implements IViewActionDelegate {
     private ServerExplorer serverExplorer;
 
     public void run(IAction action) {
-    	RepositoryActionLogger.logAction(getClass().getName());
+        RepositoryActionLogger.logAction(getClass().getName());
     	
         if (serverExplorer != null) {
             serverExplorer.refreshServerDefs();

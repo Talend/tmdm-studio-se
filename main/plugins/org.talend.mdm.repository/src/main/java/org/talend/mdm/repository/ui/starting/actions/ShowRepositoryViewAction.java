@@ -25,7 +25,7 @@ public class ShowRepositoryViewAction extends AbstractShowViewAction {
 
     @Override
     public void run(IIntroSite site, Properties params) {
-    	RepositoryActionLogger.logAction(getClass().getName());
+        RepositoryActionLogger.logAction(getClass().getName());
     	
         try {
             showRepositoryView();

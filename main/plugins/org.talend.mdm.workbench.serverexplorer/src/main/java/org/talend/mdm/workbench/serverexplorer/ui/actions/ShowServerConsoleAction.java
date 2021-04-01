@@ -27,7 +27,7 @@ public class ShowServerConsoleAction extends AbstractServerDefAction {
 
     @Override
     public void run() {
-    	RepositoryActionLogger.logAction(getClass().getName());
+        RepositoryActionLogger.logAction(getClass().getName());
     	
         IRepositoryViewObject viewObject = getSelectedViewObject();
         if (viewObject != null) {

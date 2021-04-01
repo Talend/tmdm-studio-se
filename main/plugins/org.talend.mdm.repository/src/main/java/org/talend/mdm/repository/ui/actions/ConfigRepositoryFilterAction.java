@@ -24,7 +24,7 @@ public class ConfigRepositoryFilterAction implements IViewActionDelegate {
     private IViewPart view;
 
     public void run(IAction action) {
-    	RepositoryActionLogger.logAction(getClass().getName());
+        RepositoryActionLogger.logAction(getClass().getName());
     	
         RepositoryViewFilterDialog dialog = new RepositoryViewFilterDialog(view.getSite().getShell());
         dialog.open();

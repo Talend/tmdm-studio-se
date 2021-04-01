@@ -63,7 +63,7 @@ public class PasteAction extends AbstractRepositoryAction {
     public void run() {
         IRepositoryViewObject viewObj = getSelectedDragViewObj();
         if (IServerObjectRepositoryType.TYPE_WORKFLOW == viewObj.getRepositoryObjectType()) {
-        	RepositoryActionLogger.logAction(getClass().getName());
+            RepositoryActionLogger.logAction(getClass().getName());
         	
             final IWorkspaceRunnable op = new IWorkspaceRunnable() {
 

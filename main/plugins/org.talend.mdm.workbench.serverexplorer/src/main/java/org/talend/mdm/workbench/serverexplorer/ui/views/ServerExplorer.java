@@ -292,7 +292,7 @@ public class ServerExplorer extends ViewPart {
 
         @Override
         public void run() {
-        	RepositoryActionLogger.logAction(getClass().getName());
+            RepositoryActionLogger.logAction(getClass().getName());
         	
             ServerDefDialog dialog = new ServerDefDialog(getViewSite().getShell(), null);
             if (dialog.open() == IDialogConstants.OK_ID) {

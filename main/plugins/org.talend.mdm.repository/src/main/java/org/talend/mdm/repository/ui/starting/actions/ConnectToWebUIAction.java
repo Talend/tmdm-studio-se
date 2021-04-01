@@ -37,7 +37,7 @@ public class ConnectToWebUIAction implements IIntroAction {
     private static Logger log = Logger.getLogger(ConnectToWebUIAction.class);
 
     public void run(IIntroSite iintrosite, Properties properties) {
-    	RepositoryActionLogger.logAction(getClass().getName());
+        RepositoryActionLogger.logAction(getClass().getName());
     	
         String url = getUrl();
         try {

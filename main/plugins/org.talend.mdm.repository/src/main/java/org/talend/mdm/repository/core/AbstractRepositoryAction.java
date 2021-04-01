@@ -105,8 +105,7 @@ public abstract class AbstractRepositoryAction extends BaseSelectionListenerActi
 
     @Override
     public void run() {
-    	RepositoryActionLogger.logAction(getClass().getName());
-    	
+        RepositoryActionLogger.logAction(getClass().getName());
         if (needValidateLockedObject()) {
             if (isLocked()) {
                 MessageDialog.openError(getShell(), Messages.AbstractRepositoryAction_lockedObjTitle, getAlertLockedMsg());
