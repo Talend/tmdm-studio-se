@@ -17,6 +17,7 @@ import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.repository.model.mdmproperties.MDMServerDefItem;
 import org.talend.mdm.workbench.serverexplorer.console.MDMServerLogConsoleFactory;
 import org.talend.mdm.workbench.serverexplorer.i18n.Messages;
+import org.talend.repository.token.RepositoryActionLogger;
 
 public class ShowServerConsoleAction extends AbstractServerDefAction {
 
@@ -26,6 +27,8 @@ public class ShowServerConsoleAction extends AbstractServerDefAction {
 
     @Override
     public void run() {
+    	RepositoryActionLogger.logAction(getClass().getName());
+    	
         IRepositoryViewObject viewObject = getSelectedViewObject();
         if (viewObject != null) {
             MDMServerDefItem serverDefItem = getMDMItem(viewObject);

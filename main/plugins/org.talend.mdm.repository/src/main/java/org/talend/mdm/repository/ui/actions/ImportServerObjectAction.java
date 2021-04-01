@@ -15,10 +15,12 @@ package org.talend.mdm.repository.ui.actions;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.mdm.repository.core.AbstractRepositoryAction;
+import org.talend.mdm.repository.core.dnd.RepositoryDropAssistant;
 import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.plugin.RepositoryPlugin;
 import org.talend.mdm.repository.ui.wizards.imports.ImportServerObjectWizard;
 import org.talend.mdm.repository.utils.EclipseResourceManager;
+import org.talend.repository.token.RepositoryActionLogger;
 
 /**
  * DOC achen class global comment. Detailled comment
@@ -46,6 +48,7 @@ public class ImportServerObjectAction extends AbstractRepositoryAction {
 
     @Override
     public void run() {
+    	RepositoryActionLogger.logAction(getClass().getName());
         doRun();
     }
 

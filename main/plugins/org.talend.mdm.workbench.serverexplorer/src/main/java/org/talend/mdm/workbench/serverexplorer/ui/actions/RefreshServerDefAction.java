@@ -17,12 +17,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.talend.mdm.workbench.serverexplorer.ui.views.ServerExplorer;
+import org.talend.repository.token.RepositoryActionLogger;
 
 public class RefreshServerDefAction implements IViewActionDelegate {
 
     private ServerExplorer serverExplorer;
 
     public void run(IAction action) {
+    	RepositoryActionLogger.logAction(getClass().getName());
+    	
         if (serverExplorer != null) {
             serverExplorer.refreshServerDefs();
         }

@@ -55,6 +55,7 @@ import org.talend.mdm.workbench.serverexplorer.ui.dialogs.ServerDefDialog;
 import org.talend.mdm.workbench.serverexplorer.ui.providers.ServerSorter;
 import org.talend.mdm.workbench.serverexplorer.ui.providers.TreeContentProvider;
 import org.talend.mdm.workbench.serverexplorer.ui.providers.ViewerLabelProvider;
+import org.talend.repository.token.RepositoryActionLogger;
 
 import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.image.EImage;
@@ -291,6 +292,8 @@ public class ServerExplorer extends ViewPart {
 
         @Override
         public void run() {
+        	RepositoryActionLogger.logAction(getClass().getName());
+        	
             ServerDefDialog dialog = new ServerDefDialog(getViewSite().getShell(), null);
             if (dialog.open() == IDialogConstants.OK_ID) {
                 MDMServerDef serverDef = dialog.getServerDef();

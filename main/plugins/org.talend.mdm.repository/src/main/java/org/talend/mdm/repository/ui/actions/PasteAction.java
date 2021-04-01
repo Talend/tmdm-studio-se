@@ -32,6 +32,7 @@ import org.talend.mdm.repository.core.IRepositoryViewGlobalActionHandler;
 import org.talend.mdm.repository.core.IServerObjectRepositoryType;
 import org.talend.mdm.repository.core.dnd.RepositoryDropAssistant;
 import org.talend.mdm.repository.i18n.Messages;
+import org.talend.repository.token.RepositoryActionLogger;
 
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -62,6 +63,8 @@ public class PasteAction extends AbstractRepositoryAction {
     public void run() {
         IRepositoryViewObject viewObj = getSelectedDragViewObj();
         if (IServerObjectRepositoryType.TYPE_WORKFLOW == viewObj.getRepositoryObjectType()) {
+        	RepositoryActionLogger.logAction(getClass().getName());
+        	
             final IWorkspaceRunnable op = new IWorkspaceRunnable() {
 
                 @Override

@@ -28,6 +28,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.mdm.repository.model.mdmmetadata.MDMServerDef;
 import org.talend.mdm.workbench.serverexplorer.core.ServerDefService;
 import org.talend.mdm.workbench.serverexplorer.ui.dialogs.SelectServerDefDialog;
+import org.talend.repository.token.RepositoryActionLogger;
 
 import com.amalto.workbench.utils.Util;
 
@@ -36,6 +37,8 @@ public class ConnectToWebUIAction implements IIntroAction {
     private static Logger log = Logger.getLogger(ConnectToWebUIAction.class);
 
     public void run(IIntroSite iintrosite, Properties properties) {
+    	RepositoryActionLogger.logAction(getClass().getName());
+    	
         String url = getUrl();
         try {
             if (url != null) {

@@ -17,12 +17,15 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewActionDelegate;
 import org.eclipse.ui.IViewPart;
 import org.talend.mdm.repository.ui.dialogs.filter.RepositoryViewFilterDialog;
+import org.talend.repository.token.RepositoryActionLogger;
 
 public class ConfigRepositoryFilterAction implements IViewActionDelegate {
 
     private IViewPart view;
 
     public void run(IAction action) {
+    	RepositoryActionLogger.logAction(getClass().getName());
+    	
         RepositoryViewFilterDialog dialog = new RepositoryViewFilterDialog(view.getSite().getShell());
         dialog.open();
     }

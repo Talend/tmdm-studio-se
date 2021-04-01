@@ -27,6 +27,7 @@ import org.talend.mdm.repository.core.AbstractRepositoryAction;
 import org.talend.mdm.repository.core.IServerObjectRepositoryType;
 import org.talend.mdm.repository.core.dnd.RepositoryDropAssistant;
 import org.talend.mdm.repository.i18n.Messages;
+import org.talend.repository.token.RepositoryActionLogger;
 
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -55,6 +56,8 @@ public class DuplicateAction extends AbstractRepositoryAction {
     public void run() {
         IRepositoryViewObject viewObj = getSelectedViewObj();
         if (IServerObjectRepositoryType.TYPE_WORKFLOW == viewObj.getRepositoryObjectType()) {
+        	RepositoryActionLogger.logAction(getClass().getName());
+        	
             final IWorkspaceRunnable op = new IWorkspaceRunnable() {
 
                 @Override
