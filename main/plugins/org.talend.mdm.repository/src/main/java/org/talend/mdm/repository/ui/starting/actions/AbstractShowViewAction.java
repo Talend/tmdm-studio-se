@@ -25,10 +25,13 @@ import org.talend.mdm.repository.i18n.Messages;
 import org.talend.mdm.repository.ui.navigator.MDMRepositoryView;
 import org.talend.mdm.workbench.serverexplorer.ui.views.ServerExplorer;
 import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.repository.token.RepositoryActionLogger;
 
 public abstract class AbstractShowViewAction implements IIntroAction {
 
     public void run(IIntroSite site, Properties params) {
+        RepositoryActionLogger.logAction(getClass().getName());
+    	
         IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
         if (factory.isUserReadOnlyOnCurrentProject()) {
             MessageDialog.openWarning(null, Messages.AbstractShowViewAction_authorityTitle, getReadOnlyMessage());

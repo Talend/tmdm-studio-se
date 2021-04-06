@@ -17,12 +17,15 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.intro.IIntroSite;
+import org.talend.repository.token.RepositoryActionLogger;
 
 public class ShowServerExplorerAction extends AbstractShowViewAction {
 
     private static Logger log = Logger.getLogger(ShowServerExplorerAction.class);
 
     public void run(IIntroSite iintrosite, Properties properties) {
+        RepositoryActionLogger.logAction(getClass().getName());
+    	
         try {
             showServerExplorer();
         } catch (PartInitException e) {

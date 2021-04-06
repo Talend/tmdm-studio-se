@@ -17,6 +17,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.intro.IIntroSite;
+import org.talend.repository.token.RepositoryActionLogger;
 
 public class ShowRepositoryViewAction extends AbstractShowViewAction {
 
@@ -24,6 +25,8 @@ public class ShowRepositoryViewAction extends AbstractShowViewAction {
 
     @Override
     public void run(IIntroSite site, Properties params) {
+        RepositoryActionLogger.logAction(getClass().getName());
+    	
         try {
             showRepositoryView();
         } catch (PartInitException e) {

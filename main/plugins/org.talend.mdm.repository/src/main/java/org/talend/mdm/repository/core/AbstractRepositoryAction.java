@@ -37,6 +37,7 @@ import org.talend.mdm.repository.ui.dialogs.message.MultiStatusDialog;
 import org.talend.mdm.repository.ui.navigator.MDMRepositoryView;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 import org.talend.repository.RepositoryWorkUnit;
+import org.talend.repository.token.RepositoryActionLogger;
 
 /**
  * DOC hbhong class global comment. Detailled comment <br/>
@@ -104,6 +105,7 @@ public abstract class AbstractRepositoryAction extends BaseSelectionListenerActi
 
     @Override
     public void run() {
+        RepositoryActionLogger.logAction(getClass().getName());
         if (needValidateLockedObject()) {
             if (isLocked()) {
                 MessageDialog.openError(getShell(), Messages.AbstractRepositoryAction_lockedObjTitle, getAlertLockedMsg());
