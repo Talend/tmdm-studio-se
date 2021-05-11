@@ -7,20 +7,20 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="lib" path="lib/cxf-core-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-bindings-soap-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-bindings-xml-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-databinding-jaxb-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-features-clustering-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-frontend-jaxws-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-frontend-simple-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-security-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-security-saml-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-transports-http-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-ws-addr-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-ws-policy-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-ws-security-3.3.4.jar"/>
-	<classpathentry kind="lib" path="lib/cxf-rt-wsdl-3.3.4.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-core-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-bindings-soap-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-bindings-xml-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-databinding-jaxb-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-features-clustering-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-frontend-jaxws-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-frontend-simple-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-security-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-security-saml-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-transports-http-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-ws-addr-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-ws-policy-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-ws-security-3.3.10.jar"/>
+	<classpathentry kind="lib" path="lib/cxf-rt-wsdl-3.3.10.jar"/>
 	<classpathentry kind="lib" path="lib/jakarta.xml.bind-api-2.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/jaxb-runtime-2.3.2.jar"/>
 	<classpathentry kind="lib" path="lib/istack-commons-runtime-3.0.8.jar"/>
