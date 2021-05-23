@@ -82,7 +82,6 @@ import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.utils.ZipToFile;
 import org.talend.repository.ui.wizards.exportjob.JavaJobExportReArchieveCreator;
-import org.talend.repository.ui.wizards.exportjob.scriptsmanager.JobJavaScriptsWSManager;
 import org.talend.repository.ui.wizards.exportjob.scriptsmanager.JobScriptsManager;
 import org.talend.repository.ui.wizards.exportjob.scriptsmanager.JobScriptsManager.ExportChoice;
 import org.talend.repository.ui.wizards.exportjob.util.ExportJobUtil;
@@ -157,8 +156,6 @@ public abstract class DeployOnMDMExportWizardPage extends WizardFileSystemResour
         super(name, null);
         this.selection = selection;
         this.mdmServer = mdmserver;
-        manager = new JobJavaScriptsWSManager(getExportChoiceMap(needContextScript()), BLANK, JobScriptsManager.ALL_ENVIRONMENTS,
-                IProcessor.NO_STATISTICS, IProcessor.NO_TRACES, EXT_ZIP);
         RepositoryNode[] nodes = (RepositoryNode[]) selection.toList().toArray(new RepositoryNode[selection.size()]);
 
         List<ExportFileResource> list = new ArrayList<ExportFileResource>();
