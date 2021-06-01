@@ -158,6 +158,9 @@ public abstract class DeployOnMDMExportWizardPage extends WizardFileSystemResour
         this.mdmServer = mdmserver;
         RepositoryNode[] nodes = (RepositoryNode[]) selection.toList().toArray(new RepositoryNode[selection.size()]);
 
+        manager = new JobJavaScriptsManager(getExportChoiceMap(needContextScript()), BLANK, JobScriptsManager.ALL_ENVIRONMENTS,
+                IProcessor.NO_STATISTICS, IProcessor.NO_TRACES);
+
         List<ExportFileResource> list = new ArrayList<ExportFileResource>();
         for (RepositoryNode node : nodes) {
             if (node.getType() == ENodeType.SYSTEM_FOLDER || node.getType() == ENodeType.SIMPLE_FOLDER) {
