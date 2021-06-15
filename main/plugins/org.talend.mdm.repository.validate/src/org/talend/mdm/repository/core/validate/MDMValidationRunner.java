@@ -159,13 +159,6 @@ public class MDMValidationRunner implements ICoreRunnable {
                     }
 
                 }
-                if (type == IServerObjectRepositoryType.TYPE_WORKFLOW) {
-                    Item item = viewObj.getProperty().getItem();
-                    file = findReferenceFile(type, item, "conf"); //$NON-NLS-1$
-                    if (file != null) {
-                        files.add(file);
-                    }
-                }
                 viewObjMap.put(viewObj, file);
             }
 

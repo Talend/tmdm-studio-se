@@ -219,8 +219,8 @@ public class XSDNewParticleFromTypeAction extends UndoAction implements Selectio
                 for (int i = 0; i < oldAnn.getApplicationInformation().size(); i++) {
                     Element oldElem = oldAnn.getApplicationInformation().get(i);
                     String type = oldElem.getAttributes().getNamedItem("source").getNodeValue();//$NON-NLS-1$
-                    // X_Write,X_Hide,X_Workflow
-                    if (type.equals("X_Write") || type.equals("X_Hide") || type.equals("X_Workflow")) {//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+                    // X_Write,X_Hide
+                    if (type.equals("X_Write") || type.equals("X_Hide")) {//$NON-NLS-1$//$NON-NLS-2$
                         if (!infor.containsKey(type)) {
                             List<String> typeList = new ArrayList<String>();
                             typeList.add(oldElem.getFirstChild().getNodeValue());

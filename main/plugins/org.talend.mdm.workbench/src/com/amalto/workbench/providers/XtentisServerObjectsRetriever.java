@@ -374,7 +374,6 @@ public class XtentisServerObjectsRetriever implements IRunnableWithProgress {
 
             serverRoot.addChild(serviceConfiguration);
 
-            // serverRoot.addChild(workflow);
             // serverRoot.addChild(resources);
 
             if (hasMenus) {

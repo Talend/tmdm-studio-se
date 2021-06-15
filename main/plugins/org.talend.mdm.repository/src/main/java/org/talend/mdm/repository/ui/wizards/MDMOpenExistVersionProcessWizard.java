@@ -17,12 +17,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
-import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.runtime.model.repository.ERepositoryStatus;
 import org.talend.commons.utils.VersionUtils;
@@ -44,8 +42,6 @@ import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
-import com.amalto.workbench.exadapter.ExAdapterManager;
-
 /**
  * DOC achen class global comment. Detailled comment
  */
@@ -54,8 +50,6 @@ public class MDMOpenExistVersionProcessWizard extends OpenExistVersionProcessWiz
     static Logger log = Logger.getLogger(MDMOpenExistVersionProcessWizard.class);
 
     IRepositoryViewObject viewObject;
-
-    private IMDMOpenExistVersionProcessWizardExAdapter adapter;
 
     /**
      * DOC achen MDMOpenExistVersionProcessWizard constructor comment.
@@ -70,7 +64,6 @@ public class MDMOpenExistVersionProcessWizard extends OpenExistVersionProcessWiz
             alreadyEditedByUser = true;
         }
         this.viewObject = processObject;
-        adapter = ExAdapterManager.getAdapter(this, IMDMOpenExistVersionProcessWizardExAdapter.class);
     }
 
     @Override
@@ -97,25 +90,7 @@ public class MDMOpenExistVersionProcessWizard extends OpenExistVersionProcessWiz
                         final IRepositoryViewEditorInput editorInput = actionProvider.getOpenEditorInput(viewObj);
                         editorInput.setReadOnly(!latestVersion);
                         if (editorInput != null) {
-                            boolean canOpen = true;
-                            if (adapter != null) {
-                                canOpen = adapter.canOpen(viewObj, getOriginVersion());
-                            }
-
-                            if (canOpen) {
-                                openEditor(!latestVersion, viewObj, editorInput);
-                            } else {
-                                try {
-                                    CoreRuntimePlugin.getInstance().getProxyRepositoryFactory().unlock(viewObj);
-                                } catch (PersistenceException e) {
-                                    log.error(e.getMessage(), e);
-                                } catch (LoginException e) {
-                                    log.error(e.getMessage(), e);
-                                }
-
-                                MessageDialog.openInformation(getShell(), Messages.Information,
-                                        Messages.MDMOpenExistVersionProcessWizard_NotReadToOpen);
-                            }
+                            openEditor(!latestVersion, viewObj, editorInput);
                         }
                     }
                 }
@@ -209,20 +184,6 @@ public class MDMOpenExistVersionProcessWizard extends OpenExistVersionProcessWiz
         RepositoryNode node = new RepositoryNode(viewObject, repositoryNode.getParent(), repositoryNode.getType());
         processObject.setRepositoryNode(node);
         viewObject.setRepositoryNode(node);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.talend.designer.core.ui.wizards.OpenExistVersionProcessWizard#performFinish()
-     */
-    @Override
-    public boolean performFinish() {
-        if (adapter != null) {
-            return adapter.performFinish(mainPage.isCreateNewVersionJob());
-        } else {
-            return super.performFinish();
-        }
     }
 
     public String getNewVersion() {

@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.core.GlobalServiceRegister;
 import org.talend.mdm.repository.core.service.ws.AbstractGetDocument;
 import org.talend.mdm.repository.core.service.ws.AbstractPluginDetail;
 import org.talend.mdm.repository.core.service.wsimpl.servicedoc.CallJobGetDocument;
@@ -63,8 +62,6 @@ public class RepositoryWebServiceAdapter {
     private static Map<String, AbstractPluginDetail> transformerPluginMap;
 
     private static Map<String, AbstractGetDocument> documentServiceMap;
-
-    private static ITriggerProcessService triggerProcessService;
 
     public static TMDMService getMDMService(MDMServerDef serverDef) throws XtentisException {
         return getMDMService(serverDef, true);
@@ -159,10 +156,6 @@ public class RepositoryWebServiceAdapter {
             addGetDoc(documentServiceMap, new ItemDispatcherGetDocument(twoLettersLanguageCode));
             addGetDoc(documentServiceMap, new JdbcGetDocument(twoLettersLanguageCode));
             addGetDoc(documentServiceMap, new LoggingGetDocument(twoLettersLanguageCode));
-            ITriggerProcessService service = getTriggerProcessService();
-            if (service != null) {
-                service.addExtraGetDoc(documentServiceMap, twoLettersLanguageCode);
-            }
         }
     }
 
@@ -177,10 +170,6 @@ public class RepositoryWebServiceAdapter {
             addDetail(transformerPluginMap, new ReplacePluginDetail(twoLettersLanguageCode));
             addDetail(transformerPluginMap, new RoutePluginDetail(twoLettersLanguageCode));
             addDetail(transformerPluginMap, new TISCallJobPluginDetail(twoLettersLanguageCode));
-            ITriggerProcessService service = getTriggerProcessService();
-            if (service != null) {
-                service.addDetail(transformerPluginMap, twoLettersLanguageCode);
-            }
             addDetail(transformerPluginMap, new XPathPluginDetail(twoLettersLanguageCode));
             addDetail(transformerPluginMap, new XSLTPluginDetail(twoLettersLanguageCode));
         }
@@ -196,7 +185,7 @@ public class RepositoryWebServiceAdapter {
     }
 
     public static String[] getComboListForServiceConfig() {
-        String[] comblist = new String[] { "smtp", "svn", "workflow" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        String[] comblist = new String[] { "smtp", "svn"}; //$NON-NLS-1$ //$NON-NLS-2$
 
         return comblist;
 
@@ -232,14 +221,5 @@ public class RepositoryWebServiceAdapter {
 
         xobject.setServerRoot(serverRoot);
 
-    }
-
-    public static ITriggerProcessService getTriggerProcessService() {
-        if (triggerProcessService == null
-                && GlobalServiceRegister.getDefault().isServiceRegistered(ITriggerProcessService.class)) {
-            triggerProcessService = (ITriggerProcessService) GlobalServiceRegister.getDefault()
-                    .getService(ITriggerProcessService.class);
-        }
-        return triggerProcessService;
     }
 }

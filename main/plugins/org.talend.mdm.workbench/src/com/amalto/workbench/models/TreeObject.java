@@ -89,10 +89,6 @@ public class TreeObject implements IAdaptable, Comparable<TreeObject> {
 
     public final static int CUSTOM_TYPE = 28;
 
-    public final static int WORKFLOW = 29;
-
-    public final static int WORKFLOW_PROCESS = 30;
-
     public final static int JOB_REGISTRY = 31;
 
     public final static int JOB = 32;
@@ -141,10 +137,6 @@ public class TreeObject implements IAdaptable, Comparable<TreeObject> {
     public final static String CUSTOM_TYPES_URI = "/pubcomponent/customTypesSets/";//$NON-NLS-1$
 
     public final static String PICTURES_URI = "/pubcomponent/pictures/";//$NON-NLS-1$
-
-    public final static String BARFILE_URI = "/talendmdm/services/pubcomponent/barFile/";//$NON-NLS-1$
-
-    public final static String BARFILE_PATH = "/workflow/";//$NON-NLS-1$
 
     private String name;
 

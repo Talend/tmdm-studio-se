@@ -1769,8 +1769,6 @@ public class Messages extends NLS {
 
     public static String XSDTreeLabelProvider_15;
 
-    public static String XSDTreeLabelProvider_16;
-
     public static String XSDTreeLabelProvider_17;
 
     public static String XSDTreeLabelProvider_18;
@@ -2492,8 +2490,6 @@ public class Messages extends NLS {
     public static String ExportItemsWizard_13;
 
     public static String ExportItemsWizard_15;
-
-    public static String ExportItemsWizard_16;
 
     public static String ExportItemsWizard_17;
 

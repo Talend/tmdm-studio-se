@@ -37,8 +37,6 @@ public interface IAnnotationConst {
     //
     String KEY_PK_INFO = "X_PrimaryKeyInfo"; //$NON-NLS-1$
 
-    String KEY_WORKFLOW = "X_Workflow"; //$NON-NLS-1$
-
     String KEY_AUTO_EXPAND = "X_AutoExpand"; //$NON-NLS-1$
 
     String KEY_LOOKUP_FIELD = "X_Lookup_Field"; //$NON-NLS-1$

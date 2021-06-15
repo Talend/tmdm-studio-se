@@ -12,9 +12,7 @@
 // ============================================================================
 package org.talend.mdm.repository.ui.editors;
 
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.Map;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -35,7 +33,6 @@ import org.talend.mdm.repository.core.command.CommandStack;
 import org.talend.mdm.repository.core.command.ICommand;
 import org.talend.mdm.repository.core.impl.transformerV2.ITransformerV2NodeConsDef;
 import org.talend.mdm.repository.core.service.DeployService;
-import org.talend.mdm.repository.core.service.ITriggerProcessService;
 import org.talend.mdm.repository.core.service.RepositoryWebServiceAdapter;
 import org.talend.mdm.repository.core.service.ws.AbstractPluginDetail;
 import org.talend.mdm.repository.i18n.Messages;
@@ -101,19 +98,6 @@ public class TransformerMainPage2 extends TransformerMainPage {
         initExternalInfoHolderForEachType("callJob", new ExternalInfoHolder<?>[] { allJobInfosHolder, mdmServerInfoHolder, //$NON-NLS-1$
             allVarCandidatesHolder });
 
-        ITriggerProcessService triggerProcessService = RepositoryWebServiceAdapter.getTriggerProcessService();
-        if (triggerProcessService != null) {
-            Map<String, ExternalInfoHolder<?>[]> extraExternalInfoHolderForType = triggerProcessService
-                    .getProcessExtraExternalInfoHolderForType();
-            if (extraExternalInfoHolderForType != null) {
-                Iterator<String> iterator = extraExternalInfoHolderForType.keySet().iterator();
-                while (iterator.hasNext()) {
-                    String operaType = iterator.next();
-                    ExternalInfoHolder<?>[] externalInfoHolders = extraExternalInfoHolderForType.get(operaType);
-                    initExternalInfoHolderForEachType(operaType, externalInfoHolders);
-                }
-            }
-        }
     }
 
     @Override

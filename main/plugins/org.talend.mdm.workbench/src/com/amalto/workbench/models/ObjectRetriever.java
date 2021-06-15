@@ -65,9 +65,6 @@ public class ObjectRetriever implements IRunnableWithProgress {
 
         try {
             switch (parentObject.getType()) {
-            case TreeObject.WORKFLOW:
-                objectName = "WorkflowAvailableModel";//$NON-NLS-1$
-                break;
             case TreeObject.JOB_REGISTRY:
                 objectName = "JobAvailableModel";//$NON-NLS-1$
                 break;

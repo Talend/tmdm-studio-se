@@ -773,56 +773,6 @@ public class XSDAnnotationsStructure {
         return targetSystems;
     }
 
-    /*************************************************************
-     * Workflow
-     *************************************************************/
-    public boolean setWorkflows(Collection<String> systems) {
-        removeAppInfos(ICoreConstants.X_Workflow);
-        for (String role : systems) {
-            addAppInfo(ICoreConstants.X_Workflow, role);
-        }
-        hasChanged = true;
-        return true;
-    }
-
-    public boolean setWorkflow(int num, String system) {
-        Map<String, String> infos = getSchematrons();
-        infos.put(ICoreConstants.X_Workflow + "_" + num, system);//$NON-NLS-1$
-        setSchematrons(infos.values());
-        return true;
-    }
-
-    public void addWorkflow(String pattern) {
-        Map<String, String> infos = getSchematrons();
-        infos.put(ICoreConstants.X_Workflow + "_" + (infos.size() + 1), pattern);//$NON-NLS-1$
-        setSchematrons(infos.values());
-    }
-
-    public void removeWorkflow(String pattern) {
-        Map<String, String> infos = getSchematrons();
-        for (Entry<String, String> entry : infos.entrySet()) {
-            if (pattern.equals(entry.getValue())) {
-                infos.remove(entry.getKey());
-                break;
-            }
-        }
-        setSchematrons(infos.values());
-    }
-
-    public Map<String, String> getWorkflows() {
-        Map<String, String> targetSystems = new TreeMap<String, String>();
-        Map<String, String> appInfos = getAppInfos(ICoreConstants.X_Workflow);
-        Set<String> keys = appInfos.keySet();
-        for (String key : keys) {
-            String v = appInfos.get(key);
-            if (v == null || v.trim().length() == 0) {
-                continue;
-            }
-            targetSystems.put(key, appInfos.get(key));
-        }
-        return targetSystems;
-    }
-
     /**
      * return all existed category names, it is simple wrapper for getCategoryFromElement() method
      * 

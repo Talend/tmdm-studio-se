@@ -22,7 +22,7 @@ public enum EInputTemplate {
                        EContentType.APPLICATION_ITEMPK.getName(),
                        "<item-pOJOPK>\n\t<data-cluster-pOJOPK><ids>?</ids></data-cluster-pOJOPK>\n\t<concept-name>?</concept-name>\n\t<ids>?</ids>\n</item-pOJOPK>"), //$NON-NLS-1$
     // batchproject,callJob,codec,crossreferencing,csvparser,dumpandgo,fixedlengthparser,groupedlinesreader,
-    // linereader,partialupdate,project,regexp,replace,route,tisCall,workflowtrigger,xpath,xslt
+    // linereader,partialupdate,project,regexp,replace,route,tisCall,xpath,xslt
 
     // transformer parameters(Process)
     CODEC("codec", "<parameters>\n\t\t<method>?</method>\n\t\t<algorithm>?</algorithm>\n</parameters>"), //$NON-NLS-1$//$NON-NLS-2$
@@ -34,15 +34,13 @@ public enum EInputTemplate {
     ROUTE("route", ""), //$NON-NLS-1$//$NON-NLS-2$
     TISCALL("callJob",//$NON-NLS-1$
             "<configuration>\n\t\t<url>?</url>\n\t\t<contextParam>\n\t\t\t<name>?</name>\n\t\t\t<value>?</value>\n\t\t</contextParam>\n\t\t<username>?</username>\n\t\t<password>?</password>\n</configuration>\n\n\n"), //$NON-NLS-1$
-    WORKFLOWTRIGGER("workflowtrigger",//$NON-NLS-1$
-                    "<parameters>\n\t\t<processId>?</processId>\n\t\t<processVersion>?</processVersion>\n\t\t<variable>\n\t\t\t<scope>?</scope>\n\t\t\t<name>?</name>\n\t\t\t<type>?</type>\n\t\t\t<fromItem>?</fromItem>\n\t\t\t<xpath>?</xpath>\n\t\t</variable>\n\t\t<variable>\n\t\t\t<scope>?</scope>\n\t\t\t<activityId>?</activityId>\n\t\t\t<name>?</name>\n\t\t\t<type>?</type>\n\t\t\t<fromItem>?</fromItem>\n\t\t\t<value>?</value>\n\t\t</variable>\n\t</parameters>\n\n"), //$NON-NLS-1$
     XPATH("xpath", "<parameters>\n\t\t<xPath>?</xPath>\n\t\t<contentType>?</contentType>\n</parameters>"), //$NON-NLS-1$//$NON-NLS-2$
     XSLT("xslt",//$NON-NLS-1$
          "<xsl:stylesheet xmlns:xsl='http://www.w3.org/1999/XSL/Transform' xmlns:mdm='java:com.amalto.core.plugin.base.xslt.MdmExtension' version='1.0'>  \n"//$NON-NLS-1$
                  + "    <xsl:output method='xml' indent='yes' omit-xml-declaration='yes'/>  \n"//$NON-NLS-1$
                  + "    <xsl:template match='/' priority='1'> \n\n" + "    </xsl:template> \n" + "</xsl:stylesheet>\n"), //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
 
-    // calltransformer, dumptoconsole, itemdispatcher, jdbc, logging, loggingsmtp, svn,smtp,workflow
+    // calltransformer, dumptoconsole, itemdispatcher, jdbc, logging, loggingsmtp, svn,smtp
 
     // RoutingRole(trigger)
     CALLTRANSFORMER("callprocess", "process=?"), //$NON-NLS-1$//$NON-NLS-2$
@@ -51,9 +49,7 @@ public enum EInputTemplate {
                    "<parameters>\n\t<transformer>\n\t\t<allInOne>?</allInOne>\n\t\t<assignTo>?</assignTo>\n\t</transformer>\n</parameters>"), //$NON-NLS-1$
     JDBC("jdbc",//$NON-NLS-1$
          "<parameters>\n\t<driverClassName>?</driverClassName>\n\t<url>?</url>\n\t<username>?</username>\n\t<password>?</password>\n\t<transformer>?</transformer>\n</parameters>"), //$NON-NLS-1$
-    LOGGING("logging", ""), //$NON-NLS-1$//$NON-NLS-2$
-    WORKFLOW("workflow",//$NON-NLS-1$
-             "<parameters>\n\t\t<processId>?</processId>\n\t\t<processVersion>?</processVersion>\n\t\t<username></username>\n\t\t<password></password>\n\t\t<variable>\n\t\t\t<scope>?</scope>\n\t\t\t<name>?</name>\n\t\t\t<type>?</type>\n\t\t\t<fromItem>?</fromItem>\n\t\t\t<xpath>?</xpath>\n\t\t</variable>\n\t\t<variable>\n\t\t\t<scope>?</scope>\n\t\t\t<activityId>?</activityId>\n\t\t\t<name>?</name>\n\t\t\t<type>?</type>\n\t\t\t<fromItem>?</fromItem>\n\t\t\t<value>?</value>\n\t\t</variable>\n\t</parameters>\n\n"); //$NON-NLS-1$
+    LOGGING("logging", ""); //$NON-NLS-1$
 
     String name;
 

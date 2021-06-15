@@ -356,8 +356,6 @@ public class ImportItemsWizard extends Wizard {
             TreeParent pictures = new TreeParent(EXtentisObjects.PICTURESRESOURCE.getDisplayName(), reserverRoot,
                     TreeObject.PICTURES_RESOURCE, null, null);
             // add by ymli
-            TreeParent workflow = new TreeParent(EXtentisObjects.Workflow.getDisplayName(), reserverRoot, TreeObject.WORKFLOW,
-                    null, null);
             TreeParent views = new TreeParent(EXtentisObjects.View.getDisplayName(), reserverRoot, TreeObject.VIEW, null, null);
             reserverRoot.addChild(clusters);
             reserverRoot.addChild(models);
@@ -369,7 +367,6 @@ public class ImportItemsWizard extends Wizard {
             eventManager.addChild(routingrules);
             reserverRoot.addChild(eventManager);
             reserverRoot.addChild(pictures);
-            reserverRoot.addChild(workflow);
             reserverRoot.addChild(views);
             monitor.worked(readCount);
             // caculate step and interval
@@ -411,9 +408,6 @@ public class ImportItemsWizard extends Wizard {
                     break;
                 case TreeObject.PICTURES_RESOURCE:
                     pictures.addChild(obj);
-                    break;
-                case TreeObject.WORKFLOW_PROCESS:
-                    workflow.addChild(obj);
                     break;
                 case TreeObject.VIEW:
                     views.addChild(obj);

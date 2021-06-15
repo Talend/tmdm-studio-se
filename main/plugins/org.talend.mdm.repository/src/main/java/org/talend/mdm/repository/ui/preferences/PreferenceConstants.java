@@ -22,11 +22,7 @@ public interface PreferenceConstants {
     // switch perspective
     String P_AUTO_SWITCH_TO_DI = "autoSwitchToDI"; //$NON-NLS-1$
 
-    String P_AUTO_SWITCH_TO_BONITA = "autoSwitchToBonita"; //$NON-NLS-1$
-
     String P_NOT_ASK_AUTO_SWITCH_TO_DI = "notAskAutoSwitchToDI"; //$NON-NLS-1$
-
-    String P_NOT_ASK_AUTO_SWITCH_TO_BONITA = "notAskAutoSwitchToBonita"; //$NON-NLS-1$
 
     // Consistency Conflict
     String P_WARN_USER_HAS_CONFLICT = "warnUserWhenHasConflict"; //$NON-NLS-1$

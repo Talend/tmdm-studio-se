@@ -18,7 +18,5 @@ package org.talend.mdm.repository.ui.navigator;
  */
 public interface IPerspectiveConstants {
 
-    public static final String PERSPECTIVE_ID_WORKFLOW = "org.bonitasoft.studio.perspective.process"; //$NON-NLS-1$
-
     public static final String PERSPECTIVE_ID_DI = "org.talend.rcp.perspective"; //$NON-NLS-1$
 }

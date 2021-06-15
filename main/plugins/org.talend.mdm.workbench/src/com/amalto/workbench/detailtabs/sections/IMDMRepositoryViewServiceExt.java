@@ -23,8 +23,6 @@ public interface IMDMRepositoryViewServiceExt {
 
     public List<String> findAllRoleNames();
 
-    public List<String> findAllWorkflowNames();
-
     public List<String> findAllDataModelNames();
 
     public XSDSchema getDataModelXsd(TreeObject pObject, String filter, String dataModelName);

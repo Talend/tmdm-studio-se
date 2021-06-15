@@ -231,8 +231,6 @@ public class TypesLabelProvider extends LabelProvider {
                             return Messages.bind(Messages.XSDTreeLabelProvider_24, e.getChildNodes().item(0).getNodeValue());
                         } else if (source.equals("X_FKIntegrity_Override")) {//$NON-NLS-1$
                             return Messages.bind(Messages.XSDTreeLabelProvider_25, e.getChildNodes().item(0).getNodeValue());
-                        } else if (source.equals("X_Workflow")) {//$NON-NLS-1$
-                            return Messages.bind(Messages.XSDTreeLabelProvider_16, e.getChildNodes().item(0).getNodeValue());
                         }
 
                         if (source.equals("X_ForeignKey_Filter")) {//$NON-NLS-1$

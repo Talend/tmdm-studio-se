@@ -710,10 +710,6 @@ public class Messages extends NLS {
 
     public static String Warning_text;
 
-    public static String WorkflowGetDocument_ServiceDescription;
-
-    public static String WorkflowTriggerXX_PressItem;
-
     public static String WSRootLabelProvider_localRepository;
 
     public static String Deploy_fail_cause_text;
@@ -741,8 +737,6 @@ public class Messages extends NLS {
     public static String EventManager_text;
 
     public static String MDMOpenExistVersionProcessWizard_NewObject;
-
-    public static String MDMOpenExistVersionProcessWizard_NotReadToOpen;
 
     public static String MDMOpenExistVersionProcessPage_ChooseVersion;
 
@@ -783,8 +777,6 @@ public class Messages extends NLS {
     public static String AutoDeployPreferencePage_btnCheckButton_text;
 
     public static String ImportXSDSchema;
-
-    public static String Information;
 
     public static String InputProcessNamePage_description;
 

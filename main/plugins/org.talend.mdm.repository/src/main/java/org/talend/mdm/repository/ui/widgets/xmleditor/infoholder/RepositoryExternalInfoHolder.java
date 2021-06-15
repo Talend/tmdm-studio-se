@@ -20,7 +20,6 @@ import com.amalto.workbench.webservices.WSMDMConfig;
 import com.amalto.workbench.webservices.WSTransformerV2;
 import com.amalto.workbench.widgets.xmleditor.infoholder.ExternalInfoHolder;
 import com.amalto.workbench.widgets.xmleditor.infoholder.ProcessAllCallJobVariableCandidatesHolder;
-import com.amalto.workbench.widgets.xmleditor.util.WorkflowInfo;
 
 /**
  * DOC hbhong class global comment. Detailled comment
@@ -39,10 +38,6 @@ public abstract class RepositoryExternalInfoHolder<T> extends ExternalInfoHolder
 
     public static ExternalInfoHolder<IAllDataModelHolder> getAllDataModelInfoHolderProxy(TreeObject treeNode) {
         return (ExternalInfoHolder<IAllDataModelHolder>) getEnternalInfoHolder("datamodel");
-    }
-
-    public static ExternalInfoHolder<WorkflowInfo[]> getAllWorkflowInfoHolder(TMDMService service) {
-        return (ExternalInfoHolder<WorkflowInfo[]>) getEnternalInfoHolder("workflow");
     }
 
     public static ExternalInfoHolder<String[]> getProcessAllCallJobVarsCandidatesHolder(WSTransformerV2 service) {

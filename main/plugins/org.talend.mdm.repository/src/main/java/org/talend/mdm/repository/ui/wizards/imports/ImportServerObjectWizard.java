@@ -223,11 +223,6 @@ public class ImportServerObjectWizard extends Wizard {
         if (type == TreeObject.PICTURES_RESOURCE) {
             return handlePictureResourceObject(treeObj);
         }
-        if (type == TreeObject.WORKFLOW_PROCESS) {
-            if (exAdapter != null) {
-                return exAdapter.handleWorkflowObject(treeObj);
-            }
-        }
         return null;
     }
 
@@ -332,7 +327,6 @@ public class ImportServerObjectWizard extends Wizard {
         types.add(TreeObject.ROLE);
         types.add(TreeObject.STORED_PROCEDURE);
         types.add(TreeObject.VIEW);
-        types.add(TreeObject.WORKFLOW_PROCESS);
         IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
         for (Object obj : objs) {
             try {
@@ -340,9 +334,6 @@ public class ImportServerObjectWizard extends Wizard {
                 monitor.subTask(treeObj.getDisplayName());
                 String treeObjName = treeObj.getName();
                 MDMServerObject eobj = handleSpecialTreeObject(treeObj);
-                if (treeObj.getType() == TreeObject.WORKFLOW_PROCESS) {
-                    continue;
-                }
                 if (eobj == null) {
                     if (!types.contains(treeObj.getType()) || treeObj.getWsObject() == null
                             || ("JCAAdapers".equals(treeObj.getName()) && treeObj.getType() == TreeObject.DATA_CLUSTER)) { //$NON-NLS-1$
@@ -548,9 +539,6 @@ public class ImportServerObjectWizard extends Wizard {
                 return fileInfo[4];
             }
         }
-        if (type == TreeObject.WORKFLOW_PROCESS && exAdapter != null) {
-            return exAdapter.getWorkflowgTreeObjectVersion(treeObj);
-        }
         return VersionUtils.DEFAULT_VERSION;
     }
 
@@ -571,9 +559,6 @@ public class ImportServerObjectWizard extends Wizard {
                 //return fileInfo[3] + "." + fileInfo[2]; //$NON-NLS-1$
                 return fileInfo[3];
             }
-        }
-        if (type == TreeObject.WORKFLOW_PROCESS && exAdapter != null) {
-            return exAdapter.getWorkflowgTreeObjectName(treeObj);
         }
         return treeObj.getName();
     }

@@ -226,8 +226,7 @@ public class ConsistencyConflictDialog extends Dialog {
         CompareResultEnum result = compareResultMap.get(viewObj);
         if (result == null) {
             ERepositoryObjectType viewType = viewObj.getRepositoryObjectType();
-            if (viewType == IServerObjectRepositoryType.TYPE_RESOURCE || viewType == IServerObjectRepositoryType.TYPE_JOB
-                    || viewType == IServerObjectRepositoryType.TYPE_WORKFLOW) {
+            if (viewType == IServerObjectRepositoryType.TYPE_RESOURCE || viewType == IServerObjectRepositoryType.TYPE_JOB) {
                 result = CompareResultEnum.NOT_SUPPORT;
             } else {
                 WSDigest dt = viewObjMap.get(viewObj);

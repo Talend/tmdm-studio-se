@@ -642,8 +642,7 @@ public class RepositoryViewObjectCheckedWidget extends Composite {
             if (viewType == null) {
                 return null;
             }
-            if (viewType == IServerObjectRepositoryType.TYPE_RESOURCE || viewType == IServerObjectRepositoryType.TYPE_JOB
-                    || viewType == IServerObjectRepositoryType.TYPE_WORKFLOW) {
+            if (viewType == IServerObjectRepositoryType.TYPE_RESOURCE || viewType == IServerObjectRepositoryType.TYPE_JOB) {
 
                 consistencyData.setCompareResult(CompareResultEnum.NOT_SUPPORT);
             } else {

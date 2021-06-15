@@ -277,8 +277,6 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
                             return Messages.bind(Messages.XSDTreeLabelProvider_14, e.getChildNodes().item(0).getNodeValue());
                         } else if (source.equals("X_Lookup_Field")) {//$NON-NLS-1$
                             return Messages.bind(Messages.XSDTreeLabelProvider_15, e.getChildNodes().item(0).getNodeValue());
-                        } else if (source.equals("X_Workflow")) {//$NON-NLS-1$
-                            return Messages.bind(Messages.XSDTreeLabelProvider_16, e.getChildNodes().item(0).getNodeValue());
                         } else if (source.equals("X_Hide")) {//$NON-NLS-1$
                             return Messages.bind(Messages.XSDTreeLabelProvider_17, e.getChildNodes().item(0).getNodeValue());
                             // add by ymli; bugId 0009157
@@ -546,8 +544,6 @@ public class XSDTreeLabelProvider extends LabelProvider implements ITreePathLabe
                             return ImageCache.getCreatedImage(EImage.SECURITYANNOTATION.getPath());
                         } else if (source.equals("X_Schematron")) {//$NON-NLS-1$
                             return ImageCache.getCreatedImage(EImage.ROUTINE.getPath());
-                        } else if (source.equals("X_Workflow")) {//$NON-NLS-1$
-                            return ImageCache.getCreatedImage(EImage.WORKFLOW_PROCESS.getPath());
                         } else if (source.equals("X_AutoExpand")) {//$NON-NLS-1$
                             return ImageCache.getCreatedImage(EImage.DEFAULT.getPath());
                         }

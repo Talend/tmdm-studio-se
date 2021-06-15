@@ -119,8 +119,6 @@ public class MDMRepositoryView extends CommonNavigator implements ITabbedPropert
     /**
      *
      */
-    //    private static final String BONITA_PERSPECTIVE_ID = "org.bonitasoft.studio.perspective.process"; //$NON-NLS-1$
-
     public static final String CONTRIBUTER_ID = "org.talend.mdm.repository.propertycontributer"; //$NON-NLS-1$
 
     private static final String VIEW_CONTEXT_ID = "org.talend.mdm.repository.context"; //$NON-NLS-1$
@@ -582,16 +580,10 @@ public class MDMRepositoryView extends CommonNavigator implements ITabbedPropert
     private IMDMRepositoryViewExAdapter exAdapter;
 
     private void registerEditorListener() {
-        if (exAdapter != null) {
-            exAdapter.registerWFEditorListener();
-        }
         this.getSite().getPage().addPartListener(partListener);
     }
 
     private void unRegisterEditorListener() {
-        if (exAdapter != null) {
-            exAdapter.unregisterWFEditorListener();
-        }
         this.getSite().getPage().removePartListener(partListener);
     }
 

@@ -13,21 +13,12 @@
 package org.talend.mdm.repository.ui.actions;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.resources.IWorkspaceRunnable;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.eclipse.ui.navigator.INavigatorDnDService;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.mdm.repository.core.AbstractRepositoryAction;
-import org.talend.mdm.repository.core.IServerObjectRepositoryType;
 import org.talend.mdm.repository.core.dnd.RepositoryDropAssistant;
 import org.talend.mdm.repository.i18n.Messages;
-import org.talend.repository.token.RepositoryActionLogger;
 
 import com.amalto.workbench.image.EImage;
 import com.amalto.workbench.image.ImageCache;
@@ -50,33 +41,6 @@ public class DuplicateAction extends AbstractRepositoryAction {
 
     public String getGroupName() {
         return GROUP_COMMON;
-    }
-
-    @Override
-    public void run() {
-        IRepositoryViewObject viewObj = getSelectedViewObj();
-        if (IServerObjectRepositoryType.TYPE_WORKFLOW == viewObj.getRepositoryObjectType()) {
-            RepositoryActionLogger.logAction(getClass().getName());
-        	
-            final IWorkspaceRunnable op = new IWorkspaceRunnable() {
-
-                @Override
-                public void run(IProgressMonitor monitor) {
-                    DuplicateAction.super.run();
-                }
-            };
-
-            IWorkspace workspace = ResourcesPlugin.getWorkspace();
-            try {
-                ISchedulingRule scheduleRule = workspace.getRuleFactory().createRule(workspace.getRoot());
-                workspace.run(op, scheduleRule, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
-            } catch (CoreException e) {
-                log.error(e.getMessage(), e);
-            }
-
-        } else {
-            super.run();
-        }
     }
 
     protected void doRun() {

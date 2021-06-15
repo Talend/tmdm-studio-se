@@ -30,8 +30,6 @@ public interface IServerObjectOrdinal {
 
     public static final int STORE_PROCEDURE = 13;
 
-    public static final int WORKFLOW_PROCESS = 16;
-
     public static final int TRANSFORMERV2 = 17;
 
     public static final int ROUTINGRULE = 18;

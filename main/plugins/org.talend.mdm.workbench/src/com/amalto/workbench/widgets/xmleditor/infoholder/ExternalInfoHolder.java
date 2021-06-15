@@ -28,7 +28,6 @@ import com.amalto.workbench.utils.JobInfo;
 import com.amalto.workbench.webservices.TMDMService;
 import com.amalto.workbench.webservices.WSMDMConfig;
 import com.amalto.workbench.webservices.WSTransformerV2;
-import com.amalto.workbench.widgets.xmleditor.util.WorkflowInfo;
 
 public abstract class ExternalInfoHolder<T> {
 
@@ -37,8 +36,6 @@ public abstract class ExternalInfoHolder<T> {
     public static final String INFOID_ALLJOBINFOS = "all job infos";//$NON-NLS-1$
 
     public static final String INFOID_MDMSERVERINFO = "mdm server info";//$NON-NLS-1$
-
-    public static final String INFOID_ALLWORKFLOWINFOS = "all work flow infos";//$NON-NLS-1$
 
     public static final String INFOID_ALLDATAMODELHOLDER = "all data model holder";//$NON-NLS-1$
 
@@ -96,10 +93,6 @@ public abstract class ExternalInfoHolder<T> {
 
     public static ExternalInfoHolder<IAllDataModelHolder> getAllDataModelInfoHolderProxy(TreeObject treeNode) {
         return new AllDataModelInfoHolderProxy(treeNode);
-    }
-
-    public static ExternalInfoHolder<WorkflowInfo[]> getAllWorkflowInfoHolder(TMDMService service) {
-        return null;
     }
 
     public static ExternalInfoHolder<String[]> getProcessAllCallJobVarsCandidatesHolder(WSTransformerV2 service) {

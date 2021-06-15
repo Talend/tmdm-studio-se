@@ -74,23 +74,6 @@ public class RepositoryQueryService {
         return findAllServerObjectNames(IServerObjectRepositoryType.TYPE_ROUTINGRULE);
     }
 
-    public static List<String> findAllWorkflowNames() {
-        List<IRepositoryViewObject> viewObjects = RepositoryResourceUtil
-                .findAllViewObjects(IServerObjectRepositoryType.TYPE_WORKFLOW);
-        List<String> names = new LinkedList<String>();
-        if (viewObjects != null) {
-            for (IRepositoryViewObject viewObj : viewObjects) {
-                Item item = viewObj.getProperty().getItem();
-                if (item instanceof MDMServerObjectItem) {
-                    MDMServerObjectItem serverItem = (MDMServerObjectItem) item;
-                    names.add(serverItem.getMDMServerObject().getName() + "_" + item.getProperty().getVersion()); //$NON-NLS-1$
-                }
-                // names[i]=viewObj.getLabel();
-            }
-        }
-        return names;
-    }
-
     public static List<String> findAllStoredProcedureNames() {
         return findAllServerObjectNames(IServerObjectRepositoryType.TYPE_STOREPROCEDURE);
     }
@@ -244,7 +227,6 @@ public class RepositoryQueryService {
             typeMap.put(TreeObject.STORED_PROCEDURE, IServerObjectRepositoryType.TYPE_STOREPROCEDURE);
             typeMap.put(TreeObject.VIEW, IServerObjectRepositoryType.TYPE_VIEW);
             typeMap.put(TreeObject.PICTURES_RESOURCE, IServerObjectRepositoryType.TYPE_RESOURCE);
-            typeMap.put(TreeObject.WORKFLOW_PROCESS, IServerObjectRepositoryType.TYPE_WORKFLOW);
         }
     }
 

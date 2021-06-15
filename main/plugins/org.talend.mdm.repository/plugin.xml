@@ -651,10 +651,6 @@
             serviceId="ITransformService">
       </Service>
       <Service
-            class="org.talend.mdm.repository.core.service.UpdateLastServerService"
-            serviceId="IUpdateLastServerService">
-      </Service>
-      <Service
             class="org.talend.mdm.repository.core.service.ValidateService"
             serviceId="IValidateService">
       </Service>

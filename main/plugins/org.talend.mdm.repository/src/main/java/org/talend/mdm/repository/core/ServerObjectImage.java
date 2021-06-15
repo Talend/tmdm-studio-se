@@ -25,7 +25,6 @@ public enum ServerObjectImage implements IImage {
     DATAMODEL_ICON("/icons/datamodel.png"), //$NON-NLS-1$
     DATACLUSTER_ICON("/icons/datacluster.png"), //$NON-NLS-1$
     STOREPROCEDURE_ICON("/icons/stored_procedure.png"), //$NON-NLS-1$
-    WORKFLOW_ICON("/icons/workflow_process.png"), //$NON-NLS-1$
     TRANSFORMERV2_ICON("/icons/transformer.png"), //$NON-NLS-1$
     ROUTINGRULE_ICON("/icons/routing_rule.png"), //$NON-NLS-1$
     JOBMODEL_ICON("/icons/joblet_icon.png"), //$NON-NLS-1$

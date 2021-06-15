@@ -55,7 +55,6 @@ public class MarkNodeAsNewAction implements IAfterImportProjectAction {
         types.add(IServerObjectRepositoryType.TYPE_STOREPROCEDURE);
         types.add(IServerObjectRepositoryType.TYPE_TRANSFORMERV2);
         types.add(IServerObjectRepositoryType.TYPE_VIEW);
-        types.add(IServerObjectRepositoryType.TYPE_WORKFLOW);
         types.add(ERepositoryObjectType.PROCESS);
         IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
         for (ERepositoryObjectType type : types) {

@@ -1235,8 +1235,6 @@ public class DataModelMainPage extends EditorPart implements IGotoMarker {
                     return 109;
                 } else if (source.startsWith(IAnnotationConst.KEY_PREFIX_FACET)) {
                     return 110;
-                } else if (source.startsWith(IAnnotationConst.KEY_WORKFLOW)) {
-                    return 111;
                 } else if (source.startsWith(IAnnotationConst.KEY_FOREIGN_KEY_FILTER)) {
                     return 112;
                 } else if (source.startsWith(IAnnotationConst.KEY_PREFIX_DISPLAY_FORMAT)) {

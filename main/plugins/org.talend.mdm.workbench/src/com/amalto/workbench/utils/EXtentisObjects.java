@@ -39,7 +39,6 @@ public enum EXtentisObjects {
     Menu("Menu", "Menu", TreeObject.MENU, true), //$NON-NLS-1$//$NON-NLS-2$
     SubscriptionEngine("Event Manager", "Subscription Engine", TreeObject.SUBSCRIPTION_ENGINE), //$NON-NLS-1$//$NON-NLS-2$
     ServiceConfiguration("Service Configuration", "Service Configuration", TreeObject.SERVICE_CONFIGURATION), //$NON-NLS-1$//$NON-NLS-2$
-    Workflow("Workflow", "Workflow Processes", TreeObject.WORKFLOW), //$NON-NLS-1$//$NON-NLS-2$
     JobRegistry("Job Repository", "Job Repository", TreeObject.JOB_REGISTRY), //$NON-NLS-1$//$NON-NLS-2$
     Resources("Resources", "Resources", TreeObject.RESOURCES), //$NON-NLS-1$//$NON-NLS-2$
     EventManagement("Event Management", "Event Management", TreeObject.EVENT_MANAGEMENT), //$NON-NLS-1$//$NON-NLS-2$

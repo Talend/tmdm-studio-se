@@ -230,9 +230,7 @@ public abstract class AbstractNodeCheckTreeViewer {
         }
         // remove the filter for resource to provide the function to import and export resources.
         if (node.getType() == TreeObject.SUBSCRIPTION_ENGINE || node.getType() == TreeObject.SERVICE_CONFIGURATION
-                || !Util.IsEnterPrise() && node.getType() == TreeObject.WORKFLOW || !Util.IsEnterPrise()
-                && node.getType() == TreeObject.WORKFLOW_PROCESS || node.getType() == TreeObject.JOB
-                || node.getType() == TreeObject.JOB_REGISTRY) {
+                || node.getType() == TreeObject.JOB || node.getType() == TreeObject.JOB_REGISTRY) {
             return false;
         }
         if (!Util.IsEnterPrise()) {
@@ -274,9 +272,6 @@ public abstract class AbstractNodeCheckTreeViewer {
             if (item instanceof MDMServerObjectItem) {
                 MDMServerObject serverObj = ((MDMServerObjectItem) item).getMDMServerObject();
                 String name = serverObj.getName();
-                if (type == TreeObject.WORKFLOW_PROCESS) {
-                    name = name + "_" + viewObject.getVersion(); //$NON-NLS-1$
-                }
 
                 if (type == TreeObject.PICTURES_RESOURCE) {
                     name = name + "_" + viewObject.getVersion() + "." + ((WSResourceE) serverObj).getFileExtension(); //$NON-NLS-1$ //$NON-NLS-2$

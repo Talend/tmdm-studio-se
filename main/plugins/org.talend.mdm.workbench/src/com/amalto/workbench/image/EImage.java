@@ -285,8 +285,6 @@ public enum EImage {
     JOB("icons/process_icon.gif"), //$NON-NLS-1$
     SERVICE_CONFIGURATION("icons/service_config.png"), //$NON-NLS-1$
     SERVICE_CONFIGURATION_WHITE("icons/service_config_white.png"), //$NON-NLS-1$
-    WORKFLOW_PROCESS("icons/workflow_process.png"), //$NON-NLS-1$
-    WORKFLOW_PROCESS_WHITE("icons/workflow_process_white.png"), //$NON-NLS-1$
     RENAME("icons/rename.png"), //$NON-NLS-1$
     RESOURCES("icons/resources.png"), //$NON-NLS-1$
     RESOURCES_WHITE("icons/resources_white.png"), //$NON-NLS-1$
@@ -305,7 +303,6 @@ public enum EImage {
     REPORTING("icons/reporting.png"), //$NON-NLS-1$
     TRASH("icons/trash.png"), //$NON-NLS-1$
     UPDATEREPORT("icons/updatereport.png"), //$NON-NLS-1$
-    WORKFLOWTASKS("icons/workflowtasks.png"), //$NON-NLS-1$
     SORT_ASC("icons/hmenu-asc.gif"), //$NON-NLS-1$
     SORT_DESC("icons/hmenu-desc.gif"), //$NON-NLS-1$
     INTENT("icons/indent.png");//$NON-NLS-1$

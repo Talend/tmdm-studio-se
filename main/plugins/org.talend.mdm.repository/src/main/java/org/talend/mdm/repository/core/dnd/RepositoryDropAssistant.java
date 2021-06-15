@@ -62,20 +62,12 @@ import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 import org.talend.mdm.repository.utils.ValidateUtil;
 import org.talend.repository.model.IProxyRepositoryFactory;
 
-import com.amalto.workbench.exadapter.ExAdapterManager;
-
 /**
  * DOC hbhong class global comment. Detailled comment
  */
 public class RepositoryDropAssistant extends CommonDropAdapterAssistant {
 
     private static Logger log = Logger.getLogger(RepositoryDropAssistant.class);
-
-    private IRepositoryDropAssistantExAdapter exAdapter;
-
-    public RepositoryDropAssistant() {
-        this.exAdapter = ExAdapterManager.getAdapter(this, IRepositoryDropAssistantExAdapter.class);
-    }
 
     @Override
     public IStatus validateDrop(Object target, int operation, TransferData transferType) {
@@ -313,42 +305,36 @@ public class RepositoryDropAssistant extends CommonDropAdapterAssistant {
                 pathStr = rebuildPath(dragViewObj, name, newName, pathStr);
                 IPath path = new Path(pathStr);
                 ERepositoryObjectType type = dropViewObj.getRepositoryObjectType();
-                if (type == IServerObjectRepositoryType.TYPE_WORKFLOW) {
-                    if (exAdapter != null) {
-                        return exAdapter.copyWorkflowViewObj(item, name, newName);
-                    }
-                } else {
-                    IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
-                    Item copy = null;
-                    try {
-                        copy = factory.copy(item, path, true);
-                        if (factory.isEditableAndLockIfPossible(copy)) {
-                            if (copy instanceof MDMServerObjectItem) {
-                                ((MDMServerObjectItem) copy).getMDMServerObject().setName(newName);
-                                ((MDMServerObjectItem) copy).getMDMServerObject().setLastServerDef(null);
-                                CommandManager.getInstance().pushCommand(ICommand.CMD_ADD, copy.getProperty().getId(), newName);
-                            }
-                            copy.getProperty().setLabel(newName);
-                            copy.getProperty().setDisplayName(newName);
-                            RepositoryResourceUtil.setLastServerDef(copy, null);
-                            factory.save(copy);
-
-                            MDMRepositoryView.show().refreshRootNode(type);
-                            return true;
+                IProxyRepositoryFactory factory = CoreRuntimePlugin.getInstance().getProxyRepositoryFactory();
+                Item copy = null;
+                try {
+                    copy = factory.copy(item, path, true);
+                    if (factory.isEditableAndLockIfPossible(copy)) {
+                        if (copy instanceof MDMServerObjectItem) {
+                            ((MDMServerObjectItem) copy).getMDMServerObject().setName(newName);
+                            ((MDMServerObjectItem) copy).getMDMServerObject().setLastServerDef(null);
+                            CommandManager.getInstance().pushCommand(ICommand.CMD_ADD, copy.getProperty().getId(), newName);
                         }
+                        copy.getProperty().setLabel(newName);
+                        copy.getProperty().setDisplayName(newName);
+                        RepositoryResourceUtil.setLastServerDef(copy, null);
+                        factory.save(copy);
+                        
+                        MDMRepositoryView.show().refreshRootNode(type);
+                        return true;
+                    }
+                } catch (PersistenceException e) {
+                    log.error(e.getMessage(), e);
+                } catch (BusinessException e) {
+                    log.error(e.getMessage(), e);
+                } finally {
+                    
+                    try {
+                        factory.unlock(copy);
                     } catch (PersistenceException e) {
                         log.error(e.getMessage(), e);
-                    } catch (BusinessException e) {
+                    } catch (LoginException e) {
                         log.error(e.getMessage(), e);
-                    } finally {
-
-                        try {
-                            factory.unlock(copy);
-                        } catch (PersistenceException e) {
-                            log.error(e.getMessage(), e);
-                        } catch (LoginException e) {
-                            log.error(e.getMessage(), e);
-                        }
                     }
                 }
             }

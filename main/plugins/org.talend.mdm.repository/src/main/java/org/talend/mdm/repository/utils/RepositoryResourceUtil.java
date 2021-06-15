@@ -110,7 +110,6 @@ import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 
-import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.utils.Util;
 import com.amalto.workbench.utils.XtentisException;
 import com.amalto.workbench.webservices.WSConceptKey;
@@ -133,12 +132,7 @@ public class RepositoryResourceUtil {
 
     private static final Logger LOG = Logger.getLogger(RepositoryResourceUtil.class);
 
-    private static IRepositoryResourceUtilExAdapter exAdapter;
-
     private static final String DIVIDE = "/"; //$NON-NLS-1$
-    static {
-        exAdapter = ExAdapterManager.getAdapter(new RepositoryResourceUtil(), IRepositoryResourceUtilExAdapter.class);
-    }
 
     public static boolean checkServerConnection(Shell shell, final MDMServerDef serverDef) {
         try {
@@ -395,10 +389,6 @@ public class RepositoryResourceUtil {
 
         String fileName = ResourceFilenameHelper.getExpectedFileName(property.getLabel(), property.getVersion()) + DOT
                 + (fileExtension != null ? fileExtension : ""); //$NON-NLS-1$
-        if (type == IServerObjectRepositoryType.TYPE_WORKFLOW && exAdapter != null && fileExtension != null
-                && fileExtension.equals("conf")) { //$NON-NLS-1$
-            fileName = exAdapter.getWorkflowConfigFilename(item);
-        }
         IFile file = fileName != null ? folder.getFile(fileName) : null;
         return file;
     }
@@ -630,7 +620,7 @@ public class RepositoryResourceUtil {
             allVersionObjs = factory.getAllVersion(viewObj.getProperty().getId(),
                     viewObj.getProperty().getItem().getState().getPath(), viewObj.getRepositoryObjectType());
         } catch (Exception e) {
-            LOG.error("Error occurred while retrieving all version of workflow " + viewObj.getLabel(), e);
+            LOG.error("Error occurred while retrieving all version of view object " + viewObj.getLabel(), e);
         }
 
         return allVersionObjs;
@@ -861,11 +851,6 @@ public class RepositoryResourceUtil {
                 if (property != null) {
                     String fileName = ResourceFilenameHelper.getExpectedFileName(property.getLabel(), property.getVersion())
                             + DOT + ext;
-                    // patch for Bontia 6.X, the proc is using "-" as separator
-                    if (IServerObjectRepositoryType.TYPE_WORKFLOW == type) {
-                        int index = fileName.length() - (property.getVersion().length() + ext.length() + 2);
-                        fileName = fileName.substring(0, index) + "-" + fileName.substring(index + 1); //$NON-NLS-1$
-                    }
                     if (fileName != null && fileName.equals(name)) {
                         return viewObj;
                     }
@@ -890,11 +875,6 @@ public class RepositoryResourceUtil {
                         if (property != null) {
                             String fileName = ResourceFilenameHelper.getExpectedFileName(property.getLabel(),
                                     property.getVersion()) + DOT + ext;
-                            // patch for Bontia 6.X, the proc is using "-" as separator
-                            if (IServerObjectRepositoryType.TYPE_WORKFLOW == type) {
-                                int index = fileName.length() - (property.getVersion().length() + ext.length() + 2);
-                                fileName = fileName.substring(0, index) + "-" + fileName.substring(index + 1); //$NON-NLS-1$
-                            }
                             if (fileName != null && fileName.equals(name)) {
                                 return vobj;
                             }
@@ -1299,13 +1279,6 @@ public class RepositoryResourceUtil {
                         }
                     }
 
-                    if (exAdapter != null) {
-                        IEditorReference wfEditor = exAdapter.getOpenedWFEditor(viewObj, ref);
-                        if (wfEditor != null) {
-                            return wfEditor;
-                        }
-                    }
-
                     if (editorInput instanceof ProcessEditorInput) {
                         ProcessEditorInput processEditorInput = (ProcessEditorInput) editorInput;
                         Property property = processEditorInput.getItem().getProperty();
@@ -1595,9 +1568,6 @@ public class RepositoryResourceUtil {
                     if (type == IServerObjectRepositoryType.TYPE_DATAMODEL) {
                         IFile xsdFile = findReferenceFile(type, item, "xsd"); //$NON-NLS-1$
                         return new Object[] { xsdFile, itemFile };
-                    } else if(type == IServerObjectRepositoryType.TYPE_WORKFLOW) {
-                        IFile configFile = findReferenceFile(type, item, "conf"); //$NON-NLS-1$
-                        return new Object[]{configFile};
                     } else {
                         return new Object[] { itemFile };
                     }
@@ -1610,12 +1580,4 @@ public class RepositoryResourceUtil {
         return null;
     }
 
-    private static IFolder getFolder(FolderRepositoryObject viewObj) {
-        ERepositoryObjectType type = viewObj.getRepositoryObjectType();
-        IFolder folder = getFolder(type);
-        Item item = viewObj.getProperty().getItem();
-        String path = item.getState().getPath();
-
-        return folder.getFolder(path);
-    }
 }

@@ -1582,14 +1582,8 @@ public class TransformerMainPage extends AMainPageV2 {
                     .getMDMService(getXObject()));
             ExternalInfoHolder<?> allVarCandidatesHolder = ExternalInfoHolder
                     .getProcessAllCallJobVarsCandidatesHolder((WSTransformerV2) getXObject().getWsObject());
-            ExternalInfoHolder<?> workflowInfoHolder = ExternalInfoHolder.getAllWorkflowInfoHolder(Util
-                    .getMDMService(getXObject()));
-            ExternalInfoHolder<?> allDataModelHolderProxy = ExternalInfoHolder.getAllDataModelInfoHolderProxy(getXObject());
-
             initExternalInfoHolderForEachType("callJob", new ExternalInfoHolder<?>[] { allJobInfosHolder, mdmServerInfoHolder, //$NON-NLS-1$
                     allVarCandidatesHolder });
-            initExternalInfoHolderForEachType("workflowtrigger", new ExternalInfoHolder<?>[] { workflowInfoHolder, //$NON-NLS-1$
-                    allDataModelHolderProxy });
         } catch (XtentisException e) {
             log.error(e.getMessage(), e);
         }

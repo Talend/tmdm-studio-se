@@ -327,8 +327,6 @@ public class SchemaItemLabelCreator {
                         return "Writable By : " + element.getChildNodes().item(0).getNodeValue();//$NON-NLS-1$
                     } else if (source.equals("X_Lookup_Field")) {//$NON-NLS-1$
                         return "Look Field : " + element.getChildNodes().item(0).getNodeValue();//$NON-NLS-1$
-                    } else if (source.equals("X_Workflow")) {//$NON-NLS-1$
-                        return "Workflow access : " + element.getChildNodes().item(0).getNodeValue();//$NON-NLS-1$
                     } else if (source.equals("X_Hide")) {//$NON-NLS-1$
                         return "No Access to : " + element.getChildNodes().item(0).getNodeValue();//$NON-NLS-1$
 

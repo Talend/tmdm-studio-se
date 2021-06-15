@@ -41,8 +41,6 @@ public interface IServerObjectRepositoryType {
 
     public ERepositoryObjectType TYPE_VIEW = ERepositoryObjectType.valueOf(ERepositoryObjectType.class, "MDM.View"); //$NON-NLS-1$
 
-    public ERepositoryObjectType TYPE_WORKFLOW = ERepositoryObjectType.valueOf(ERepositoryObjectType.class, "MDM.Workflow"); //$NON-NLS-1$
-
     public ERepositoryObjectType TYPE_TRANSFORMERV2 = ERepositoryObjectType.valueOf(ERepositoryObjectType.class,
             "MDM.TransformerV2"); //$NON-NLS-1$
 
@@ -71,5 +69,5 @@ public interface IServerObjectRepositoryType {
 
     public ERepositoryObjectType[] ALL_TYPES = new ERepositoryObjectType[] { TYPE_CUSTOM_FORM, TYPE_DATACLUSTER, TYPE_DATAMODEL,
             TYPE_EVENTMANAGER, TYPE_JOB, TYPE_MENU, TYPE_MATCH_RULE, TYPE_RESOURCE, TYPE_ROLE, TYPE_ROUTINGRULE,
-            TYPE_SERVICECONFIGURATION, TYPE_STOREPROCEDURE, TYPE_TRANSFORMERV2, TYPE_VIEW, TYPE_WORKFLOW };
+            TYPE_SERVICECONFIGURATION, TYPE_STOREPROCEDURE, TYPE_TRANSFORMERV2, TYPE_VIEW };
 }

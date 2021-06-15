@@ -252,9 +252,6 @@ public class SchemaItemImageCreator {
                     if (source.equals("X_Schematron"))//$NON-NLS-1$
                         return ImageCache.getCreatedImage(EImage.ROUTINE.getPath());
 
-                    if (source.equals("X_Workflow"))//$NON-NLS-1$
-                        return ImageCache.getCreatedImage(EImage.WORKFLOW_PROCESS.getPath());
-
                     if (source.equals("X_ForeignKey_Filter"))//$NON-NLS-1$
                         return ImageCache.getCreatedImage(EImage.FILTER_PS.getPath());
 

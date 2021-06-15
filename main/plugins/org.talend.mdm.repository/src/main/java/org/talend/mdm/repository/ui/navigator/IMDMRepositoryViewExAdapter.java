@@ -24,10 +24,6 @@ import com.amalto.workbench.exadapter.IExAdapter;
  */
 public interface IMDMRepositoryViewExAdapter extends IExAdapter<MDMRepositoryView> {
 
-    void registerWFEditorListener();
-
-    void unregisterWFEditorListener();
-
     Item getItem(IWorkbenchPart part);
 
     void createBranchPartControl(Composite parent);

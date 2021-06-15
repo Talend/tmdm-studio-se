@@ -49,7 +49,6 @@ import org.talend.mdm.repository.ui.widgets.AbstractNodeCheckTreeViewer;
 import org.talend.mdm.repository.utils.EclipseResourceManager;
 import org.talend.mdm.repository.utils.RepositoryResourceUtil;
 
-import com.amalto.workbench.exadapter.ExAdapterManager;
 import com.amalto.workbench.models.TreeObject;
 import com.amalto.workbench.models.TreeParent;
 import com.amalto.workbench.providers.ServerTreeContentProvider;
@@ -93,8 +92,6 @@ public class TreeObjectCheckTreeViewer extends AbstractNodeCheckTreeViewer {
 
     private Map<TreeObject, ConsistencyData> consistencyMap;
 
-    private ITreeObjectCheckTreeViewerExAdapter exAdapter;
-
     /**
      * DOC hbhong TreeObjectCheckTreeViewer constructor comment.
      *
@@ -104,7 +101,6 @@ public class TreeObjectCheckTreeViewer extends AbstractNodeCheckTreeViewer {
      */
     public TreeObjectCheckTreeViewer(TreeParent serverRoot) {
         super(serverRoot);
-        exAdapter = ExAdapterManager.getAdapter(this, ITreeObjectCheckTreeViewerExAdapter.class);
     }
 
     public void initInput(MDMServerDef serverDef) {
@@ -211,13 +207,6 @@ public class TreeObjectCheckTreeViewer extends AbstractNodeCheckTreeViewer {
 
     private String getTreeObjectName(TreeObject treeObject) {
         if (treeObject != null) {
-            int type = treeObject.getType();
-            if (type == TreeObject.WORKFLOW_PROCESS) {
-                if (exAdapter != null) {
-                    return exAdapter.getWorkflowgTreeObjectName(treeObject);
-                }
-
-            }
             return treeObject.getDisplayName();
         }
         return null;
@@ -241,8 +230,7 @@ public class TreeObjectCheckTreeViewer extends AbstractNodeCheckTreeViewer {
                 if (viewType == null) {
                     continue;
                 }
-                if (viewType == IServerObjectRepositoryType.TYPE_RESOURCE || viewType == IServerObjectRepositoryType.TYPE_JOB
-                        || viewType == IServerObjectRepositoryType.TYPE_WORKFLOW) {
+                if (viewType == IServerObjectRepositoryType.TYPE_RESOURCE || viewType == IServerObjectRepositoryType.TYPE_JOB) {
 
                     consistencyData.setCompareResult(CompareResultEnum.NOT_SUPPORT);
                 } else {
