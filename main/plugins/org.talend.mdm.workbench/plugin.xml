@@ -500,13 +500,6 @@
       </libraryNeeded>
    </extension>
   <extension
-        point="org.talend.core.repository.login.task">
-     <loginTask
-           class="com.amalto.workbench.task.CheckMissingJarLoginTask"
-           priority="normal">
-     </loginTask>
-  </extension>
-  <extension
         point="org.talend.core.ui.showPerspectiveAtStartup">
      <perspective
            appearsAfter="org.talend.dataprofiler.DataProfilingPerspective | org.talend.rcp.perspective"
