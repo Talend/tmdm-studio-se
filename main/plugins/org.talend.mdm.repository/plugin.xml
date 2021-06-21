@@ -764,14 +764,4 @@
             name="Job">
       </listener>
    </extension>
-    <extension
-         point="org.talend.core.runtime.librariesNeeded">
-      <libraryNeeded
-            context="plugin:org.talend.mdm.repository"
-            language="java"
-            message="Required for using this component."
-            name="xstream-1.4.17.jar" mvn_uri="mvn:org.talend.libraries/xstream-1.4.17/6.0.0" 
-            required="true">
-      </libraryNeeded>
-    </extension>
 </plugin>

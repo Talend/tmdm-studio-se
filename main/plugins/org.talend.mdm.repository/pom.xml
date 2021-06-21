@@ -9,4 +9,33 @@
   </parent>
   <artifactId>org.talend.mdm.repository</artifactId>
   <packaging>eclipse-plugin</packaging>
+  
+  <build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.0.2</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}/lib</outputDirectory>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.thoughtworks.xstream</groupId>
+								    <artifactId>xstream</artifactId>
+								    <version>1.4.17</version>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
