@@ -103,8 +103,5 @@ Export-Package: org.talend.mdm.repository.core,
  org.talend.mdm.repository.ui.wizards.process,
  org.talend.mdm.repository.utils
 Import-Package: com.amalto.workbench.webservices,
- com.thoughtworks.xstream,
- com.thoughtworks.xstream.io,
- com.thoughtworks.xstream.io.xml,
  org.talend.mdm.webservice
 Eclipse-BundleShape: dir
