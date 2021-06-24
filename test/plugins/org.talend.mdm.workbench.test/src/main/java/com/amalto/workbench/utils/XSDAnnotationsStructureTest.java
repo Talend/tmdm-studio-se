@@ -12,7 +12,7 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -375,32 +375,6 @@ public class XSDAnnotationsStructureTest {
         strct.addSchematron("schematron");
         assertTrue(strct.getSchematrons().containsValue("schematron"));
     }
-
-
-    /**
-     * Test method for {@link com.amalto.workbench.utils.XSDAnnotationsStructure#setWorkflows(java.util.Collection)}.
-     */
-    @Test
-    public void testSetWorkflows() {
-        List<String> list = new ArrayList<String>();
-        list.add("workflow");
-        strct.setWorkflows(list);
-        assertTrue(strct.getWorkflows().containsValue("workflow"));
-    }
-
-
-
-    /**
-     * Test method for {@link com.amalto.workbench.utils.XSDAnnotationsStructure#getWorkflows()}.
-     */
-    @Test
-    public void testGetWorkflows() {
-        List<String> list = new ArrayList<String>();
-        list.add("workflow");
-        strct.setWorkflows(list);
-        assertTrue(strct.getWorkflows().containsValue("workflow"));
-    }
-
 
     /**
      * Test method for {@link com.amalto.workbench.utils.XSDAnnotationsStructure#getFactMessage()}.

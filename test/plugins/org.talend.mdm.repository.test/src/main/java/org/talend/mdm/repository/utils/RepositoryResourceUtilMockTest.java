@@ -96,11 +96,6 @@ public class RepositoryResourceUtilMockTest {
         PowerMockito.mockStatic(DefaultMessagesImpl.class);
         when(DefaultMessagesImpl.getString(anyString())).thenReturn("anyString()"); //$NON-NLS-1$
 
-        IRepositoryResourceUtilExAdapter mockAdapter = PowerMockito.mock(IRepositoryResourceUtilExAdapter.class);
-        PowerMockito.mockStatic(ExAdapterManager.class);
-        PowerMockito.when(ExAdapterManager.getAdapter(new RepositoryResourceUtil(), IRepositoryResourceUtilExAdapter.class))
-                .thenReturn(mockAdapter);
-
         PowerMockito.mockStatic(CoreRuntimePlugin.class);
         CoreRuntimePlugin coreRuntimePlugin = mock(CoreRuntimePlugin.class);
         when(CoreRuntimePlugin.getInstance()).thenReturn(coreRuntimePlugin);
