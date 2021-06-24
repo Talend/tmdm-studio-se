@@ -12,6 +12,8 @@ import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.domain.DomainPackage;
 import org.talend.dataquality.expressions.ExpressionsPackage;
@@ -19,6 +21,10 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.properties.PropertiesPackage;
 import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.rules.RulesPackage;
+import org.talend.designer.business.model.business.BusinessPackage;
+import org.talend.designer.core.model.utils.emf.component.ComponentPackage;
+import org.talend.designer.core.model.utils.emf.talendfile.TalendFilePackage;
+import org.talend.designer.joblet.model.JobletPackage;
 import org.talend.mdm.repository.model.mdmmetadata.MdmmetadataPackage;
 import org.talend.mdm.repository.model.mdmserverobject.MDMServerObject;
 import org.talend.mdm.repository.model.mdmserverobject.MdmserverobjectFactory;
@@ -53,10 +59,39 @@ import org.talend.mdm.repository.model.mdmserverobject.WSTypedContentE;
 import org.talend.mdm.repository.model.mdmserverobject.WSViewE;
 import org.talend.mdm.repository.model.mdmserverobject.WSWhereConditionE;
 import org.talend.mdm.repository.model.mdmserverobject.WSWhereOperatorE;
-import org.talend.mdm.repository.model.mdmserverobject.WSWorkflowDeployE;
-import org.talend.mdm.repository.model.mdmserverobject.WSWorkflowE;
 import org.talend.mdm.repository.model.mdmserverobject.matchrule.MatchRulePackage;
 import org.talend.mdm.repository.model.mdmserverobject.matchrule.impl.MatchRulePackageImpl;
+
+import orgomg.cwm.analysis.businessnomenclature.BusinessnomenclaturePackage;
+import orgomg.cwm.analysis.datamining.DataminingPackage;
+import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
+import orgomg.cwm.analysis.olap.OlapPackage;
+import orgomg.cwm.analysis.transformation.TransformationPackage;
+import orgomg.cwm.foundation.businessinformation.BusinessinformationPackage;
+import orgomg.cwm.foundation.datatypes.DatatypesPackage;
+import orgomg.cwm.foundation.keysindexes.KeysindexesPackage;
+import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
+import orgomg.cwm.foundation.typemapping.TypemappingPackage;
+import orgomg.cwm.management.warehouseoperation.WarehouseoperationPackage;
+import orgomg.cwm.management.warehouseprocess.WarehouseprocessPackage;
+import orgomg.cwm.objectmodel.behavioral.BehavioralPackage;
+import orgomg.cwm.objectmodel.core.CorePackage;
+import orgomg.cwm.objectmodel.instance.InstancePackage;
+import orgomg.cwm.objectmodel.relationships.RelationshipsPackage;
+import orgomg.cwm.resource.multidimensional.MultidimensionalPackage;
+import orgomg.cwm.resource.record.RecordPackage;
+import orgomg.cwm.resource.relational.RelationalPackage;
+import orgomg.cwm.resource.xml.XmlPackage;
+import orgomg.cwmmip.CwmmipPackage;
+import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
+import orgomg.cwmx.analysis.informationset.InformationsetPackage;
+import orgomg.cwmx.foundation.er.ErPackage;
+import orgomg.cwmx.resource.coboldata.CoboldataPackage;
+import orgomg.cwmx.resource.dmsii.DmsiiPackage;
+import orgomg.cwmx.resource.essbase.EssbasePackage;
+import orgomg.cwmx.resource.express.ExpressPackage;
+import orgomg.cwmx.resource.imsdatabase.ImsdatabasePackage;
+import orgomg.mof.model.ModelPackage;
 
 /**
  * <!-- begin-user-doc -->
@@ -175,13 +210,6 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
      * <!-- end-user-doc -->
      * @generated
      */
-    private EClass wsWorkflowDeployEEClass = null;
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
     private EClass wsTransformerV2EEClass = null;
 
     /**
@@ -266,13 +294,6 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
      * <!-- end-user-doc -->
      * @generated
      */
-    private EClass wsWorkflowEEClass = null;
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
     private EClass wsResourceEEClass = null;
 
     /**
@@ -345,6 +366,39 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
         isInited = true;
 
         // Initialize simple dependencies
+        BusinessPackage.eINSTANCE.eClass();
+        ComponentPackage.eINSTANCE.eClass();
+        CorePackage.eINSTANCE.eClass();
+        BehavioralPackage.eINSTANCE.eClass();
+        RelationshipsPackage.eINSTANCE.eClass();
+        InstancePackage.eINSTANCE.eClass();
+        BusinessinformationPackage.eINSTANCE.eClass();
+        DatatypesPackage.eINSTANCE.eClass();
+        orgomg.cwm.foundation.expressions.ExpressionsPackage.eINSTANCE.eClass();
+        KeysindexesPackage.eINSTANCE.eClass();
+        SoftwaredeploymentPackage.eINSTANCE.eClass();
+        TypemappingPackage.eINSTANCE.eClass();
+        RelationalPackage.eINSTANCE.eClass();
+        RecordPackage.eINSTANCE.eClass();
+        MultidimensionalPackage.eINSTANCE.eClass();
+        XmlPackage.eINSTANCE.eClass();
+        TransformationPackage.eINSTANCE.eClass();
+        OlapPackage.eINSTANCE.eClass();
+        DataminingPackage.eINSTANCE.eClass();
+        InformationvisualizationPackage.eINSTANCE.eClass();
+        BusinessnomenclaturePackage.eINSTANCE.eClass();
+        WarehouseprocessPackage.eINSTANCE.eClass();
+        WarehouseoperationPackage.eINSTANCE.eClass();
+        ErPackage.eINSTANCE.eClass();
+        CoboldataPackage.eINSTANCE.eClass();
+        DmsiiPackage.eINSTANCE.eClass();
+        ImsdatabasePackage.eINSTANCE.eClass();
+        EssbasePackage.eINSTANCE.eClass();
+        ExpressPackage.eINSTANCE.eClass();
+        InformationsetPackage.eINSTANCE.eClass();
+        InformationreportingPackage.eINSTANCE.eClass();
+        CwmmipPackage.eINSTANCE.eClass();
+        ModelPackage.eINSTANCE.eClass();
         AnalysisPackage.eINSTANCE.eClass();
         ReportsPackage.eINSTANCE.eClass();
         IndicatorsPackage.eINSTANCE.eClass();
@@ -352,7 +406,13 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
         DomainPackage.eINSTANCE.eClass();
         RulesPackage.eINSTANCE.eClass();
         PropertiesPackage.eINSTANCE.eClass();
+        EcorePackage.eINSTANCE.eClass();
+        JobletPackage.eINSTANCE.eClass();
         MdmmetadataPackage.eINSTANCE.eClass();
+        ConnectionPackage.eINSTANCE.eClass();
+        NotationPackage.eINSTANCE.eClass();
+        org.talend.core.model.properties.PropertiesPackage.eINSTANCE.eClass();
+        TalendFilePackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
         MatchRulePackageImpl theMatchRulePackage = (MatchRulePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(MatchRulePackage.eNS_URI) instanceof MatchRulePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(MatchRulePackage.eNS_URI) : MatchRulePackage.eINSTANCE);
@@ -990,26 +1050,6 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
      * @generated
      */
     @Override
-    public EClass getWSWorkflowDeployE() {
-        return wsWorkflowDeployEEClass;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public EAttribute getWSWorkflowDeployE_Filename() {
-        return (EAttribute)wsWorkflowDeployEEClass.getEStructuralFeatures().get(0);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
     public EClass getWSTransformerV2E() {
         return wsTransformerV2EEClass;
     }
@@ -1440,26 +1480,6 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
      * @generated
      */
     @Override
-    public EClass getWSWorkflowE() {
-        return wsWorkflowEEClass;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
-    public EAttribute getWSWorkflowE_FileContent() {
-        return (EAttribute)wsWorkflowEEClass.getEStructuralFeatures().get(0);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    @Override
     public EClass getWSResourceE() {
         return wsResourceEEClass;
     }
@@ -1711,9 +1731,6 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
         wsBooleanEEClass = createEClass(WS_BOOLEAN_E);
         createEAttribute(wsBooleanEEClass, WS_BOOLEAN_E__TRUE);
 
-        wsWorkflowDeployEEClass = createEClass(WS_WORKFLOW_DEPLOY_E);
-        createEAttribute(wsWorkflowDeployEEClass, WS_WORKFLOW_DEPLOY_E__FILENAME);
-
         wsTransformerV2EEClass = createEClass(WS_TRANSFORMER_V2E);
         createEReference(wsTransformerV2EEClass, WS_TRANSFORMER_V2E__PROCESS_STEPS);
         createEAttribute(wsTransformerV2EEClass, WS_TRANSFORMER_V2E__WITH_ADMIN_PERMISSIONS);
@@ -1768,9 +1785,6 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
         wsServicePutConfigurationEEClass = createEClass(WS_SERVICE_PUT_CONFIGURATION_E);
         createEAttribute(wsServicePutConfigurationEEClass, WS_SERVICE_PUT_CONFIGURATION_E__JNDI_NAME);
         createEAttribute(wsServicePutConfigurationEEClass, WS_SERVICE_PUT_CONFIGURATION_E__CONFIGURATION);
-
-        wsWorkflowEEClass = createEClass(WS_WORKFLOW_E);
-        createEAttribute(wsWorkflowEEClass, WS_WORKFLOW_E__FILE_CONTENT);
 
         wsResourceEEClass = createEClass(WS_RESOURCE_E);
         createEAttribute(wsResourceEEClass, WS_RESOURCE_E__FILE_EXTENSION);
@@ -1836,13 +1850,11 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
         wsDataModelEEClass.getESuperTypes().add(this.getMDMServerObject());
         wsDataClusterEEClass.getESuperTypes().add(this.getMDMServerObject());
         wsStoredProcedureEEClass.getESuperTypes().add(this.getMDMServerObject());
-        wsWorkflowDeployEEClass.getESuperTypes().add(this.getMDMServerObject());
         wsTransformerV2EEClass.getESuperTypes().add(this.getMDMServerObject());
         wsRoutingRuleEEClass.getESuperTypes().add(this.getMDMServerObject());
         wsJobModelEEClass.getESuperTypes().add(this.getMDMServerObject());
         wsEventManagerEEClass.getESuperTypes().add(this.getMDMServerObject());
         wsServiceConfigurationEEClass.getESuperTypes().add(this.getMDMServerObject());
-        wsWorkflowEEClass.getESuperTypes().add(this.getMDMServerObject());
         wsResourceEEClass.getESuperTypes().add(this.getMDMServerObject());
         wsCustomFormEEClass.getESuperTypes().add(this.getMDMServerObject());
         wsMatchRuleEEClass.getESuperTypes().add(this.getMDMServerObject());
@@ -1926,9 +1938,6 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
         initEClass(wsBooleanEEClass, WSBooleanE.class, "WSBooleanE", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getWSBooleanE__true(), ecorePackage.getEBoolean(), "_true", null, 0, 1, WSBooleanE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
-        initEClass(wsWorkflowDeployEEClass, WSWorkflowDeployE.class, "WSWorkflowDeployE", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getWSWorkflowDeployE_Filename(), ecorePackage.getEString(), "filename", null, 0, 1, WSWorkflowDeployE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
         initEClass(wsTransformerV2EEClass, WSTransformerV2E.class, "WSTransformerV2E", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getWSTransformerV2E_ProcessSteps(), this.getWSTransformerProcessStepE(), null, "processSteps", null, 0, -1, WSTransformerV2E.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getWSTransformerV2E_WithAdminPermissions(), ecorePackage.getEBoolean(), "withAdminPermissions", "false", 0, 1, WSTransformerV2E.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1983,9 +1992,6 @@ public class MdmserverobjectPackageImpl extends EPackageImpl implements Mdmserve
         initEClass(wsServicePutConfigurationEEClass, WSServicePutConfigurationE.class, "WSServicePutConfigurationE", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getWSServicePutConfigurationE_JndiName(), ecorePackage.getEString(), "jndiName", null, 0, 1, WSServicePutConfigurationE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getWSServicePutConfigurationE_Configuration(), ecorePackage.getEString(), "configuration", null, 0, 1, WSServicePutConfigurationE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-
-        initEClass(wsWorkflowEEClass, WSWorkflowE.class, "WSWorkflowE", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getWSWorkflowE_FileContent(), ecorePackage.getEByteArray(), "fileContent", null, 0, 1, WSWorkflowE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(wsResourceEEClass, WSResourceE.class, "WSResourceE", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getWSResourceE_FileExtension(), ecorePackage.getEString(), "fileExtension", null, 0, 1, WSResourceE.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

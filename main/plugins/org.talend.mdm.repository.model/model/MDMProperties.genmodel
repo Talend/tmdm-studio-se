@@ -42,9 +42,6 @@
     <genClasses ecoreClass="MDMProperties.ecore#//WSViewItem">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MDMProperties.ecore#//WSViewItem/wsView"/>
     </genClasses>
-    <genClasses ecoreClass="MDMProperties.ecore#//WSWorkflowDeployItem">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MDMProperties.ecore#//WSWorkflowDeployItem/wsWorkflowDeploy"/>
-    </genClasses>
     <genClasses ecoreClass="MDMProperties.ecore#//WSTransformerV2Item">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MDMProperties.ecore#//WSTransformerV2Item/wsTransformerV2"/>
     </genClasses>
@@ -59,9 +56,6 @@
     </genClasses>
     <genClasses ecoreClass="MDMProperties.ecore#//WSServiceConfigurationItem">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MDMProperties.ecore#//WSServiceConfigurationItem/wsServiceConfiguration"/>
-    </genClasses>
-    <genClasses ecoreClass="MDMProperties.ecore#//WSWorkflowItem">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MDMProperties.ecore#//WSWorkflowItem/wsWorkflow"/>
     </genClasses>
     <genClasses ecoreClass="MDMProperties.ecore#//WSResourceItem">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference MDMProperties.ecore#//WSResourceItem/resource"/>

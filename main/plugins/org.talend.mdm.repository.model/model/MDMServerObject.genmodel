@@ -83,9 +83,6 @@
     <genClasses ecoreClass="MDMServerObject.ecore#//WSBooleanE">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSBooleanE/_true"/>
     </genClasses>
-    <genClasses ecoreClass="MDMServerObject.ecore#//WSWorkflowDeployE">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSWorkflowDeployE/filename"/>
-    </genClasses>
     <genClasses ecoreClass="MDMServerObject.ecore#//WSTransformerV2E">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference MDMServerObject.ecore#//WSTransformerV2E/processSteps"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSTransformerV2E/withAdminPermissions"/>
@@ -138,9 +135,6 @@
     <genClasses ecoreClass="MDMServerObject.ecore#//WSServicePutConfigurationE">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSServicePutConfigurationE/jndiName"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSServicePutConfigurationE/configuration"/>
-    </genClasses>
-    <genClasses ecoreClass="MDMServerObject.ecore#//WSWorkflowE">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSWorkflowE/fileContent"/>
     </genClasses>
     <genClasses ecoreClass="MDMServerObject.ecore#//WSResourceE">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute MDMServerObject.ecore#//WSResourceE/fileExtension"/>

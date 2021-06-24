@@ -12,7 +12,12 @@
 // ============================================================================
 package com.amalto.workbench.utils;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -34,7 +39,6 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.apache.xmlbeans.impl.common.IOUtil;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
@@ -1357,7 +1361,7 @@ public class UtilTest {
         FileOutputStream fileOutputStream = null;
         try {
             fileOutputStream = new FileOutputStream(file);
-            IOUtil.copyCompletely(getClass().getResourceAsStream("/resources/zip-slip.zip"), fileOutputStream);
+            IOUtils.copy(getClass().getResourceAsStream("/resources/zip-slip.zip"), fileOutputStream);
             Util.unZipFile(file, unzipFolder.getAbsolutePath(), 8, new NullProgressMonitor());
         } catch (IOException e) {
             assertTrue(e.getMessage().contains("Invalid output path"));

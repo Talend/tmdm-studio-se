@@ -183,13 +183,6 @@ public class MdmserverobjectSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
-            case MdmserverobjectPackage.WS_WORKFLOW_DEPLOY_E: {
-                WSWorkflowDeployE wsWorkflowDeployE = (WSWorkflowDeployE)theEObject;
-                T result = caseWSWorkflowDeployE(wsWorkflowDeployE);
-                if (result == null) result = caseMDMServerObject(wsWorkflowDeployE);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
             case MdmserverobjectPackage.WS_TRANSFORMER_V2E: {
                 WSTransformerV2E wsTransformerV2E = (WSTransformerV2E)theEObject;
                 T result = caseWSTransformerV2E(wsTransformerV2E);
@@ -264,13 +257,6 @@ public class MdmserverobjectSwitch<T> {
             case MdmserverobjectPackage.WS_SERVICE_PUT_CONFIGURATION_E: {
                 WSServicePutConfigurationE wsServicePutConfigurationE = (WSServicePutConfigurationE)theEObject;
                 T result = caseWSServicePutConfigurationE(wsServicePutConfigurationE);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case MdmserverobjectPackage.WS_WORKFLOW_E: {
-                WSWorkflowE wsWorkflowE = (WSWorkflowE)theEObject;
-                T result = caseWSWorkflowE(wsWorkflowE);
-                if (result == null) result = caseMDMServerObject(wsWorkflowE);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -531,21 +517,6 @@ public class MdmserverobjectSwitch<T> {
     }
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>WS Workflow Deploy E</em>'.
-     * <!-- begin-user-doc -->
-     * This implementation returns null;
-     * returning a non-null result will terminate the switch.
-     * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>WS Workflow Deploy E</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
-    public T caseWSWorkflowDeployE(WSWorkflowDeployE object) {
-        return null;
-    }
-
-    /**
      * Returns the result of interpreting the object as an instance of '<em>WS Transformer V2E</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
@@ -722,21 +693,6 @@ public class MdmserverobjectSwitch<T> {
      * @generated
      */
     public T caseWSServicePutConfigurationE(WSServicePutConfigurationE object) {
-        return null;
-    }
-
-    /**
-     * Returns the result of interpreting the object as an instance of '<em>WS Workflow E</em>'.
-     * <!-- begin-user-doc -->
-     * This implementation returns null;
-     * returning a non-null result will terminate the switch.
-     * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>WS Workflow E</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
-    public T caseWSWorkflowE(WSWorkflowE object) {
         return null;
     }
 

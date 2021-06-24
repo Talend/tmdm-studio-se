@@ -161,15 +161,6 @@ public interface MdmserverobjectFactory extends EFactory {
     WSBooleanE createWSBooleanE();
 
     /**
-     * Returns a new object of class '<em>WS Workflow Deploy E</em>'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return a new object of class '<em>WS Workflow Deploy E</em>'.
-     * @generated
-     */
-    WSWorkflowDeployE createWSWorkflowDeployE();
-
-    /**
      * Returns a new object of class '<em>WS Transformer V2E</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -276,15 +267,6 @@ public interface MdmserverobjectFactory extends EFactory {
      * @generated
      */
     WSServicePutConfigurationE createWSServicePutConfigurationE();
-
-    /**
-     * Returns a new object of class '<em>WS Workflow E</em>'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return a new object of class '<em>WS Workflow E</em>'.
-     * @generated
-     */
-    WSWorkflowE createWSWorkflowE();
 
     /**
      * Returns a new object of class '<em>WS Resource E</em>'.

@@ -408,28 +408,6 @@ public class ConsistencyService {
     }
 
     public String calculateDigestValueBySortedObject(Item item, ERepositoryObjectType type) {
-        if (item.eClass().getClassifierID() == MdmpropertiesPackage.WS_WORKFLOW_ITEM) {
-
-            IFile file = getReferenceFile(item, type);
-            if (file != null && file.exists()) {
-                try {
-                    URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), true);
-                    Resource rawResource = new XMIResourceImpl(uri);
-                    rawResource.load(Collections.EMPTY_MAP);
-                    Resource resource = new XMIResourceImpl();
-                    SortEMFCopier copier = new SortEMFCopier();
-
-                    for (EObject next : rawResource.getContents()) {
-                        EObject copy = copier.duplicate(next);
-                        resource.getContents().add(copy);
-                    }
-                    return calculateDigestValueByEMFResource(resource);
-                } catch (IOException e) {
-                    log.error(e.getMessage(), e);
-                }
-
-            }
-        }
         return null;
     }
 
@@ -634,8 +612,6 @@ public class ConsistencyService {
             case MdmpropertiesPackage.WS_RESOURCE_ITEM:
 
                 return DigestCalStrategyEnum.REF_FILE;
-            case MdmpropertiesPackage.WS_WORKFLOW_ITEM:
-                return DigestCalStrategyEnum.SORTED_OBJ_RESOURCE;
             default:
                 return DigestCalStrategyEnum.OBJ_RESOURCE;
             }

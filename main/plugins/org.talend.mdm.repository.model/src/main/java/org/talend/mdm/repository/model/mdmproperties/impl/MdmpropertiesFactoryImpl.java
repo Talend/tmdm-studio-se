@@ -34,7 +34,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      */
     public static MdmpropertiesFactory init() {
         try {
-            MdmpropertiesFactory theMdmpropertiesFactory = (MdmpropertiesFactory)EPackage.Registry.INSTANCE.getEFactory("http://www.talend.org/mdmproperties"); 
+            MdmpropertiesFactory theMdmpropertiesFactory = (MdmpropertiesFactory)EPackage.Registry.INSTANCE.getEFactory(MdmpropertiesPackage.eNS_URI);
             if (theMdmpropertiesFactory != null) {
                 return theMdmpropertiesFactory;
             }
@@ -73,13 +73,11 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
             case MdmpropertiesPackage.WS_DATA_CLUSTER_ITEM: return createWSDataClusterItem();
             case MdmpropertiesPackage.WS_STORED_PROCEDURE_ITEM: return createWSStoredProcedureItem();
             case MdmpropertiesPackage.WS_VIEW_ITEM: return createWSViewItem();
-            case MdmpropertiesPackage.WS_WORKFLOW_DEPLOY_ITEM: return createWSWorkflowDeployItem();
             case MdmpropertiesPackage.WS_TRANSFORMER_V2_ITEM: return createWSTransformerV2Item();
             case MdmpropertiesPackage.WS_ROUTING_RULE_ITEM: return createWSRoutingRuleItem();
             case MdmpropertiesPackage.WS_JOB_MODEL_ITEM: return createWSJobModelItem();
             case MdmpropertiesPackage.WS_EVENT_MANAGER_ITEM: return createWSEventManagerItem();
             case MdmpropertiesPackage.WS_SERVICE_CONFIGURATION_ITEM: return createWSServiceConfigurationItem();
-            case MdmpropertiesPackage.WS_WORKFLOW_ITEM: return createWSWorkflowItem();
             case MdmpropertiesPackage.WS_RESOURCE_ITEM: return createWSResourceItem();
             case MdmpropertiesPackage.WS_CUSTOM_FORM_ITEM: return createWSCustomFormItem();
             case MdmpropertiesPackage.WORKSPACE_ROOT_ITEM: return createWorkspaceRootItem();
@@ -124,6 +122,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public MDMItem createMDMItem() {
         MDMItemImpl mdmItem = new MDMItemImpl();
         return mdmItem;
@@ -134,6 +133,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public MDMServerDefItem createMDMServerDefItem() {
         MDMServerDefItemImpl mdmServerDefItem = new MDMServerDefItemImpl();
         return mdmServerDefItem;
@@ -144,6 +144,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public MDMServerObjectItem createMDMServerObjectItem() {
         MDMServerObjectItemImpl mdmServerObjectItem = new MDMServerObjectItemImpl();
         return mdmServerObjectItem;
@@ -154,6 +155,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSMenuItem createWSMenuItem() {
         WSMenuItemImpl wsMenuItem = new WSMenuItemImpl();
         return wsMenuItem;
@@ -164,6 +166,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSRoleItem createWSRoleItem() {
         WSRoleItemImpl wsRoleItem = new WSRoleItemImpl();
         return wsRoleItem;
@@ -174,6 +177,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public ContainerItem createContainerItem() {
         ContainerItemImpl containerItem = new ContainerItemImpl();
         return containerItem;
@@ -184,6 +188,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSDataModelItem createWSDataModelItem() {
         WSDataModelItemImpl wsDataModelItem = new WSDataModelItemImpl();
         return wsDataModelItem;
@@ -194,6 +199,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSDataClusterItem createWSDataClusterItem() {
         WSDataClusterItemImpl wsDataClusterItem = new WSDataClusterItemImpl();
         return wsDataClusterItem;
@@ -204,6 +210,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSStoredProcedureItem createWSStoredProcedureItem() {
         WSStoredProcedureItemImpl wsStoredProcedureItem = new WSStoredProcedureItemImpl();
         return wsStoredProcedureItem;
@@ -214,6 +221,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSViewItem createWSViewItem() {
         WSViewItemImpl wsViewItem = new WSViewItemImpl();
         return wsViewItem;
@@ -224,16 +232,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
-    public WSWorkflowDeployItem createWSWorkflowDeployItem() {
-        WSWorkflowDeployItemImpl wsWorkflowDeployItem = new WSWorkflowDeployItemImpl();
-        return wsWorkflowDeployItem;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
+    @Override
     public WSTransformerV2Item createWSTransformerV2Item() {
         WSTransformerV2ItemImpl wsTransformerV2Item = new WSTransformerV2ItemImpl();
         return wsTransformerV2Item;
@@ -244,6 +243,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSRoutingRuleItem createWSRoutingRuleItem() {
         WSRoutingRuleItemImpl wsRoutingRuleItem = new WSRoutingRuleItemImpl();
         return wsRoutingRuleItem;
@@ -254,6 +254,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSJobModelItem createWSJobModelItem() {
         WSJobModelItemImpl wsJobModelItem = new WSJobModelItemImpl();
         return wsJobModelItem;
@@ -264,6 +265,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSEventManagerItem createWSEventManagerItem() {
         WSEventManagerItemImpl wsEventManagerItem = new WSEventManagerItemImpl();
         return wsEventManagerItem;
@@ -274,6 +276,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSServiceConfigurationItem createWSServiceConfigurationItem() {
         WSServiceConfigurationItemImpl wsServiceConfigurationItem = new WSServiceConfigurationItemImpl();
         return wsServiceConfigurationItem;
@@ -284,16 +287,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
-    public WSWorkflowItem createWSWorkflowItem() {
-        WSWorkflowItemImpl wsWorkflowItem = new WSWorkflowItemImpl();
-        return wsWorkflowItem;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
+    @Override
     public WSResourceItem createWSResourceItem() {
         WSResourceItemImpl wsResourceItem = new WSResourceItemImpl();
         return wsResourceItem;
@@ -304,6 +298,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSCustomFormItem createWSCustomFormItem() {
         WSCustomFormItemImpl wsCustomFormItem = new WSCustomFormItemImpl();
         return wsCustomFormItem;
@@ -314,6 +309,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WorkspaceRootItem createWorkspaceRootItem() {
         WorkspaceRootItemImpl workspaceRootItem = new WorkspaceRootItemImpl();
         return workspaceRootItem;
@@ -324,6 +320,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public WSMatchRuleItem createWSMatchRuleItem() {
         WSMatchRuleItemImpl wsMatchRuleItem = new WSMatchRuleItemImpl();
         return wsMatchRuleItem;
@@ -352,6 +349,7 @@ public class MdmpropertiesFactoryImpl extends EFactoryImpl implements Mdmpropert
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public MdmpropertiesPackage getMdmpropertiesPackage() {
         return (MdmpropertiesPackage)getEPackage();
     }

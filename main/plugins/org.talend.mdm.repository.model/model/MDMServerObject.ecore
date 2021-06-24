@@ -95,9 +95,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="WSBooleanE">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="_true" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EBoolean"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WSWorkflowDeployE" eSuperTypes="#//MDMServerObject">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="filename" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WSTransformerV2E" eSuperTypes="#//MDMServerObject">
     <eStructuralFeatures xsi:type="ecore:EReference" name="processSteps" upperBound="-1"
         eType="#//WSTransformerProcessStepE" containment="true"/>
@@ -159,9 +156,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="WSServicePutConfigurationE">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="jndiName" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="configuration" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WSWorkflowE" eSuperTypes="#//MDMServerObject">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileContent" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EByteArray"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WSResourceE" eSuperTypes="#//MDMServerObject">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="fileExtension" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

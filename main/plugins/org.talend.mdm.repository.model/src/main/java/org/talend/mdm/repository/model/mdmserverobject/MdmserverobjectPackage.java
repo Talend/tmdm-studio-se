@@ -1245,115 +1245,6 @@ public interface MdmserverobjectPackage extends EPackage {
     int WS_BOOLEAN_E_FEATURE_COUNT = 1;
 
     /**
-     * The meta object id for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSWorkflowDeployEImpl <em>WS Workflow Deploy E</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.mdm.repository.model.mdmserverobject.impl.WSWorkflowDeployEImpl
-     * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSWorkflowDeployE()
-     * @generated
-     */
-    int WS_WORKFLOW_DEPLOY_E = 15;
-
-    /**
-     * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_DEPLOY_E__NAME = MDM_SERVER_OBJECT__NAME;
-
-    /**
-     * The feature id for the '<em><b>Description</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_DEPLOY_E__DESCRIPTION = MDM_SERVER_OBJECT__DESCRIPTION;
-
-    /**
-     * The feature id for the '<em><b>System</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_DEPLOY_E__SYSTEM = MDM_SERVER_OBJECT__SYSTEM;
-
-    /**
-     * The feature id for the '<em><b>Last Server Def</b></em>' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_DEPLOY_E__LAST_SERVER_DEF = MDM_SERVER_OBJECT__LAST_SERVER_DEF;
-
-    /**
-     * The feature id for the '<em><b>Type</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_DEPLOY_E__TYPE = MDM_SERVER_OBJECT__TYPE;
-
-    /**
-     * The feature id for the '<em><b>Timestamp</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_DEPLOY_E__TIMESTAMP = MDM_SERVER_OBJECT__TIMESTAMP;
-
-    /**
-     * The feature id for the '<em><b>Digest Value</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_DEPLOY_E__DIGEST_VALUE = MDM_SERVER_OBJECT__DIGEST_VALUE;
-
-    /**
-     * The feature id for the '<em><b>Current Digest Value</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_DEPLOY_E__CURRENT_DIGEST_VALUE = MDM_SERVER_OBJECT__CURRENT_DIGEST_VALUE;
-
-    /**
-     * The feature id for the '<em><b>Last Server Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_DEPLOY_E__LAST_SERVER_NAME = MDM_SERVER_OBJECT__LAST_SERVER_NAME;
-
-    /**
-     * The feature id for the '<em><b>Filename</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_DEPLOY_E__FILENAME = MDM_SERVER_OBJECT_FEATURE_COUNT + 0;
-
-    /**
-     * The number of structural features of the '<em>WS Workflow Deploy E</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_DEPLOY_E_FEATURE_COUNT = MDM_SERVER_OBJECT_FEATURE_COUNT + 1;
-
-    /**
      * The meta object id for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSTransformerV2EImpl <em>WS Transformer V2E</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1361,7 +1252,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSTransformerV2E()
      * @generated
      */
-    int WS_TRANSFORMER_V2E = 16;
+    int WS_TRANSFORMER_V2E = 15;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1479,7 +1370,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSTransformerProcessStepE()
      * @generated
      */
-    int WS_TRANSFORMER_PROCESS_STEP_E = 17;
+    int WS_TRANSFORMER_PROCESS_STEP_E = 16;
 
     /**
      * The feature id for the '<em><b>Plugin JNDI</b></em>' attribute.
@@ -1552,7 +1443,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSTransformerVariablesMappingE()
      * @generated
      */
-    int WS_TRANSFORMER_VARIABLES_MAPPING_E = 18;
+    int WS_TRANSFORMER_VARIABLES_MAPPING_E = 17;
 
     /**
      * The feature id for the '<em><b>Pipeline Variable</b></em>' attribute.
@@ -1598,7 +1489,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSTypedContentE()
      * @generated
      */
-    int WS_TYPED_CONTENT_E = 19;
+    int WS_TYPED_CONTENT_E = 18;
 
     /**
      * The feature id for the '<em><b>Url</b></em>' attribute.
@@ -1644,7 +1535,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSByteArrayE()
      * @generated
      */
-    int WS_BYTE_ARRAY_E = 20;
+    int WS_BYTE_ARRAY_E = 19;
 
     /**
      * The feature id for the '<em><b>Bytes</b></em>' attribute.
@@ -1672,7 +1563,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSRoutingRuleE()
      * @generated
      */
-    int WS_ROUTING_RULE_E = 21;
+    int WS_ROUTING_RULE_E = 20;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1844,7 +1735,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSRoutingRuleExpressionE()
      * @generated
      */
-    int WS_ROUTING_RULE_EXPRESSION_E = 22;
+    int WS_ROUTING_RULE_EXPRESSION_E = 21;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -1899,7 +1790,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSRoutingRuleOperatorE()
      * @generated
      */
-    int WS_ROUTING_RULE_OPERATOR_E = 23;
+    int WS_ROUTING_RULE_OPERATOR_E = 22;
 
     /**
      * The feature id for the '<em><b>Value</b></em>' attribute.
@@ -1927,7 +1818,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSJobModelE()
      * @generated
      */
-    int WS_JOB_MODEL_E = 24;
+    int WS_JOB_MODEL_E = 23;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2027,7 +1918,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSEventManagerE()
      * @generated
      */
-    int WS_EVENT_MANAGER_E = 25;
+    int WS_EVENT_MANAGER_E = 24;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2127,7 +2018,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSServiceConfigurationE()
      * @generated
      */
-    int WS_SERVICE_CONFIGURATION_E = 26;
+    int WS_SERVICE_CONFIGURATION_E = 25;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2236,7 +2127,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSServicePutConfigurationE()
      * @generated
      */
-    int WS_SERVICE_PUT_CONFIGURATION_E = 27;
+    int WS_SERVICE_PUT_CONFIGURATION_E = 26;
 
     /**
      * The feature id for the '<em><b>Jndi Name</b></em>' attribute.
@@ -2266,115 +2157,6 @@ public interface MdmserverobjectPackage extends EPackage {
     int WS_SERVICE_PUT_CONFIGURATION_E_FEATURE_COUNT = 2;
 
     /**
-     * The meta object id for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSWorkflowEImpl <em>WS Workflow E</em>}' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see org.talend.mdm.repository.model.mdmserverobject.impl.WSWorkflowEImpl
-     * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSWorkflowE()
-     * @generated
-     */
-    int WS_WORKFLOW_E = 28;
-
-    /**
-     * The feature id for the '<em><b>Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_E__NAME = MDM_SERVER_OBJECT__NAME;
-
-    /**
-     * The feature id for the '<em><b>Description</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_E__DESCRIPTION = MDM_SERVER_OBJECT__DESCRIPTION;
-
-    /**
-     * The feature id for the '<em><b>System</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_E__SYSTEM = MDM_SERVER_OBJECT__SYSTEM;
-
-    /**
-     * The feature id for the '<em><b>Last Server Def</b></em>' containment reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_E__LAST_SERVER_DEF = MDM_SERVER_OBJECT__LAST_SERVER_DEF;
-
-    /**
-     * The feature id for the '<em><b>Type</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_E__TYPE = MDM_SERVER_OBJECT__TYPE;
-
-    /**
-     * The feature id for the '<em><b>Timestamp</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_E__TIMESTAMP = MDM_SERVER_OBJECT__TIMESTAMP;
-
-    /**
-     * The feature id for the '<em><b>Digest Value</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_E__DIGEST_VALUE = MDM_SERVER_OBJECT__DIGEST_VALUE;
-
-    /**
-     * The feature id for the '<em><b>Current Digest Value</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_E__CURRENT_DIGEST_VALUE = MDM_SERVER_OBJECT__CURRENT_DIGEST_VALUE;
-
-    /**
-     * The feature id for the '<em><b>Last Server Name</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_E__LAST_SERVER_NAME = MDM_SERVER_OBJECT__LAST_SERVER_NAME;
-
-    /**
-     * The feature id for the '<em><b>File Content</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_E__FILE_CONTENT = MDM_SERVER_OBJECT_FEATURE_COUNT + 0;
-
-    /**
-     * The number of structural features of the '<em>WS Workflow E</em>' class.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int WS_WORKFLOW_E_FEATURE_COUNT = MDM_SERVER_OBJECT_FEATURE_COUNT + 1;
-
-    /**
      * The meta object id for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSResourceEImpl <em>WS Resource E</em>}' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2382,7 +2164,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSResourceE()
      * @generated
      */
-    int WS_RESOURCE_E = 29;
+    int WS_RESOURCE_E = 27;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2509,7 +2291,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSCustomFormE()
      * @generated
      */
-    int WS_CUSTOM_FORM_E = 30;
+    int WS_CUSTOM_FORM_E = 28;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2654,7 +2436,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSMatchRuleE()
      * @generated
      */
-    int WS_MATCH_RULE_E = 31;
+    int WS_MATCH_RULE_E = 29;
 
     /**
      * The feature id for the '<em><b>Name</b></em>' attribute.
@@ -2772,7 +2554,7 @@ public interface MdmserverobjectPackage extends EPackage {
      * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSMatchRulePKE()
      * @generated
      */
-    int WS_MATCH_RULE_PKE = 32;
+    int WS_MATCH_RULE_PKE = 30;
 
     /**
      * The feature id for the '<em><b>Pk</b></em>' attribute.
@@ -3450,27 +3232,6 @@ public interface MdmserverobjectPackage extends EPackage {
     EAttribute getWSBooleanE__true();
 
     /**
-     * Returns the meta object for class '{@link org.talend.mdm.repository.model.mdmserverobject.WSWorkflowDeployE <em>WS Workflow Deploy E</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for class '<em>WS Workflow Deploy E</em>'.
-     * @see org.talend.mdm.repository.model.mdmserverobject.WSWorkflowDeployE
-     * @generated
-     */
-    EClass getWSWorkflowDeployE();
-
-    /**
-     * Returns the meta object for the attribute '{@link org.talend.mdm.repository.model.mdmserverobject.WSWorkflowDeployE#getFilename <em>Filename</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Filename</em>'.
-     * @see org.talend.mdm.repository.model.mdmserverobject.WSWorkflowDeployE#getFilename()
-     * @see #getWSWorkflowDeployE()
-     * @generated
-     */
-    EAttribute getWSWorkflowDeployE_Filename();
-
-    /**
      * Returns the meta object for class '{@link org.talend.mdm.repository.model.mdmserverobject.WSTransformerV2E <em>WS Transformer V2E</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -3930,27 +3691,6 @@ public interface MdmserverobjectPackage extends EPackage {
      * @generated
      */
     EAttribute getWSServicePutConfigurationE_Configuration();
-
-    /**
-     * Returns the meta object for class '{@link org.talend.mdm.repository.model.mdmserverobject.WSWorkflowE <em>WS Workflow E</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for class '<em>WS Workflow E</em>'.
-     * @see org.talend.mdm.repository.model.mdmserverobject.WSWorkflowE
-     * @generated
-     */
-    EClass getWSWorkflowE();
-
-    /**
-     * Returns the meta object for the attribute '{@link org.talend.mdm.repository.model.mdmserverobject.WSWorkflowE#getFileContent <em>File Content</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>File Content</em>'.
-     * @see org.talend.mdm.repository.model.mdmserverobject.WSWorkflowE#getFileContent()
-     * @see #getWSWorkflowE()
-     * @generated
-     */
-    EAttribute getWSWorkflowE_FileContent();
 
     /**
      * Returns the meta object for class '{@link org.talend.mdm.repository.model.mdmserverobject.WSResourceE <em>WS Resource E</em>}'.
@@ -4654,24 +4394,6 @@ public interface MdmserverobjectPackage extends EPackage {
         EAttribute WS_BOOLEAN_E__TRUE = eINSTANCE.getWSBooleanE__true();
 
         /**
-         * The meta object literal for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSWorkflowDeployEImpl <em>WS Workflow Deploy E</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @see org.talend.mdm.repository.model.mdmserverobject.impl.WSWorkflowDeployEImpl
-         * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSWorkflowDeployE()
-         * @generated
-         */
-        EClass WS_WORKFLOW_DEPLOY_E = eINSTANCE.getWSWorkflowDeployE();
-
-        /**
-         * The meta object literal for the '<em><b>Filename</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute WS_WORKFLOW_DEPLOY_E__FILENAME = eINSTANCE.getWSWorkflowDeployE_Filename();
-
-        /**
          * The meta object literal for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSTransformerV2EImpl <em>WS Transformer V2E</em>}' class.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -5038,24 +4760,6 @@ public interface MdmserverobjectPackage extends EPackage {
          * @generated
          */
         EAttribute WS_SERVICE_PUT_CONFIGURATION_E__CONFIGURATION = eINSTANCE.getWSServicePutConfigurationE_Configuration();
-
-        /**
-         * The meta object literal for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSWorkflowEImpl <em>WS Workflow E</em>}' class.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @see org.talend.mdm.repository.model.mdmserverobject.impl.WSWorkflowEImpl
-         * @see org.talend.mdm.repository.model.mdmserverobject.impl.MdmserverobjectPackageImpl#getWSWorkflowE()
-         * @generated
-         */
-        EClass WS_WORKFLOW_E = eINSTANCE.getWSWorkflowE();
-
-        /**
-         * The meta object literal for the '<em><b>File Content</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute WS_WORKFLOW_E__FILE_CONTENT = eINSTANCE.getWSWorkflowE_FileContent();
 
         /**
          * The meta object literal for the '{@link org.talend.mdm.repository.model.mdmserverobject.impl.WSResourceEImpl <em>WS Resource E</em>}' class.

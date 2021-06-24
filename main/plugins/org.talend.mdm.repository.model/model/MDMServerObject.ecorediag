@@ -582,7 +582,6 @@
     <children xmi:type="notation:Node" xmi:id="_vX4mVLDnEeCUJMpow_GU0w" type="4001"/>
     <children xmi:type="notation:Node" xmi:id="_vX4mVbDnEeCUJMpow_GU0w" type="5001">
       <children xmi:type="notation:Node" xmi:id="_2zrpgLDnEeCUJMpow_GU0w" type="2001">
-        <element xmi:type="ecore:EAttribute" href="MDMServerObject.ecore#//WSWorkflowDeployE/filename"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_2zrpgbDnEeCUJMpow_GU0w"/>
       </children>
       <styles xmi:type="notation:DrawerStyle" xmi:id="_vX4mVrDnEeCUJMpow_GU0w"/>
@@ -595,7 +594,6 @@
       <styles xmi:type="notation:FilteringStyle" xmi:id="_vYCXUrDnEeCUJMpow_GU0w"/>
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_vX4mUrDnEeCUJMpow_GU0w" fontColor="4210752" fontName="宋体" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="MDMServerObject.ecore#//WSWorkflowDeployE"/>
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_vX4mU7DnEeCUJMpow_GU0w" x="810" y="65"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_TDbgIbEREeCfg_ADjEsa_g" type="1001">
@@ -878,7 +876,6 @@
     <children xmi:type="notation:Node" xmi:id="_hNcHwMl7EeCRG4ESnHIh_g" type="4001"/>
     <children xmi:type="notation:Node" xmi:id="_hNvpwMl7EeCRG4ESnHIh_g" type="5001">
       <children xmi:type="notation:Node" xmi:id="_0OIGMB-5EeGAkN-IZwcdOQ" type="2001">
-        <element xmi:type="ecore:EAttribute" href="MDMServerObject.ecore#//WSWorkflowE/fileContent"/>
         <layoutConstraint xmi:type="notation:Location" xmi:id="_0OIGMR-5EeGAkN-IZwcdOQ"/>
       </children>
       <styles xmi:type="notation:DrawerStyle" xmi:id="_hNvpwcl7EeCRG4ESnHIh_g"/>
@@ -891,7 +888,6 @@
       <styles xmi:type="notation:FilteringStyle" xmi:id="_hNvpx8l7EeCRG4ESnHIh_g"/>
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_hNJM0sl7EeCRG4ESnHIh_g" fontColor="4210752" fontName="宋体" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="MDMServerObject.ecore#//WSWorkflowE"/>
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_hNJM08l7EeCRG4ESnHIh_g" x="419" y="-61"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_4QzzwNOiEeC_97ZVdXFvlA" type="1001">

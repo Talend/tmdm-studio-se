@@ -38,9 +38,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="WSViewItem" eSuperTypes="#//MDMServerObjectItem">
     <eStructuralFeatures xsi:type="ecore:EReference" name="wsView" eType="ecore:EClass MDMServerObject.ecore#//WSViewE"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WSWorkflowDeployItem" eSuperTypes="#//MDMServerObjectItem">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="wsWorkflowDeploy" eType="ecore:EClass MDMServerObject.ecore#//WSWorkflowDeployE"/>
-  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WSTransformerV2Item" eSuperTypes="#//MDMServerObjectItem">
     <eStructuralFeatures xsi:type="ecore:EReference" name="wsTransformerV2" eType="ecore:EClass MDMServerObject.ecore#//WSTransformerV2E"/>
   </eClassifiers>
@@ -56,9 +53,6 @@
   <eClassifiers xsi:type="ecore:EClass" name="WSServiceConfigurationItem" eSuperTypes="#//MDMServerObjectItem">
     <eStructuralFeatures xsi:type="ecore:EReference" name="wsServiceConfiguration"
         eType="ecore:EClass MDMServerObject.ecore#//WSServiceConfigurationE"/>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="WSWorkflowItem" eSuperTypes="#//MDMServerObjectItem">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="wsWorkflow" eType="ecore:EClass MDMServerObject.ecore#//WSWorkflowE"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="WSResourceItem" eSuperTypes="#//MDMServerObjectItem">
     <eStructuralFeatures xsi:type="ecore:EReference" name="resource" eType="ecore:EClass MDMServerObject.ecore#//WSResourceE"/>

@@ -62,19 +62,11 @@ public class NewServiceConfigurationAction extends AbstractSimpleAddAction {
 
         putConfig2.setConfiguration(formatXml(configContent2));
 
-        WSServicePutConfigurationE putConfig3 = MdmserverobjectFactory.eINSTANCE.createWSServicePutConfigurationE();
-        putConfig3.setJndiName("workflow"); //$NON-NLS-1$
-
-        String configContent3 = "  <workflow-configuration> <api-type>EJB2</api-type> </workflow-configuration>"; //$NON-NLS-1$
-
-        putConfig3.setConfiguration(formatXml(configContent3));
-
         WSServiceConfigurationE serConfig = MdmserverobjectFactory.eINSTANCE.createWSServiceConfigurationE();
         serConfig.setName(key);
 
         serConfig.getServicePutConfigurations().add(putConfig1);
         serConfig.getServicePutConfigurations().add(putConfig2);
-        serConfig.getServicePutConfigurations().add(putConfig3);
 
         return serConfig;
     }

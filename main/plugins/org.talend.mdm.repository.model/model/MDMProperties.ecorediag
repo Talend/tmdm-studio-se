@@ -232,7 +232,6 @@
       <styles xmi:type="notation:FilteringStyle" xmi:id="_2tmaO7DoEeCUJMpow_GU0w"/>
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_2tmaMbDoEeCUJMpow_GU0w" fontColor="4210752" fontName="宋体" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="MDMProperties.ecore#//WSWorkflowDeployItem"/>
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_2tmaMrDoEeCUJMpow_GU0w" x="733" y="364"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_xmrVILETEeCfg_ADjEsa_g" type="1001">
@@ -330,7 +329,6 @@
       <styles xmi:type="notation:FilteringStyle" xmi:id="_bDyMe8l8EeCRG4ESnHIh_g"/>
     </children>
     <styles xmi:type="notation:ShapeStyle" xmi:id="_bDyMccl8EeCRG4ESnHIh_g" fontColor="4210752" fontName="宋体" fontHeight="10" fillColor="13761016" lineColor="8421504"/>
-    <element xmi:type="ecore:EClass" href="MDMProperties.ecore#//WSWorkflowItem"/>
     <layoutConstraint xmi:type="notation:Bounds" xmi:id="_bDyMcsl8EeCRG4ESnHIh_g" x="358" y="176"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_LI1psNOjEeC_97ZVdXFvlA" type="1001">

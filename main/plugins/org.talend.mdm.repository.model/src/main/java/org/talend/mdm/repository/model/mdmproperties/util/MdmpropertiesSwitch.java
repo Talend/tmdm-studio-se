@@ -176,15 +176,6 @@ public class MdmpropertiesSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
-            case MdmpropertiesPackage.WS_WORKFLOW_DEPLOY_ITEM: {
-                WSWorkflowDeployItem wsWorkflowDeployItem = (WSWorkflowDeployItem)theEObject;
-                T result = caseWSWorkflowDeployItem(wsWorkflowDeployItem);
-                if (result == null) result = caseMDMServerObjectItem(wsWorkflowDeployItem);
-                if (result == null) result = caseMDMItem(wsWorkflowDeployItem);
-                if (result == null) result = caseItem(wsWorkflowDeployItem);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
             case MdmpropertiesPackage.WS_TRANSFORMER_V2_ITEM: {
                 WSTransformerV2Item wsTransformerV2Item = (WSTransformerV2Item)theEObject;
                 T result = caseWSTransformerV2Item(wsTransformerV2Item);
@@ -227,15 +218,6 @@ public class MdmpropertiesSwitch<T> {
                 if (result == null) result = caseMDMServerObjectItem(wsServiceConfigurationItem);
                 if (result == null) result = caseMDMItem(wsServiceConfigurationItem);
                 if (result == null) result = caseItem(wsServiceConfigurationItem);
-                if (result == null) result = defaultCase(theEObject);
-                return result;
-            }
-            case MdmpropertiesPackage.WS_WORKFLOW_ITEM: {
-                WSWorkflowItem wsWorkflowItem = (WSWorkflowItem)theEObject;
-                T result = caseWSWorkflowItem(wsWorkflowItem);
-                if (result == null) result = caseMDMServerObjectItem(wsWorkflowItem);
-                if (result == null) result = caseMDMItem(wsWorkflowItem);
-                if (result == null) result = caseItem(wsWorkflowItem);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
@@ -430,21 +412,6 @@ public class MdmpropertiesSwitch<T> {
     }
 
     /**
-     * Returns the result of interpreting the object as an instance of '<em>WS Workflow Deploy Item</em>'.
-     * <!-- begin-user-doc -->
-     * This implementation returns null;
-     * returning a non-null result will terminate the switch.
-     * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>WS Workflow Deploy Item</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
-    public T caseWSWorkflowDeployItem(WSWorkflowDeployItem object) {
-        return null;
-    }
-
-    /**
      * Returns the result of interpreting the object as an instance of '<em>WS Transformer V2 Item</em>'.
      * <!-- begin-user-doc -->
      * This implementation returns null;
@@ -516,21 +483,6 @@ public class MdmpropertiesSwitch<T> {
      * @generated
      */
     public T caseWSServiceConfigurationItem(WSServiceConfigurationItem object) {
-        return null;
-    }
-
-    /**
-     * Returns the result of interpreting the object as an instance of '<em>WS Workflow Item</em>'.
-     * <!-- begin-user-doc -->
-     * This implementation returns null;
-     * returning a non-null result will terminate the switch.
-     * <!-- end-user-doc -->
-     * @param object the target of the switch.
-     * @return the result of interpreting the object as an instance of '<em>WS Workflow Item</em>'.
-     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
-     * @generated
-     */
-    public T caseWSWorkflowItem(WSWorkflowItem object) {
         return null;
     }
 

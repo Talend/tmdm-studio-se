@@ -116,15 +116,6 @@ public interface MdmpropertiesFactory extends EFactory {
     WSViewItem createWSViewItem();
 
     /**
-     * Returns a new object of class '<em>WS Workflow Deploy Item</em>'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return a new object of class '<em>WS Workflow Deploy Item</em>'.
-     * @generated
-     */
-    WSWorkflowDeployItem createWSWorkflowDeployItem();
-
-    /**
      * Returns a new object of class '<em>WS Transformer V2 Item</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -168,15 +159,6 @@ public interface MdmpropertiesFactory extends EFactory {
      * @generated
      */
     WSServiceConfigurationItem createWSServiceConfigurationItem();
-
-    /**
-     * Returns a new object of class '<em>WS Workflow Item</em>'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return a new object of class '<em>WS Workflow Item</em>'.
-     * @generated
-     */
-    WSWorkflowItem createWSWorkflowItem();
 
     /**
      * Returns a new object of class '<em>WS Resource Item</em>'.
