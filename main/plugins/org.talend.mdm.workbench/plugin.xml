@@ -460,21 +460,7 @@
             context="plugin:org.talend.mdm.workbench"
             language="java"
             message="Required for using this component."
-            name="activation.jar" mvn_uri="mvn:org.talend.libraries/activation/6.0.0" 
-            required="true">
-      </libraryNeeded>
-      <libraryNeeded
-            context="plugin:org.talend.mdm.workbench"
-            language="java"
-            message="Required for using this component."
             name="dtdparser121.jar" mvn_uri="mvn:org.talend.libraries/dtdparser121/6.1.0" 
-            required="true">
-      </libraryNeeded>
-            <libraryNeeded
-            context="plugin:org.talend.mdm.workbench"
-            language="java"
-            message="Required for using this component."
-            name="mail.jar" mvn_uri="mvn:org.talend.libraries/mail/6.0.0" 
             required="true">
       </libraryNeeded>
       <libraryNeeded

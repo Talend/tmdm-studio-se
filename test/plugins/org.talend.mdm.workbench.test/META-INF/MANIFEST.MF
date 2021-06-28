@@ -6,6 +6,7 @@ Fragment-Host: org.talend.mdm.workbench
 Bundle-Version: 7.4.1.qualifier
 Require-Bundle: org.talend.testutils,
  org.hamcrest,
- org.eclipse.osgi.services
+ org.eclipse.osgi.services,
+ org.talend.libraries.apache.xml
 Bundle-ClassPath: .
 Export-Package: com.amalto.workbench.utils
