@@ -18,6 +18,7 @@ import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -73,6 +74,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IProduct;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.notify.Adapter;
@@ -128,6 +130,7 @@ import org.eclipse.xsd.impl.XSDSchemaImpl;
 import org.eclipse.xsd.util.XSDConstants;
 import org.eclipse.xsd.util.XSDSchemaLocator;
 import org.osgi.framework.Bundle;
+import org.osgi.framework.FrameworkUtil;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.service.IMDMWebServiceHook;
 import org.talend.mdm.commmon.util.core.EUUIDCustomType;
@@ -387,7 +390,18 @@ public class Util {
 
     public static TMDMService getMDMService(URL url, final String username, final String password, boolean showMissingJarDialog)
             throws XtentisException {
-        url = checkAndAddSuffix(url);
+    	
+    	url = checkAndAddSuffix(url);
+    	URL wsdlUrl = null;
+        try {
+			wsdlUrl = getWSDLPath();
+			log.info("wsdl path: "+wsdlUrl);
+		} catch (Exception e1) {
+			WebServiceException we = new WebServiceException(e1);
+			XtentisException ex = convertWebServiceException(we);
+			log.error(ex);
+			throw ex;
+		}
 
         boolean needCheck = true;
         TMDMService service = (TMDMService) cachedMDMService.get(url, username, password);
@@ -404,7 +418,7 @@ public class Util {
                 //
                 Thread.currentThread().setContextClassLoader(TMDMService_Service.class.getClassLoader());
 
-                TMDMService_Service service_service = new TMDMService_Service(url);
+                TMDMService_Service service_service = new TMDMService_Service(wsdlUrl);
 
                 service = service_service.getTMDMPort();
 
@@ -417,16 +431,27 @@ public class Util {
                 // // dynamic set endpointAddress
                 // context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
 
+                context.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, url.toString());
+                
                 // authentication
                 context.put(BindingProvider.USERNAME_PROPERTY, username);
                 context.put(BindingProvider.PASSWORD_PROPERTY, password);
 
+                String ct = System.getProperty("com.sun.xml.ws.connect.timeout", String.valueOf(3 * 60 * 1000));
+                String rt = System.getProperty("com.sun.xml.ws.request.timeout", String.valueOf(30 * 60 * 1000));
+                context.put("com.sun.xml.ws.connect.timeout", Integer.valueOf(ct));
+                context.put("com.sun.xml.ws.request.timeout", Integer.valueOf(rt));
+                context.put("javax.xml.ws.client.connectionTimeout", Integer.valueOf(ct));
+                context.put("javax.xml.ws.client.receiveTimeout", Integer.valueOf(rt));
+                
                 IMDMWebServiceHook wsHook = getWebServiceHook();
                 if (wsHook != null) {
                     wsHook.preRequestSendingHook(stub.getRequestContext(), username);
                 }
 
                 cachedMDMService.put(url, username, password, service);
+                
+                log.warn("webservice client initialzed, "+url);
             } catch (WebServiceException e) {
                 XtentisException ex = convertWebServiceException(e);
                 log.error(Messages.bind(Messages.UnableAccessEndpoint, url, e.getMessage()), e);
@@ -455,6 +480,23 @@ public class Util {
 
         return service;
     }
+    
+	private static URL getWSDLPath() throws Exception {
+		String filePath = "wsdl/webservices.wsdl";
+		try {
+			URL dataUrl = FileLocator.find(FrameworkUtil.getBundle(Util.class), new Path(filePath), null);
+			if (dataUrl== null) {
+				FileNotFoundException ex = new FileNotFoundException(filePath);
+				log.error(ex);
+				throw ex;
+			}
+			dataUrl = FileLocator.toFileURL(dataUrl);
+			return dataUrl;
+		} catch (Exception e) {
+			log.error(e);
+			throw e;
+		}
+	}
 
     private static URL checkAndAddSuffix(URL url) {
         String protocol = url.getProtocol();
