@@ -26,18 +26,18 @@ public class AvailableModelUtilTest {
     public void testGetAvailableModels() {
         List<IAvailableModel> availableModels = AvailableModelUtil.getAvailableModels();
         assertNotNull(availableModels);
-        assertEquals(11, availableModels.size());
+        assertEquals(9, availableModels.size());
     }
 
     @Test
     public void testGetAvailableModelsBoolean() {
         List<IAvailableModel> availableModels = AvailableModelUtil.getAvailableModels(true);
         assertNotNull(availableModels);
-        assertEquals(6, availableModels.size());
+        assertEquals(5, availableModels.size());
 
         availableModels = AvailableModelUtil.getAvailableModels(false);
         assertNotNull(availableModels);
-        assertEquals(6, availableModels.size());
+        assertEquals(5, availableModels.size());
     }
 
 }
