@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Client Plug-in
 Bundle-SymbolicName: org.talend.mdm.engines.client;singleton:=true
-Bundle-Version: 7.4.1.qualifier
+Bundle-Version: 8.0.1.qualifier
 Bundle-Activator: org.talend.mdm.engines.client.Activator
 Require-Bundle: org.apache.commons.httpclient,
  org.apache.commons.logging,

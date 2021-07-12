@@ -2,7 +2,7 @@
 <feature
       id="org.talend.mdm.tom.test.feature"
       label="org.talend.mdm.tom.test.feature Feature"
-      version="7.4.1.qualifier">
+      version="8.0.1.qualifier">
 
    <description>
       Tests For Talend MDM in tom
