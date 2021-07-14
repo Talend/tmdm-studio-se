@@ -71,14 +71,6 @@
          unpack="false"/>
 
    <plugin
-         id="org.talend.mdm.repository.nl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.talend.mdm.repository.validate"
          download-size="0"
          install-size="0"
@@ -92,26 +84,10 @@
          version="0.0.0"/>
 
    <plugin
-         id="org.talend.mdm.workbench.nl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.talend.mdm.workbench.serverexplorer"
          download-size="0"
          install-size="0"
          version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.talend.mdm.workbench.serverexplorer.nl"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
          unpack="false"/>
 
    <plugin
